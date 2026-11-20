@@ -11,3 +11,9 @@
 .loon-combobox .loon-option[aria-selected="true"] {
   font-weight: inherit;
 }
+
+@media (pointer: coarse) {
+  .loon-combobox-content .loon-command-input {
+    height: 2.75rem;
+  }
+}

@@ -83,3 +83,10 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* Phones: 16px text, or iOS zooms in on focus. */
+@media (pointer: coarse) {
+  .loon-command-input {
+    font-size: 1rem;
+  }
+}

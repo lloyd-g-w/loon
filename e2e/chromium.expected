@@ -70,6 +70,7 @@ tapped a link: Theming, sheet closed
 scrim tap closes the sheet
 search fits: true
 sideways overflow: none
+fields under 44px: none
 == mobile:small
 small: sidebar hidden true, toc hidden true
 header targets: all at least 44px
@@ -80,3 +81,4 @@ tapped a link: Theming, sheet closed
 scrim tap closes the sheet
 search fits: true
 sideways overflow: none
+fields under 44px: none

@@ -1,6 +1,6 @@
 // Phones (390x844, and a small one, 320x640), by touch: no page scrolls
 // sideways, the sidebar is a sheet behind the menu button, the header's
-// controls are 44px targets.
+// controls and the examples' text fields and selects are 44px targets.
 import { checkErrors, open, overflow, ready, run, screenshot, text, waitForHash } from "./lib.mjs";
 
 const device = process.argv[3] ?? "phone";
@@ -72,6 +72,23 @@ await run(async (engine, url) => {
     for (const e of errors.splice(0)) console.log(`ERROR on ${slug}: ${e}`);
   }
   console.log(`sideways overflow: ${wide.length ? wide.join("; ") : "none"}`);
+
+  // Text fields and selects (an input in a group: the group).
+  const short = [];
+  for (const slug of ["input", "native_select", "select", "combobox", "data_table", "form"]) {
+    await page.goto(`${url}#/${slug}`);
+    await ready(page, slug);
+    const found = await page.$$eval(
+      '.docs-preview input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), .docs-preview select, .docs-preview .loon-select-trigger',
+      (els) =>
+        els
+          .map((el) => el.closest(".loon-input-group") ?? el)
+          .filter((el) => el.getBoundingClientRect().height < 43.5)
+          .map((el) => `${el.className || el.tagName} ${Math.round(el.getBoundingClientRect().height)}px`),
+    );
+    for (const f of found) short.push(`${slug}: ${f}`);
+  }
+  console.log(`fields under 44px: ${short.length ? short.join("; ") : "none"}`);
   await page.goto(`${url}#/button`);
   await ready(page, "button");
   await screenshot(page, `${device}-button`);

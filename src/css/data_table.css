@@ -135,3 +135,11 @@
     padding-right: 0.5rem;
   }
 }
+
+/* Phones: 16px text, or iOS zooms in on focus; and a taller target. */
+@media (pointer: coarse) {
+  .loon-data-table-filter > input {
+    height: 2.75rem;
+    font-size: 1rem;
+  }
+}
