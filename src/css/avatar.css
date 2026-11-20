@@ -1,0 +1,89 @@
+.loon-avatar {
+  --loon-avatar-size: 2.5rem;
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--loon-avatar-size);
+  height: var(--loon-avatar-size);
+  font-size: calc(var(--loon-avatar-size) * 0.38);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  user-select: none;
+  vertical-align: middle;
+}
+.loon-avatar-circle,
+.loon-avatar-circle > .loon-avatar-image,
+.loon-avatar-circle > .loon-avatar-fallback {
+  border-radius: 999px;
+}
+.loon-avatar-square,
+.loon-avatar-square > .loon-avatar-image,
+.loon-avatar-square > .loon-avatar-fallback {
+  border-radius: var(--loon-radius-sm);
+}
+.loon-avatar-xs { --loon-avatar-size: 1.5rem; }
+.loon-avatar-sm { --loon-avatar-size: 2rem; }
+.loon-avatar-md { --loon-avatar-size: 2.5rem; }
+.loon-avatar-lg { --loon-avatar-size: 3rem; }
+.loon-avatar-xl { --loon-avatar-size: 4rem; }
+
+.loon-avatar-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: oklch(0.38 0.08 var(--loon-avatar-hue, 250));
+  background: oklch(0.93 0.035 var(--loon-avatar-hue, 250));
+}
+.loon-dark .loon-avatar-fallback {
+  color: oklch(0.9 0.05 var(--loon-avatar-hue, 250));
+  background: oklch(0.36 0.05 var(--loon-avatar-hue, 250));
+}
+.loon-avatar-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--loon-muted);
+}
+.loon-avatar-image[data-state="error"] {
+  display: none;
+}
+.loon-avatar-status {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 28%;
+  height: 28%;
+  min-width: 0.5rem;
+  min-height: 0.5rem;
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px var(--loon-background);
+  background: var(--loon-muted-foreground);
+}
+.loon-avatar-status-online { background: var(--loon-success); }
+.loon-avatar-status-busy { background: var(--loon-danger); }
+.loon-avatar-status-away { background: var(--loon-warning); }
+
+.loon-avatar-group {
+  display: inline-flex;
+  align-items: center;
+  flex-direction: row;
+}
+.loon-avatar-group > .loon-avatar {
+  box-shadow: 0 0 0 2px var(--loon-background);
+  border-radius: 999px;
+}
+.loon-avatar-group > .loon-avatar + .loon-avatar {
+  margin-left: calc(var(--loon-avatar-size) * -0.22);
+}
+.loon-avatar-more {
+  background: var(--loon-muted);
+  color: var(--loon-muted-foreground);
+  font-size: calc(var(--loon-avatar-size) * 0.32);
+}
