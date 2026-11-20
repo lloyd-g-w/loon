@@ -19,6 +19,8 @@
   dune
   core
   core_unix
+  patience_diff
+  ppx_expect
   ppx_jane
   bonsai
   bonsai_web

@@ -1,0 +1,11 @@
+; Reading loon's sources for the registry: which modules and classes a
+; component uses, which classes a stylesheet defines, and its description.
+
+(library
+ (name loon_scan)
+ (inline_tests
+  (flags
+   (-source-tree-root .)))
+ (preprocess
+  (pps ppx_jane))
+ (libraries core))

@@ -1,0 +1,29 @@
+; The registry: every component's files, embedded at build time from src/
+; (cli/gen), and what `loon` does with them.
+
+(library
+ (name loon_registry)
+ (inline_tests
+  (flags
+   (-source-tree-root .)))
+ (preprocess
+  (pps ppx_jane))
+ (libraries
+  core
+  core_unix
+  core_unix.sys_unix
+  patience_diff
+  expect_test_helpers_core
+  loon_scan))
+
+(rule
+ (target data.ml)
+ (deps
+  ../../src/dune
+  (glob_files ../../src/*.ml)
+  (glob_files ../../src/*.mli)
+  (glob_files ../../src/css/*.css))
+ (action
+  (with-stdout-to
+   data.ml
+   (run ../gen/gen.exe %{deps}))))
