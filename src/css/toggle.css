@@ -46,12 +46,6 @@
 .loon-toggle:hover:not(:disabled) {
   background: var(--loon-muted);
 }
-.loon-toggle:not([data-state="on"]):hover:not(:disabled) {
-  color: var(--loon-foreground);
-}
-.loon-toggle[data-state="off"] {
-  color: var(--loon-muted-foreground);
-}
 .loon-toggle[data-state="on"] {
   background: var(--loon-secondary);
   color: var(--loon-secondary-foreground);

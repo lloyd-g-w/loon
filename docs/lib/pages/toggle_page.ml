@@ -17,15 +17,27 @@ let narrow nodes =
 
 let page = "toggle"
 
-(*$ Default *)
+(*$ Default
+   Ghost toggles have no border until pressed, which suits a toolbar; use
+   Outline for one on its own. *)
 let default (local_ graph) =
-  let%arr bold =
+  let bold =
     Toggle.component
       ~attrs:[ Attr.create "aria-label" "Bold" ]
+      ~default:true
       [ Node.strong [ Node.text "B" ] ]
       graph
   in
-  bold.view
+  let italic =
+    Toggle.component
+      ~attrs:[ Attr.create "aria-label" "Italic" ]
+      [ Node.em [ Node.text "I" ] ]
+      graph
+  in
+  let%arr bold and italic in
+  Node.div
+    ~attrs:[ Attr.class_ "docs-toolbar" ]
+    [ bold.view; italic.view ]
 ;;
 
 (*$*)
