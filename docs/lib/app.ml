@@ -600,7 +600,7 @@ let component (local_ graph) =
     ~equal:String.equal
     hash
     ~callback:
-      (let%arr set_outline and set_nav_open and set_search_open in
+      (let%arr set_nav_open and set_search_open in
        fun prev hash ->
          let slug = shown_of_hash hash in
          let same_page =
@@ -620,13 +620,24 @@ let component (local_ graph) =
                match anchor_of_hash hash with
                | Some id -> Browser.scroll_to_anchor id
                | None -> if not same_page then Browser.scroll_to_top ())
-           ; (if same_page
-              then Effect.Ignore
-              else (
-                let%bind.Effect outline = Effect.of_thunk Browser.outline in
-                Effect.Many
-                  [ set_outline outline; Effect.of_thunk Browser.update_scroll_spy ]))
            ])
+    graph;
+  (* The outline is read from the page drawn: after each frame whose article
+     is not the one last outlined (in WebKit, the page's first frame after a
+     change of hash may still show the old one). *)
+  let outlined, set_outlined = Bonsai.state "" graph in
+  Bonsai.Edge.after_display
+    (let%arr outlined and set_outlined and set_outline in
+     let%bind.Effect page = Effect.of_thunk Browser.article_page in
+     match page with
+     | Some page when not (String.equal page outlined) ->
+       let%bind.Effect outline = Effect.of_thunk Browser.outline in
+       Effect.Many
+         [ set_outlined page
+         ; set_outline outline
+         ; Effect.of_thunk Browser.update_scroll_spy
+         ]
+     | _ -> Effect.Ignore)
     graph;
   Bonsai.Edge.on_change
     ~trigger:`After_display

@@ -23,6 +23,9 @@ val scroll_to_top : unit -> unit
 val scroll_to_anchor : string -> unit
 val focus : string -> unit
 
+(** The [data-page] of the article drawn, if any. *)
+val article_page : unit -> string option
+
 (** The article's headings marked [data-outline]: id, title, level. *)
 val outline : unit -> (string * string * int) list
 

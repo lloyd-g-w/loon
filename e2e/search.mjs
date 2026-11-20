@@ -39,6 +39,7 @@ await run(async (engine, url) => {
   await page.keyboard.press("/");
   await page.waitForSelector(".docs-search");
   await page.keyboard.type("cli");
+  await settle(page);
   await page.keyboard.press("ArrowDown");
   await page.keyboard.press("ArrowUp");
   await page.keyboard.press("ArrowUp");

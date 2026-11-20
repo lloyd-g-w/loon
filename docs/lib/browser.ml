@@ -49,6 +49,14 @@ let attr el name =
   Js.Opt.to_option (el##getAttribute (Js.string name)) |> Option.map ~f:Js.to_string
 ;;
 
+let article_page () =
+  if not (in_browser ())
+  then None
+  else
+    Js.Opt.to_option (Dom_html.document##querySelector (Js.string ".docs-article"))
+    |> Option.bind ~f:(fun el -> attr el "data-page")
+;;
+
 let outline () =
   query_all ".docs-article [data-outline]"
   |> List.filter_map ~f:(fun (el : Dom_html.element Js.t) ->

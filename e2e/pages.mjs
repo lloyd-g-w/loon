@@ -1,6 +1,6 @@
 // Every page in the sidebar, the guides, navigation and back/forward, the
 // outline and the pager, on a desktop.
-import { checkErrors, open, overflow, pages, ready, run, screenshot, text, waitForHash } from "./lib.mjs";
+import { checkErrors, open, overflow, pages, ready, run, screenshot, settle, text, waitForHash } from "./lib.mjs";
 
 await run(async (engine, url) => {
   const { browser, page, errors } = await open(engine);
@@ -24,6 +24,7 @@ await run(async (engine, url) => {
   for (const p of all) {
     await page.click(`.docs-nav-link[data-slug="${p.slug}"]`);
     await page.waitForSelector(`.docs-article[data-page="${p.slug}"]`);
+    await settle(page);
     const problems = [];
     const h1 = await page.$eval(".docs-article h1", (h) => h.textContent.trim()).catch(() => "");
     if (p.slug !== "introduction" && h1 !== p.title) problems.push(`h1 "${h1}"`);
@@ -63,6 +64,7 @@ await run(async (engine, url) => {
   console.log(`forward: ${await text(page, ".docs-article h1")}`);
   const top = await page.evaluate(() => window.scrollY);
   console.log(`scrolled to the top: ${top === 0}`);
+  await settle(page);
 
   // The outline: its links, and following one.
   const outline = await page.$$eval(".docs-toc-link", (ls) => ls.map((l) => l.textContent.trim()));

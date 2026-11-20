@@ -17,13 +17,13 @@ let%expect_test "score" =
     ~f:(fun (query, text) -> print_s [%message query text (Search.score ~query text : int option)]);
   [%expect
     {|
-    (btn Button ("Search.score ~query text" (67)))
+    (btn Button ("Search.score ~query text" (55)))
     (button Button ("Search.score ~query text" (229)))
     (but Button ("Search.score ~query text" (107)))
-    (ton Button ("Search.score ~query text" (31)))
+    (ton Button ("Search.score ~query text" (27)))
     (BUT button ("Search.score ~query text" (107)))
-    (tg "Toggle group" ("Search.score ~query text" (61)))
-    ("togg grp" "Toggle group" ("Search.score ~query text" (193)))
+    (tg "Toggle group" ("Search.score ~query text" (57)))
+    ("togg grp" "Toggle group" ("Search.score ~query text" (173)))
     (xyz Button ("Search.score ~query text" ()))
     ("" Anything ("Search.score ~query text" (-2)))
     (nottub Button ("Search.score ~query text" ()))

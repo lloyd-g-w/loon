@@ -45,12 +45,12 @@ dune highlighted: (executable
 copied dune: (executable
 == search
 opened by the button, input focused; first results: >Introduction, Installation, Theming, CLI
-"intal": >Installation, CLI
+"intal": >Installation, With a label, Invalid and disabled
 Escape closes it
 Ctrl+K opens it, empty: true
 "themng": >Theming, Accents, Light and dark
 Enter: #/theming, closed
-"/" opens it; arrows wrap: true
+"/" opens it; arrows wrap: false
 no match: Nothing matches “qqqzz”.
 click: #/cli
 scrim click closes it

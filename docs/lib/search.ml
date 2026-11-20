@@ -25,7 +25,9 @@ let score ~query text =
         1
         + (if is_word_start text ti then 8 else 0)
         + (if prev_match = ti - 1 then 5 else 0)
-        + if ti = 0 then 6 else 0
+        + (if ti = 0 then 6 else 0)
+        (* characters skipped since the last match: a loose match *)
+        - if prev_match >= 0 then ti - prev_match - 1 else 0
       in
       go (qi + 1) (ti + 1) ti (acc + bonus))
     else go qi (ti + 1) prev_match acc

@@ -1,5 +1,6 @@
 (** Fuzzy matching for the docs' search: the query's characters in order,
-    scored higher for matches at word starts and in runs. *)
+    scored higher for matches at word starts and in runs, lower for the
+    characters skipped between them. *)
 
 open! Core
 
