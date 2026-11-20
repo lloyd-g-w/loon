@@ -1,0 +1,7 @@
+_build/
+*.install
+/result
+/result-*
+/.direnv/
+*.swp
+*~

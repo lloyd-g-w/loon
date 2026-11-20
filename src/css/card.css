@@ -1,0 +1,48 @@
+.loon-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--loon-surface);
+  color: var(--loon-surface-foreground);
+  border: 1px solid var(--loon-border);
+  border-radius: var(--loon-radius-lg);
+  box-shadow: var(--loon-shadow-sm);
+}
+.loon-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 1.25rem 1.5rem 0;
+}
+.loon-card-header:has(.loon-card-action) {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.loon-card-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+.loon-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.loon-card-description {
+  color: var(--loon-muted-foreground);
+  font-size: 0.875rem;
+}
+.loon-card-content {
+  padding: 1.25rem 1.5rem;
+}
+.loon-card-header + .loon-card-footer {
+  margin-top: 1.25rem;
+}
+.loon-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1.5rem 1.25rem;
+}

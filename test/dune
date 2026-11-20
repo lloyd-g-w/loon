@@ -1,0 +1,23 @@
+; Expect tests under node (virtual_dom needs a JavaScript runtime): each
+; component's HTML, and the stateful ones driven by clicks and keys.
+
+(library
+ (name loon_test)
+ (enabled_if %{bin-available:node})
+ (preprocess
+  (pps ppx_jane js_of_ocaml-ppx bonsai.ppx_bonsai))
+ (inline_tests
+  (modes js)
+  (flags
+   (-source-tree-root .)))
+ (libraries
+  core
+  bonsai
+  bonsai_web
+  bonsai_web_test
+  bonsai_test
+  virtual_dom
+  virtual_dom.vdom_test_helpers
+  expect_test_helpers_core
+  js_of_ocaml
+  loon))

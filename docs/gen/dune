@@ -1,0 +1,6 @@
+; Reads the docs' pages (lib/pages/*_page.ml) and writes the modules that
+; list them (pages.ml) and hold their examples' source (example_sources.ml).
+
+(executable
+ (name gen)
+ (libraries core))

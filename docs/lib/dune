@@ -1,0 +1,28 @@
+; The documentation: each component's page (pages/*_page.ml) with its
+; examples, shown live next to their source.
+
+(include_subdirs unqualified)
+
+(library
+ (name loon_docs)
+ (preprocess
+  (pps ppx_jane js_of_ocaml-ppx bonsai.ppx_bonsai))
+ (libraries core bonsai bonsai_web virtual_dom js_of_ocaml loon))
+
+(rule
+ (target pages.ml)
+ (deps
+  (glob_files pages/*_page.ml))
+ (action
+  (with-stdout-to
+   pages.ml
+   (run ../gen/gen.exe pages %{deps}))))
+
+(rule
+ (target example_sources.ml)
+ (deps
+  (glob_files pages/*_page.ml))
+ (action
+  (with-stdout-to
+   example_sources.ml
+   (run ../gen/gen.exe sources %{deps}))))

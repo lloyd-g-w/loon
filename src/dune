@@ -1,0 +1,43 @@
+; loon: the components. Each component is one module (and its stylesheet in
+; css/), depending only on Import and the components it names, so that
+; `loon add` can copy it into a project unchanged.
+
+(library
+ (name loon)
+ (public_name loon)
+ (preprocess
+  (pps ppx_jane js_of_ocaml-ppx bonsai.ppx_bonsai))
+ (libraries
+  core
+  bonsai
+  bonsai_web
+  virtual_dom
+  virtual_dom.svg
+  js_of_ocaml))
+
+; The stylesheet: the theme, the base styles, then each component's.
+
+(rule
+ (target loon.css)
+ (deps
+  (glob_files css/*.css))
+ (action
+  (with-stdout-to
+   loon.css
+   (system "cat css/*.css"))))
+
+(rule
+ (target stylesheet_contents.ml)
+ (deps loon.css)
+ (action
+  (with-stdout-to
+   stylesheet_contents.ml
+   (progn
+    (echo "let css = {loon_css|")
+    (cat loon.css)
+    (echo "|loon_css}\n")))))
+
+(install
+ (section share)
+ (package loon)
+ (files loon.css))

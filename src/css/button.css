@@ -1,0 +1,115 @@
+.loon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  border-radius: var(--loon-radius-sm);
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  text-decoration: none;
+  user-select: none;
+  transition: background-color var(--loon-duration) var(--loon-ease),
+    color var(--loon-duration) var(--loon-ease),
+    border-color var(--loon-duration) var(--loon-ease),
+    box-shadow var(--loon-duration) var(--loon-ease),
+    transform 80ms var(--loon-ease);
+  outline: none;
+}
+.loon-button:focus-visible {
+  box-shadow: 0 0 0 2px var(--loon-background), 0 0 0 4px var(--loon-ring);
+}
+.loon-button:active:not(:disabled) {
+  transform: translateY(0.5px) scale(0.985);
+}
+.loon-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.loon-button .loon-icon {
+  font-size: 1rem;
+}
+
+.loon-button-sm {
+  height: 2rem;
+  padding: 0 0.75rem;
+  font-size: 0.8125rem;
+  gap: 0.375rem;
+}
+.loon-button-md {
+  height: 2.25rem;
+  padding: 0 1rem;
+}
+.loon-button-lg {
+  height: 2.75rem;
+  padding: 0 1.5rem;
+  font-size: 0.9375rem;
+  border-radius: var(--loon-radius);
+}
+.loon-button-icon {
+  height: 2.25rem;
+  width: 2.25rem;
+  padding: 0;
+}
+
+.loon-button-primary {
+  background: var(--loon-primary);
+  color: var(--loon-primary-foreground);
+  box-shadow: var(--loon-shadow-sm),
+    inset 0 1px 0 oklch(1 0 0 / 0.08);
+}
+.loon-button-primary:hover:not(:disabled) {
+  background: color-mix(in oklch, var(--loon-primary) 88%, var(--loon-background));
+}
+.loon-button-secondary {
+  background: var(--loon-secondary);
+  color: var(--loon-secondary-foreground);
+}
+.loon-button-secondary:hover:not(:disabled) {
+  background: color-mix(in oklch, var(--loon-secondary) 85%, var(--loon-foreground) 8%);
+}
+.loon-button-outline {
+  background: var(--loon-surface);
+  border-color: var(--loon-input);
+  box-shadow: var(--loon-shadow-sm);
+}
+.loon-button-outline:hover:not(:disabled),
+.loon-button-ghost:hover:not(:disabled) {
+  background: var(--loon-muted);
+}
+.loon-button-ghost {
+  background: transparent;
+}
+.loon-button-accent {
+  background: var(--loon-accent);
+  color: var(--loon-accent-foreground);
+  box-shadow: var(--loon-shadow-sm);
+}
+.loon-button-accent:hover:not(:disabled) {
+  background: color-mix(in oklch, var(--loon-accent) 88%, var(--loon-foreground));
+}
+.loon-button-danger {
+  background: var(--loon-danger);
+  color: var(--loon-danger-foreground);
+  box-shadow: var(--loon-shadow-sm);
+}
+.loon-button-danger:hover:not(:disabled) {
+  background: color-mix(in oklch, var(--loon-danger) 88%, var(--loon-foreground));
+}
+.loon-button-link {
+  background: transparent;
+  color: var(--loon-accent);
+  height: auto;
+  padding: 0;
+  text-underline-offset: 4px;
+}
+.loon-button-link:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.loon-spin {
+  animation: loon-spin 0.8s linear infinite;
+}

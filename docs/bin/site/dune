@@ -1,0 +1,24 @@
+(rule
+ (target main.bc.js)
+ (action
+  (copy ../main.bc.js main.bc.js)))
+
+(rule
+ (target loon.css)
+ (action
+  (copy ../../../src/loon.css loon.css)))
+
+(copy_files
+ (files ../{index.html,docs.css,icon.svg,temporal-polyfill.js,LICENSE-temporal-polyfill}))
+
+(install
+ (section share)
+ (package loon)
+ (files
+  (main.bc.js as docs/main.bc.js)
+  (loon.css as docs/loon.css)
+  (index.html as docs/index.html)
+  (docs.css as docs/docs.css)
+  (icon.svg as docs/icon.svg)
+  (temporal-polyfill.js as docs/temporal-polyfill.js)
+  (LICENSE-temporal-polyfill as docs/LICENSE-temporal-polyfill)))

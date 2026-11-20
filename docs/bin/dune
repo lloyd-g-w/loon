@@ -1,0 +1,13 @@
+; The documentation site, assembled under site/: main.bc.js, the page and
+; loon.css. The dev profile compiles separately (quick to relink); release
+; builds (`-p`, Nix) are whole-program.
+
+(executable
+ (name main)
+ (modes js)
+ (preprocess
+  (pps ppx_jane js_of_ocaml-ppx))
+ (js_of_ocaml
+  (flags
+   (:standard --opt 3)))
+ (libraries core bonsai_web loon loon_docs))

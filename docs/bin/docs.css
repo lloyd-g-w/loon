@@ -1,0 +1,5 @@
+html, body { margin: 0; }
+.docs-main { max-width: 56rem; margin: 0 auto; padding: 2rem 1rem; }
+.docs-row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+.docs-preview { padding: 2rem; border: 1px solid var(--loon-border); border-radius: var(--loon-radius-lg); }
+.docs-source { font-family: var(--loon-font-mono); font-size: 0.8125rem; padding: 1rem; background: var(--loon-muted); border-radius: var(--loon-radius); overflow-x: auto; }
