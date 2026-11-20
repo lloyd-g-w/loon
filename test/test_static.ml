@@ -350,3 +350,14 @@ let%expect_test "table" =
     </div>
     |}]
 ;;
+
+let%expect_test "theme root" =
+  Render.html (Theme.root [ Node.text "inherits both" ]);
+  Render.html (Theme.root ~accent:Iris [ Node.text "inherits the mode" ]);
+  Render.html (Theme.root ~mode:Dark ~accent:Teal [ Node.text "dark, teal" ]);
+  [%expect {|
+    <div class="loon"> inherits both </div>
+    <div data-loon-accent="iris" class="loon"> inherits the mode </div>
+    <div data-loon-accent="teal" class="loon loon-dark"> dark, teal </div>
+    |}]
+;;
