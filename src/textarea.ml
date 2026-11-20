@@ -1,20 +1,24 @@
 open! Import
 
 let view
-  ?attrs:extra
-  ?placeholder
-  ?(rows = 3)
-  ?(disabled = false)
-  ?(invalid = false)
-  ~value
-  ~on_input
-  ()
+      ?attrs:extra
+      ?placeholder
+      ?(rows = 3)
+      ?(disabled = false)
+      ?(invalid = false)
+      ~value
+      ~on_input
+      ()
   =
   Node.textarea
     ~attrs:
       (attrs ?attrs:extra [ "loon-textarea" ]
-       @ [ Attr.rows rows; Attr.value value; Attr.on_input (fun _ s -> on_input s) ]
-       @ Option.value_map placeholder ~default:[] ~f:(fun p -> [ Attr.placeholder p ])
+       @ [ Attr.rows rows
+         ; Attr.value value
+         ; Attr.on_input (fun _ s -> on_input s)
+         ]
+       @ Option.value_map placeholder ~default:[] ~f:(fun p ->
+         [ Attr.placeholder p ])
        @ (if disabled then [ Attr.disabled ] else [])
        @ if invalid then [ aria "invalid" "true" ] else [])
     []

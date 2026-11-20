@@ -21,6 +21,8 @@ let page = "switch"
 let default (local_ graph) =
   let%arr airplane = Switch.component ~label:"Airplane mode" graph in
   airplane.view
+;;
+
 (*$*)
 
 (*$ Settings list *)
@@ -41,7 +43,9 @@ let settings (local_ graph) =
       [ Node.div
           ~attrs:[ Attr.class_ "loon-field-text" ]
           [ Label.text ~for_:id label
-          ; Node.p ~attrs:[ Attr.class_ "loon-field-description" ] [ Node.text description ]
+          ; Node.p
+              ~attrs:[ Attr.class_ "loon-field-description" ]
+              [ Node.text description ]
           ]
       ; Switch.view
           ~attrs:[ Attr.id id ]
@@ -66,18 +70,41 @@ let settings (local_ graph) =
       ~default:false
       graph
   in
-  let%arr a and b in
+  let%arr a
+  and b in
   Card.container
-    ~attrs:[ Attr.style (Css_gen.create ~field:"width" ~value:"min(100%, 26rem)") ]
-    [ a; Node.hr ~attrs:[ Attr.style (Css_gen.create ~field:"margin" ~value:"0") ] (); b ]
+    ~attrs:
+      [ Attr.style (Css_gen.create ~field:"width" ~value:"min(100%, 26rem)") ]
+    [ a
+    ; Node.div
+        ~attrs:
+          [ Attr.style
+              (Css_gen.create
+                 ~field:"border-top"
+                 ~value:"1px solid var(--loon-border)")
+          ]
+        []
+    ; b
+    ]
+;;
+
 (*$*)
 
 (*$ Sizes and disabled *)
 let sizes =
   Node.div
     ~attrs:[ Attr.class_ "docs-row" ]
-    [ Switch.view ~size:Sm ~label:"Small" ~checked:true ~on_change:(fun _ -> Effect.Ignore) ()
-    ; Switch.view ~label:"Medium" ~checked:true ~on_change:(fun _ -> Effect.Ignore) ()
+    [ Switch.view
+        ~size:Sm
+        ~label:"Small"
+        ~checked:true
+        ~on_change:(fun _ -> Effect.Ignore)
+        ()
+    ; Switch.view
+        ~label:"Medium"
+        ~checked:true
+        ~on_change:(fun _ -> Effect.Ignore)
+        ()
     ; Switch.view
         ~disabled:true
         ~label:"Disabled"
@@ -85,6 +112,8 @@ let sizes =
         ~on_change:(fun _ -> Effect.Ignore)
         ()
     ]
+;;
+
 (*$*)
 
 let page =
@@ -104,7 +133,8 @@ let page =
           ; "disabled", "bool", "Greys it out and ignores clicks."
           ]
       ; Doc.p
-          "Use a switch for a setting that applies immediately; in a form that is submitted, use a checkbox."
+          "Use a switch for a setting that applies immediately; in a form that \
+           is submitted, use a checkbox."
       ]
     [ Doc.example ~page "Default" default
     ; Doc.example ~page "Settings list" settings

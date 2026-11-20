@@ -17,4 +17,8 @@ end
     items, whose [enabled] flags are given) that [key] moves to from
     [current]; arrows wrap. Both arrow axes move in a [Horizontal] group
     and a [Vertical] one alike, as WAI-ARIA radio groups do. *)
-val move : enabled:bool list -> current:int -> Dom_html.Keyboard_code.t -> int option
+val move
+  :  enabled:bool list
+  -> current:int
+  -> Dom_html.Keyboard_code.t
+  -> int option

@@ -20,10 +20,21 @@ module Size = struct
 end
 
 let classes ?(variant = Variant.Ghost) ?(size = Size.Md) () =
-  [ "loon-toggle"; "loon-toggle-" ^ Variant.name variant; "loon-toggle-" ^ Size.name size ]
+  [ "loon-toggle"
+  ; "loon-toggle-" ^ Variant.name variant
+  ; "loon-toggle-" ^ Size.name size
+  ]
 ;;
 
-let view ?attrs:extra ?variant ?size ?(disabled = false) ~pressed ~on_change children =
+let view
+      ?attrs:extra
+      ?variant
+      ?size
+      ?(disabled = false)
+      ~pressed
+      ~on_change
+      children
+  =
   Node.button
     ~attrs:
       (attrs ?attrs:extra (classes ?variant ?size ())
@@ -38,7 +49,15 @@ let view ?attrs:extra ?variant ?size ?(disabled = false) ~pressed ~on_change chi
     children
 ;;
 
-let component ?attrs ?variant ?size ?disabled ?(default = false) children (local_ graph) =
+let component
+      ?attrs
+      ?variant
+      ?size
+      ?disabled
+      ?(default = false)
+      children
+      (local_ graph)
+  =
   Control.make
     ~equal:Bool.equal
     default

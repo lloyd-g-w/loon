@@ -29,4 +29,9 @@ val view
   -> Node.t
 
 (** A [<fieldset>] with a legend, grouping fields. *)
-val set : ?attrs:Attr.t list -> ?description:string -> legend:string -> Node.t list -> Node.t
+val set
+  :  ?attrs:Attr.t list
+  -> ?description:string
+  -> legend:string
+  -> Node.t list
+  -> Node.t

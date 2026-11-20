@@ -19,8 +19,12 @@ let page = "input"
 
 (*$ Default *)
 let default (local_ graph) =
-  let%arr email = Input.component ~type_:Email ~placeholder:"you@example.com" graph in
+  let%arr email =
+    Input.component ~type_:Email ~placeholder:"you@example.com" graph
+  in
   narrow [ email.view ]
+;;
+
 (*$*)
 
 (*$ With a label
@@ -35,6 +39,8 @@ let with_label (local_ graph) =
         ~description:"As it should appear on your profile."
         (fun attrs -> Input.view ~attrs ~value:name.value ~on_input:name.set ())
     ]
+;;
+
 (*$*)
 
 (*$ Icons and addons *)
@@ -54,15 +60,21 @@ let addons (local_ graph) =
       ~placeholder:"your-site"
       graph
   in
-  let%arr search and site in
+  let%arr search
+  and site in
   narrow [ search.view; site.view ]
+;;
+
 (*$*)
 
 (*$ Password with a show button *)
 let password (local_ graph) =
   let shown, set_shown = Bonsai.state false graph in
   let value, set_value = Bonsai.state "hunter2" graph in
-  let%arr shown and set_shown and value and set_value in
+  let%arr shown
+  and set_shown
+  and value
+  and set_value in
   narrow
     [ Input.view
         ~attrs:[ Attr.create "aria-label" "Password" ]
@@ -78,6 +90,8 @@ let password (local_ graph) =
         ~on_input:set_value
         ()
     ]
+;;
+
 (*$*)
 
 (*$ Invalid and disabled *)
@@ -95,17 +109,23 @@ let states =
         ~on_input:(fun _ -> Effect.Ignore)
         ()
     ]
+;;
+
 (*$*)
 
 (*$ Textarea *)
 let textarea (local_ graph) =
-  let%arr bio = Textarea.component ~placeholder:"Tell us a little about yourself" graph in
+  let%arr bio =
+    Textarea.component ~placeholder:"Tell us a little about yourself" graph
+  in
   narrow
     [ bio.view
     ; Node.p
         ~attrs:[ Attr.class_ "loon-field-description" ]
         [ Node.textf "%d / 280 characters" (String.length bio.value) ]
     ]
+;;
+
 (*$*)
 
 let page =
@@ -113,23 +133,36 @@ let page =
     ~slug:page
     ~title:"Input"
     ~group:Forms
-    ~description:"A text field, with optional icons and addons; and Textarea, its multi-line sibling."
+    ~description:
+      "A text field, with optional icons and addons; and Textarea, its \
+       multi-line sibling."
     ~usage:{|Input.view ~type_:Email ~value ~on_input:set_value ()|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "type_", "Input.Type.t", "Text (default), Email, Password, Search, Number, Url or Tel."
+          [ ( "type_"
+            , "Input.Type.t"
+            , "Text (default), Email, Password, Search, Number, Url or Tel." )
           ; "value", "string", "The text shown."
           ; "on_input", "string -> unit Effect.t", "Gets every edit."
           ; "on_enter", "unit Effect.t", "Runs when Enter is pressed."
           ; "leading", "Icon.t", "An icon inside the field, before the text."
-          ; "trailing", "Vdom.Node.t", "An addon inside the field, after the text: a hint, a unit, a small button."
-          ; "invalid", "bool", "Sets aria-invalid and draws it in the danger colour (Field does this for you)."
+          ; ( "trailing"
+            , "Vdom.Node.t"
+            , "An addon inside the field, after the text: a hint, a unit, a \
+               small button." )
+          ; ( "invalid"
+            , "bool"
+            , "Sets aria-invalid and draws it in the danger colour (Field does \
+               this for you)." )
           ; "disabled", "bool", "Greys it out."
-          ; "attrs", "Vdom.Attr.t list", "Extra attributes for the <input>: id, name, autocomplete…"
+          ; ( "attrs"
+            , "Vdom.Attr.t list"
+            , "Extra attributes for the <input>: id, name, autocomplete…" )
           ]
       ; Doc.p
-          "Input.component keeps the text in Bonsai state and returns a Control.t: its value, a set effect and its view."
+          "Input.component keeps the text in Bonsai state and returns a \
+           Control.t: its value, a set effect and its view."
       ]
     [ Doc.example ~page "Default" default
     ; Doc.example ~page "With a label" with_label

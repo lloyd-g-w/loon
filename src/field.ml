@@ -8,14 +8,14 @@ module Orientation = struct
 end
 
 let view
-  ?attrs:extra
-  ?(orientation = Orientation.Vertical)
-  ?description
-  ?error
-  ?(required = false)
-  ~id
-  ~label
-  control
+      ?attrs:extra
+      ?(orientation = Orientation.Vertical)
+      ?description
+      ?error
+      ?(required = false)
+      ~id
+      ~label
+      control
   =
   let description_id = id ^ "-description" in
   let error_id = id ^ "-error" in
@@ -44,7 +44,11 @@ let view
   let error =
     Option.map error ~f:(fun e ->
       Node.p
-        ~attrs:[ Attr.class_ "loon-field-error"; Attr.id error_id; Attr.role "alert" ]
+        ~attrs:
+          [ Attr.class_ "loon-field-error"
+          ; Attr.id error_id
+          ; Attr.role "alert"
+          ]
         [ Icon.view Alert_circle; Node.text e ])
   in
   let orientation_class =
@@ -57,7 +61,8 @@ let view
       (attrs ?attrs:extra [ "loon-field"; orientation_class ]
        @ if Option.is_some error then [ data "invalid" "true" ] else [])
     (match orientation with
-     | Vertical -> List.filter_opt [ Some label; Some control; description; error ]
+     | Vertical ->
+       List.filter_opt [ Some label; Some control; description; error ]
      | Horizontal ->
        [ control
        ; Node.div
@@ -69,8 +74,13 @@ let view
 let set ?attrs:extra ?description ~legend children =
   Node.fieldset
     ~attrs:(attrs ?attrs:extra [ "loon-fieldset" ])
-    (Node.legend ~attrs:[ Attr.class_ "loon-fieldset-legend" ] [ Node.text legend ]
+    (Node.legend
+       ~attrs:[ Attr.class_ "loon-fieldset-legend" ]
+       [ Node.text legend ]
      :: (Option.value_map description ~default:[] ~f:(fun d ->
-           [ Node.p ~attrs:[ Attr.class_ "loon-field-description" ] [ Node.text d ] ])
+           [ Node.p
+               ~attrs:[ Attr.class_ "loon-field-description" ]
+               [ Node.text d ]
+           ])
          @ children))
 ;;

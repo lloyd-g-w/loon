@@ -6,7 +6,8 @@ let%expect_test "each state" =
   List.iter Checkbox.State.all ~f:(fun state ->
     Render.html
       (Checkbox.view ~state ~on_change:(fun _ -> Bonsai_web.Effect.Ignore) ()));
-  [%expect {|
+  [%expect
+    {|
     <button type="button"
             role="checkbox"
             aria-checked="true"
@@ -43,7 +44,8 @@ let%expect_test "indeterminate becomes checked" =
         (Checkbox.view
            ~state:Indeterminate
            ~on_change:(fun b ->
-             Bonsai_web.Effect.of_thunk (fun () -> print_s [%message (b : bool)]))
+             Bonsai_web.Effect.of_thunk (fun () ->
+               print_s [%message (b : bool)]))
            ()))
   in
   Handle.click_on handle ~get_vdom:Fn.id ~selector:"button";
@@ -52,10 +54,13 @@ let%expect_test "indeterminate becomes checked" =
 
 let%expect_test "clicking toggles it; disabled ones have no handler" =
   let handle =
-    Control_render.handle [%sexp_of: bool] (Checkbox.component ~label:"Remember me")
+    Control_render.handle
+      [%sexp_of: bool]
+      (Checkbox.component ~label:"Remember me")
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <span> value: false </span>
       <label data-disabled="false" class="loon-checkbox-label">
@@ -71,7 +76,8 @@ let%expect_test "clicking toggles it; disabled ones have no handler" =
     |}];
   Handle.click_on handle ~get_vdom:Fn.id ~selector:"button";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div>
     -|  <span> value: false </span>
     +|  <span> value: true </span>
@@ -98,7 +104,8 @@ let%expect_test "clicking toggles it; disabled ones have no handler" =
     |}];
   Handle.click_on handle ~get_vdom:Fn.id ~selector:"button";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div>
     -|  <span> value: true </span>
     +|  <span> value: false </span>
@@ -130,7 +137,8 @@ let%expect_test "clicking toggles it; disabled ones have no handler" =
        ~state:Checked
        ~on_change:(fun _ -> Bonsai_web.Effect.Ignore)
        ());
-  [%expect {|
+  [%expect
+    {|
     <label data-disabled="true" class="loon-checkbox-label">
       <button type="button"
               role="checkbox"

@@ -14,7 +14,8 @@ let%expect_test "variants and sizes" =
            ~pressed:false
            ~on_change:(fun _ -> Bonsai_web.Effect.Ignore)
            [ Node.text "B" ])));
-  [%expect {|
+  [%expect
+    {|
     <button type="button"
             aria-pressed="false"
             data-state="off"
@@ -52,10 +53,13 @@ let%expect_test "clicking presses and releases it" =
   let handle =
     Control_render.handle
       [%sexp_of: bool]
-      (Toggle.component ~attrs:[ Attr.create "aria-label" "Bold" ] [ Icon.view Pencil ])
+      (Toggle.component
+         ~attrs:[ Attr.create "aria-label" "Bold" ]
+         [ Icon.view Pencil ])
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <span> value: false </span>
       <button aria-label="Bold"
@@ -73,7 +77,8 @@ let%expect_test "clicking presses and releases it" =
     |}];
   Handle.click_on handle ~get_vdom:Fn.id ~selector:"button";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div>
     -|  <span> value: false </span>
     +|  <span> value: true </span>
@@ -109,7 +114,8 @@ let%expect_test "single: one at most, pressing again releases" =
       (Toggle_group.single_component ~variant:Outline ~default:"left" items)
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <span> value: (left) </span>
       <div role="radiogroup" class="loon-toggle-group">
@@ -158,7 +164,8 @@ let%expect_test "single: one at most, pressing again releases" =
     |}];
   Handle.click_on handle ~get_vdom:Fn.id ~selector:"[id$=toggle-center]";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div>
     -|  <span> value: (left) </span>
     +|  <span> value: (center) </span>
@@ -203,7 +210,8 @@ let%expect_test "single: one at most, pressing again releases" =
     |}];
   Handle.click_on handle ~get_vdom:Fn.id ~selector:"[id$=toggle-center]";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div>
     -|  <span> value: (center) </span>
     +|  <span> value: () </span>
@@ -254,7 +262,8 @@ let%expect_test "single and required: pressing the pressed one does nothing" =
   in
   Handle.click_on handle ~get_vdom:Fn.id ~selector:"[id$=toggle-left]";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <span> value: (left) </span>
       <div role="radiogroup" class="loon-toggle-group">
@@ -312,7 +321,8 @@ let%expect_test "multiple: any number; arrow keys move focus only" =
   Handle.click_on handle ~get_vdom:Fn.id ~selector:"[id$=toggle-left]";
   Handle.click_on handle ~get_vdom:Fn.id ~selector:"[id$=toggle-right]";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <span> value: (left right) </span>
       <div role="group" class="loon-toggle-group">
@@ -355,7 +365,11 @@ let%expect_test "multiple: any number; arrow keys move focus only" =
       </div>
     </div>
     |}];
-  Handle.keydown handle ~get_vdom:Fn.id ~selector:"[id$=toggle-left]" ~key:ArrowLeft;
+  Handle.keydown
+    handle
+    ~get_vdom:Fn.id
+    ~selector:"[id$=toggle-left]"
+    ~key:ArrowLeft;
   Handle.show_diff handle;
   [%expect {| ("default prevented" (key ArrowLeft)) |}]
 ;;

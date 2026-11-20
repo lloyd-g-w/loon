@@ -14,6 +14,7 @@ let narrow nodes =
       ]
     nodes
 ;;
+
 let page = "native_select"
 
 (*$ Default *)
@@ -28,7 +29,8 @@ let timezones =
 
 let default (local_ graph) =
   let timezone, set_timezone = Bonsai.state "" graph in
-  let%arr timezone and set_timezone in
+  let%arr timezone
+  and set_timezone in
   narrow
     [ Field.view
         ~id:"select-tz"
@@ -42,6 +44,8 @@ let default (local_ graph) =
              ~on_change:set_timezone
              timezones)
     ]
+;;
+
 (*$*)
 
 (*$ Invalid and disabled *)
@@ -54,8 +58,14 @@ let states =
         ~value:""
         ~on_change:(fun _ -> Effect.Ignore)
         items
-    ; Native_select.view ~disabled:true ~value:"a" ~on_change:(fun _ -> Effect.Ignore) items
+    ; Native_select.view
+        ~disabled:true
+        ~value:"a"
+        ~on_change:(fun _ -> Effect.Ignore)
+        items
     ]
+;;
+
 (*$*)
 
 let page =
@@ -63,7 +73,9 @@ let page =
     ~slug:page
     ~title:"Native select"
     ~group:Forms
-    ~description:"The browser's own <select>, styled to match. On phones it opens the system picker."
+    ~description:
+      "The browser's own <select>, styled to match. On phones it opens the \
+       system picker."
     ~usage:
       {|Native_select.view ~value ~on_change:set_value
   [ Native_select.Item.create ~value:"au" "Australia"
@@ -73,11 +85,17 @@ let page =
       [ Doc.h2 "Arguments"
       ; Doc.props
           [ "value", "string", "The chosen item's value."
-          ; "on_change", "string -> unit Effect.t", "Gets the newly chosen value."
-          ; "placeholder", "string", "Shown, and not choosable, while value matches no item."
+          ; ( "on_change"
+            , "string -> unit Effect.t"
+            , "Gets the newly chosen value." )
+          ; ( "placeholder"
+            , "string"
+            , "Shown, and not choosable, while value matches no item." )
           ; "invalid", "bool", "Sets aria-invalid and the danger colour."
           ; "disabled", "bool", "Greys it out."
           ]
       ]
-    [ Doc.example ~page "Default" default; Doc.static ~page "Invalid and disabled" states ]
+    [ Doc.example ~page "Default" default
+    ; Doc.static ~page "Invalid and disabled" states
+    ]
 ;;

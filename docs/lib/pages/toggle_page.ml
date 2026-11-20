@@ -14,6 +14,7 @@ let narrow nodes =
       ]
     nodes
 ;;
+
 let page = "toggle"
 
 (*$ Default *)
@@ -25,14 +26,21 @@ let default (local_ graph) =
       graph
   in
   bold.view
+;;
+
 (*$*)
 
 (*$ Outline, with text *)
 let outline (local_ graph) =
   let%arr starred =
-    Toggle.component ~variant:Outline [ Icon.view Bell; Node.text "Watch" ] graph
+    Toggle.component
+      ~variant:Outline
+      [ Icon.view Bell; Node.text "Watch" ]
+      graph
   in
   starred.view
+;;
+
 (*$*)
 
 (*$ Toggle group: one at a time
@@ -51,6 +59,8 @@ let single (local_ graph) =
       graph
   in
   view.view
+;;
+
 (*$*)
 
 (*$ Toggle group: any number *)
@@ -58,14 +68,22 @@ let multiple (local_ graph) =
   let%arr format =
     Toggle_group.multiple_component
       ~default:(String.Set.singleton "bold")
-      [ Toggle_group.Item.create ~label:"Bold" ~value:"bold" [ Node.strong [ Node.text "B" ] ]
-      ; Toggle_group.Item.create ~label:"Italic" ~value:"italic" [ Node.em [ Node.text "I" ] ]
+      [ Toggle_group.Item.create
+          ~label:"Bold"
+          ~value:"bold"
+          [ Node.strong [ Node.text "B" ] ]
+      ; Toggle_group.Item.create
+          ~label:"Italic"
+          ~value:"italic"
+          [ Node.em [ Node.text "I" ] ]
       ; Toggle_group.Item.create
           ~label:"Underline"
           ~value:"underline"
           [ Node.span
               ~attrs:
-                [ Attr.style (Css_gen.create ~field:"text-decoration" ~value:"underline") ]
+                [ Attr.style
+                    (Css_gen.create ~field:"text-decoration" ~value:"underline")
+                ]
               [ Node.text "U" ]
           ]
       ]
@@ -82,6 +100,8 @@ let multiple (local_ graph) =
              | styles -> String.concat ~sep:" + " styles)
         ]
     ]
+;;
+
 (*$*)
 
 (*$ Sizes *)
@@ -95,6 +115,8 @@ let sizes =
          ~pressed:true
          ~on_change:(fun _ -> Effect.Ignore)
          [ Icon.view Sun; Node.text (Toggle.Size.name size) ]))
+;;
+
 (*$*)
 
 let page =
@@ -102,7 +124,8 @@ let page =
     ~slug:page
     ~title:"Toggle"
     ~group:Forms
-    ~description:"A button that stays pressed; and groups of them, one or many at a time."
+    ~description:
+      "A button that stays pressed; and groups of them, one or many at a time."
     ~usage:{|Toggle.view ~pressed ~on_change:set_pressed [ Icon.view Bell ]|}
     ~body:
       [ Doc.h2 "Arguments"
@@ -114,7 +137,11 @@ let page =
           ]
       ; Doc.h2 "Toggle groups"
       ; Doc.p
-          "Toggle_group.single has one item pressed at most (required: exactly one) and is announced as a radio group; Toggle_group.multiple any number. Tab reaches the group once; the arrow keys, Home and End move between its items, and Space or Enter presses one. Outline groups join into a single segmented control."
+          "Toggle_group.single has one item pressed at most (required: exactly \
+           one) and is announced as a radio group; Toggle_group.multiple any \
+           number. Tab reaches the group once; the arrow keys, Home and End \
+           move between its items, and Space or Enter presses one. Outline \
+           groups join into a single segmented control."
       ]
     [ Doc.example ~page "Default" default
     ; Doc.example ~page "Outline, with text" outline

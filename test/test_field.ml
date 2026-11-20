@@ -8,7 +8,8 @@ let ignore_input (_ : string) = Bonsai_web.Effect.Ignore
 let%expect_test "a label" =
   Render.html (Label.text ~for_:"name" "Name");
   Render.html (Label.text ~required:true "Email");
-  [%expect {|
+  [%expect
+    {|
     <label for="name" class="loon-label"> Name </label>
     <label class="loon-label">
       Email
@@ -25,8 +26,10 @@ let%expect_test "a field wires its label, description and error to the control" 
        ~description:"We'll never share it."
        ~error:"Enter an email address."
        ~required:true
-       (fun attrs -> Input.view ~attrs ~type_:Email ~value:"" ~on_input:ignore_input ()));
-  [%expect {|
+       (fun attrs ->
+          Input.view ~attrs ~type_:Email ~value:"" ~on_input:ignore_input ()));
+  [%expect
+    {|
     <div data-invalid="true" class="loon-field loon-field-vertical">
       <label for="email" class="loon-label">
         Email
@@ -56,7 +59,8 @@ let%expect_test "a field with only a label" =
   Render.html
     (Field.view ~id:"name" ~label:"Name" (fun attrs ->
        Input.view ~attrs ~value:"" ~on_input:ignore_input ()));
-  [%expect {|
+  [%expect
+    {|
     <div class="loon-field loon-field-vertical">
       <label for="name" class="loon-label"> Name </label>
       <input id="name" type="text" class="loon-input" #value="" @on_input/>
@@ -77,7 +81,8 @@ let%expect_test "a horizontal field (control first)" =
             ~state:Unchecked
             ~on_change:(fun _ -> Bonsai_web.Effect.Ignore)
             ()));
-  [%expect {|
+  [%expect
+    {|
     <div class="loon-field loon-field-horizontal">
       <button id="terms"
               aria-describedby="terms-description"
@@ -101,7 +106,8 @@ let%expect_test "a fieldset" =
        ~legend:"Notifications"
        ~description:"How we reach you."
        [ Node.text "fields" ]);
-  [%expect {|
+  [%expect
+    {|
     <fieldset class="loon-fieldset">
       <legend class="loon-fieldset-legend"> Notifications </legend>
       <p class="loon-field-description"> How we reach you. </p>

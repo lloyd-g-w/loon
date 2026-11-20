@@ -19,8 +19,12 @@ let page = "checkbox"
 
 (*$ Default *)
 let default (local_ graph) =
-  let%arr terms = Checkbox.component ~label:"Accept terms and conditions" graph in
+  let%arr terms =
+    Checkbox.component ~label:"Accept terms and conditions" graph
+  in
   terms.view
+;;
+
 (*$*)
 
 (*$ With a description *)
@@ -30,13 +34,16 @@ let with_description (local_ graph) =
     ~orientation:Horizontal
     ~id:"checkbox-marketing"
     ~label:"Product updates"
-    ~description:"A short email when we ship something new. No more than once a month."
+    ~description:
+      "A short email when we ship something new. No more than once a month."
     (fun attrs ->
        Checkbox.view
          ~attrs
          ~state:(Checkbox.State.of_bool marketing.value)
          ~on_change:marketing.set
          ())
+;;
+
 (*$*)
 
 (*$ Select all
@@ -46,7 +53,8 @@ let select_all (local_ graph) =
   let chosen, set_chosen =
     Bonsai.state (String.Set.of_list [ "Mentions"; "Replies" ]) graph
   in
-  let%arr chosen and set_chosen in
+  let%arr chosen
+  and set_chosen in
   let state : Checkbox.State.t =
     if Set.length chosen = List.length all
     then Checked
@@ -60,7 +68,8 @@ let select_all (local_ graph) =
         ~label:"All notifications"
         ~state
         ~on_change:(fun all_on ->
-          set_chosen (if all_on then String.Set.of_list all else String.Set.empty))
+          set_chosen
+            (if all_on then String.Set.of_list all else String.Set.empty))
         ()
     ; Node.div
         ~attrs:
@@ -72,9 +81,12 @@ let select_all (local_ graph) =
              ~label:item
              ~state:(Checkbox.State.of_bool (Set.mem chosen item))
              ~on_change:(fun on ->
-               set_chosen (if on then Set.add chosen item else Set.remove chosen item))
+               set_chosen
+                 (if on then Set.add chosen item else Set.remove chosen item))
              ()))
     ]
+;;
+
 (*$*)
 
 (*$ Disabled *)
@@ -94,6 +106,8 @@ let disabled =
         ~on_change:(fun _ -> Effect.Ignore)
         ()
     ]
+;;
+
 (*$*)
 
 let page =
@@ -101,13 +115,17 @@ let page =
     ~slug:page
     ~title:"Checkbox"
     ~group:Forms
-    ~description:"Turns an option on or off; or shows that some of a group are on."
-    ~usage:{|Checkbox.view ~label:"Remember me" ~state:(Checkbox.State.of_bool remember) ~on_change:set_remember ()|}
+    ~description:
+      "Turns an option on or off; or shows that some of a group are on."
+    ~usage:
+      {|Checkbox.view ~label:"Remember me" ~state:(Checkbox.State.of_bool remember) ~on_change:set_remember ()|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
           [ "state", "Checkbox.State.t", "Checked, Unchecked or Indeterminate."
-          ; "on_change", "bool -> unit Effect.t", "Gets the new value: true from Unchecked and Indeterminate."
+          ; ( "on_change"
+            , "bool -> unit Effect.t"
+            , "Gets the new value: true from Unchecked and Indeterminate." )
           ; "label", "string", "Text beside the box, which toggles it too."
           ; "disabled", "bool", "Greys it out and ignores clicks."
           ]

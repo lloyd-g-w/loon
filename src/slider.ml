@@ -2,7 +2,9 @@ open! Import
 
 let default_format ~step value =
   let decimals =
-    let rec count step d = if d >= 6 || Float.is_integer step then d else count (step *. 10.) (d + 1) in
+    let rec count step d =
+      if d >= 6 || Float.is_integer step then d else count (step *. 10.) (d + 1)
+    in
     count step 0
   in
   Float.to_string_hum ~decimals ~strip_zero:false value
@@ -15,20 +17,22 @@ let number_string v =
 ;;
 
 let view
-  ?attrs:extra
-  ?(min = 0.)
-  ?(max = 100.)
-  ?(step = 1.)
-  ?(disabled = false)
-  ?(show_value = false)
-  ?format
-  ~value
-  ~on_change
-  ()
+      ?attrs:extra
+      ?(min = 0.)
+      ?(max = 100.)
+      ?(step = 1.)
+      ?(disabled = false)
+      ?(show_value = false)
+      ?format
+      ~value
+      ~on_change
+      ()
   =
   let format = Option.value format ~default:(default_format ~step) in
   let value = Float.clamp_exn value ~min ~max:(Float.max min max) in
-  let fill = if Float.( <= ) max min then 0. else (value -. min) /. (max -. min) *. 100. in
+  let fill =
+    if Float.( <= ) max min then 0. else (value -. min) /. (max -. min) *. 100.
+  in
   let input =
     Node.input
       ~attrs:
@@ -50,33 +54,46 @@ let view
   Node.div
     ~attrs:
       [ Attr.class_ "loon-slider"
-      ; Attr.style
-          (Css_gen.create ~field:"--loon-slider-fill" ~value:(sprintf "%.3f%%" fill))
+      ; Attr.css_var ~name:"loon-slider-fill" (sprintf "%.2f%%" fill)
       ; data "disabled" (Bool.to_string disabled)
       ]
     (input
      ::
      (if show_value
-      then [ Node.output ~attrs:[ Attr.class_ "loon-slider-value" ] [ Node.text (format value) ] ]
+      then
+        [ Node.output
+            ~attrs:[ Attr.class_ "loon-slider-value" ]
+            [ Node.text (format value) ]
+        ]
       else []))
 ;;
 
 let component
-  ?attrs
-  ?min
-  ?max
-  ?step
-  ?disabled
-  ?show_value
-  ?format
-  ?default
-  (local_ graph)
+      ?attrs
+      ?min
+      ?max
+      ?step
+      ?disabled
+      ?show_value
+      ?format
+      ?default
+      (local_ graph)
   =
   let default = Option.value default ~default:(Option.value min ~default:0.) in
   Control.make
     ~equal:Float.equal
     default
     ~view:(fun value set ->
-      view ?attrs ?min ?max ?step ?disabled ?show_value ?format ~value ~on_change:set ())
+      view
+        ?attrs
+        ?min
+        ?max
+        ?step
+        ?disabled
+        ?show_value
+        ?format
+        ~value
+        ~on_change:set
+        ())
     graph
 ;;

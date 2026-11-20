@@ -14,6 +14,7 @@ let narrow nodes =
       ]
     nodes
 ;;
+
 let page = "radio_group"
 
 (*$ Default *)
@@ -28,6 +29,8 @@ let default (local_ graph) =
       graph
   in
   density.view
+;;
+
 (*$*)
 
 (*$ With descriptions *)
@@ -57,6 +60,8 @@ let plans (local_ graph) =
         ~attrs:[ Attr.class_ "loon-field-description" ]
         [ Node.textf "Chosen: %s" (Option.value plan.value ~default:"nothing") ]
     ]
+;;
+
 (*$*)
 
 (*$ Horizontal *)
@@ -70,6 +75,8 @@ let horizontal (local_ graph) =
       graph
   in
   size.view
+;;
+
 (*$*)
 
 let page =
@@ -86,15 +93,28 @@ let page =
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "value", "string option", "The chosen item's value; None before one is chosen."
-          ; "on_change", "string -> unit Effect.t", "Gets the newly chosen value."
-          ; "name", "string", "Scopes the elements' ids: one per group on a page (the component makes its own)."
-          ; "orientation", "Roving.Orientation.t", "Vertical (default) or Horizontal."
-          ; "disabled", "bool", "Disables every item; Item.create ~disabled disables one."
+          [ ( "value"
+            , "string option"
+            , "The chosen item's value; None before one is chosen." )
+          ; ( "on_change"
+            , "string -> unit Effect.t"
+            , "Gets the newly chosen value." )
+          ; ( "name"
+            , "string"
+            , "Scopes the elements' ids: one per group on a page (the \
+               component makes its own)." )
+          ; ( "orientation"
+            , "Roving.Orientation.t"
+            , "Vertical (default) or Horizontal." )
+          ; ( "disabled"
+            , "bool"
+            , "Disables every item; Item.create ~disabled disables one." )
           ]
       ; Doc.h2 "Keyboard"
       ; Doc.p
-          "Tab moves to the chosen option. The arrow keys choose the next or previous option, wrapping and skipping disabled ones; Home and End the first and last."
+          "Tab moves to the chosen option. The arrow keys choose the next or \
+           previous option, wrapping and skipping disabled ones; Home and End \
+           the first and last."
       ]
     [ Doc.example ~page "Default" default
     ; Doc.example ~page "With descriptions" plans

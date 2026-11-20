@@ -9,7 +9,14 @@ module Size = struct
   let name t = String.lowercase (Sexp.to_string (sexp_of_t t))
 end
 
-let view ?attrs:extra ?(size = Size.Md) ?(disabled = false) ?label ~checked ~on_change ()
+let view
+      ?attrs:extra
+      ?(size = Size.Md)
+      ?(disabled = false)
+      ?label
+      ~checked
+      ~on_change
+      ()
   =
   let switch =
     Node.button
@@ -31,7 +38,9 @@ let view ?attrs:extra ?(size = Size.Md) ?(disabled = false) ?label ~checked ~on_
   | Some label ->
     Node.label
       ~attrs:
-        [ Attr.class_ "loon-switch-label"; data "disabled" (Bool.to_string disabled) ]
+        [ Attr.class_ "loon-switch-label"
+        ; data "disabled" (Bool.to_string disabled)
+        ]
       [ switch; Node.span [ Node.text label ] ]
 ;;
 

@@ -4,6 +4,7 @@ open Loon
 open! Bonsai.Let_syntax
 module Node = Vdom.Node
 module Attr = Vdom.Attr
+
 let page = "form"
 
 (*$ Sign-up form
@@ -21,7 +22,9 @@ module Signup = struct
 
   let errors t =
     List.filter_opt
-      [ (if String.is_empty (String.strip t.name) then Some ("name", "Tell us your name.") else None)
+      [ (if String.is_empty (String.strip t.name)
+         then Some ("name", "Tell us your name.")
+         else None)
       ; (match String.lsplit2 t.email ~on:'@' with
          | Some (user, domain)
            when (not (String.is_empty user)) && String.mem domain '.' -> None
@@ -29,9 +32,13 @@ module Signup = struct
       ; (if String.length t.password < 8
          then Some ("password", "Use at least 8 characters.")
          else None)
-      ; (if String.is_empty t.country then Some ("country", "Choose a country.") else None)
+      ; (if String.is_empty t.country
+         then Some ("country", "Choose a country.")
+         else None)
       ; (if Option.is_none t.plan then Some ("plan", "Choose a plan.") else None)
-      ; (if t.terms then None else Some ("terms", "You need to accept the terms."))
+      ; (if t.terms
+         then None
+         else Some ("terms", "You need to accept the terms."))
       ]
   ;;
 
@@ -63,15 +70,30 @@ let signup (local_ graph) =
   let country, set_country = Bonsai.state "au" graph in
   let plan, set_plan = Bonsai.state (Some "hobby") graph in
   let newsletter =
-    Switch.component ~label:"Email me the occasional product update" ~default:true graph
+    Switch.component
+      ~label:"Email me the occasional product update"
+      ~default:true
+      graph
   in
   let terms, set_terms = Bonsai.state false graph in
   let show_password = Toggle.component [ Node.text "Show" ] graph in
   let attempted, set_attempted = Bonsai.state false graph in
   let submitted, set_submitted = Bonsai.state None graph in
-  let%arr name and email and password and country and set_country and plan
-  and set_plan and newsletter and terms and set_terms and show_password
-  and attempted and set_attempted and submitted and set_submitted in
+  let%arr name
+  and email
+  and password
+  and country
+  and set_country
+  and plan
+  and set_plan
+  and newsletter
+  and terms
+  and set_terms
+  and show_password
+  and attempted
+  and set_attempted
+  and submitted
+  and set_submitted in
   let signup =
     { Signup.name = name.value
     ; email = email.value
@@ -96,11 +118,16 @@ let signup (local_ graph) =
   match submitted with
   | Some address ->
     Card.view
-      ~attrs:[ Attr.style (Css_gen.create ~field:"width" ~value:"min(100%, 28rem)") ]
+      ~attrs:
+        [ Attr.style (Css_gen.create ~field:"width" ~value:"min(100%, 28rem)") ]
       ~title:"Check your inbox"
       ~description:(sprintf "We sent a link to %s to confirm it's you." address)
       ~footer:
-        [ Button.view ~variant:Outline ~on_click:(set_submitted None) [ Node.text "Back" ] ]
+        [ Button.view
+            ~variant:Outline
+            ~on_click:(set_submitted None)
+            [ Node.text "Back" ]
+        ]
       []
   | None ->
     let strength = Signup.strength password.value in
@@ -114,10 +141,22 @@ let signup (local_ graph) =
           ~title:"Create an account"
           ~description:"Start your 14-day trial. No card needed."
           ~footer:
-            [ Button.view ~type_:`Submit ~attrs:[ Attr.style (Css_gen.create ~field:"width" ~value:"100%") ] [ Node.text "Create account" ] ]
+            [ Button.view
+                ~type_:`Submit
+                ~attrs:
+                  [ Attr.style (Css_gen.create ~field:"width" ~value:"100%") ]
+                [ Node.text "Create account" ]
+            ]
           [ Node.div
-              ~attrs:[ Attr.class_ "docs-stack"; Attr.style (Css_gen.create ~field:"gap" ~value:"1.125rem") ]
-              [ Field.view ~id:"signup-name" ~label:"Name" ~required:true ?error:(error "name")
+              ~attrs:
+                [ Attr.class_ "docs-stack"
+                ; Attr.style (Css_gen.create ~field:"gap" ~value:"1.125rem")
+                ]
+              [ Field.view
+                  ~id:"signup-name"
+                  ~label:"Name"
+                  ~required:true
+                  ?error:(error "name")
                   (fun attrs ->
                      Input.view
                        ~attrs:(Attr.create "autocomplete" "name" :: attrs)
@@ -125,7 +164,11 @@ let signup (local_ graph) =
                        ~value:name.value
                        ~on_input:name.set
                        ())
-              ; Field.view ~id:"signup-email" ~label:"Email" ~required:true ?error:(error "email")
+              ; Field.view
+                  ~id:"signup-email"
+                  ~label:"Email"
+                  ~required:true
+                  ?error:(error "email")
                   (fun attrs ->
                      Input.view
                        ~attrs:(Attr.create "autocomplete" "email" :: attrs)
@@ -148,18 +191,24 @@ let signup (local_ graph) =
                   ?error:(error "password")
                   (fun attrs ->
                      Input.view
-                       ~attrs:(Attr.create "autocomplete" "new-password" :: attrs)
+                       ~attrs:
+                         (Attr.create "autocomplete" "new-password" :: attrs)
                        ~type_:(if show_password.value then Text else Password)
                        ~trailing:
                          (Toggle.view
                             ~size:Sm
                             ~pressed:show_password.value
                             ~on_change:show_password.set
-                            [ Node.text (if show_password.value then "Hide" else "Show") ])
+                            [ Node.text
+                                (if show_password.value then "Hide" else "Show")
+                            ])
                        ~value:password.value
                        ~on_input:password.set
                        ())
-              ; Field.view ~id:"signup-country" ~label:"Country" ?error:(error "country")
+              ; Field.view
+                  ~id:"signup-country"
+                  ~label:"Country"
+                  ?error:(error "country")
                   (fun attrs ->
                      Native_select.view
                        ~attrs
@@ -179,7 +228,8 @@ let signup (local_ graph) =
                           "Hobby"
                       ; Radio_group.Item.create
                           ~value:"team"
-                          ~description:"$8 a person a month, for working together."
+                          ~description:
+                            "$8 a person a month, for working together."
                           "Team"
                       ]
                   ]
@@ -198,6 +248,8 @@ let signup (local_ graph) =
               ]
           ]
       ]
+;;
+
 (*$*)
 
 let page =
@@ -205,13 +257,20 @@ let page =
     ~slug:page
     ~title:"Forms"
     ~group:Forms
-    ~description:"Putting the form components together: labels, validation and submitting."
+    ~description:
+      "Putting the form components together: labels, validation and submitting."
     ~body:
       [ Doc.h2 "How it fits together"
       ; Doc.p
-          "Each control has a controlled view (you pass its value and an on_change) and a component that keeps the value in Bonsai state and returns a Control.t { value; set; view }. Field.view gives a control its label, description and error, passing it the attributes (id, aria-describedby, aria-invalid) that tie them together."
+          "Each control has a controlled view (you pass its value and an \
+           on_change) and a component that keeps the value in Bonsai state and \
+           returns a Control.t { value; set; view }. Field.view gives a \
+           control its label, description and error, passing it the attributes \
+           (id, aria-describedby, aria-invalid) that tie them together."
       ; Doc.p
-          "Validate with plain functions of the values. Showing errors only after a first attempt to submit, then live, is kind: nobody likes being told off for a field they have not reached yet."
+          "Validate with plain functions of the values. Showing errors only \
+           after a first attempt to submit, then live, is kind: nobody likes \
+           being told off for a field they have not reached yet."
       ]
     [ Doc.example ~page "Sign-up form" signup ]
 ;;

@@ -5,8 +5,13 @@ module Handle = Bonsai_web_test.Handle
 let%expect_test "sizes" =
   List.iter Switch.Size.all ~f:(fun size ->
     Render.html
-      (Switch.view ~size ~checked:true ~on_change:(fun _ -> Bonsai_web.Effect.Ignore) ()));
-  [%expect {|
+      (Switch.view
+         ~size
+         ~checked:true
+         ~on_change:(fun _ -> Bonsai_web.Effect.Ignore)
+         ()));
+  [%expect
+    {|
     <button type="button"
             role="switch"
             aria-checked="true"
@@ -28,10 +33,13 @@ let%expect_test "sizes" =
 
 let%expect_test "clicking flips it" =
   let handle =
-    Control_render.handle [%sexp_of: bool] (Switch.component ~label:"Airplane mode")
+    Control_render.handle
+      [%sexp_of: bool]
+      (Switch.component ~label:"Airplane mode")
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <span> value: false </span>
       <label data-disabled="false" class="loon-switch-label">
@@ -49,7 +57,8 @@ let%expect_test "clicking flips it" =
     |}];
   Handle.click_on handle ~get_vdom:Fn.id ~selector:"[role=switch]";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div>
     -|  <span> value: false </span>
     +|  <span> value: true </span>

@@ -78,7 +78,7 @@
   transform: scale(1.1);
 }
 .loon-slider-value {
-  min-width: 2.5rem;
+  min-width: 2rem;
   text-align: right;
   font-size: 0.8125rem;
   font-weight: 500;

@@ -15,7 +15,8 @@ let%expect_test "a plain input" =
        ~value:""
        ~on_input:ignore_input
        ());
-  [%expect {|
+  [%expect
+    {|
     <input id="email"
            name="email"
            type="email"
@@ -29,7 +30,8 @@ let%expect_test "a plain input" =
 let%expect_test "invalid and disabled" =
   Render.html (Input.view ~invalid:true ~value:"x" ~on_input:ignore_input ());
   Render.html (Input.view ~disabled:true ~value:"x" ~on_input:ignore_input ());
-  [%expect {|
+  [%expect
+    {|
     <input type="text" aria-invalid="true" class="loon-input" #value="x" @on_input/>
     <input type="text" disabled="" class="loon-input" #value="x" @on_input/>
     |}]
@@ -44,7 +46,8 @@ let%expect_test "a leading icon and a trailing addon" =
        ~value:""
        ~on_input:ignore_input
        ());
-  [%expect {|
+  [%expect
+    {|
     <div data-disabled="false"
          class="loon-input-group loon-input-group-leading loon-input-group-trailing">
       <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search loon-input-icon">
@@ -61,10 +64,13 @@ let%expect_test "a leading icon and a trailing addon" =
 
 let%expect_test "typing updates the component's value" =
   let handle =
-    Control_render.handle [%sexp_of: string] (Input.component ~placeholder:"Name")
+    Control_render.handle
+      [%sexp_of: string]
+      (Input.component ~placeholder:"Name")
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <span> value: "" </span>
       <input type="text" placeholder="Name" class="loon-input" #value="" @on_input/>
@@ -72,7 +78,8 @@ let%expect_test "typing updates the component's value" =
     |}];
   Handle.input_text handle ~get_vdom:Fn.id ~selector:"input" ~text:"Ada";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div>
     -|  <span> value: "" </span>
     +|  <span> value: Ada </span>
@@ -87,7 +94,9 @@ let%expect_test "Enter runs on_enter" =
     Render.handle (fun _graph ->
       Bonsai_web.Bonsai.return
         (Input.view
-           ~on_enter:(Bonsai_web.Effect.of_thunk (fun () -> print_s [%message "submitted"]))
+           ~on_enter:
+             (Bonsai_web.Effect.of_thunk (fun () ->
+                print_s [%message "submitted"]))
            ~value:""
            ~on_input:ignore_input
            ()))
@@ -99,7 +108,8 @@ let%expect_test "Enter runs on_enter" =
 
 let%expect_test "every type" =
   List.iter Input.Type.all ~f:(fun t -> print_endline (Input.Type.name t));
-  [%expect {|
+  [%expect
+    {|
     text
     email
     password
@@ -112,18 +122,26 @@ let%expect_test "every type" =
 
 let%expect_test "a textarea" =
   let handle =
-    Control_render.handle [%sexp_of: string] (Textarea.component ~rows:4 ~placeholder:"Bio")
+    Control_render.handle
+      [%sexp_of: string]
+      (Textarea.component ~rows:4 ~placeholder:"Bio")
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <span> value: "" </span>
       <textarea rows="4" placeholder="Bio" class="loon-textarea" #value="" @on_input> </textarea>
     </div>
     |}];
-  Handle.input_text handle ~get_vdom:Fn.id ~selector:"textarea" ~text:"Hello\nthere";
+  Handle.input_text
+    handle
+    ~get_vdom:Fn.id
+    ~selector:"textarea"
+    ~text:"Hello\nthere";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div>
     -|  <span> value: "" </span>
     +|  <span> value: "Hello\nthere" </span>

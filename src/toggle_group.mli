@@ -12,7 +12,13 @@ module Item : sig
     ; disabled : bool
     }
 
-  val create : ?label:string -> ?disabled:bool -> value:string -> Node.t list -> t
+  val create
+    :  ?label:string
+    -> ?disabled:bool
+    -> value:string
+    -> Node.t list
+    -> t
+
   val text : ?disabled:bool -> value:string -> string -> t
   val icon : ?disabled:bool -> value:string -> label:string -> Icon.t -> t
 end

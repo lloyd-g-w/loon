@@ -22,7 +22,14 @@ module State = struct
   ;;
 end
 
-let view ?attrs:extra ?(disabled = false) ?label ~(state : State.t) ~on_change () =
+let view
+      ?attrs:extra
+      ?(disabled = false)
+      ?label
+      ~(state : State.t)
+      ~on_change
+      ()
+  =
   let box =
     Node.button
       ~attrs:
@@ -44,15 +51,19 @@ let view ?attrs:extra ?(disabled = false) ?label ~(state : State.t) ~on_change (
            ])
       (match state with
        | Unchecked -> []
-       | Checked -> [ Icon.view ~attrs:[ Attr.class_ "loon-checkbox-mark" ] Check ]
-       | Indeterminate -> [ Icon.view ~attrs:[ Attr.class_ "loon-checkbox-mark" ] Minus ])
+       | Checked ->
+         [ Icon.view ~attrs:[ Attr.class_ "loon-checkbox-mark" ] Check ]
+       | Indeterminate ->
+         [ Icon.view ~attrs:[ Attr.class_ "loon-checkbox-mark" ] Minus ])
   in
   match label with
   | None -> box
   | Some label ->
     Node.label
       ~attrs:
-        [ Attr.class_ "loon-checkbox-label"; data "disabled" (Bool.to_string disabled) ]
+        [ Attr.class_ "loon-checkbox-label"
+        ; data "disabled" (Bool.to_string disabled)
+        ]
       [ box; Node.span [ Node.text label ] ]
 ;;
 
@@ -61,6 +72,12 @@ let component ?attrs ?disabled ?label ?(default = false) (local_ graph) =
     ~equal:Bool.equal
     default
     ~view:(fun value set ->
-      view ?attrs ?disabled ?label ~state:(State.of_bool value) ~on_change:set ())
+      view
+        ?attrs
+        ?disabled
+        ?label
+        ~state:(State.of_bool value)
+        ~on_change:set
+        ())
     graph
 ;;

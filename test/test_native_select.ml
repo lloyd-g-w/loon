@@ -16,7 +16,8 @@ let%expect_test "a placeholder until something is chosen" =
       (Native_select.component ~placeholder:"Choose a country" items)
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <span> value: "" </span>
       <div data-disabled="false" class="loon-native-select">
@@ -36,7 +37,8 @@ let%expect_test "a placeholder until something is chosen" =
     |}];
   Handle.change handle ~get_vdom:Fn.id ~selector:"select" ~value:"nz";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div>
     -|  <span> value: "" </span>
     +|  <span> value: nz </span>

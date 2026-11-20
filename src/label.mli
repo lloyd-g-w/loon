@@ -2,7 +2,17 @@
 
 open! Import
 
-val view : ?attrs:Attr.t list -> ?for_:string -> ?required:bool -> Node.t list -> Node.t
+val view
+  :  ?attrs:Attr.t list
+  -> ?for_:string
+  -> ?required:bool
+  -> Node.t list
+  -> Node.t
 
 (** A label with just text. *)
-val text : ?attrs:Attr.t list -> ?for_:string -> ?required:bool -> string -> Node.t
+val text
+  :  ?attrs:Attr.t list
+  -> ?for_:string
+  -> ?required:bool
+  -> string
+  -> Node.t

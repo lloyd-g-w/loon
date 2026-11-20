@@ -6,13 +6,19 @@ let%expect_test "the value is shown, and the track filled up to it" =
   let handle =
     Control_render.handle
       [%sexp_of: float]
-      (Slider.component ~min:0. ~max:2. ~step:0.25 ~default:0.5 ~show_value:true)
+      (Slider.component
+         ~min:0.
+         ~max:2.
+         ~step:0.25
+         ~default:0.5
+         ~show_value:true)
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <span> value: 0.5 </span>
-      <div data-disabled="false" class="loon-slider" style={ --loon-slider-fill: 25.000%; }>
+      <div data-disabled="false" class="loon-slider" custom-css-vars=((--loon-slider-fill 25.00%))>
         <input type="range"
                min="0"
                max="2"
@@ -27,12 +33,13 @@ let%expect_test "the value is shown, and the track filled up to it" =
     |}];
   Handle.input_text handle ~get_vdom:Fn.id ~selector:"input" ~text:"1.75";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div>
     -|  <span> value: 0.5 </span>
     +|  <span> value: 1.75 </span>
-    -|  <div data-disabled="false" class="loon-slider" style={ --loon-slider-fill: 25.000%; }>
-    +|  <div data-disabled="false" class="loon-slider" style={ --loon-slider-fill: 87.500%; }>
+    -|  <div data-disabled="false" class="loon-slider" custom-css-vars=((--loon-slider-fill 25.00%))>
+    +|  <div data-disabled="false" class="loon-slider" custom-css-vars=((--loon-slider-fill 87.50%))>
           <input type="range"
                  min="0"
                  max="2"
@@ -58,8 +65,9 @@ let%expect_test "values outside the range are clamped; custom format" =
        ~format:(fun v -> sprintf "%.0f%%" v)
        ~on_change:(fun _ -> Bonsai_web.Effect.Ignore)
        ());
-  [%expect {|
-    <div data-disabled="false" class="loon-slider" style={ --loon-slider-fill: 100.000%; }>
+  [%expect
+    {|
+    <div data-disabled="false" class="loon-slider" custom-css-vars=((--loon-slider-fill 100.00%))>
       <input type="range"
              min="0"
              max="100"

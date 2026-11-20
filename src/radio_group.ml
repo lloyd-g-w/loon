@@ -16,20 +16,23 @@ end
 let item_id ~name value = sprintf "%s-radio-%s" name value
 
 let view
-  ?attrs:extra
-  ?(orientation = Roving.Orientation.Vertical)
-  ?(disabled = false)
-  ~name
-  ~value
-  ~on_change
-  (items : Item.t list)
+      ?attrs:extra
+      ?(orientation = Roving.Orientation.Vertical)
+      ?(disabled = false)
+      ~name
+      ~value
+      ~on_change
+      (items : Item.t list)
   =
-  let enabled = List.map items ~f:(fun item -> (not disabled) && not item.disabled) in
+  let enabled =
+    List.map items ~f:(fun item -> (not disabled) && not item.disabled)
+  in
   (* Tab reaches the chosen item, or the first enabled one. *)
   let tab_stop =
     match
       List.findi items ~f:(fun i item ->
-        List.nth_exn enabled i && Option.equal String.equal value (Some item.value))
+        List.nth_exn enabled i
+        && Option.equal String.equal value (Some item.value))
     with
     | Some (i, _) -> Some i
     | None -> List.findi enabled ~f:(fun _ e -> e) |> Option.map ~f:fst
@@ -51,7 +54,9 @@ let view
     in
     Node.label
       ~attrs:
-        [ Attr.class_ "loon-radio-item"; data "disabled" (Bool.to_string item_disabled) ]
+        [ Attr.class_ "loon-radio-item"
+        ; data "disabled" (Bool.to_string item_disabled)
+        ]
       [ Node.button
           ~attrs:
             ([ Attr.class_ "loon-radio"
@@ -84,7 +89,9 @@ let view
            :: Option.value_map item.description ~default:[] ~f:(fun d ->
              [ Node.span
                  ~attrs:
-                   [ Attr.class_ "loon-radio-description"; Attr.id (id ^ "-description") ]
+                   [ Attr.class_ "loon-radio-description"
+                   ; Attr.id (id ^ "-description")
+                   ]
                  [ Node.text d ]
              ]))
       ]
@@ -93,7 +100,9 @@ let view
     ~attrs:
       (attrs
          ?attrs:extra
-         [ "loon-radio-group"; "loon-radio-group-" ^ Roving.Orientation.name orientation ]
+         [ "loon-radio-group"
+         ; "loon-radio-group-" ^ Roving.Orientation.name orientation
+         ]
        @ [ Attr.role "radiogroup"
          ; aria "orientation" (Roving.Orientation.name orientation)
          ]

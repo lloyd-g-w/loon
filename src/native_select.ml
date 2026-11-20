@@ -11,15 +11,17 @@ module Item = struct
 end
 
 let view
-  ?attrs:extra
-  ?(disabled = false)
-  ?(invalid = false)
-  ?placeholder
-  ~value
-  ~on_change
-  (items : Item.t list)
+      ?attrs:extra
+      ?(disabled = false)
+      ?(invalid = false)
+      ?placeholder
+      ~value
+      ~on_change
+      (items : Item.t list)
   =
-  let matched = List.exists items ~f:(fun item -> String.equal item.value value) in
+  let matched =
+    List.exists items ~f:(fun item -> String.equal item.value value)
+  in
   let option ?(disabled = false) ~selected v label =
     Node.option
       ~attrs:
@@ -34,7 +36,10 @@ let view
     | Some p -> [ option ~disabled:true ~selected:(not matched) "" p ]
   in
   Node.div
-    ~attrs:[ Attr.class_ "loon-native-select"; data "disabled" (Bool.to_string disabled) ]
+    ~attrs:
+      [ Attr.class_ "loon-native-select"
+      ; data "disabled" (Bool.to_string disabled)
+      ]
     [ Node.select
         ~attrs:
           (attrs ?attrs:extra [ "loon-native-select-control" ]
@@ -51,7 +56,9 @@ let view
              ~selected:(String.equal item.value value)
              item.value
              item.label))
-    ; Icon.view ~attrs:[ Attr.class_ "loon-native-select-chevron" ] Chevrons_up_down
+    ; Icon.view
+        ~attrs:[ Attr.class_ "loon-native-select-chevron" ]
+        Chevrons_up_down
     ]
 ;;
 

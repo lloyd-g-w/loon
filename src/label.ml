@@ -8,7 +8,11 @@ let view ?attrs:extra ?for_ ?(required = false) children =
     (children
      @
      if required
-     then [ Node.span ~attrs:[ Attr.class_ "loon-label-required"; aria "hidden" "true" ] [ Node.text "*" ] ]
+     then
+       [ Node.span
+           ~attrs:[ Attr.class_ "loon-label-required"; aria "hidden" "true" ]
+           [ Node.text "*" ]
+       ]
      else [])
 ;;
 

@@ -15,10 +15,13 @@ let items =
 
 let%expect_test "nothing chosen: the first item is the tab stop" =
   let handle =
-    Control_render.handle [%sexp_of: string option] (Radio_group.component items)
+    Control_render.handle
+      [%sexp_of: string option]
+      (Radio_group.component items)
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <span> value: () </span>
       <div role="radiogroup"
@@ -100,7 +103,8 @@ let%expect_test "nothing chosen: the first item is the tab stop" =
     |}];
   Handle.click_on handle ~get_vdom:Fn.id ~selector:"[id$=radio-comfortable]";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div>
     -|  <span> value: () </span>
     +|  <span> value: (comfortable) </span>
@@ -159,14 +163,18 @@ let%expect_test "arrow keys choose the next enabled item, wrapping" =
   let handle =
     Control_render.handle
       [%sexp_of: string option]
-      (Radio_group.component ~orientation:Horizontal ~default:"comfortable" items)
+      (Radio_group.component
+         ~orientation:Horizontal
+         ~default:"comfortable"
+         items)
   in
   let key selector key =
     Handle.keydown handle ~get_vdom:Fn.id ~selector ~key;
     Handle.show_diff handle
   in
   key "[id$=radio-comfortable]" ArrowDown;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key ArrowDown))
 
     +|<div>
@@ -249,7 +257,8 @@ let%expect_test "arrow keys choose the next enabled item, wrapping" =
     +|</div>
     |}];
   key "[id$=radio-spacious]" ArrowRight;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key ArrowRight))
 
       <div>
@@ -321,7 +330,8 @@ let%expect_test "arrow keys choose the next enabled item, wrapping" =
       </div>
     |}];
   key "[id$=radio-default]" End;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key End))
 
       <div>
@@ -393,7 +403,8 @@ let%expect_test "arrow keys choose the next enabled item, wrapping" =
       </div>
     |}];
   key "[id$=radio-spacious]" Home;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key Home))
 
       <div>
@@ -465,7 +476,8 @@ let%expect_test "arrow keys choose the next enabled item, wrapping" =
       </div>
     |}];
   key "[id$=radio-default]" ArrowUp;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key ArrowUp))
 
       <div>
@@ -554,10 +566,13 @@ let%expect_test "roving focus skips disabled items" =
           (current : int)
             ~key:name
             ~moves_to:(Roving.move ~enabled ~current key : int option)]);
-  print_s [%message (Roving.move ~enabled:[] ~current:0 ArrowRight : int option)];
   print_s
-    [%message (Roving.move ~enabled:[ false; false ] ~current:0 ArrowRight : int option)];
-  [%expect {|
+    [%message (Roving.move ~enabled:[] ~current:0 ArrowRight : int option)];
+  print_s
+    [%message
+      (Roving.move ~enabled:[ false; false ] ~current:0 ArrowRight : int option)];
+  [%expect
+    {|
     ((current 0) (key ArrowRight) (moves_to (2)))
     ((current 2) (key ArrowRight) (moves_to (0)))
     ((current 0) (key ArrowLeft) (moves_to (2)))

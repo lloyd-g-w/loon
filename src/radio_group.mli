@@ -11,7 +11,12 @@ module Item : sig
     ; disabled : bool
     }
 
-  val create : ?description:string -> ?disabled:bool -> value:string -> string -> t
+  val create
+    :  ?description:string
+    -> ?disabled:bool
+    -> value:string
+    -> string
+    -> t
 end
 
 (** Controlled; [value] is the chosen item's, [None] before any is chosen.

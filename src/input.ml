@@ -15,17 +15,17 @@ module Type = struct
 end
 
 let view
-  ?attrs:extra
-  ?(type_ = Type.Text)
-  ?placeholder
-  ?(disabled = false)
-  ?(invalid = false)
-  ?leading
-  ?trailing
-  ?on_enter
-  ~value
-  ~on_input
-  ()
+      ?attrs:extra
+      ?(type_ = Type.Text)
+      ?placeholder
+      ?(disabled = false)
+      ?(invalid = false)
+      ?leading
+      ?trailing
+      ?on_enter
+      ~value
+      ~on_input
+      ()
   =
   let input =
     Node.input
@@ -35,16 +35,17 @@ let view
            ; Attr.value value
            ; Attr.on_input (fun _ s -> on_input s)
            ]
-         @ Option.value_map placeholder ~default:[] ~f:(fun p -> [ Attr.placeholder p ])
+         @ Option.value_map placeholder ~default:[] ~f:(fun p ->
+           [ Attr.placeholder p ])
          @ (if disabled then [ Attr.disabled ] else [])
          @ (if invalid then [ aria "invalid" "true" ] else [])
          @
          match on_enter with
          | None -> []
-         | Some effect ->
+         | Some enter ->
            [ Attr.on_keydown (fun ev ->
                match Dom_util.key ev with
-               | Enter -> effect
+               | Enter -> enter
                | _ -> Effect.Ignore)
            ])
       ()
@@ -56,8 +57,13 @@ let view
       ~attrs:
         [ Attr.classes
             ([ "loon-input-group" ]
-             @ (if Option.is_some leading then [ "loon-input-group-leading" ] else [])
-             @ if Option.is_some trailing then [ "loon-input-group-trailing" ] else [])
+             @ (if Option.is_some leading
+                then [ "loon-input-group-leading" ]
+                else [])
+             @
+             if Option.is_some trailing
+             then [ "loon-input-group-trailing" ]
+             else [])
         ; data "disabled" (Bool.to_string disabled)
         ]
       (List.filter_opt
@@ -69,8 +75,15 @@ let view
          ])
 ;;
 
-let component ?attrs ?type_ ?placeholder ?disabled ?leading ?trailing ?(default = "")
-  (local_ graph)
+let component
+      ?attrs
+      ?type_
+      ?placeholder
+      ?disabled
+      ?leading
+      ?trailing
+      ?(default = "")
+      (local_ graph)
   =
   Control.make
     ~equal:String.equal
