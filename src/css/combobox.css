@@ -1,0 +1,13 @@
+.loon-combobox-content {
+  min-width: max(100%, 15rem);
+  overflow: hidden;
+}
+.loon-combobox-content .loon-command-input {
+  height: 2.5rem;
+}
+.loon-combobox-content .loon-command-list {
+  max-height: min(18rem, 50dvh);
+}
+.loon-combobox .loon-option[aria-selected="true"] {
+  font-weight: inherit;
+}

@@ -1,0 +1,74 @@
+.loon-select {
+  display: inline-flex;
+  min-width: 12rem;
+}
+.loon-select-trigger {
+  display: inline-flex;
+  width: 100%;
+  height: 2.25rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0 0.625rem 0 0.75rem;
+  border: 1px solid var(--loon-input);
+  border-radius: var(--loon-radius);
+  background: var(--loon-surface);
+  color: var(--loon-foreground);
+  box-shadow: var(--loon-shadow-sm);
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--loon-duration) var(--loon-ease),
+    box-shadow var(--loon-duration) var(--loon-ease);
+}
+.loon-select-trigger:hover {
+  border-color: color-mix(in oklch, var(--loon-input), var(--loon-foreground) 15%);
+}
+.loon-select-trigger:focus-visible,
+.loon-select-trigger[aria-expanded="true"] {
+  outline: none;
+  border-color: var(--loon-accent);
+  box-shadow: 0 0 0 3px var(--loon-ring);
+}
+.loon-select-trigger[aria-invalid="true"] {
+  border-color: var(--loon-danger);
+}
+.loon-select-trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.loon-select-trigger[data-placeholder] .loon-select-value {
+  color: var(--loon-muted-foreground);
+}
+.loon-select-value {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.loon-select-value > svg {
+  flex: none;
+  color: var(--loon-muted-foreground);
+}
+.loon-select-chevron {
+  flex: none;
+  color: var(--loon-muted-foreground);
+}
+.loon-option-check {
+  display: inline-flex;
+  width: 1em;
+  margin-left: auto;
+  padding-left: 0.75rem;
+  box-sizing: content-box;
+  color: var(--loon-accent);
+}
+@media (pointer: coarse) {
+  .loon-select-trigger {
+    height: 2.75rem;
+  }
+}
