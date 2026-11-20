@@ -3,7 +3,13 @@ open Loon
 
 let%expect_test "fuzzy scores: in order, word starts and runs first" =
   let texts =
-    [ "Settings"; "Search files"; "Send feedback"; "Sign out"; "Open recent"; "Inbox" ]
+    [ "Settings"
+    ; "Search files"
+    ; "Send feedback"
+    ; "Sign out"
+    ; "Open recent"
+    ; "Inbox"
+    ]
   in
   List.iter [ ""; "se"; "sf"; "set"; "xyz"; "o r"; "in" ] ~f:(fun query ->
     let ranked =
@@ -13,7 +19,8 @@ let%expect_test "fuzzy scores: in order, word starts and runs first" =
       |> List.map ~f:snd
     in
     print_s [%message query (ranked : string list)]);
-  [%expect {|
+  [%expect
+    {|
     (""
      (ranked
       (Settings "Search files" "Send feedback" "Sign out" "Open recent" Inbox)))
@@ -43,7 +50,8 @@ let%expect_test "list navigation wraps, jumps and types ahead" =
         ~b_from_blueberry:(move (Some 2) KeyB : int option)
         ~z:(move (Some 0) KeyZ : int option)
         ~shift:(move (Some 0) ShiftLeft : int option)];
-  [%expect {|
+  [%expect
+    {|
     ((down_from_none (0)) (up_from_none (3)) (down_from_last (0))
      (up_from_first (3)) (end_ (3)) (home (0)) (b_from_apple (1))
      (b_from_banana (2)) (b_from_blueberry (1)) (z ()) (shift ()))

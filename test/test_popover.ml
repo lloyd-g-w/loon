@@ -51,6 +51,7 @@ let%expect_test "popover: toggles on its trigger, closes on Escape and when told
            aria-labelledby="loonbonsai_path_replaced_in_test-trigger"
            class="loon-floating-content loon-popover"
            always-focus-hook=()
+           loon-keep-in-view=()
            @on_keydown>
         <div class="loon-popover-header">
           <h4 class="loon-popover-title"> Title </h4>

@@ -62,6 +62,7 @@ let%expect_test "opens on click, arrows skip disabled items, Enter chooses" =
            aria-labelledby="loonbonsai_path_replaced_in_test-trigger"
            class="loon-floating-content loon-menu"
            always-focus-hook=()
+           loon-keep-in-view=()
            @on_keydown>
         <div class="loon-menu-label"> Edit </div>
         <div role="menuitem"
@@ -133,6 +134,7 @@ let%expect_test "opens on click, arrows skip disabled items, Enter chooses" =
     +|       aria-activedescendant="loonbonsai_path_replaced_in_test-item-3"
              class="loon-floating-content loon-menu"
              always-focus-hook=()
+             loon-keep-in-view=()
              @on_keydown>
           <div class="loon-menu-label"> Edit </div>
           <div role="menuitem"
@@ -274,6 +276,7 @@ let%expect_test "keyboard opening, clicking items, Escape and clicking away" =
            aria-activedescendant="loonbonsai_path_replaced_in_test-item-5"
            class="loon-floating-content loon-menu"
            always-focus-hook=()
+           loon-keep-in-view=()
            @on_keydown>
         <div class="loon-menu-label"> Edit </div>
         <div role="menuitem"

@@ -88,6 +88,7 @@ let%expect_test "select: open, move, choose, typeahead" =
              aria-activedescendant="loonbonsai_path_replaced_in_test-option-Apple"
              class="loon-floating-content loon-listbox"
              always-focus-hook=()
+             loon-keep-in-view=()
              @on_keydown>
           <div role="group"
                aria-labelledby="loonbonsai_path_replaced_in_test-group-0"
@@ -168,6 +169,7 @@ let%expect_test "select: open, move, choose, typeahead" =
     +|         aria-activedescendant="loonbonsai_path_replaced_in_test-option-Blueberry"
                class="loon-floating-content loon-listbox"
                always-focus-hook=()
+               loon-keep-in-view=()
                @on_keydown>
             <div role="group"
                  aria-labelledby="loonbonsai_path_replaced_in_test-group-0"
@@ -333,6 +335,7 @@ let%expect_test "combobox: search then choose" =
              data-align="start"
              data-match-width=""
              class="loon-combobox-content loon-floating-content"
+             loon-keep-in-view=()
              @on_keydown>
           <div class="loon-command">
             <div class="loon-command-search">
@@ -442,6 +445,7 @@ let%expect_test "combobox: search then choose" =
              data-align="start"
              data-match-width=""
              class="loon-combobox-content loon-floating-content"
+             loon-keep-in-view=()
              @on_keydown>
           <div class="loon-command">
             <div class="loon-command-search">

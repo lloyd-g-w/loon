@@ -81,6 +81,7 @@ let view
                ; Attr.id (content_id id)
                ; data "side" (Side.name side)
                ; data "align" (Align.name align)
+               ; Keep_in_view.attr
                ; Attr.on_keydown on_keydown
                ]
                @ (if match_width then [ data "match-width" "" ] else [])
