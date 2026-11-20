@@ -28,7 +28,14 @@ module Accent : sig
   val name : t -> string
 end
 
+(** The attributes of a themed subtree's root: the class [loon], and
+    [loon-light] or [loon-dark] and [data-loon-accent] for the [mode] and
+    [accent] given. Either omitted, the subtree keeps its surroundings' (and
+    at the top of the page, light and teal). *)
 val attrs : ?mode:Mode.t -> ?accent:Accent.t -> unit -> Attr.t list
+
+(** A [div] with [attrs ?mode ?accent ()]: e.g. [root ~accent:Iris] inside a
+    dark page is dark and iris. *)
 
 val root
   :  ?attrs:Attr.t list

@@ -37,15 +37,16 @@ module Accent = struct
   let name t = String.lowercase (Sexp.to_string (sexp_of_t t))
 end
 
-let attrs ?(mode = Mode.Light) ?(accent = Accent.Teal) () =
-  [ Attr.classes
-      [ "loon"
-      ; (match mode with
-         | Light -> "loon-light"
-         | Dark -> "loon-dark")
-      ]
-  ; data "loon-accent" (Accent.name accent)
-  ]
+let attrs ?mode ?accent () =
+  Attr.classes
+    ("loon"
+     ::
+     (match (mode : Mode.t option) with
+      | None -> []
+      | Some Light -> [ "loon-light" ]
+      | Some Dark -> [ "loon-dark" ]))
+  :: Option.value_map accent ~default:[] ~f:(fun accent ->
+    [ data "loon-accent" (Accent.name accent) ])
 ;;
 
 let root ?attrs:(extra = []) ?mode ?accent children =

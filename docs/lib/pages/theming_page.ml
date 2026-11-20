@@ -89,7 +89,13 @@ let page =
           ; Doc.code "Loon.Theme.root ~mode"
           ; Doc.text " sets it, and "
           ; Doc.code "Theme.Mode.preferred ()"
-          ; Doc.text " reads the system's preference:"
+          ; Doc.text " reads the system's preference. Without "
+          ; Doc.code "~mode"
+          ; Doc.text ", a "
+          ; Doc.code "Theme.root"
+          ; Doc.text " keeps the mode around it (light at the top of the page), so "
+          ; Doc.code "Theme.root ~accent:Iris"
+          ; Doc.text " only changes the accent:"
           ]
       ; Doc.pre
           "let component (local_ graph) =\n\
