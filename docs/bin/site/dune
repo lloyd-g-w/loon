@@ -9,7 +9,8 @@
   (copy ../../../src/loon.css loon.css)))
 
 (copy_files
- (files ../{index.html,docs.css,icon.svg,temporal-polyfill.js,LICENSE-temporal-polyfill}))
+ (files
+  ../{index.html,docs.css,icon.svg,temporal-polyfill.js,LICENSE-temporal-polyfill,recursive-sans.woff2,recursive-mono.woff2,recursive-OFL.txt}))
 
 (install
  (section share)
@@ -21,4 +22,7 @@
   (docs.css as docs/docs.css)
   (icon.svg as docs/icon.svg)
   (temporal-polyfill.js as docs/temporal-polyfill.js)
-  (LICENSE-temporal-polyfill as docs/LICENSE-temporal-polyfill)))
+  (LICENSE-temporal-polyfill as docs/LICENSE-temporal-polyfill)
+  (recursive-sans.woff2 as docs/recursive-sans.woff2)
+  (recursive-mono.woff2 as docs/recursive-mono.woff2)
+  (recursive-OFL.txt as docs/recursive-OFL.txt)))
