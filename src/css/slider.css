@@ -63,10 +63,10 @@
   transition: box-shadow var(--loon-duration) var(--loon-ease);
 }
 .loon-slider-input:hover:not(:disabled)::-webkit-slider-thumb {
-  box-shadow: 0 0 0 4px color-mix(in oklch, var(--loon-ring) 18%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--loon-ring) 18%, transparent);
 }
 .loon-slider-input:hover:not(:disabled)::-moz-range-thumb {
-  box-shadow: 0 0 0 4px color-mix(in oklch, var(--loon-ring) 18%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--loon-ring) 18%, transparent);
 }
 .loon-slider-input:focus-visible::-webkit-slider-thumb {
   box-shadow: 0 0 0 2px var(--loon-background), 0 0 0 4px var(--loon-ring);

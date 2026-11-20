@@ -72,7 +72,7 @@ written.
 
   $ loon add -dir elsewhere buton tabz zzzzzz
   loon: unknown component "buton": did you mean button?
-  unknown component "tabz": did you mean tabs?
+  unknown component "tabz": did you mean tabs or table?
   unknown component "zzzzzz" (`loon list` shows them)
   [1]
   $ ls elsewhere

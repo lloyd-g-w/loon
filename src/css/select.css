@@ -24,7 +24,7 @@
     box-shadow var(--loon-duration) var(--loon-ease);
 }
 .loon-select-trigger:hover {
-  border-color: color-mix(in oklch, var(--loon-input), var(--loon-foreground) 15%);
+  border-color: color-mix(in oklab, var(--loon-input), var(--loon-foreground) 15%);
 }
 .loon-select-trigger:focus-visible,
 .loon-select-trigger[aria-expanded="true"] {

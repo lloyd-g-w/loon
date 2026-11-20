@@ -1,0 +1,69 @@
+.loon-table-container {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.loon-table {
+  width: 100%;
+  border-collapse: collapse;
+  caption-side: bottom;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+.loon-table-caption {
+  margin-top: 0.875rem;
+  color: var(--loon-muted-foreground);
+  font-size: 0.8125rem;
+}
+.loon-table-row {
+  border-bottom: 1px solid var(--loon-border);
+  transition: background var(--loon-duration) var(--loon-ease);
+}
+.loon-table-body > .loon-table-row:last-child {
+  border-bottom: 0;
+}
+.loon-table-hover .loon-table-body > .loon-table-row:hover {
+  background: color-mix(in oklab, var(--loon-muted) 60%, transparent);
+}
+.loon-table-striped .loon-table-body > .loon-table-row:nth-child(even) {
+  background: color-mix(in oklab, var(--loon-muted) 45%, transparent);
+}
+.loon-table-row[data-state="selected"],
+.loon-table-hover .loon-table-body > .loon-table-row[data-state="selected"]:hover {
+  background: color-mix(in oklab, var(--loon-accent-soft) 70%, transparent);
+}
+.loon-table-head {
+  height: 2.5rem;
+  padding: 0 0.75rem;
+  color: var(--loon-muted-foreground);
+  font-weight: 500;
+  font-size: 0.8125rem;
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.loon-table-cell {
+  padding: 0.75rem;
+  vertical-align: middle;
+}
+.loon-table-dense .loon-table-head {
+  height: 2rem;
+}
+.loon-table-dense .loon-table-cell {
+  padding: 0.375rem 0.75rem;
+}
+.loon-table [data-align="center"] {
+  text-align: center;
+}
+.loon-table [data-align="right"] {
+  text-align: right;
+}
+.loon-table-footer {
+  border-top: 1px solid var(--loon-border);
+  background: color-mix(in oklab, var(--loon-muted) 50%, transparent);
+  font-weight: 500;
+}
+.loon-table-footer > .loon-table-row {
+  border-bottom: 0;
+}

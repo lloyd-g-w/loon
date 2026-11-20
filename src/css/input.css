@@ -19,17 +19,17 @@
   opacity: 1;
 }
 .loon-input:hover:not(:disabled):not(:focus) {
-  border-color: color-mix(in oklch, var(--loon-input) 70%, var(--loon-foreground));
+  border-color: color-mix(in oklab, var(--loon-input) 70%, var(--loon-foreground));
 }
 .loon-input:focus-visible {
   border-color: var(--loon-ring);
-  box-shadow: 0 0 0 3px color-mix(in oklch, var(--loon-ring) 25%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--loon-ring) 25%, transparent);
 }
 .loon-input[aria-invalid="true"] {
   border-color: var(--loon-danger);
 }
 .loon-input[aria-invalid="true"]:focus-visible {
-  box-shadow: 0 0 0 3px color-mix(in oklch, var(--loon-danger) 22%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--loon-danger) 22%, transparent);
 }
 .loon-input:disabled {
   cursor: not-allowed;
@@ -84,17 +84,17 @@
   box-shadow: none;
 }
 .loon-input-group:hover:not([data-disabled="true"]):not(:focus-within) {
-  border-color: color-mix(in oklch, var(--loon-input) 70%, var(--loon-foreground));
+  border-color: color-mix(in oklab, var(--loon-input) 70%, var(--loon-foreground));
 }
 .loon-input-group:has(.loon-input:focus-visible) {
   border-color: var(--loon-ring);
-  box-shadow: 0 0 0 3px color-mix(in oklch, var(--loon-ring) 25%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--loon-ring) 25%, transparent);
 }
 .loon-input-group:has(.loon-input[aria-invalid="true"]) {
   border-color: var(--loon-danger);
 }
 .loon-input-group:has(.loon-input[aria-invalid="true"]:focus-visible) {
-  box-shadow: 0 0 0 3px color-mix(in oklch, var(--loon-danger) 22%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--loon-danger) 22%, transparent);
 }
 .loon-input-group[data-disabled="true"] {
   cursor: not-allowed;
