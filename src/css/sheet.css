@@ -7,6 +7,7 @@
   box-sizing: border-box;
   overflow-y: auto;
   background: var(--loon-overlay);
+  --loon-table-background: var(--loon-overlay);
   color: var(--loon-foreground);
   box-shadow: var(--loon-shadow-lg);
   outline: none;

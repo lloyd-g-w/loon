@@ -40,6 +40,10 @@ module Invoice = struct
 end
 
 (*$ Invoices *)
+let dollars amount =
+  "$" ^ Float.to_string_hum ~decimals:2 ~delimiter:',' amount
+;;
+
 let invoices =
   let total = List.sum (module Float) Invoice.all ~f:(fun i -> i.amount) in
   Table.view
@@ -49,12 +53,11 @@ let invoices =
         [ text "Invoice" (fun (i : Invoice.t) -> i.id)
         ; create "Status" Invoice.status_badge
         ; text "Method" (fun (i : Invoice.t) -> i.method_)
-        ; text ~align:Right "Amount" (fun (i : Invoice.t) ->
-            sprintf "$%.2f" i.amount)
+        ; text ~align:Right "Amount" (fun (i : Invoice.t) -> dollars i.amount)
         ]
     ~footer:
       [ Table.cell ~colspan:3 [ Node.text "Total" ]
-      ; Table.cell ~align:Right [ Node.textf "$%.2f" total ]
+      ; Table.cell ~align:Right [ Node.text (dollars total) ]
       ]
     Invoice.all
 ;;
@@ -112,9 +115,10 @@ let page =
           ; "dense", "bool", "Less padding."
           ]
       ; Doc.p
-          "Table.table, header, body, footer, row, head and cell build tables \
-           of any shape. Wide tables scroll sideways in their own box. For \
-           sorting, filtering and selecting, see Data table."
+          "[Table.table], [header], [body], [footer], [row], [head] and [cell] \
+           build tables of any shape. Wide tables scroll sideways in their own \
+           box, with a shadow at the edge that has more. For sorting, filtering \
+           and selecting, see [Data_table]."
       ]
     [ Doc.static ~page "Invoices" invoices
     ; Doc.static ~page "Striped and dense, from the parts" parts

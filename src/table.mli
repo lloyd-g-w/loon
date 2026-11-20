@@ -15,7 +15,9 @@ module Align : sig
 end
 
 (** The parts, for tables of any shape. [table] scrolls sideways in its own
-    box when it is too wide for the page. *)
+    box when it is too wide for the page, with a shadow at the edge that has
+    more. That box is filled with [--loon-table-background] (the page's
+    background by default; a card's, dialog's or sheet's inside one). *)
 
 val table
   :  ?attrs:Attr.t list

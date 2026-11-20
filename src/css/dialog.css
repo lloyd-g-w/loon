@@ -13,6 +13,7 @@
   box-sizing: border-box;
   transform: translate(-50%, -50%);
   background: var(--loon-overlay);
+  --loon-table-background: var(--loon-overlay);
   color: var(--loon-foreground);
   border: 1px solid var(--loon-border);
   border-radius: var(--loon-radius-lg);

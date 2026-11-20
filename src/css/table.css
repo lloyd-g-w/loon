@@ -3,6 +3,21 @@
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  /* What does not fit scrolls sideways, with a shadow at the edge it goes
+     on past: covers in the background colour scroll with the content and
+     hide the shadows when at that edge. */
+  --loon-table-shadow: color-mix(in oklab, var(--loon-foreground) 18%, transparent);
+  background-color: var(--loon-table-background, var(--loon-background));
+  background-image:
+    linear-gradient(to right, var(--loon-table-background, var(--loon-background)) 30%, transparent),
+    linear-gradient(to left, var(--loon-table-background, var(--loon-background)) 30%, transparent),
+    radial-gradient(farthest-side at 0 50%, var(--loon-table-shadow), transparent),
+    radial-gradient(farthest-side at 100% 50%, var(--loon-table-shadow), transparent);
+  background-position: left center, right center, left center, right center;
+  background-repeat: no-repeat;
+  background-size: 2.5rem 100%, 2.5rem 100%, 1rem 100%, 1rem 100%;
+  background-attachment: local, local, scroll, scroll;
 }
 .loon-table {
   width: 100%;
