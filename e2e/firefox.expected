@@ -49,7 +49,7 @@ Escape closes it
 Ctrl+K opens it, empty: true
 "themng": >Theming, Accents, Light and dark
 Enter: #/theming, closed
-"/" opens it; arrows wrap: false
+"/" opens it; arrows wrap: true
 no match: Nothing matches “qqqzz”.
 click: #/cli
 scrim click closes it

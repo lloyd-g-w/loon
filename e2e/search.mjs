@@ -53,7 +53,10 @@ await run(async (engine, url) => {
   await waitForHash(page, "#/cli");
   console.log(`click: ${await page.evaluate(() => location.hash)}`);
 
-  // A click on the scrim closes it.
+  // A click on the scrim closes it (once the page it went to is drawn: a
+  // change of page closes the search).
+  await page.waitForSelector('.docs-article[data-page="cli"]');
+  await settle(page);
   await page.keyboard.press("Control+k");
   await page.waitForSelector(".docs-search");
   await page.waitForFunction(() => document.activeElement?.id === "docs-search-input");
