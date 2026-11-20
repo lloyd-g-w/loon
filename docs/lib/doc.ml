@@ -83,10 +83,39 @@ let h2 text =
 ;;
 
 let h3 text = Node.h3 ~attrs:[ Attr.class_ "docs-h3" ] [ Node.text text ]
-let p text = Node.p ~attrs:[ Attr.class_ "docs-p" ] [ Node.text text ]
-let p' nodes = Node.p ~attrs:[ Attr.class_ "docs-p" ] nodes
 let text = Node.text
 let code text = Node.code ~attrs:[ Attr.class_ "docs-code-inline" ] [ Node.text text ]
+
+(* Splits on the outermost brackets, so [[ `A | `B ]] is one piece of code. *)
+let inline s =
+  let pieces = ref [] in
+  let buf = Buffer.create (String.length s) in
+  let flush f =
+    if Buffer.length buf > 0 then pieces := f (Buffer.contents buf) :: !pieces;
+    Buffer.clear buf
+  in
+  let depth = ref 0 in
+  String.iter s ~f:(fun c ->
+    match c with
+    | '[' when !depth = 0 ->
+      flush text;
+      depth := 1
+    | ']' when !depth = 1 ->
+      flush code;
+      depth := 0
+    | '[' ->
+      incr depth;
+      Buffer.add_char buf c
+    | ']' when !depth > 1 ->
+      decr depth;
+      Buffer.add_char buf c
+    | c -> Buffer.add_char buf c);
+  if !depth > 0 then flush (fun s -> text ("[" ^ s)) else flush text;
+  List.rev !pieces
+;;
+
+let p text = Node.p ~attrs:[ Attr.class_ "docs-p" ] (inline text)
+let p' nodes = Node.p ~attrs:[ Attr.class_ "docs-p" ] nodes
 
 let link ~href text =
   let external_ = String.is_prefix href ~prefix:"http" in
@@ -138,7 +167,7 @@ let props rows =
                Node.tr
                  [ Node.td [ code name ]
                  ; Node.td [ Highlight.view type_ ]
-                 ; Node.td [ Node.text description ]
+                 ; Node.td (inline description)
                  ]))
         ]
     ]

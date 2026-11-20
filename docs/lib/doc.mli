@@ -68,6 +68,12 @@ val page
 val h2 : string -> Vdom.Node.t
 
 val h3 : string -> Vdom.Node.t
+
+(** Text with code in brackets, as in odoc: ["Use [Table.view]."]. Pages'
+    descriptions, examples' descriptions, [p] and [props]' descriptions are
+    written this way. *)
+val inline : string -> Vdom.Node.t list
+
 val p : string -> Vdom.Node.t
 
 (** A paragraph of mixed text, [code] and [link]s. *)

@@ -164,7 +164,7 @@ let example_view ~(page : Doc.Page.t) index (example : Doc.Example.t) (local_ gr
     ; (match example.description with
        | None -> Node.none
        | Some d ->
-         Node.p ~attrs:[ Attr.class_ "docs-example-description" ] [ Node.text d ])
+         Node.p ~attrs:[ Attr.class_ "docs-example-description" ] (Doc.inline d))
     ; Node.div
         ~attrs:[ Attr.class_ "docs-example-card" ]
         [ Loon.Tabs.view
@@ -197,7 +197,7 @@ let page_header (page : Doc.Page.t) =
         ~attrs:[ Attr.class_ "docs-eyebrow" ]
         [ Node.text (Doc.Group.title page.group) ]
     ; Node.h1 ~attrs:[ Attr.class_ "docs-h1" ] [ Node.text page.title ]
-    ; Node.p ~attrs:[ Attr.class_ "docs-lede" ] [ Node.text page.description ]
+    ; Node.p ~attrs:[ Attr.class_ "docs-lede" ] (Doc.inline page.description)
     ; (if is_component
        then
          Node.div
