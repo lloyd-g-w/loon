@@ -1,0 +1,158 @@
+.loon-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  border-radius: var(--loon-radius-sm);
+  border: 1px solid var(--loon-input);
+  background: var(--loon-surface);
+  color: var(--loon-foreground);
+  font: inherit;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  box-shadow: var(--loon-shadow-sm);
+  outline: none;
+  transition: border-color var(--loon-duration) var(--loon-ease),
+    box-shadow var(--loon-duration) var(--loon-ease);
+}
+.loon-input::placeholder {
+  color: var(--loon-muted-foreground);
+  opacity: 1;
+}
+.loon-input:hover:not(:disabled):not(:focus) {
+  border-color: color-mix(in oklch, var(--loon-input) 70%, var(--loon-foreground));
+}
+.loon-input:focus-visible {
+  border-color: var(--loon-ring);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--loon-ring) 25%, transparent);
+}
+.loon-input[aria-invalid="true"] {
+  border-color: var(--loon-danger);
+}
+.loon-input[aria-invalid="true"]:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--loon-danger) 22%, transparent);
+}
+.loon-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background: var(--loon-muted);
+}
+.loon-input {
+  height: 2.25rem;
+  padding: 0 0.75rem;
+}
+.loon-input[type="file"] {
+  padding: 0.3rem 0.75rem;
+}
+.loon-input[type="search"]::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+.loon-input[type="number"] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* An input with a leading icon and/or a trailing addon: the group draws
+   the field, and the input inside it is bare, so addons of any width fit. */
+.loon-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+  height: 2.25rem;
+  padding: 0 0.25rem 0 0.75rem;
+  border-radius: var(--loon-radius-sm);
+  border: 1px solid var(--loon-input);
+  background: var(--loon-surface);
+  box-shadow: var(--loon-shadow-sm);
+  cursor: text;
+  transition: border-color var(--loon-duration) var(--loon-ease),
+    box-shadow var(--loon-duration) var(--loon-ease);
+}
+.loon-input-group:not(.loon-input-group-trailing) {
+  padding-right: 0.75rem;
+}
+.loon-input-group .loon-input {
+  flex: 1;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.loon-input-group .loon-input:focus-visible {
+  box-shadow: none;
+}
+.loon-input-group:hover:not([data-disabled="true"]):not(:focus-within) {
+  border-color: color-mix(in oklch, var(--loon-input) 70%, var(--loon-foreground));
+}
+.loon-input-group:has(.loon-input:focus-visible) {
+  border-color: var(--loon-ring);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--loon-ring) 25%, transparent);
+}
+.loon-input-group:has(.loon-input[aria-invalid="true"]) {
+  border-color: var(--loon-danger);
+}
+.loon-input-group:has(.loon-input[aria-invalid="true"]:focus-visible) {
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--loon-danger) 22%, transparent);
+}
+.loon-input-group[data-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background: var(--loon-muted);
+}
+.loon-input-group[data-disabled="true"] .loon-input:disabled {
+  opacity: 1;
+  background: transparent;
+}
+.loon-input-icon {
+  font-size: 1rem;
+  color: var(--loon-muted-foreground);
+  pointer-events: none;
+}
+.loon-input-addon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  color: var(--loon-muted-foreground);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+.loon-input-addon > :not(.loon-button):not(.loon-toggle) {
+  padding-right: 0.5rem;
+}
+.loon-input-addon .loon-button,
+.loon-input-addon .loon-toggle {
+  height: 1.75rem;
+  min-width: 1.75rem;
+  padding: 0 0.625rem;
+}
+.loon-input-addon .loon-button-icon {
+  width: 1.75rem;
+  padding: 0;
+}
+.loon-input-addon kbd {
+  font-family: var(--loon-font-mono);
+  font-size: 0.75rem;
+  padding: 0.0625rem 0.375rem;
+  margin-right: 0.25rem;
+  border-radius: calc(var(--loon-radius-sm) * 0.75);
+  border: 1px solid var(--loon-border);
+  background: var(--loon-muted);
+}
+
+/* Phones: 16px text, or iOS zooms in on focus; and taller targets. */
+@media (pointer: coarse) {
+  .loon-input,
+  .loon-input-group .loon-input {
+    font-size: 1rem;
+  }
+  .loon-input,
+  .loon-input-group {
+    height: 2.75rem;
+  }
+  .loon-input-addon .loon-button,
+  .loon-input-addon .loon-toggle {
+    height: 2.25rem;
+  }
+}

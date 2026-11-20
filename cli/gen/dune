@@ -1,0 +1,7 @@
+; Writes the registry (cli/registry/data.ml) from loon's sources.
+
+(executable
+ (name gen)
+ (preprocess
+  (pps ppx_jane))
+ (libraries core loon_scan))

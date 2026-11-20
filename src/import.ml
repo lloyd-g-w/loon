@@ -1,3 +1,5 @@
+(** What every component opens: Core, Vdom, Bonsai and small helpers. *)
+
 include Core
 module Vdom = Virtual_dom.Vdom
 module Node = Vdom.Node
