@@ -41,6 +41,25 @@ let scroll_to_anchor id =
   | Some el -> el##scrollIntoView Js._true
 ;;
 
+let reveal_current_nav () =
+  let find s = Js.Opt.to_option (Dom_html.document##querySelector (Js.string s)) in
+  match find ".docs-sidebar", find ".docs-sidebar .docs-nav-link[aria-current=\"page\"]" with
+  | Some nav, Some link ->
+    let nav_box = nav##getBoundingClientRect in
+    let link_box = link##getBoundingClientRect in
+    let margin = 24. in
+    let above = Js.to_float link_box##.top -. Js.to_float nav_box##.top -. margin in
+    let below =
+      Js.to_float link_box##.bottom -. Js.to_float nav_box##.bottom +. margin
+    in
+    let top = Js.to_float nav##.scrollTop in
+    if Float.(above < 0.)
+    then nav##.scrollTop := Js.float (top +. above)
+    else if Float.(below > 0.)
+    then nav##.scrollTop := Js.float (top +. below)
+  | _ -> ()
+;;
+
 let query_all selector =
   Dom_html.document##querySelectorAll (Js.string selector) |> Dom.list_of_nodeList
 ;;

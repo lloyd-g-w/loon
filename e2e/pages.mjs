@@ -103,6 +103,18 @@ await run(async (engine, url) => {
   await page.waitForSelector('.docs-article:not([data-page="introduction"])');
   console.log(`components: ${await page.evaluate(() => location.hash)}`);
   console.log(`topnav active: ${await text(page, ".docs-topnav-link[data-active]")}`);
+
+  // Opened at a page far down the sidebar, the sidebar shows its link.
+  await page.setViewportSize({ width: 1280, height: 600 });
+  await page.goto(`${url}#/toast`);
+  await ready(page, "toast");
+  await page.waitForFunction(() => document.querySelector(".docs-sidebar").scrollTop > 0);
+  const shown = await page.evaluate(() => {
+    const nav = document.querySelector(".docs-sidebar").getBoundingClientRect();
+    const link = document.querySelector('.docs-sidebar [aria-current="page"]').getBoundingClientRect();
+    return link.top >= nav.top && link.bottom <= nav.bottom;
+  });
+  console.log(`sidebar shows the current link: ${shown}`);
   checkErrors(errors, "navigation");
   await browser.close();
 });

@@ -22,6 +22,7 @@ missing: Page not found | Not found · loon
 back home: #/
 components: #/button
 topnav active: Components
+sidebar shows the current link: true
 == theme
 default: html light/teal, app light/teal, background oklch(0.995 0.002 250)
 toggle: Switch to dark theme

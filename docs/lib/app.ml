@@ -146,9 +146,13 @@ let example_view ~(page : Doc.Page.t) index (example : Doc.Example.t) (local_ gr
   let tab, set_tab = Bonsai.state "preview" graph in
   let%arr preview and tab and set_tab in
   let id = Doc.anchor example.title in
+  (* The home page's example has no "Examples" heading above it, so it is a
+     section of its own: in the outline, at the level of the headings after
+     it. *)
+  let heading = if String.equal page.slug Route.home_slug then Node.h2 else Node.h3 in
   Node.section
     ~attrs:[ Attr.class_ "docs-example" ]
-    [ Node.h3
+    [ heading
         ~attrs:
           [ Attr.class_ "docs-example-title"
           ; Attr.id id
@@ -636,6 +640,7 @@ let component (local_ graph) =
                     p.title ^ " · loon"
                   | Some _ -> "loon — components for Bonsai"
                   | None -> "Not found · loon");
+               Browser.reveal_current_nav ();
                match anchor_of_hash hash with
                | Some id -> Browser.scroll_to_anchor id
                | None -> if not same_page then Browser.scroll_to_top ())

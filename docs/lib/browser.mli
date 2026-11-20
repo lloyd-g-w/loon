@@ -21,6 +21,10 @@ val set_root_theme : mode:string -> accent:string -> unit
 val set_title : string -> unit
 val scroll_to_top : unit -> unit
 val scroll_to_anchor : string -> unit
+
+(** Scrolls the sidebar (not the page) the least needed to show the current
+    page's link. *)
+val reveal_current_nav : unit -> unit
 val focus : string -> unit
 
 (** The [data-page] of the article drawn, if any. *)
