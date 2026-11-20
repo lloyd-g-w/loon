@@ -11,7 +11,7 @@ a library (`loon`) or copied into a project with `loon add`.
 | `test/` | expect tests, run under node: `test_<component>.ml` |
 | `docs/lib/` | the documentation site (`loon_docs`); `docs/lib/pages/<slug>_page.ml` is a component's page, found by `docs/gen` (no list to edit) |
 | `docs/bin/` | `main.bc.js` and the page, assembled under `docs/bin/site/` |
-| `cli/` | the `loon` command (`loon add`, ...) |
+| `cli/` | the `loon` command (`loon add`, ...): `cli/gen` embeds src/ into `cli/registry` at build time (no list to edit); cram tests in `cli/test` |
 | `e2e/` | Playwright scripts against the built site |
 | `nix/` | the OxCaml pins and patches, shared with prigh (see `nix/README.md`) |
 
@@ -48,6 +48,11 @@ a library (`loon`) or copied into a project with `loon add`.
   keyboard: arrows, Home/End, Esc closes, Enter/Space activate), visible
   focus rings (`:focus-visible` with `--loon-ring`), 44px touch targets
   where it is a phone's primary control, `prefers-reduced-motion`.
+- `loon add` finds what a component needs from the modules it names and
+  the `loon-<name>` classes its strings use; its description is the first
+  sentence of its `.mli`'s leading doc comment. A component must build when
+  copied alone (cli/test/compile.t builds every one), so never use a
+  generated module (like `Stylesheet_contents`) from one.
 - Keys: `Dom_util.key ev` (a `Dom_html.Keyboard_code.t`, which works in
   tests); `Dom_util.prevent_default`, `Dom_util.focus_selector`.
 

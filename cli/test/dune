@@ -1,0 +1,9 @@
+; The `loon` command, run as a user would. compile.t builds a project made
+; with `loon init` and `loon add` with dune, so it needs bonsai_web.
+
+(cram
+ (deps %{bin:loon}))
+
+(cram
+ (applies_to compile)
+ (enabled_if %{lib-available:bonsai_web}))

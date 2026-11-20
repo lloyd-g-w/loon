@@ -1,0 +1,7 @@
+(executable
+ (name main)
+ (public_name loon)
+ (package loon)
+ (preprocess
+  (pps ppx_jane))
+ (libraries core core_unix core_unix.command_unix loon_registry))
