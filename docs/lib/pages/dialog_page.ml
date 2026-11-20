@@ -48,7 +48,7 @@ let sizes (local_ graph) =
       ~size
       ~title:(name ^ " dialog")
       ~description:"Dialogs come in four widths, and never overflow a phone's screen."
-      ~trigger:(fun attrs -> Button.view ~attrs ~variant:Secondary [ Node.text name ])
+      ~trigger:(fun attrs -> Button.view ~attrs ~variant:Outline [ Node.text name ])
       (Bonsai.return (fun ~close ->
          [], [ Button.view ~on_click:close [ Node.text "Got it" ] ]))
       graph

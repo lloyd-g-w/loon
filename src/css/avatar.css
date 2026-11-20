@@ -80,7 +80,7 @@
   border-radius: 999px;
 }
 .loon-avatar-group > .loon-avatar + .loon-avatar {
-  margin-left: calc(var(--loon-avatar-size) * -0.22);
+  margin-left: calc(var(--loon-avatar-size) * -0.12);
 }
 .loon-avatar-more {
   background: var(--loon-muted);

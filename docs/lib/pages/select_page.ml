@@ -31,7 +31,18 @@ let fruit (local_ graph) =
     ]
 (*$*)
 
-(*$ Groups, icons and disabled options *)
+(*$ Groups, icons and disabled options
+   Starts on a default value; open it to see the options under their
+   headings. *)
+let utc_offsets =
+  [ "aest", "+10:00"
+  ; "acst", "+9:30"
+  ; "awst", "+8:00"
+  ; "nzst", "+12:00"
+  ; "gmt", "+0:00"
+  ]
+;;
+
 let timezone (local_ graph) =
   let select =
     Select.component
@@ -52,8 +63,20 @@ let timezone (local_ graph) =
          ])
       graph
   in
-  let%arr _, view = select in
-  view
+  let%arr zone, view = select in
+  Node.div
+    ~attrs:[ Vdom.Attr.class_ "docs-row" ]
+    [ view
+    ; Node.span
+        ~attrs:[ Vdom.Attr.class_ "loon-field-description" ]
+        [ Node.text
+            (match
+               Option.bind zone ~f:(List.Assoc.find utc_offsets ~equal:String.equal)
+             with
+             | None -> "No time zone"
+             | Some offset -> "UTC" ^ offset)
+        ]
+    ]
 (*$*)
 
 let page =

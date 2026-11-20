@@ -13,43 +13,52 @@ let toasts (local_ graph) =
   let toaster = Toast.component graph in
   let%arr { Toast.Toaster.view; push; dismiss_all = _ } = toaster in
   Node.div
-    ~attrs:[ Attr.class_ "docs-row" ]
-    [ Button.view
-        ~variant:Outline
-        ~on_click:
-          (push
-             (Toast.create
-                ~description:"Friday 20 November 2026 at 5:57 pm"
-                "Event has been created"))
-        [ Node.text "Show a toast" ]
-    ; Button.view
-        ~variant:Outline
-        ~on_click:
-          (push
-             (Toast.create
-                ~variant:Success
-                ~description:"Your changes are live."
-                "Deployed to production"))
-        [ Node.text "Success" ]
-    ; Button.view
-        ~variant:Outline
-        ~on_click:
-          (push
-             (Toast.create
-                ~variant:Danger
-                ~description:"There was a problem with your request."
-                "Uh oh! Something went wrong"))
-        [ Node.text "Error" ]
-    ; Button.view
-        ~variant:Outline
-        ~on_click:
-          (push
-             (Toast.create
-                ~duration:None
-                ~action:("Undo", Effect.Ignore)
-                ~description:"It's in the bin for 30 days."
-                "Message deleted"))
-        [ Node.text "With an action" ]
+    ~attrs:
+      [ Attr.class_ "docs-stack"
+      ; Attr.create "style" "align-items: center; text-align: center"
+      ]
+    [ Node.div
+        ~attrs:[ Attr.class_ "docs-row" ]
+        [ Button.view
+            ~variant:Outline
+            ~on_click:
+              (push
+                 (Toast.create
+                    ~description:"Friday 20 November 2026 at 5:57 pm"
+                    "Event has been created"))
+            [ Node.text "Show a toast" ]
+        ; Button.view
+            ~variant:Outline
+            ~on_click:
+              (push
+                 (Toast.create
+                    ~variant:Success
+                    ~description:"Your changes are live."
+                    "Deployed to production"))
+            [ Node.text "Success" ]
+        ; Button.view
+            ~variant:Outline
+            ~on_click:
+              (push
+                 (Toast.create
+                    ~variant:Danger
+                    ~description:"There was a problem with your request."
+                    "Uh oh! Something went wrong"))
+            [ Node.text "Error" ]
+        ; Button.view
+            ~variant:Outline
+            ~on_click:
+              (push
+                 (Toast.create
+                    ~duration:None
+                    ~action:("Undo", Effect.Ignore)
+                    ~description:"It's in the bin for 30 days."
+                    "Message deleted"))
+            [ Node.text "With an action" ]
+        ]
+    ; Node.p
+        ~attrs:[ Attr.class_ "loon-field-description" ]
+        [ Node.text "Toasts appear in the corner of the page, and stack." ]
     ; view
     ]
 (*$*)

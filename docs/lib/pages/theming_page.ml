@@ -8,14 +8,14 @@ module Attr = Vdom.Attr
 let page = "theming"
 
 (*$ Accents
-   Any element can set data-loon-accent; Theme.root takes ~accent. *)
+   Any element can set [data-loon-accent]; [Theme.root] takes [~accent]. *)
 let accents =
   Node.div
-    ~attrs:[ Attr.class_ "docs-stack" ]
+    ~attrs:[ Attr.class_ "docs-accent-grid" ]
     (List.map Theme.Accent.all ~f:(fun accent ->
        Node.div
          ~attrs:
-           [ Attr.class_ "docs-row"
+           [ Attr.class_ "docs-accent-row"
            ; Attr.create "data-loon-accent" (Theme.Accent.name accent)
            ]
          [ Button.view ~variant:Accent [ Node.text (String.capitalize (Theme.Accent.name accent)) ]

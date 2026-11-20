@@ -96,6 +96,20 @@ body[data-scroll-locked] {
   background: var(--loon-surface);
   box-shadow: var(--loon-shadow-sm);
 }
+/* Rows whose columns line up: each row's children are the grid's cells. */
+.docs-accent-grid {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 0.75rem 1rem;
+  align-items: center;
+  justify-items: start;
+}
+.docs-accent-grid > .docs-accent-row {
+  display: contents;
+}
+.docs-accent-grid > .docs-accent-row > :first-child {
+  justify-self: stretch;
+}
 .docs-stack {
   display: flex;
   flex-direction: column;

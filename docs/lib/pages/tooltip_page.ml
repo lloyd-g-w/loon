@@ -9,19 +9,28 @@ let page = "tooltip"
    Tooltips name buttons that only show an icon. *)
 let icon_buttons =
   Node.div
-    ~attrs:[ Vdom.Attr.class_ "docs-row" ]
-    (List.map
-       [ "tip-edit", Icon.Pencil, "Edit"
-       ; "tip-copy", Copy, "Copy to clipboard"
-       ; "tip-delete", Trash, "Move to trash"
-       ]
-       ~f:(fun (id, icon, label) ->
-         Tooltip.view ~id ~content:label (fun attrs ->
-           Button.view
-             ~attrs:(Vdom.Attr.create "aria-label" label :: attrs)
-             ~variant:Outline
-             ~size:Icon
-             [ Icon.view icon ])))
+    ~attrs:
+      [ Vdom.Attr.class_ "docs-stack"
+      ; Vdom.Attr.create "style" "align-items: center; text-align: center"
+      ]
+    [ Node.div
+        ~attrs:[ Vdom.Attr.class_ "docs-row" ]
+        (List.map
+           [ "tip-edit", Icon.Pencil, "Edit"
+           ; "tip-copy", Copy, "Copy to clipboard"
+           ; "tip-delete", Trash, "Move to trash"
+           ]
+           ~f:(fun (id, icon, label) ->
+             Tooltip.view ~id ~content:label (fun attrs ->
+               Button.view
+                 ~attrs:(Vdom.Attr.create "aria-label" label :: attrs)
+                 ~variant:Outline
+                 ~size:Icon
+                 [ Icon.view icon ])))
+    ; Node.p
+        ~attrs:[ Vdom.Attr.class_ "loon-field-description" ]
+        [ Node.text "Hover over a button, or Tab to it." ]
+    ]
 ;;
 
 (*$*)
@@ -36,7 +45,11 @@ let sides =
          ~side
          ~id:("tip-side-" ^ name)
          ~content:("On the " ^ name)
-         (fun attrs -> Button.view ~attrs ~variant:Secondary [ Node.text name ])))
+         (fun attrs ->
+            Button.view
+              ~attrs
+              ~variant:Outline
+              [ Node.text (String.capitalize name) ])))
 ;;
 
 (*$*)

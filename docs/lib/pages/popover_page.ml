@@ -34,12 +34,16 @@ let sides (local_ graph) =
       ~trigger:(fun attrs ->
         Button.view
           ~attrs
-          ~variant:Secondary
-          [ Node.text (Floating.Side.name side ^ " / " ^ Floating.Align.name align) ])
+          ~variant:Outline
+          [ Node.text
+              (String.capitalize (Floating.Side.name side)
+               ^ ", "
+               ^ Floating.Align.name align)
+          ])
       (Bonsai.return (fun ~close:_ ->
          [ Popover.header
              ~description:"Placed beside its trigger by CSS alone."
-             (Floating.Side.name side)
+             (String.capitalize (Floating.Side.name side))
          ]))
       graph
   in

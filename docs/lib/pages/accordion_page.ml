@@ -32,7 +32,12 @@ let single (local_ graph) =
 (*$*)
 
 (*$ Several open *)
-let multiple (local_ graph) = Accordion.component ~kind:Multiple (Bonsai.return faq) graph
+let multiple (local_ graph) =
+  Accordion.component
+    ~kind:Multiple
+    ~default:[ "what"; "accessible" ]
+    (Bonsai.return faq)
+    graph
 (*$*)
 
 let page =
