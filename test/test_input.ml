@@ -51,7 +51,7 @@ let%expect_test "a leading icon and a trailing addon" =
     <div data-disabled="false"
          class="loon-input-group loon-input-group-leading loon-input-group-trailing">
       <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search loon-input-icon">
-        <circle cx="11." cy="11." r="7."> </circle>
+        <circle cx="11" cy="11" r="7"> </circle>
         <path d="m20 20-3.5-3.5"> </path>
       </svg>
       <input type="search" class="loon-input" #value="" @on_input/>

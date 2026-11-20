@@ -2,11 +2,11 @@
 comment (the list grows with loon, so only some are checked here).
 
   $ loon list | grep -E '^(button|tabs|theme|import|dom_util) '
-  button    Buttons, and links that look like them.
-  dom_util  Small DOM effects the components share: moving focus and reading keys.
-  import    What every component opens: Core, Vdom, Bonsai and small helpers.
-  tabs      Tabs: a row of triggers, one panel shown at a time.
-  theme     The theme a subtree uses: light or dark, and an accent colour.
+  button         Buttons, and links that look like them.
+  dom_util       Small DOM effects the components share: moving focus and reading keys.
+  import         What every component opens: Core, Vdom, Bonsai and small helpers.
+  tabs           Tabs: a row of triggers, one panel shown at a time.
+  theme          The theme a subtree uses: light or dark, and an accent colour.
 
 Every line has a name and a description.
 

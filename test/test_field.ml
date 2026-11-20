@@ -46,7 +46,7 @@ let%expect_test "a field wires its label, description and error to the control" 
       <p id="email-description" class="loon-field-description"> We'll never share it. </p>
       <p id="email-error" role="alert" class="loon-field-error">
         <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-alert-circle">
-          <circle cx="12." cy="12." r="9.5"> </circle>
+          <circle cx="12" cy="12" r="9.5"> </circle>
           <path d="M12 7.5v5M12 16h.01"> </path>
         </svg>
         Enter an email address.
