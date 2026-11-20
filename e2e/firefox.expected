@@ -1,0 +1,75 @@
+== pages
+home: loon — components for Bonsai | Calm, well-made components for Bonsai.
+current: Introduction
+guides: Introduction, Installation, Theming, CLI
+every page: ok (h1, current link, title, previews, outline, no overflow or errors)
+back: Theming
+back: Installation
+forward: Theming
+scrolled to the top: true
+theming outline: Examples | Accents | Light and dark | Dark mode | Accents | Variables | Overriding
+outline link: heading in view, hash #/theming/variables
+outline marks: Variables
+pager: PreviousIntroductionNextTheming
+next: Theming
+missing: Page not found | Not found · loon
+back home: #/
+components: #/button
+topnav active: Components
+== theme
+default: html light/teal, app light/teal, background oklch(0.995 0.002 250)
+toggle: Switch to dark theme
+toggled: html dark/teal, app dark/teal, background oklch(0.17 0.012 255)
+toggle: Switch to light theme
+accents: Teal* Lake Moss Ember Iris
+iris: html dark/iris, app dark/iris, background oklch(0.17 0.012 255)
+focus on opening: Iris
+arrow down: Teal
+accent menu: closes on Escape and outside clicks
+reloaded: html dark/iris, app dark/iris, background oklch(0.17 0.012 255)
+light again, reloaded: html light/iris, app light/iris, background oklch(0.995 0.002 250)
+system dark: html dark/teal, app dark/teal, background oklch(0.17 0.012 255)
+== examples
+tabs: Preview Code; selected Preview
+preview: true, code: false
+code: let variants =
+highlighted: hl-keyword hl-label hl-module hl-operator hl-punctuation hl-string
+arrow left: Preview, focused Preview
+copied the source: true
+copy mark: gone after a moment
+header: Sourceloon add button
+source: https://github.com/lloyd-g-w/loon/blob/main/src/button.mli
+installation: 7 code blocks
+dune highlighted: (executable
+copied dune: (executable
+== search
+opened by the button, input focused; first results: >Introduction, Installation, Theming, CLI
+"intal": >Installation, With a label, Invalid and disabled
+Escape closes it
+Ctrl+K opens it, empty: true
+"themng": >Theming, Accents, Light and dark
+Enter: #/theming, closed
+"/" opens it; arrows wrap: false
+no match: Nothing matches “qqqzz”.
+click: #/cli
+scrim click closes it
+== mobile:phone
+phone: sidebar hidden true, toc hidden true
+header targets: all at least 44px
+menu: true, Menu
+sheet links under 44px: 0
+page scroll locked: true
+tapped a link: Theming, sheet closed
+scrim tap closes the sheet
+search fits: true
+sideways overflow: none
+== mobile:small
+small: sidebar hidden true, toc hidden true
+header targets: all at least 44px
+menu: true, Menu
+sheet links under 44px: 0
+page scroll locked: true
+tapped a link: Theming, sheet closed
+scrim tap closes the sheet
+search fits: true
+sideways overflow: none

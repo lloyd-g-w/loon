@@ -2,18 +2,12 @@
 home: loon — components for Bonsai | Calm, well-made components for Bonsai.
 current: Introduction
 guides: Introduction, Installation, Theming, CLI
-page installation: outline 3 of 6
-page theming: outline 6 of 7
-page native_select: outline 9 of 5
-page radio_group: outline 5 of 7
-page slider: outline 7 of 6
-page toggle: outline 6 of 9
-every page: 6 with problems (h1, current link, title, previews, outline, no overflow or errors)
+every page: ok (h1, current link, title, previews, outline, no overflow or errors)
 back: Theming
 back: Installation
 forward: Theming
 scrolled to the top: true
-theming outline: Requirements | With nix | With opam | Add the library | Load the stylesheet | Wrap your app
+theming outline: Examples | Accents | Light and dark | Dark mode | Accents | Variables | Overriding
 outline link: heading in view, hash #/theming/variables
 outline marks: Variables
 pager: PreviousIntroductionNextTheming

@@ -355,7 +355,16 @@ let search_results query =
     |> fun l -> List.take l 30
 ;;
 
-let search_dialog ~query ~set_query ~selected ~set_selected ~close ~go =
+(* Moves the search's selection: from the query as it is when the key is
+   handled, not as last drawn, so that keys typed faster than frames count. *)
+let move_selection (query, selected) delta =
+  let count = List.length (search_results query) in
+  if count = 0
+  then query, 0
+  else query, (Int.clamp_exn selected ~min:0 ~max:(count - 1) + delta + count) % count
+;;
+
+let search_dialog ~query ~set_query ~selected ~set_selected ~move ~close ~go =
   let results = search_results query in
   let count = List.length results in
   let selected =
@@ -363,11 +372,8 @@ let search_dialog ~query ~set_query ~selected ~set_selected ~close ~go =
   in
   let on_keydown ev =
     match Loon.Dom_util.key ev with
-    | ArrowDown when count > 0 ->
-      Effect.Many [ Loon.Dom_util.prevent_default ev; set_selected ((selected + 1) % count) ]
-    | ArrowUp when count > 0 ->
-      Effect.Many
-        [ Loon.Dom_util.prevent_default ev; set_selected ((selected - 1 + count) % count) ]
+    | ArrowDown -> Effect.Many [ Loon.Dom_util.prevent_default ev; move 1 ]
+    | ArrowUp -> Effect.Many [ Loon.Dom_util.prevent_default ev; move (-1) ]
     | Enter ->
       (match List.nth results selected with
        | None -> Effect.Ignore
@@ -401,7 +407,7 @@ let search_dialog ~query ~set_query ~selected ~set_selected ~close ~go =
                   ; Attr.create "aria-controls" "docs-search-results"
                   ; Attr.create "aria-activedescendant" (sprintf "docs-search-%d" selected)
                   ; Attr.value query
-                  ; Attr.on_input (fun _ q -> Effect.Many [ set_query q; set_selected 0 ])
+                  ; Attr.on_input (fun _ q -> set_query q)
                   ; Attr.on_keydown on_keydown
                   ]
                 ()
@@ -579,8 +585,21 @@ let component (local_ graph) =
   let accent, set_accent = Bonsai.state initial_accent graph in
   let nav_open, set_nav_open = Bonsai.state false graph in
   let search_open, set_search_open = Bonsai.state false graph in
-  let query, set_query = Bonsai.state "" graph in
-  let selected, set_selected = Bonsai.state 0 graph in
+  let search, update_search = Bonsai.state' ("", 0) graph in
+  let query = search >>| fst in
+  let selected = search >>| snd in
+  let set_query =
+    let%arr update_search in
+    fun q -> update_search (fun _ -> q, 0)
+  in
+  let set_selected =
+    let%arr update_search in
+    fun i -> update_search (fun (q, _) -> q, i)
+  in
+  let move_selected =
+    let%arr update_search in
+    fun delta -> update_search (fun m -> move_selection m delta)
+  in
   let accent_open, set_accent_open = Bonsai.state false graph in
   let outline, set_outline = Bonsai.state [] graph in
   (* The document follows the theme: its background and scrollbars. *)
@@ -680,6 +699,7 @@ let component (local_ graph) =
   and set_query
   and selected
   and set_selected
+  and move_selected
   and accent_open
   and set_accent_open
   and outline
@@ -860,6 +880,7 @@ let component (local_ graph) =
            ~set_query
            ~selected
            ~set_selected
+           ~move:move_selected
            ~close:(set_search_open false)
            ~go
        else Node.none)

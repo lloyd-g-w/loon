@@ -36,6 +36,7 @@ await run(async (engine, url) => {
   await page.waitForSelector(".docs-search", { state: "detached" });
   console.log(`Enter: ${await page.evaluate(() => location.hash)}, closed`);
 
+  await settle(page);
   await page.keyboard.press("/");
   await page.waitForSelector(".docs-search");
   await page.keyboard.type("cli");
@@ -55,7 +56,8 @@ await run(async (engine, url) => {
   // A click on the scrim closes it.
   await page.keyboard.press("Control+k");
   await page.waitForSelector(".docs-search");
-  await page.mouse.click(10, 800);
+  await page.waitForFunction(() => document.activeElement?.id === "docs-search-input");
+  await page.click(".docs-scrim", { position: { x: 10, y: 10 }, force: true });
   await page.waitForSelector(".docs-search", { state: "detached" });
   console.log("scrim click closes it");
   checkErrors(errors, "search");
