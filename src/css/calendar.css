@@ -1,0 +1,126 @@
+.loon-calendar {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--loon-border);
+  border-radius: var(--loon-radius-lg);
+  background: var(--loon-surface);
+  color: var(--loon-foreground);
+  box-shadow: var(--loon-shadow-sm);
+  font-size: 0.875rem;
+  user-select: none;
+}
+.loon-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.loon-calendar-caption {
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+.loon-calendar-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--loon-border);
+  border-radius: var(--loon-radius);
+  background: var(--loon-surface);
+  color: var(--loon-foreground);
+  cursor: pointer;
+  transition: background var(--loon-duration) var(--loon-ease);
+}
+.loon-calendar-nav:hover:not(:disabled) {
+  background: var(--loon-muted);
+}
+.loon-calendar-nav:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.loon-calendar-grid {
+  border-collapse: separate;
+  border-spacing: 0 0.125rem;
+}
+.loon-calendar-weekday {
+  width: 2.25rem;
+  height: 2rem;
+  color: var(--loon-muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.loon-calendar-cell {
+  padding: 0;
+  text-align: center;
+}
+.loon-calendar-day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  border-radius: var(--loon-radius);
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    background var(--loon-duration) var(--loon-ease),
+    color var(--loon-duration) var(--loon-ease);
+}
+.loon-calendar-day:hover:not(:disabled) {
+  background: var(--loon-muted);
+}
+.loon-calendar-day[data-outside] {
+  color: var(--loon-muted-foreground);
+  opacity: 0.55;
+}
+.loon-calendar-day[aria-current="date"] {
+  background: var(--loon-accent-soft);
+  color: color-mix(in oklch, var(--loon-accent) 80%, var(--loon-foreground));
+  font-weight: 600;
+}
+.loon-calendar-day[data-selected],
+.loon-calendar-day[data-selected]:hover:not(:disabled) {
+  background: var(--loon-primary);
+  color: var(--loon-primary-foreground);
+  font-weight: 600;
+  opacity: 1;
+}
+.loon-calendar-day:disabled {
+  opacity: 0.3;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+.loon-calendar-day:focus-visible,
+.loon-calendar-nav:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--loon-ring);
+}
+@media (max-width: 40rem) {
+  .loon-calendar-day,
+  .loon-calendar-weekday {
+    width: 2.625rem;
+  }
+  .loon-calendar-day {
+    height: 2.625rem;
+  }
+  .loon-calendar-nav {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+}
+@media (max-width: 22rem) {
+  .loon-calendar {
+    padding: 0.5rem;
+  }
+  .loon-calendar-day,
+  .loon-calendar-weekday {
+    width: 2.375rem;
+  }
+}

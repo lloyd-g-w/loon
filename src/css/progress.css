@@ -1,0 +1,34 @@
+.loon-progress {
+  --loon-progress-tone: var(--loon-primary);
+  position: relative;
+  width: 100%;
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--loon-progress-tone) 14%, var(--loon-muted));
+}
+.loon-progress-sm { height: 0.25rem; }
+.loon-progress-lg { height: 0.75rem; }
+.loon-progress-accent { --loon-progress-tone: var(--loon-accent); }
+.loon-progress-success { --loon-progress-tone: var(--loon-success); }
+.loon-progress-warning { --loon-progress-tone: var(--loon-warning); }
+.loon-progress-danger { --loon-progress-tone: var(--loon-danger); }
+.loon-progress-indicator {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--loon-progress-tone);
+  transition: transform 420ms var(--loon-ease);
+}
+.loon-progress[data-state="indeterminate"] .loon-progress-indicator {
+  width: 40%;
+  animation: loon-progress-sweep 1.4s var(--loon-ease) infinite;
+}
+@keyframes loon-progress-sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
