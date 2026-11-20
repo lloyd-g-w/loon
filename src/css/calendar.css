@@ -73,7 +73,7 @@
     background var(--loon-duration) var(--loon-ease),
     color var(--loon-duration) var(--loon-ease);
 }
-.loon-calendar-day:hover:not(:disabled) {
+.loon-calendar-day:hover:not([aria-disabled="true"]) {
   background: var(--loon-muted);
 }
 .loon-calendar-day[data-outside] {
@@ -86,13 +86,13 @@
   font-weight: 600;
 }
 .loon-calendar-day[data-selected],
-.loon-calendar-day[data-selected]:hover:not(:disabled) {
+.loon-calendar-day[data-selected]:hover {
   background: var(--loon-primary);
   color: var(--loon-primary-foreground);
   font-weight: 600;
   opacity: 1;
 }
-.loon-calendar-day:disabled {
+.loon-calendar-day[aria-disabled="true"] {
   opacity: 0.3;
   text-decoration: line-through;
   cursor: not-allowed;

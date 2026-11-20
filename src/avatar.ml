@@ -25,7 +25,16 @@ let initials name =
     String.split_on_chars name ~on:[ ' '; '\t'; '-'; '_'; '.' ]
     |> List.filter ~f:(fun w -> not (String.is_empty w))
   in
-  let first w = String.uppercase (String.prefix w 1) in
+  (* The first character, with its UTF-8 continuation bytes. *)
+  let first w =
+    let n =
+      1
+      + (String.drop_prefix w 1
+         |> String.take_while ~f:(fun c -> Char.to_int c land 0xC0 = 0x80)
+         |> String.length)
+    in
+    String.uppercase (String.prefix w n)
+  in
   match words with
   | [] -> ""
   | [ w ] -> first w

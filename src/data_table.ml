@@ -137,7 +137,7 @@ let component
   =
   let filter, set_filter = Bonsai.state "" graph in
   let sort, set_sort = Bonsai.state None graph in
-  let selected, set_selected = Bonsai.state String.Set.empty graph in
+  let selected, update_selected = Bonsai.state' String.Set.empty graph in
   let page, set_page = Bonsai.state 1 graph in
   let open Bonsai.Let_syntax in
   let%arr filter
@@ -145,7 +145,7 @@ let component
   and sort
   and set_sort
   and selected
-  and set_selected
+  and update_selected
   and page
   and set_page
   and columns
@@ -170,11 +170,12 @@ let component
   in
   let some_selected = List.exists visible_keys ~f:(Set.mem selected) in
   let toggle k =
-    set_selected (if Set.mem selected k then Set.remove selected k else Set.add selected k)
+    update_selected (fun selected ->
+      if Set.mem selected k then Set.remove selected k else Set.add selected k)
   in
   let toggle_all =
-    set_selected
-      (if all_selected
+    update_selected (fun selected ->
+      if all_selected
        then List.fold visible_keys ~init:selected ~f:Set.remove
        else List.fold visible_keys ~init:selected ~f:Set.add)
   in

@@ -34,14 +34,7 @@ let toggled (kind : Kind.t) ~open_ id =
 let trigger_id ~name id = sprintf "%s-trigger-%s" name id
 let content_id ~name id = sprintf "%s-content-%s" name id
 
-let view
-  ?attrs:extra
-  ?(kind = Kind.Single { collapsible = true })
-  ~name
-  ~open_
-  ~on_change
-  items
-  =
+let view_with_toggle ?attrs:extra ~kind ~name ~open_ ~toggle items =
   let enabled =
     List.filter_map items ~f:(fun (i : Item.t) -> Option.some_if (not i.disabled) i.id)
     |> Array.of_list
@@ -71,7 +64,7 @@ let view
     let state = if is_open then "open" else "closed" in
     let locked =
       match kind with
-      | Single { collapsible = false } -> is_open
+      | Kind.Single { collapsible = false } -> is_open
       | Single { collapsible = true } | Multiple -> false
     in
     Node.div
@@ -87,7 +80,7 @@ let view
                  ; aria_bool "expanded" is_open
                  ; aria "controls" (content_id ~name item.id)
                  ; data "state" state
-                 ; Attr.on_click (fun _ -> on_change (toggled kind ~open_ item.id))
+                 ; Attr.on_click (fun _ -> toggle item.id)
                  ; Attr.on_keydown (on_keydown item.id)
                  ]
                  @ (if locked then [ aria "disabled" "true" ] else [])
@@ -114,10 +107,39 @@ let view
   Node.div ~attrs:(attrs ?attrs:extra [ "loon-accordion" ]) (List.map items ~f:item)
 ;;
 
-let component ?attrs ?kind ?(default = []) items (local_ graph) =
-  let open_, set_open = Bonsai.state default graph in
+let view
+  ?attrs
+  ?(kind = Kind.Single { collapsible = true })
+  ~name
+  ~open_
+  ~on_change
+  items
+  =
+  view_with_toggle
+    ?attrs
+    ~kind
+    ~name
+    ~open_
+    ~toggle:(fun id -> on_change (toggled kind ~open_ id))
+    items
+;;
+
+let component
+  ?attrs
+  ?(kind = Kind.Single { collapsible = true })
+  ?(default = [])
+  items
+  (local_ graph)
+  =
+  let open_, update = Bonsai.state' default graph in
   let name = Bonsai.path_id graph in
   let open Bonsai.Let_syntax in
-  let%arr open_ and set_open and name and items in
-  view ?attrs ?kind ~name:("loon" ^ name) ~open_ ~on_change:set_open items
+  let%arr open_ and update and name and items in
+  view_with_toggle
+    ?attrs
+    ~kind
+    ~name:("loon" ^ name)
+    ~open_
+    ~toggle:(fun id -> update (fun open_ -> toggled kind ~open_ id))
+    items
 ;;

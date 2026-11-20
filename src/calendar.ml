@@ -72,7 +72,7 @@ let clamp ?min ?max d =
   Option.value_map max ~default:d ~f:(fun m -> Date.min d m)
 ;;
 
-let view
+let view_internal
   ?attrs:extra
   ?(week_start = Day_of_week.Mon)
   ?min
@@ -82,29 +82,33 @@ let view
   ~name
   ~focused
   ~selected
-  ~on_focus
+  ~update_focus
   ~on_select
   ()
   =
+  let on_focus d = update_focus (Fn.const d) in
   let disabled d =
     is_disabled d
     || Option.value_map min ~default:false ~f:(fun m -> Date.( < ) d m)
     || Option.value_map max ~default:false ~f:(fun m -> Date.( > ) d m)
   in
   let caption_id = name ^ "-caption" in
-  let move_to d =
-    let d = clamp ?min ?max d in
-    Effect.Many [ on_focus d; Dom_util.focus_selector ("#" ^ day_id ~name d) ]
-  in
+  let grid_id = name ^ "-grid" in
   let on_keydown (ev : Dom_html.keyboardEvent Js.t) =
     match
       moved ~week_start ~shift:(Js.to_bool ev##.shiftKey) ~key:(Dom_util.key ev) focused
     with
     | None -> Effect.Ignore
-    | Some d -> Effect.Many [ Dom_util.prevent_default ev; move_to d ]
+    | Some _ ->
+      let shift = Js.to_bool ev##.shiftKey and key = Dom_util.key ev in
+      Effect.Many
+        [ Dom_util.prevent_default ev
+        ; update_focus (fun f ->
+            Option.value_map (moved ~week_start ~shift ~key f) ~default:f ~f:(clamp ?min ?max))
+        ; Dom_util.focus_selector (sprintf "#%s button[tabindex='0']" grid_id)
+        ]
   in
   let nav ~label ~icon ~months =
-    let target = Date.add_months focused months in
     let blocked =
       match months < 0, min, max with
       | true, Some min, _ -> Date.( < ) (Date.add_days (first_of_month focused) (-1)) min
@@ -118,7 +122,9 @@ let view
          ; Attr.type_ "button"
          ; aria "label" label
          ]
-         @ if blocked then [ Attr.disabled ] else [ Attr.on_click (fun _ -> on_focus (clamp ?min ?max target)) ])
+         @ if blocked then [ Attr.disabled ] else [ Attr.on_click (fun _ ->
+                 update_focus (fun f -> clamp ?min ?max (Date.add_months f months)))
+             ])
       [ Icon.view icon ]
   in
   let header_days =
@@ -156,7 +162,7 @@ let view
                  ]
              @
              if is_disabled
-             then [ Attr.disabled ]
+             then [ aria "disabled" "true" ]
              else [ Attr.on_click (fun _ -> Effect.Many [ on_focus d; on_select d ]) ])
           [ Node.text (Int.to_string (Date.day d)) ]
       ]
@@ -174,6 +180,7 @@ let view
     ; Node.table
         ~attrs:
           [ Attr.class_ "loon-calendar-grid"
+          ; Attr.id grid_id
           ; Attr.role "grid"
           ; aria "labelledby" caption_id
           ; Attr.on_keydown on_keydown
@@ -184,6 +191,22 @@ let view
                Node.tr (List.map week ~f:cell)))
         ]
     ]
+;;
+
+let view ?attrs ?week_start ?min ?max ?is_disabled ?today ~name ~focused ~selected ~on_focus ~on_select () =
+  view_internal
+    ?attrs
+    ?week_start
+    ?min
+    ?max
+    ?is_disabled
+    ?today
+    ~name
+    ~focused
+    ~selected
+    ~update_focus:(fun f -> on_focus (f focused))
+    ~on_select
+    ()
 ;;
 
 type t =
@@ -202,14 +225,14 @@ let local_today () =
 let component ?attrs ?week_start ?min ?max ?is_disabled ?today ?default (local_ graph) =
   let today = match today with Some t -> t | None -> local_today () in
   let selected, set_selected = Bonsai.state default graph in
-  let focused, set_focused =
-    Bonsai.state (clamp ?min ?max (Option.value default ~default:today)) graph
+  let focused, update_focused =
+    Bonsai.state' (clamp ?min ?max (Option.value default ~default:today)) graph
   in
   let name = Bonsai.path_id graph in
   let open Bonsai.Let_syntax in
-  let%arr selected and set_selected and focused and set_focused and name in
+  let%arr selected and set_selected and focused and update_focused and name in
   { view =
-      view
+      view_internal
         ?attrs
         ?week_start
         ?min
@@ -219,7 +242,7 @@ let component ?attrs ?week_start ?min ?max ?is_disabled ?today ?default (local_ 
         ~name:("loon" ^ name)
         ~focused
         ~selected
-        ~on_focus:set_focused
+        ~update_focus:update_focused
         ~on_select:(fun d -> set_selected (Some d))
         ()
   ; selected
