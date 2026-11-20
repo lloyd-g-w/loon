@@ -62,7 +62,7 @@ let%expect_test "typing filters, arrows move, Enter runs" =
     <div class="loon-command">
       <div class="loon-command-search">
         <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-          <circle cx="11." cy="11." r="7."> </circle>
+          <circle cx="11" cy="11" r="7"> </circle>
           <path d="m20 20-3.5-3.5"> </path>
         </svg>
         <input type="text"
@@ -152,7 +152,7 @@ let%expect_test "typing filters, arrows move, Enter runs" =
       <div class="loon-command">
         <div class="loon-command-search">
           <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-            <circle cx="11." cy="11." r="7."> </circle>
+            <circle cx="11" cy="11" r="7"> </circle>
             <path d="m20 20-3.5-3.5"> </path>
           </svg>
           <input type="text"
@@ -249,7 +249,7 @@ let%expect_test "typing filters, arrows move, Enter runs" =
       <div class="loon-command">
         <div class="loon-command-search">
           <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-            <circle cx="11." cy="11." r="7."> </circle>
+            <circle cx="11" cy="11" r="7"> </circle>
             <path d="m20 20-3.5-3.5"> </path>
           </svg>
           <input type="text"
@@ -317,7 +317,7 @@ let%expect_test "typing filters, arrows move, Enter runs" =
     <div class="loon-command">
       <div class="loon-command-search">
         <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-          <circle cx="11." cy="11." r="7."> </circle>
+          <circle cx="11" cy="11" r="7"> </circle>
           <path d="m20 20-3.5-3.5"> </path>
         </svg>
         <input type="text"
@@ -385,7 +385,7 @@ let%expect_test "the palette opens in a dialog and closes when an item runs" =
             <div class="loon-command">
               <div class="loon-command-search">
                 <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-                  <circle cx="11." cy="11." r="7."> </circle>
+                  <circle cx="11" cy="11" r="7"> </circle>
                   <path d="m20 20-3.5-3.5"> </path>
                 </svg>
                 <input type="text"
