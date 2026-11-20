@@ -1,0 +1,25 @@
+.loon-modal-anchor {
+  display: contents;
+}
+.loon-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+}
+:root:has(.loon-modal) {
+  overflow: hidden;
+}
+.loon-scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--loon-scrim);
+  backdrop-filter: blur(2px);
+  animation: loon-fade-in calc(var(--loon-duration) * 1.25) var(--loon-ease);
+}
+.loon-focus-guard {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}

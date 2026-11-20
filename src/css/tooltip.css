@@ -1,0 +1,63 @@
+.loon-tooltip {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+}
+.loon-tooltip-content {
+  position: absolute;
+  z-index: 60;
+  width: max-content;
+  max-width: min(18rem, calc(100vw - 1rem));
+  padding: 0.3125rem 0.625rem;
+  border-radius: calc(var(--loon-radius) - 2px);
+  background: var(--loon-foreground);
+  color: var(--loon-background);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.35;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--loon-duration) var(--loon-ease),
+    transform var(--loon-duration) var(--loon-ease),
+    visibility 0s linear var(--loon-duration);
+  --loon-tooltip-gap: 0.375rem;
+}
+.loon-tooltip:hover > .loon-tooltip-content,
+.loon-tooltip:has(> :focus-visible) > .loon-tooltip-content {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0.3s;
+}
+.loon-tooltip[data-side="top"] > .loon-tooltip-content {
+  bottom: calc(100% + var(--loon-tooltip-gap));
+  left: 50%;
+  translate: -50% 0;
+  transform: translateY(3px);
+}
+.loon-tooltip[data-side="bottom"] > .loon-tooltip-content {
+  top: calc(100% + var(--loon-tooltip-gap));
+  left: 50%;
+  translate: -50% 0;
+  transform: translateY(-3px);
+}
+.loon-tooltip[data-side="left"] > .loon-tooltip-content {
+  right: calc(100% + var(--loon-tooltip-gap));
+  top: 50%;
+  translate: 0 -50%;
+  transform: translateX(3px);
+}
+.loon-tooltip[data-side="right"] > .loon-tooltip-content {
+  left: calc(100% + var(--loon-tooltip-gap));
+  top: 50%;
+  translate: 0 -50%;
+  transform: translateX(-3px);
+}
+@media (hover: none) {
+  .loon-tooltip:hover > .loon-tooltip-content {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
