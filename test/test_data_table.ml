@@ -77,7 +77,7 @@ let%expect_test "the whole table" =
       <div class="loon-data-table-toolbar">
         <div class="loon-data-table-filter">
           <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-            <circle cx="11." cy="11." r="7."> </circle>
+            <circle cx="11" cy="11" r="7"> </circle>
             <path d="m20 20-3.5-3.5"> </path>
           </svg>
           <input type="search" placeholder="Filter…" aria-label="Filter rows" #value="" @on_input/>
@@ -231,7 +231,7 @@ let%expect_test "sorting, filtering and selecting" =
       <div class="loon-data-table-toolbar">
         <div class="loon-data-table-filter">
           <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-            <circle cx="11." cy="11." r="7."> </circle>
+            <circle cx="11" cy="11" r="7"> </circle>
             <path d="m20 20-3.5-3.5"> </path>
           </svg>
           <input type="search" placeholder="Filter…" aria-label="Filter rows" #value="" @on_input/>

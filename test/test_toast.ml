@@ -75,7 +75,7 @@ let%expect_test "a toast's HTML" =
           <svg viewBox="0 0 24 24"
                aria-hidden="true"
                class="loon-icon loon-icon-check-circle loon-toast-icon">
-            <circle cx="12." cy="12." r="9.5"> </circle>
+            <circle cx="12" cy="12" r="9.5"> </circle>
             <path d="m8.5 12.5 2.5 2.5 4.5-5"> </path>
           </svg>
           <div class="loon-toast-body">

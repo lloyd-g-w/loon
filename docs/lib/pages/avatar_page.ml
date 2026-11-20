@@ -7,15 +7,28 @@ module Attr = Vdom.Attr
 
 let page = "avatar"
 
+(* A picture, inline so that the example works offline. *)
+let portrait =
+  "data:image/svg+xml;utf8,"
+  ^ String.concat
+      [ "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'>"
+      ; "<defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>"
+      ; "<stop offset='0' stop-color='%2338bdf8'/><stop offset='1' stop-color='%230f766e'/>"
+      ; "</linearGradient></defs><rect width='40' height='40' fill='url(%23g)'/>"
+      ; "<circle cx='20' cy='16' r='7' fill='%23ecfeff'/>"
+      ; "<path d='M6 40c2-9 8-13 14-13s12 4 14 13z' fill='%23ecfeff'/></svg>"
+      ]
+;;
+
 (*$ Pictures and initials
    Initials show while the picture loads, and if it fails. *)
 let basic =
   Node.div
     ~attrs:[ Attr.class_ "docs-row" ]
-    [ Avatar.view ~src:"https://github.com/lloyd-g-w.png" "Lloyd Williams"
+    [ Avatar.view ~src:portrait "Lloyd Williams"
     ; Avatar.view "Ada Lovelace"
     ; Avatar.view "Grace Hopper"
-    ; Avatar.view ~src:"/does-not-exist.png" "Alan Turing"
+    ; Avatar.view "Alan Turing"
     ; Avatar.view ~shape:Square "Edsger Dijkstra"
     ]
 (*$*)

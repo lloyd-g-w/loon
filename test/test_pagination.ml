@@ -80,9 +80,9 @@ let%expect_test "next, previous and page links" =
         <li>
           <span aria-hidden="true" class="loon-pagination-ellipsis">
             <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-more-horizontal">
-              <circle cx="5." cy="12." r="1."> </circle>
-              <circle cx="12." cy="12." r="1."> </circle>
-              <circle cx="19." cy="12." r="1."> </circle>
+              <circle cx="5" cy="12" r="1"> </circle>
+              <circle cx="12" cy="12" r="1"> </circle>
+              <circle cx="19" cy="12" r="1"> </circle>
             </svg>
           </span>
         </li>
@@ -128,9 +128,9 @@ let%expect_test "next, previous and page links" =
     +|    <li>
     +|      <span aria-hidden="true" class="loon-pagination-ellipsis">
     +|        <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-more-horizontal">
-    +|          <circle cx="5." cy="12." r="1."> </circle>
-    +|          <circle cx="12." cy="12." r="1."> </circle>
-    +|          <circle cx="19." cy="12." r="1."> </circle>
+    +|          <circle cx="5" cy="12" r="1"> </circle>
+    +|          <circle cx="12" cy="12" r="1"> </circle>
+    +|          <circle cx="19" cy="12" r="1"> </circle>
     +|        </svg>
     +|      </span>
     +|    </li>
@@ -163,9 +163,9 @@ let%expect_test "next, previous and page links" =
           <li>
             <span aria-hidden="true" class="loon-pagination-ellipsis">
               <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-more-horizontal">
-                <circle cx="5." cy="12." r="1."> </circle>
-                <circle cx="12." cy="12." r="1."> </circle>
-                <circle cx="19." cy="12." r="1."> </circle>
+                <circle cx="5" cy="12" r="1"> </circle>
+                <circle cx="12" cy="12" r="1"> </circle>
+                <circle cx="19" cy="12" r="1"> </circle>
               </svg>
             </span>
           </li>
@@ -198,9 +198,9 @@ let%expect_test "next, previous and page links" =
         <li>
           <span aria-hidden="true" class="loon-pagination-ellipsis">
             <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-more-horizontal">
-              <circle cx="5." cy="12." r="1."> </circle>
-              <circle cx="12." cy="12." r="1."> </circle>
-              <circle cx="19." cy="12." r="1."> </circle>
+              <circle cx="5" cy="12" r="1"> </circle>
+              <circle cx="12" cy="12" r="1"> </circle>
+              <circle cx="19" cy="12" r="1"> </circle>
             </svg>
           </span>
         </li>

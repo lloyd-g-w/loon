@@ -43,5 +43,5 @@ With no names, it compares everything the project has.
 Unknown names are errors.
 
   $ loon diff tab
-  loon: unknown component "tab": did you mean tabs?
+  loon: unknown component "tab": did you mean tabs or table or data_table?
   [1]

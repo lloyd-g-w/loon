@@ -10,7 +10,7 @@ let%expect_test "alert" =
   [%expect {|
     <div role="status" class="loon-alert loon-alert-neutral">
       <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-alert-icon loon-icon loon-icon-info">
-        <circle cx="12." cy="12." r="9.5"> </circle>
+        <circle cx="12" cy="12" r="9.5"> </circle>
         <path d="M12 16v-4.5M12 8h.01"> </path>
       </svg>
       <div class="loon-alert-body">
@@ -20,7 +20,7 @@ let%expect_test "alert" =
     </div>
     <div role="status" class="loon-alert loon-alert-info">
       <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-alert-icon loon-icon loon-icon-info">
-        <circle cx="12." cy="12." r="9.5"> </circle>
+        <circle cx="12" cy="12" r="9.5"> </circle>
         <path d="M12 16v-4.5M12 8h.01"> </path>
       </svg>
       <div class="loon-alert-body">
@@ -32,7 +32,7 @@ let%expect_test "alert" =
       <svg viewBox="0 0 24 24"
            aria-hidden="true"
            class="loon-alert-icon loon-icon loon-icon-check-circle">
-        <circle cx="12." cy="12." r="9.5"> </circle>
+        <circle cx="12" cy="12" r="9.5"> </circle>
         <path d="m8.5 12.5 2.5 2.5 4.5-5"> </path>
       </svg>
       <div class="loon-alert-body">
@@ -56,7 +56,7 @@ let%expect_test "alert" =
       <svg viewBox="0 0 24 24"
            aria-hidden="true"
            class="loon-alert-icon loon-icon loon-icon-alert-circle">
-        <circle cx="12." cy="12." r="9.5"> </circle>
+        <circle cx="12" cy="12" r="9.5"> </circle>
         <path d="M12 7.5v5M12 16h.01"> </path>
       </svg>
       <div class="loon-alert-body">
@@ -263,9 +263,9 @@ let%expect_test "breadcrumb" =
         <li class="loon-breadcrumb-item">
           <span aria-label="3 more" role="img" class="loon-breadcrumb-ellipsis">
             <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-more-horizontal">
-              <circle cx="5." cy="12." r="1."> </circle>
-              <circle cx="12." cy="12." r="1."> </circle>
-              <circle cx="19." cy="12." r="1."> </circle>
+              <circle cx="5" cy="12" r="1"> </circle>
+              <circle cx="12" cy="12" r="1"> </circle>
+              <circle cx="19" cy="12" r="1"> </circle>
             </svg>
           </span>
         </li>
