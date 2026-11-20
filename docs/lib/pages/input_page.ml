@@ -161,8 +161,8 @@ let page =
             , "Extra attributes for the <input>: id, name, autocomplete…" )
           ]
       ; Doc.p
-          "Input.component keeps the text in Bonsai state and returns a \
-           Control.t: its value, a set effect and its view."
+          "[Input.component] keeps the text in Bonsai state and returns a \
+           [Control.t]: its value, a set effect and its view."
       ]
     [ Doc.example ~page "Default" default
     ; Doc.example ~page "With a label" with_label

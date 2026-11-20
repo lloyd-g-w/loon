@@ -70,7 +70,7 @@ let page =
           ; "children", "Vdom.Node.t list", "The description."
           ]
       ; Doc.p
-          "Danger and warning alerts have role=\"alert\", so screen readers \
+          "Danger and warning alerts have [role=\"alert\"], so screen readers \
            announce them at once; the others are polite status messages."
       ]
     [ Doc.static ~page "Variants" variants

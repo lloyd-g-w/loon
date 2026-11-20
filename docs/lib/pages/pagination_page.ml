@@ -44,7 +44,7 @@ let page =
           ; "compact", "bool", "\"Page 3 of 10\" in place of the numbers."
           ]
       ; Doc.p
-          "Pagination.component keeps the page itself and returns it with the view."
+          "[Pagination.component] keeps the page itself and returns it with the view."
       ]
     [ Doc.example ~page "Pages" pages; Doc.example ~page "Compact" compact ]
 ;;

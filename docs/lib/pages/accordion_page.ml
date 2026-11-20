@@ -50,7 +50,7 @@ let page =
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "kind", "Accordion.Kind.t", "Single { collapsible } (the default: one open at a time) or Multiple."
+          [ "kind", "Accordion.Kind.t", "[Single { collapsible }] (the default: one open at a time) or [Multiple]."
           ; "default", "string list", "The ids open at first."
           ; "items", "Accordion.Item.t list", "Each with an id, a title and content."
           ]

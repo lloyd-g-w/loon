@@ -100,7 +100,7 @@ let page =
           ; "toolbar", "Vdom.Node.t list", "Extra controls beside the filter."
           ]
       ; Doc.p
-          "The component returns its view and the keys of the selected rows. Data_table.visible_rows is the filtering and sorting on its own."
+          "The component returns its view and the keys of the selected rows. [Data_table.visible_rows] is the filtering and sorting on its own."
       ]
     [ Doc.example ~page "Payments" payments ]
 ;;

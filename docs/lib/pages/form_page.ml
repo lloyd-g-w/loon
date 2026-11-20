@@ -8,7 +8,7 @@ module Attr = Vdom.Attr
 let page = "form"
 
 (*$ Sign-up form
-   Every control here is a Control.t from its component. Errors appear once
+   Every control here is a [Control.t] from its component. Errors appear once
    you try to submit, then update as you type. *)
 module Signup = struct
   type t =

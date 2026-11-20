@@ -20,7 +20,7 @@ let basic =
 (*$*)
 
 (*$ Collapsed
-   Past max_items, the middle of the trail folds into an ellipsis. *)
+   Past [max_items], the middle of the trail folds into an ellipsis. *)
 let collapsed =
   Breadcrumb.view
     ~max_items:3

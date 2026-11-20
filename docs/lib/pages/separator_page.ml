@@ -49,7 +49,7 @@ let page =
           ; "label", "string", "Text in the middle of the line."
           ; ( "semantic"
             , "bool"
-            , "role=\"separator\" rather than decorative (default false)." )
+            , "[role=\"separator\"] rather than decorative (default false)." )
           ]
       ]
     [ Doc.static ~page "Horizontal and vertical" basic

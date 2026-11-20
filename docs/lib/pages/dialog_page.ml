@@ -95,7 +95,7 @@ let page =
       ; Doc.p
           "While it is open, the page behind does not scroll, Tab and Shift+Tab cycle \
            through the dialog only, and Esc, the close button or a click on the scrim \
-           closes it, giving focus back to the trigger. Dialog.view is the controlled form."
+           closes it, giving focus back to the trigger. [Dialog.view] is the controlled form."
       ]
     [ Doc.example ~page "Edit profile" edit_profile; Doc.example ~page "Sizes" sizes ]
 ;;

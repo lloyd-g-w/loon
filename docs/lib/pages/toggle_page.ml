@@ -56,7 +56,7 @@ let outline (local_ graph) =
 (*$*)
 
 (*$ Toggle group: one at a time
-   With Single, a group works like a segmented control. *)
+   With [Single], a group works like a segmented control. *)
 let single (local_ graph) =
   let%arr view =
     Toggle_group.single_component

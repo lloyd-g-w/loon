@@ -60,7 +60,7 @@ let page =
           ; "is_disabled", "Date.t -> bool", "Other days that can't be picked."
           ; "today", "Date.t", "Marked; default the browser's local date."
           ]
-      ; Doc.p "Calendar.component returns its view and the date picked. Calendar.view is the controlled form: you keep the focused day (which sets the month shown) and the selection."
+      ; Doc.p "[Calendar.component] returns its view and the date picked. [Calendar.view] is the controlled form: you keep the focused day (which sets the month shown) and the selection."
       ]
     [ Doc.example ~page "Pick a date" pick
     ; Doc.example ~page "Weekdays only, from today" weekdays

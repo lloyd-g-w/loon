@@ -8,7 +8,7 @@ module Attr = Vdom.Attr
 let page = "toast"
 
 (*$ Toasts
-   Put a toaster's view once in your page, and pass its push to whatever announces things. *)
+   Put a toaster's view once in your page, and pass its [push] to whatever announces things. *)
 let toasts (local_ graph) =
   let toaster = Toast.component graph in
   let%arr { Toast.Toaster.view; push; dismiss_all = _ } = toaster in

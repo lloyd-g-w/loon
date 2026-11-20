@@ -86,7 +86,7 @@ let page =
             , "The alt text, and where the initials and colour come from." )
           ]
       ; Doc.p
-          "Avatar.group overlaps avatars; past max, the rest are counted in a \
+          "[Avatar.group] overlaps avatars; past [max], the rest are counted in a \
            +N."
       ]
     [ Doc.static ~page "Pictures and initials" basic

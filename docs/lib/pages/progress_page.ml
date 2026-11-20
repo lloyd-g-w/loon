@@ -60,7 +60,7 @@ let page =
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "value", "float", "Out of max; absent for an indeterminate bar."
+          [ "value", "float", "Out of [max]; absent for an indeterminate bar."
           ; "max", "float", "Default 100."
           ; "tone", "Progress.Tone.t", "Primary (default), Accent, Success, Warning or Danger."
           ; "size", "Progress.Size.t", "Sm, Md (default) or Lg."

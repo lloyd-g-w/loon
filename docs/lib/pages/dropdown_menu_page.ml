@@ -75,7 +75,7 @@ let page =
       ; Doc.props
           [ ( "action"
             , "?icon ?shortcut ?disabled ?danger ~on_select label"
-            , "Runs on_select and closes the menu." )
+            , "Runs [on_select] and closes the menu." )
           ; "checkbox", "?disabled ~checked ~on_change label", "A toggle with a check mark."
           ; "radio", "?disabled ~selected ~on_select label", "One of a set of choices."
           ; "label", "string", "A heading for the items after it."

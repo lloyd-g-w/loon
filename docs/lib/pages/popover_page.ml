@@ -87,7 +87,7 @@ let page =
           ]
       ; Doc.p
           "Esc or a click outside closes it, and focus goes back to the trigger. \
-           Popover.view is the controlled form, for when you keep whether it is open."
+           [Popover.view] is the controlled form, for when you keep whether it is open."
       ]
     [ Doc.example ~page "Share a link" share
     ; Doc.example ~page "Sides and alignment" sides
