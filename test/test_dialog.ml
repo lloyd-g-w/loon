@@ -5,7 +5,9 @@ module Handle = Bonsai_web_test.Handle
 
 let trigger name attrs = Button.view ~attrs [ Vdom.Node.text name ]
 
-let%expect_test "dialog: opens, closes with Escape, the close button and the scrim" =
+let%expect_test
+    "dialog: opens, closes with Escape, the close button and the scrim"
+  =
   let handle =
     Render.handle
       (Dialog.component
@@ -14,10 +16,15 @@ let%expect_test "dialog: opens, closes with Escape, the close button and the scr
          ~trigger:(trigger "Edit")
          (Bonsai.return (fun ~close ->
             ( [ Vdom.Node.text "Body" ]
-            , [ Button.view ~attrs:[ Vdom.Attr.id "done" ] ~on_click:close [ Vdom.Node.text "Done" ] ] ))))
+            , [ Button.view
+                  ~attrs:[ Vdom.Attr.id "done" ]
+                  ~on_click:close
+                  [ Vdom.Node.text "Done" ]
+              ] ))))
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div class="loon-modal-anchor">
       <button id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
@@ -32,7 +39,8 @@ let%expect_test "dialog: opens, closes with Escape, the close button and the scr
     |}];
   Drive.click handle "button";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div class="loon-modal-anchor">
       <button id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
@@ -77,7 +85,8 @@ let%expect_test "dialog: opens, closes with Escape, the close button and the scr
     |}];
   Drive.key handle ".loon-modal" Escape;
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key Escape))
     <div class="loon-modal-anchor">
       <button id="loonbonsai_path_replaced_in_test-trigger"
@@ -98,7 +107,8 @@ let%expect_test "dialog: opens, closes with Escape, the close button and the scr
   Drive.click handle "button";
   Drive.click handle "#done";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div class="loon-modal-anchor">
       <button id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
@@ -113,7 +123,9 @@ let%expect_test "dialog: opens, closes with Escape, the close button and the scr
     |}]
 ;;
 
-let%expect_test "alert dialog: the scrim does not close it; confirm runs the effect" =
+let%expect_test
+    "alert dialog: the scrim does not close it; confirm runs the effect"
+  =
   let handle =
     Render.handle
       (Alert_dialog.component
@@ -126,7 +138,8 @@ let%expect_test "alert dialog: the scrim does not close it; confirm runs the eff
   in
   Drive.click handle "button";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div class="loon-modal-anchor">
       <button id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
@@ -167,7 +180,8 @@ let%expect_test "alert dialog: the scrim does not close it; confirm runs the eff
   (* The scrim has no click handler: only the buttons and Esc close it. *)
   Drive.click handle ".loon-button-danger";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     deleted
     <div class="loon-modal-anchor">
       <button id="loonbonsai_path_replaced_in_test-trigger"
@@ -195,7 +209,8 @@ let%expect_test "sheet: sides" =
          ~on_change:(fun _ -> Effect.Ignore)
          ~title:"Filters"
          [ Vdom.Node.text "Body" ]));
-  [%expect {|
+  [%expect
+    {|
     <div id="s-content"
          role="dialog"
          aria-modal="true"

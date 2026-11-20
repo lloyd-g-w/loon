@@ -10,7 +10,10 @@ let groups =
     [ Group.create
         ~heading:"Suggestions"
         [ Item.create ~icon:Calendar ~on_select:(say "calendar") "Calendar"
-        ; Item.create ~keywords:[ "find" ] ~on_select:(say "search") "Search files"
+        ; Item.create
+            ~keywords:[ "find" ]
+            ~on_select:(say "search")
+            "Search files"
         ; Item.create ~disabled:true ~on_select:(say "inbox") "Inbox"
         ]
     ; Group.create
@@ -32,12 +35,14 @@ let print_filter query =
 
 let%expect_test "filtering keeps groups in order and items best first" =
   print_filter "";
-  [%expect {|
+  [%expect
+    {|
     Suggestions: Calendar, Search files, Inbox
     Settings: Profile, Settings
     |}];
   print_filter "se";
-  [%expect {|
+  [%expect
+    {|
     Suggestions: Search files
     Settings: Settings
     |}];
@@ -48,9 +53,12 @@ let%expect_test "filtering keeps groups in order and items best first" =
 ;;
 
 let%expect_test "typing filters, arrows move, Enter runs" =
-  let handle = Render.handle (Command_palette.component (Bonsai.return groups)) in
+  let handle =
+    Render.handle (Command_palette.component (Bonsai.return groups))
+  in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div class="loon-command">
       <div class="loon-command-search">
         <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
@@ -139,7 +147,8 @@ let%expect_test "typing filters, arrows move, Enter runs" =
     |}];
   Drive.type_ handle "input" "s";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div class="loon-command">
         <div class="loon-command-search">
           <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
@@ -233,7 +242,8 @@ let%expect_test "typing filters, arrows move, Enter runs" =
     |}];
   Drive.key handle "input" ArrowDown;
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key ArrowDown))
 
       <div class="loon-command">
@@ -295,13 +305,15 @@ let%expect_test "typing filters, arrows move, Enter runs" =
       </div>
     |}];
   Drive.key handle "input" Enter;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key Enter))
     ran settings
     |}];
   Drive.type_ handle "input" "qqq";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div class="loon-command">
       <div class="loon-command-search">
         <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
@@ -342,7 +354,8 @@ let%expect_test "the palette opens in a dialog and closes when an item runs" =
         ])
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <button id="open" @on_click> Open </button>
       <div class="loon-modal-anchor" @on_keydown_global>
@@ -352,7 +365,8 @@ let%expect_test "the palette opens in a dialog and closes when an item runs" =
     |}];
   Drive.click handle "#open";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <button id="open" @on_click> Open </button>
       <div class="loon-modal-anchor" @on_keydown_global>
@@ -462,7 +476,8 @@ let%expect_test "the palette opens in a dialog and closes when an item runs" =
     |}];
   Drive.click handle "[role=option]:not([aria-disabled])";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     ran calendar
     <div>
       <button id="open" @on_click> Open </button>

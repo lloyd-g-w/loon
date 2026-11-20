@@ -3,7 +3,9 @@ open Bonsai_web
 open Loon
 module Handle = Bonsai_web_test.Handle
 
-let%expect_test "popover: toggles on its trigger, closes on Escape and when told" =
+let%expect_test
+    "popover: toggles on its trigger, closes on Escape and when told"
+  =
   let handle =
     Render.handle
       (Popover.component
@@ -13,12 +15,16 @@ let%expect_test "popover: toggles on its trigger, closes on Escape and when told
          (Bonsai.return (fun ~close ->
             [ Popover.header ~description:"Details" "Title"
             ; Popover.footer
-                [ Button.view ~attrs:[ Vdom.Attr.id "x" ] ~on_click:close [ Vdom.Node.text "Close" ]
+                [ Button.view
+                    ~attrs:[ Vdom.Attr.id "x" ]
+                    ~on_click:close
+                    [ Vdom.Node.text "Close" ]
                 ]
             ])))
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div data-state="closed" class="loon-floating">
       <button id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
@@ -32,7 +38,8 @@ let%expect_test "popover: toggles on its trigger, closes on Escape and when told
     |}];
   Drive.click handle "button";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div data-state="open" class="loon-floating">
       <button id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
@@ -68,7 +75,8 @@ let%expect_test "popover: toggles on its trigger, closes on Escape and when told
     |}];
   Drive.key handle ".loon-floating-content" Escape;
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key Escape))
     <div data-state="closed" class="loon-floating">
       <button id="loonbonsai_path_replaced_in_test-trigger"
@@ -84,7 +92,8 @@ let%expect_test "popover: toggles on its trigger, closes on Escape and when told
   Drive.click handle "button";
   Drive.click handle "#x";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div data-state="closed" class="loon-floating">
       <button id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
@@ -102,7 +111,8 @@ let%expect_test "tooltip" =
   Render.html
     (Tooltip.view ~side:Bottom ~id:"tip" ~content:"Copy" (fun attrs ->
        Button.view ~attrs ~size:Icon [ Icon.view Copy ]));
-  [%expect {|
+  [%expect
+    {|
     <span data-side="bottom" class="loon-tooltip">
       <button aria-describedby="tip"
               type="button"

@@ -8,7 +8,8 @@ let say s = Effect.of_thunk (fun () -> print_endline ("selected " ^ s))
 let menu graph =
   let bold, set_bold = Bonsai.state false graph in
   let items =
-    let%arr.Bonsai bold and set_bold in
+    let%arr.Bonsai bold
+    and set_bold in
     Dropdown_menu.Item.
       [ label "Edit"
       ; action ~icon:Pencil ~shortcut:"⌘E" ~on_select:(say "rename") "Rename"
@@ -27,7 +28,8 @@ let menu graph =
 let%expect_test "opens on click, arrows skip disabled items, Enter chooses" =
   let handle = Render.handle menu in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div data-state="closed" class="loon-floating">
       <button id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="menu"
@@ -42,7 +44,8 @@ let%expect_test "opens on click, arrows skip disabled items, Enter chooses" =
     |}];
   Drive.click handle "button";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div data-state="open" class="loon-floating">
       <button id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="menu"
@@ -111,7 +114,8 @@ let%expect_test "opens on click, arrows skip disabled items, Enter chooses" =
   Drive.key handle "[role=menu]" ArrowDown;
   Drive.key handle "[role=menu]" ArrowDown;
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key ArrowDown))
     ("default prevented" (key ArrowDown))
 
@@ -183,7 +187,8 @@ let%expect_test "opens on click, arrows skip disabled items, Enter chooses" =
   (* A checkbox item toggles and keeps the menu open. *)
   Drive.key handle "[role=menu]" Enter;
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key Enter))
 
               <path d="m15 5 4 4"> </path>
@@ -232,7 +237,8 @@ let%expect_test "opens on click, arrows skip disabled items, Enter chooses" =
   Drive.key handle "[role=menu]" KeyD;
   Drive.key handle "[role=menu]" Enter;
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key KeyD))
     ("default prevented" (key Enter))
     selected delete
@@ -254,7 +260,8 @@ let%expect_test "keyboard opening, clicking items, Escape and clicking away" =
   let handle = Render.handle menu in
   Drive.key handle "button" ArrowUp;
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key ArrowUp))
     <div data-state="open" class="loon-floating">
       <button id="loonbonsai_path_replaced_in_test-trigger"
@@ -325,7 +332,8 @@ let%expect_test "keyboard opening, clicking items, Escape and clicking away" =
     |}];
   Drive.key handle "[role=menu]" Escape;
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key Escape))
     <div data-state="closed" class="loon-floating">
       <button id="loonbonsai_path_replaced_in_test-trigger"
@@ -346,7 +354,8 @@ let%expect_test "keyboard opening, clicking items, Escape and clicking away" =
   (* Disabled items have no click handler. *)
   Drive.click handle ".loon-click-away";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div data-state="closed" class="loon-floating">
       <button id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="menu"

@@ -19,16 +19,20 @@ let groups =
 let with_value component graph =
   let%arr.Bonsai value, view = component graph in
   Vdom.Node.div
-    [ Vdom.Node.p [ Vdom.Node.text (Option.value value ~default:"(none)") ]; view ]
+    [ Vdom.Node.p [ Vdom.Node.text (Option.value value ~default:"(none)") ]
+    ; view
+    ]
 ;;
 
 let%expect_test "select: open, move, choose, typeahead" =
   let handle =
     Render.handle
-      (with_value (Select.component ~placeholder:"Pick one" (Bonsai.return groups)))
+      (with_value
+         (Select.component ~placeholder:"Pick one" (Bonsai.return groups)))
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <p> (none) </p>
       <div data-state="closed" class="loon-floating loon-select">
@@ -55,7 +59,8 @@ let%expect_test "select: open, move, choose, typeahead" =
     |}];
   Drive.click handle "button";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <p> (none) </p>
       <div data-state="open" class="loon-floating loon-select">
@@ -146,7 +151,8 @@ let%expect_test "select: open, move, choose, typeahead" =
     |}];
   Drive.key handle "[role=listbox]" ArrowDown;
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key ArrowDown))
 
                   @on_keydown>
@@ -217,7 +223,8 @@ let%expect_test "select: open, move, choose, typeahead" =
     |}];
   Drive.key handle "[role=listbox]" Enter;
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key Enter))
     <div>
       <p> Blueberry </p>
@@ -245,7 +252,8 @@ let%expect_test "select: open, move, choose, typeahead" =
   (* Typeahead on the closed select changes the value. *)
   Drive.key handle "button" KeyC;
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <p> carrot </p>
       <div data-state="closed" class="loon-floating loon-select">
@@ -273,7 +281,8 @@ let%expect_test "select: open, move, choose, typeahead" =
   Drive.key handle "button" Enter;
   Drive.click handle "[role=option]";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key Enter))
     <div>
       <p> Apple </p>
@@ -303,11 +312,13 @@ let%expect_test "select: open, move, choose, typeahead" =
 let%expect_test "combobox: search then choose" =
   let handle =
     Render.handle
-      (with_value (Combobox.component ~placeholder:"Pick one" (Bonsai.return groups)))
+      (with_value
+         (Combobox.component ~placeholder:"Pick one" (Bonsai.return groups)))
   in
   Drive.click handle "button";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <p> (none) </p>
       <div data-state="open" class="loon-combobox loon-floating loon-select">
@@ -417,7 +428,8 @@ let%expect_test "combobox: search then choose" =
     |}];
   Drive.type_ handle "input" "car";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <p> (none) </p>
       <div data-state="open" class="loon-combobox loon-floating loon-select">
@@ -495,7 +507,8 @@ let%expect_test "combobox: search then choose" =
     |}];
   Drive.key handle "input" Enter;
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key Enter))
     <div>
       <p> carrot </p>
