@@ -19,10 +19,13 @@ module Column : sig
     ; cell : 'row -> Node.t
     ; sort : ('row -> 'row -> int) option (** [Some]: sortable *)
     ; search : ('row -> string) option (** [Some]: the filter matches it *)
+    ; secondary : bool
+    (** [true]: hidden when the table is narrower than 28rem (on phones) *)
     }
 
   val create
     :  ?align:Table.Align.t
+    -> ?secondary:bool
     -> ?sort:('row -> 'row -> int)
     -> ?search:('row -> string)
     -> id:string
@@ -33,6 +36,7 @@ module Column : sig
   (** A column of text, sorted by it and searched. *)
   val text
     :  ?align:Table.Align.t
+    -> ?secondary:bool
     -> id:string
     -> string
     -> ('row -> string)

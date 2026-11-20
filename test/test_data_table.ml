@@ -20,7 +20,7 @@ let people =
 let columns =
   Data_table.Column.
     [ text ~id:"name" "Name" (fun p -> p.name)
-    ; text ~id:"role" "Role" (fun p -> p.role)
+    ; text ~secondary:true ~id:"role" "Role" (fun p -> p.role)
     ; create
         ~align:Right
         ~sort:(fun a b -> Int.compare a.age b.age)
@@ -125,7 +125,10 @@ let%expect_test "the whole table" =
                     </svg>
                   </button>
                 </th>
-                <th aria-sort="none" scope="col" data-align="left" class="loon-table-head">
+                <th aria-sort="none"
+                    scope="col"
+                    data-align="left"
+                    class="loon-data-table-secondary loon-table-head">
                   <button type="button" data-sort="none" class="loon-data-table-sort" @on_click>
                     Role
                     <svg viewBox="0 0 24 24"
@@ -158,7 +161,7 @@ let%expect_test "the whole table" =
                          @on_click/>
                 </td>
                 <td data-align="left" class="loon-table-cell"> Ada </td>
-                <td data-align="left" class="loon-table-cell"> Mathematician </td>
+                <td data-align="left" class="loon-data-table-secondary loon-table-cell"> Mathematician </td>
                 <td data-align="right" class="loon-table-cell"> 36 </td>
               </tr>
               <tr @key=Grace class="loon-table-row">
@@ -171,7 +174,7 @@ let%expect_test "the whole table" =
                          @on_click/>
                 </td>
                 <td data-align="left" class="loon-table-cell"> Grace </td>
-                <td data-align="left" class="loon-table-cell"> Admiral </td>
+                <td data-align="left" class="loon-data-table-secondary loon-table-cell"> Admiral </td>
                 <td data-align="right" class="loon-table-cell"> 85 </td>
               </tr>
               <tr @key=Alan class="loon-table-row">
@@ -184,7 +187,7 @@ let%expect_test "the whole table" =
                          @on_click/>
                 </td>
                 <td data-align="left" class="loon-table-cell"> Alan </td>
-                <td data-align="left" class="loon-table-cell"> Mathematician </td>
+                <td data-align="left" class="loon-data-table-secondary loon-table-cell"> Mathematician </td>
                 <td data-align="right" class="loon-table-cell"> 41 </td>
               </tr>
               <tr @key=Edsger class="loon-table-row">
@@ -197,7 +200,7 @@ let%expect_test "the whole table" =
                          @on_click/>
                 </td>
                 <td data-align="left" class="loon-table-cell"> Edsger </td>
-                <td data-align="left" class="loon-table-cell"> Programmer </td>
+                <td data-align="left" class="loon-data-table-secondary loon-table-cell"> Programmer </td>
                 <td data-align="right" class="loon-table-cell"> 72 </td>
               </tr>
             </tbody>
@@ -284,7 +287,10 @@ let%expect_test "sorting, filtering and selecting" =
                     </svg>
                   </button>
                 </th>
-                <th aria-sort="none" scope="col" data-align="left" class="loon-table-head">
+                <th aria-sort="none"
+                    scope="col"
+                    data-align="left"
+                    class="loon-data-table-secondary loon-table-head">
                   <button type="button" data-sort="none" class="loon-data-table-sort" @on_click>
                     Role
                     <svg viewBox="0 0 24 24"
@@ -317,7 +323,7 @@ let%expect_test "sorting, filtering and selecting" =
                          @on_click/>
                 </td>
                 <td data-align="left" class="loon-table-cell"> Ada </td>
-                <td data-align="left" class="loon-table-cell"> Mathematician </td>
+                <td data-align="left" class="loon-data-table-secondary loon-table-cell"> Mathematician </td>
                 <td data-align="right" class="loon-table-cell"> 36 </td>
               </tr>
               <tr @key=Grace data-state="selected" aria-selected="true" class="loon-table-row">
@@ -330,7 +336,7 @@ let%expect_test "sorting, filtering and selecting" =
                          @on_click/>
                 </td>
                 <td data-align="left" class="loon-table-cell"> Grace </td>
-                <td data-align="left" class="loon-table-cell"> Admiral </td>
+                <td data-align="left" class="loon-data-table-secondary loon-table-cell"> Admiral </td>
                 <td data-align="right" class="loon-table-cell"> 85 </td>
               </tr>
               <tr @key=Alan data-state="selected" aria-selected="true" class="loon-table-row">
@@ -343,7 +349,7 @@ let%expect_test "sorting, filtering and selecting" =
                          @on_click/>
                 </td>
                 <td data-align="left" class="loon-table-cell"> Alan </td>
-                <td data-align="left" class="loon-table-cell"> Mathematician </td>
+                <td data-align="left" class="loon-data-table-secondary loon-table-cell"> Mathematician </td>
                 <td data-align="right" class="loon-table-cell"> 41 </td>
               </tr>
               <tr @key=Edsger class="loon-table-row">
@@ -356,7 +362,7 @@ let%expect_test "sorting, filtering and selecting" =
                          @on_click/>
                 </td>
                 <td data-align="left" class="loon-table-cell"> Edsger </td>
-                <td data-align="left" class="loon-table-cell"> Programmer </td>
+                <td data-align="left" class="loon-data-table-secondary loon-table-cell"> Programmer </td>
                 <td data-align="right" class="loon-table-cell"> 72 </td>
               </tr>
             </tbody>

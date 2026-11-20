@@ -4,6 +4,7 @@
   gap: 0.75rem;
   width: 100%;
   min-width: 0;
+  container-type: inline-size;
 }
 .loon-data-table-toolbar {
   display: flex;
@@ -52,6 +53,21 @@
   border-radius: var(--loon-radius-lg);
   background: var(--loon-surface);
   overflow: hidden;
+}
+/* What does not fit scrolls sideways, with a shadow at the edge it goes on
+   past. */
+.loon-data-table-frame > .loon-table-container {
+  --loon-data-table-shadow: color-mix(in oklab, var(--loon-foreground) 18%, transparent);
+  background-image:
+    linear-gradient(to right, var(--loon-surface) 30%, transparent),
+    linear-gradient(to left, var(--loon-surface) 30%, transparent),
+    radial-gradient(farthest-side at 0 50%, var(--loon-data-table-shadow), transparent),
+    radial-gradient(farthest-side at 100% 50%, var(--loon-data-table-shadow), transparent);
+  background-position: left center, right center, left center, right center;
+  background-repeat: no-repeat;
+  background-size: 2.5rem 100%, 2.5rem 100%, 1rem 100%, 1rem 100%;
+  background-attachment: local, local, scroll, scroll;
+  scrollbar-width: thin;
 }
 .loon-data-table-frame .loon-table-header {
   background: color-mix(in oklab, var(--loon-muted) 55%, transparent);
@@ -119,4 +135,15 @@
 }
 .loon-data-table-footer > .loon-pagination {
   width: auto;
+}
+
+@container (max-width: 28rem) {
+  .loon-data-table-secondary {
+    display: none;
+  }
+  .loon-data-table .loon-table-head,
+  .loon-data-table .loon-table-cell {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
 }

@@ -15,15 +15,18 @@ module Column = struct
     ; cell : 'row -> Node.t
     ; sort : ('row -> 'row -> int) option
     ; search : ('row -> string) option
+    ; secondary : bool
     }
 
-  let create ?(align = Table.Align.Left) ?sort ?search ~id header cell =
-    { id; header; align; cell; sort; search }
+  let create ?(align = Table.Align.Left) ?(secondary = false) ?sort ?search ~id header cell
+    =
+    { id; header; align; cell; sort; search; secondary }
   ;;
 
-  let text ?align ~id header f =
+  let text ?align ?secondary ~id header f =
     create
       ?align
+      ?secondary
       ~sort:(fun a b -> String.compare (f a) (f b))
       ~search:f
       ~id
@@ -84,6 +87,10 @@ let checkbox ~label ~checked ?(indeterminate = false) on_click =
     ()
 ;;
 
+let secondary (column : _ Column.t) =
+  if column.secondary then [ Attr.class_ "loon-data-table-secondary" ] else []
+;;
+
 let sort_header (column : _ Column.t) ~sort ~set_sort =
   let direction =
     match sort with
@@ -97,10 +104,11 @@ let sort_header (column : _ Column.t) ~sort ~set_sort =
     | Some Descending -> "descending"
   in
   match column.sort with
-  | None -> Table.head ~align:column.align [ Node.text column.header ]
+  | None ->
+    Table.head ~attrs:(secondary column) ~align:column.align [ Node.text column.header ]
   | Some _ ->
     Table.head
-      ~attrs:[ aria "sort" aria_sort ]
+      ~attrs:(aria "sort" aria_sort :: secondary column)
       ~align:column.align
       [ Node.button
           ~attrs:
@@ -223,7 +231,8 @@ let component
                   [ checkbox ~label:"Select row" ~checked:is_selected (toggle k) ]
               ]
             else [])
-           @ List.map columns ~f:(fun c -> Table.cell ~align:c.align [ c.cell r ])))
+           @ List.map columns ~f:(fun c ->
+             Table.cell ~attrs:(secondary c) ~align:c.align [ c.cell r ])))
   in
   let status =
     if selectable

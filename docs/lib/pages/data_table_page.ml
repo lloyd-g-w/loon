@@ -39,7 +39,8 @@ module Payment = struct
 end
 
 (*$ Payments
-   Press a header to sort by it; type to filter; tick rows to select them. *)
+   Press a header to sort by it; type to filter; tick rows to select them.
+   Status is a secondary column, hidden when the table is narrow. *)
 let payments (local_ graph) =
   let table =
     Data_table.component
@@ -50,6 +51,7 @@ let payments (local_ graph) =
         (Bonsai.return
            Data_table.Column.
              [ create
+                 ~secondary:true
                  ~sort:(fun (a : Payment.t) b -> String.compare a.status b.status)
                  ~id:"status"
                  "Status"
@@ -90,7 +92,7 @@ let page =
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "columns", "'row Data_table.Column.t list Bonsai.t", "Each with an optional sort (a comparison) and search (the text the filter matches)."
+          [ "columns", "'row Data_table.Column.t list Bonsai.t", "Each with an optional sort (a comparison) and search (the text the filter matches); secondary ones are hidden when the table is narrower than 28rem."
           ; "key", "'row -> string", "Names a row, for selection."
           ; "selectable", "bool", "A checkbox column, and one to select every visible row."
           ; "page_size", "int", "Paginate."
