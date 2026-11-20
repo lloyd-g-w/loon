@@ -87,6 +87,15 @@ body[data-scroll-locked] {
   align-items: center;
   justify-content: center;
 }
+.docs-toolbar {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid var(--loon-border);
+  border-radius: var(--loon-radius);
+  background: var(--loon-surface);
+  box-shadow: var(--loon-shadow-sm);
+}
 .docs-stack {
   display: flex;
   flex-direction: column;
@@ -574,7 +583,7 @@ a.docs-chip:hover {
   border: 1px solid var(--loon-border);
   font-family: var(--loon-font-mono);
   font-size: 0.85em;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
 }
 .docs-note {
   margin: 1.25rem 0;
@@ -605,7 +614,7 @@ a.docs-chip:hover {
 
 /* Tables */
 .docs-props {
-  margin: 1rem 0;
+  margin: 1rem 0 1.5rem;
   overflow-x: auto;
   border: 1px solid var(--loon-border);
   border-radius: var(--loon-radius-lg);
@@ -648,7 +657,7 @@ a.docs-chip:hover {
 .docs-props,
 .docs-pre,
 .docs-preview {
-  --docs-shadow: color-mix(in oklch, var(--loon-foreground) 14%, transparent);
+  --docs-shadow: color-mix(in oklch, var(--loon-foreground) 22%, transparent);
 }
 .docs-props,
 .docs-pre {
@@ -659,7 +668,7 @@ a.docs-chip:hover {
     radial-gradient(farthest-side at 100% 50%, var(--docs-shadow), transparent);
   background-position: left center, right center, left center, right center;
   background-repeat: no-repeat;
-  background-size: 2.5rem 100%, 2.5rem 100%, 0.875rem 100%, 0.875rem 100%;
+  background-size: 2.5rem 100%, 2.5rem 100%, 1rem 100%, 1rem 100%;
   background-attachment: local, local, scroll, scroll;
 }
 .docs-pre {
@@ -694,7 +703,7 @@ a.docs-chip:hover {
   overflow-x: auto;
   border: 1px solid var(--docs-code-border);
   border-radius: var(--loon-radius-lg);
-  background: var(--docs-code-bg);
+  background-color: var(--docs-code-bg);
   font-family: var(--loon-font-mono);
   font-size: 0.8125rem;
   line-height: 1.7;
@@ -703,6 +712,13 @@ a.docs-chip:hover {
 }
 .docs-codeblock .docs-pre {
   padding-right: 0.75rem;
+}
+/* A one-line snippet wraps rather than hide its end, continuing indented. */
+.docs-pre-line {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding-left: calc(1.125rem + 2ch);
+  text-indent: -2ch;
 }
 .docs-app :where(code, kbd, samp, pre) {
   font-family: var(--loon-font-mono);
@@ -1152,6 +1168,37 @@ a.docs-chip:hover {
   }
   .docs-search-footer {
     display: none;
+  }
+  /* Tables stack: a row's first cells on a line, its last below. */
+  .docs-props :is(table, tbody, tr, td) {
+    display: block;
+  }
+  .docs-props thead {
+    display: none;
+  }
+  .docs-props tr {
+    padding: 0.75rem 0.875rem;
+  }
+  .docs-props tr + tr {
+    border-top: 1px solid var(--loon-border);
+  }
+  .docs-props td,
+  .docs-props td:first-child,
+  .docs-props td:last-child {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    white-space: normal;
+  }
+  .docs-props td:not(:last-child) {
+    display: inline;
+    margin-right: 0.5rem;
+  }
+  .docs-props td:nth-child(2):not(:last-child) {
+    color: var(--loon-muted-foreground);
+  }
+  .docs-props td:last-child {
+    margin-top: 0.375rem;
   }
 }
 

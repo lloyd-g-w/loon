@@ -184,6 +184,8 @@ let signup (local_ graph) =
                   ~required:true
                   ~description:
                     (match strength with
+                     | _ when String.is_empty password.value ->
+                       "At least 8 characters."
                      | 0 | 1 -> "Strength: weak"
                      | 2 -> "Strength: fair"
                      | 3 -> "Strength: good"

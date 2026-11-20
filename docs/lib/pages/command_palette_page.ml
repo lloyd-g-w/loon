@@ -51,7 +51,9 @@ let inline (local_ graph) =
                  ])
           ]
         [ command ]
-    ; Node.span [ Node.text ("Ran: " ^ last) ]
+    ; Node.span
+        ~attrs:[ Vdom.Attr.class_ "loon-field-description" ]
+        [ Node.text ("Ran: " ^ last) ]
     ]
 (*$*)
 
@@ -68,7 +70,10 @@ let palette (local_ graph) =
   let%arr palette_view, open_palette = palette
   and last in
   Node.div
-    ~attrs:[ Vdom.Attr.class_ "docs-row" ]
+    ~attrs:
+      [ Vdom.Attr.class_ "docs-stack"
+      ; Vdom.Attr.style (Css_gen.create ~field:"align-items" ~value:"flex-start")
+      ]
     [ Button.view
         ~variant:Outline
         ~on_click:open_palette
@@ -76,7 +81,9 @@ let palette (local_ graph) =
         ; Node.text "Search…"
         ; Node.kbd ~attrs:[ Vdom.Attr.class_ "loon-menu-shortcut" ] [ Node.text "Ctrl K" ]
         ]
-    ; Node.span [ Node.text ("Ran: " ^ last) ]
+    ; Node.span
+        ~attrs:[ Vdom.Attr.class_ "loon-field-description" ]
+        [ Node.text ("Ran: " ^ last) ]
     ; palette_view
     ]
 (*$*)

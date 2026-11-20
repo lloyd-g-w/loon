@@ -73,7 +73,13 @@ let copy_button ?(label = "Copy code") text =
 let view ?lang source =
   Node.div
     ~attrs:[ Attr.class_ "docs-codeblock" ]
-    [ Node.pre ~attrs:[ Attr.class_ "docs-pre" ] [ Highlight.view ?lang source ]
+    [ Node.pre
+        ~attrs:
+          [ Attr.classes
+              ("docs-pre"
+               :: (if String.mem (String.rstrip source) '\n' then [] else [ "docs-pre-line" ]))
+          ]
+        [ Highlight.view ?lang source ]
     ; copy_button source
     ]
 ;;
