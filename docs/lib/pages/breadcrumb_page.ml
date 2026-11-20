@@ -15,6 +15,8 @@ let basic =
       ; create ~href:"#/" "Components"
       ; create "Breadcrumb"
       ]
+;;
+
 (*$*)
 
 (*$ Collapsed
@@ -29,13 +31,18 @@ let collapsed =
       ; create ~href:"#/" "src"
       ; create "breadcrumb.ml"
       ]
+;;
+
 (*$*)
 
 (*$ Custom separator *)
 let slashes =
   Breadcrumb.view
     ~separator:(Node.text "/")
-    Breadcrumb.Item.[ create ~href:"#/" "lloyd-g-w"; create ~href:"#/" "loon"; create "main" ]
+    Breadcrumb.Item.
+      [ create ~href:"#/" "lloyd-g-w"; create ~href:"#/" "loon"; create "main" ]
+;;
+
 (*$*)
 
 let page =
@@ -49,7 +56,10 @@ let page =
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "items", "Breadcrumb.Item.t list", "Each with an href or an on_click effect; the last is the current page."
+          [ ( "items"
+            , "Breadcrumb.Item.t list"
+            , "Each with an href or an on_click effect; the last is the \
+               current page." )
           ; "max_items", "int", "Collapse the middle past this many."
           ; "separator", "Vdom.Node.t", "Between items (default a chevron)."
           ]

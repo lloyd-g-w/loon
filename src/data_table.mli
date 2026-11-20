@@ -31,7 +31,12 @@ module Column : sig
     -> 'row t
 
   (** A column of text, sorted by it and searched. *)
-  val text : ?align:Table.Align.t -> id:string -> string -> ('row -> string) -> 'row t
+  val text
+    :  ?align:Table.Align.t
+    -> id:string
+    -> string
+    -> ('row -> string)
+    -> 'row t
 end
 
 (** The rows the filter matches (case-insensitively, any searchable

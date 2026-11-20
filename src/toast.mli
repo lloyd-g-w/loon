@@ -19,7 +19,8 @@ type t =
   { title : string
   ; description : string option
   ; variant : Variant.t
-  ; action : (string * unit Effect.t) option (** a button: its label, what it does *)
+  ; action : (string * unit Effect.t) option
+    (** a button: its label, what it does *)
   ; duration : Time_ns.Span.t option (** [None]: until dismissed *)
   }
 

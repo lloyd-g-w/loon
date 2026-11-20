@@ -39,4 +39,9 @@ val view
   -> Node.t
 
 (** Overlapping avatars; past [max], the rest are counted in a "+N". *)
-val group : ?attrs:Attr.t list -> ?size:Size.t -> ?max:int -> Node.t list -> Node.t
+val group
+  :  ?attrs:Attr.t list
+  -> ?size:Size.t
+  -> ?max:int
+  -> Node.t list
+  -> Node.t

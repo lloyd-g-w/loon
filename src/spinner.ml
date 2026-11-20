@@ -29,7 +29,10 @@ let view ?attrs:extra ?(size = Size.Md) ?(label = "Loading") () =
             []
         ; Node.create_svg
             "path"
-            ~attrs:[ Attr.class_ "loon-spinner-arc"; Attr.create "d" "M21.5 12a9.5 9.5 0 0 0-9.5-9.5" ]
+            ~attrs:
+              [ Attr.class_ "loon-spinner-arc"
+              ; Attr.create "d" "M21.5 12a9.5 9.5 0 0 0-9.5-9.5"
+              ]
             []
         ]
     ]

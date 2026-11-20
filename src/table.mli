@@ -29,9 +29,22 @@ val table
 val header : ?attrs:Attr.t list -> Node.t list -> Node.t
 val body : ?attrs:Attr.t list -> Node.t list -> Node.t
 val footer : ?attrs:Attr.t list -> Node.t list -> Node.t
-val row : ?attrs:Attr.t list -> ?key:string -> ?selected:bool -> Node.t list -> Node.t
+
+val row
+  :  ?attrs:Attr.t list
+  -> ?key:string
+  -> ?selected:bool
+  -> Node.t list
+  -> Node.t
+
 val head : ?attrs:Attr.t list -> ?align:Align.t -> Node.t list -> Node.t
-val cell : ?attrs:Attr.t list -> ?align:Align.t -> ?colspan:int -> Node.t list -> Node.t
+
+val cell
+  :  ?attrs:Attr.t list
+  -> ?align:Align.t
+  -> ?colspan:int
+  -> Node.t list
+  -> Node.t
 
 module Column : sig
   type 'row t =

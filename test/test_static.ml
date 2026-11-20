@@ -6,8 +6,13 @@ module Node = Virtual_dom.Vdom.Node
 
 let%expect_test "alert" =
   List.iter Alert.Variant.all ~f:(fun variant ->
-    Render.html (Alert.view ~variant ~title:"Heads up" [ Node.text "Something happened." ]));
-  [%expect {|
+    Render.html
+      (Alert.view
+         ~variant
+         ~title:"Heads up"
+         [ Node.text "Something happened." ]));
+  [%expect
+    {|
     <div role="status" class="loon-alert loon-alert-neutral">
       <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-alert-icon loon-icon loon-icon-info">
         <circle cx="12" cy="12" r="9.5"> </circle>
@@ -66,7 +71,8 @@ let%expect_test "alert" =
     </div>
     |}];
   Render.html (Alert.view ~icon:None [ Node.text "No icon, no title" ]);
-  [%expect {|
+  [%expect
+    {|
     <div role="status" class="loon-alert loon-alert-neutral">
       <div class="loon-alert-body">
         <div class="loon-alert-description"> No icon, no title </div>
@@ -76,9 +82,11 @@ let%expect_test "alert" =
 ;;
 
 let%expect_test "avatar" =
-  List.iter [ "Ada Lovelace"; "plato"; "Jean-Luc Picard"; "  "; "émile zola" ] ~f:(fun n ->
-    printf "%S -> %S\n" n (Avatar.initials n));
-  [%expect {|
+  List.iter
+    [ "Ada Lovelace"; "plato"; "Jean-Luc Picard"; "  "; "émile zola" ]
+    ~f:(fun n -> printf "%S -> %S\n" n (Avatar.initials n));
+  [%expect
+    {|
     "Ada Lovelace" -> "AL"
     "plato" -> "P"
     "Jean-Luc Picard" -> "JP"
@@ -86,8 +94,10 @@ let%expect_test "avatar" =
     "\195\169mile zola" -> "\195\169Z"
     |}];
   Render.html (Avatar.view ~src:"/ada.jpg" ~status:`Online "Ada Lovelace");
-  [%expect {|
-    <span class="loon-avatar loon-avatar-circle loon-avatar-md" style={ --loon-avatar-hue: 350; }>
+  [%expect
+    {|
+    <span class="loon-avatar loon-avatar-circle loon-avatar-md"
+          custom-css-vars=((--loon-avatar-hue 350))>
       <span aria-hidden="true" class="loon-avatar-fallback"> AL </span>
       <img src="/ada.jpg" alt="Ada Lovelace" loading="lazy" class="loon-avatar-image" @on_error/>
       <span title="online" class="loon-avatar-status loon-avatar-status-online"> </span>
@@ -97,15 +107,19 @@ let%expect_test "avatar" =
     (Avatar.group
        ~size:Sm
        ~max:2
-       (List.map [ "Ada Lovelace"; "Alan Turing"; "Grace Hopper"; "Edsger Dijkstra" ] ~f:(fun n ->
-          Avatar.view ~size:Sm n)));
-  [%expect {|
+       (List.map
+          [ "Ada Lovelace"; "Alan Turing"; "Grace Hopper"; "Edsger Dijkstra" ]
+          ~f:(fun n -> Avatar.view ~size:Sm n)));
+  [%expect
+    {|
     <div role="group" class="loon-avatar-group loon-avatar-group-sm">
-      <span class="loon-avatar loon-avatar-circle loon-avatar-sm" style={ --loon-avatar-hue: 350; }>
+      <span class="loon-avatar loon-avatar-circle loon-avatar-sm"
+            custom-css-vars=((--loon-avatar-hue 350))>
         <span aria-hidden="true" class="loon-avatar-fallback"> AL </span>
         <span class="loon-sr-only"> Ada Lovelace </span>
       </span>
-      <span class="loon-avatar loon-avatar-circle loon-avatar-sm" style={ --loon-avatar-hue: 185; }>
+      <span class="loon-avatar loon-avatar-circle loon-avatar-sm"
+            custom-css-vars=((--loon-avatar-hue 185))>
         <span aria-hidden="true" class="loon-avatar-fallback"> AT </span>
         <span class="loon-sr-only"> Alan Turing </span>
       </span>
@@ -118,7 +132,8 @@ let%expect_test "separator, skeleton, spinner, kbd, empty" =
   Render.html (Separator.view ());
   Render.html (Separator.view ~orientation:Vertical ~semantic:true ());
   Render.html (Separator.view ~label:"or" ());
-  [%expect {|
+  [%expect
+    {|
     <div role="none" class="loon-separator loon-separator-horizontal"> </div>
     <div role="separator" aria-orientation="vertical" class="loon-separator loon-separator-vertical"> </div>
     <div role="none" class="loon-separator loon-separator-horizontal loon-separator-labelled">
@@ -127,7 +142,8 @@ let%expect_test "separator, skeleton, spinner, kbd, empty" =
     |}];
   Render.html (Skeleton.view ~shape:Circle ());
   Render.html (Skeleton.text ~lines:2 ());
-  [%expect {|
+  [%expect
+    {|
     <div aria-hidden="true" class="loon-skeleton loon-skeleton-circle"> </div>
     <div aria-hidden="true" class="loon-skeleton-lines">
       <div aria-hidden="true" class="loon-skeleton loon-skeleton-text"> </div>
@@ -135,7 +151,8 @@ let%expect_test "separator, skeleton, spinner, kbd, empty" =
     </div>
     |}];
   Render.html (Spinner.view ~size:Sm ());
-  [%expect {|
+  [%expect
+    {|
     <span role="status" aria-label="Loading" class="loon-spinner loon-spinner-sm">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <circle cx="12" cy="12" r="9.5" class="loon-spinner-track"> </circle>
@@ -145,7 +162,8 @@ let%expect_test "separator, skeleton, spinner, kbd, empty" =
     |}];
   Render.html (Kbd.combo [ "Cmd"; "Shift"; "P" ]);
   Render.html (Kbd.combo ~symbols:false [ "Ctrl"; "K" ]);
-  [%expect {|
+  [%expect
+    {|
     <kbd class="loon-kbd-combo">
       <kbd title="Cmd" aria-label="Cmd" class="loon-kbd"> ⌘ </kbd>
       <kbd title="Shift" aria-label="Shift" class="loon-kbd"> ⇧ </kbd>
@@ -162,7 +180,8 @@ let%expect_test "separator, skeleton, spinner, kbd, empty" =
        ~description:"New messages show up here."
        ~actions:[ Button.view [ Node.text "Compose" ] ]
        "No messages");
-  [%expect {|
+  [%expect
+    {|
     <div class="loon-empty">
       <div class="loon-empty-icon">
         <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-inbox">
@@ -184,7 +203,8 @@ let%expect_test "progress" =
   Render.html (Progress.view ~value:150. ~tone:Success ());
   Render.html (Progress.view ~max:0. ~value:1. ());
   Render.html (Progress.view ());
-  [%expect {|
+  [%expect
+    {|
     <div role="progressbar"
          aria-valuemin="0"
          aria-valuemax="100"
@@ -231,7 +251,8 @@ let%expect_test "breadcrumb" =
       ]
   in
   Render.html (Breadcrumb.view (List.take items 2));
-  [%expect {|
+  [%expect
+    {|
     <nav aria-label="Breadcrumb" class="loon-breadcrumb">
       <ol class="loon-breadcrumb-list">
         <li class="loon-breadcrumb-item">
@@ -249,7 +270,8 @@ let%expect_test "breadcrumb" =
     </nav>
     |}];
   Render.html (Breadcrumb.view ~max_items:3 items);
-  [%expect {|
+  [%expect
+    {|
     <nav aria-label="Breadcrumb" class="loon-breadcrumb">
       <ol class="loon-breadcrumb-list">
         <li class="loon-breadcrumb-item">
@@ -287,12 +309,18 @@ let%expect_test "table" =
     (Table.view
        ~striped:true
        ~caption:"Invoices"
-       ~footer:[ Table.cell [ Node.text "Total" ]; Table.cell ~align:Right [ Node.text "$30" ] ]
+       ~footer:
+         [ Table.cell [ Node.text "Total" ]
+         ; Table.cell ~align:Right [ Node.text "$30" ]
+         ]
        ~columns:
          Table.Column.
-           [ text "Invoice" fst; text ~align:Right "Amount" (fun (_, a) -> sprintf "$%d" a) ]
+           [ text "Invoice" fst
+           ; text ~align:Right "Amount" (fun (_, a) -> sprintf "$%d" a)
+           ]
        [ "INV001", 10; "INV002", 20 ]);
-  [%expect {|
+  [%expect
+    {|
     <div class="loon-table-container">
       <table class="loon-table loon-table-hover loon-table-striped">
         <caption class="loon-table-caption"> Invoices </caption>

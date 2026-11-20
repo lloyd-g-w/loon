@@ -1,9 +1,9 @@
 .loon-skeleton {
-  background: var(--loon-muted);
+  background: color-mix(in oklab, var(--loon-muted), var(--loon-foreground) 7%);
   background-image: linear-gradient(
     90deg,
     transparent 0%,
-    color-mix(in oklch, var(--loon-background) 55%, transparent) 50%,
+    color-mix(in oklab, var(--loon-background) 55%, transparent) 50%,
     transparent 100%
   );
   background-size: 200% 100%;

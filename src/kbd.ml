@@ -17,7 +17,9 @@ let symbol key =
   | _ -> None
 ;;
 
-let view ?attrs:extra key = Node.kbd ~attrs:(attrs ?attrs:extra [ "loon-kbd" ]) [ Node.text key ]
+let view ?attrs:extra key =
+  Node.kbd ~attrs:(attrs ?attrs:extra [ "loon-kbd" ]) [ Node.text key ]
+;;
 
 let combo ?attrs:extra ?(symbols = true) keys =
   let key name =
@@ -28,5 +30,7 @@ let combo ?attrs:extra ?(symbols = true) keys =
         [ Node.text s ]
     | _ -> view name
   in
-  Node.kbd ~attrs:(attrs ?attrs:extra [ "loon-kbd-combo" ]) (List.map keys ~f:key)
+  Node.kbd
+    ~attrs:(attrs ?attrs:extra [ "loon-kbd-combo" ])
+    (List.map keys ~f:key)
 ;;

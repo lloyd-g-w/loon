@@ -82,7 +82,7 @@
 }
 .loon-calendar-day[aria-current="date"] {
   background: var(--loon-accent-soft);
-  color: color-mix(in oklch, var(--loon-accent) 80%, var(--loon-foreground));
+  color: color-mix(in oklab, var(--loon-accent) 80%, var(--loon-foreground));
   font-weight: 600;
 }
 .loon-calendar-day[data-selected],

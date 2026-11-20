@@ -12,7 +12,14 @@ end
 
 let flag cond cls = if cond then [ cls ] else []
 
-let table ?attrs:extra ?(striped = false) ?(hover = true) ?(dense = false) ?caption parts =
+let table
+      ?attrs:extra
+      ?(striped = false)
+      ?(hover = true)
+      ?(dense = false)
+      ?caption
+      parts
+  =
   Node.div
     ~attrs:[ Attr.class_ "loon-table-container" ]
     [ Node.table
@@ -23,27 +30,44 @@ let table ?attrs:extra ?(striped = false) ?(hover = true) ?(dense = false) ?capt
               @ flag hover "loon-table-hover"
               @ flag dense "loon-table-dense"))
         (Option.value_map caption ~default:[] ~f:(fun c ->
-           [ Node.create "caption" ~attrs:[ Attr.class_ "loon-table-caption" ] [ Node.text c ] ])
+           [ Node.create
+               "caption"
+               ~attrs:[ Attr.class_ "loon-table-caption" ]
+               [ Node.text c ]
+           ])
          @ parts)
     ]
 ;;
 
-let header ?attrs:extra rows = Node.thead ~attrs:(attrs ?attrs:extra [ "loon-table-header" ]) rows
-let body ?attrs:extra rows = Node.tbody ~attrs:(attrs ?attrs:extra [ "loon-table-body" ]) rows
-let footer ?attrs:extra rows = Node.tfoot ~attrs:(attrs ?attrs:extra [ "loon-table-footer" ]) rows
+let header ?attrs:extra rows =
+  Node.thead ~attrs:(attrs ?attrs:extra [ "loon-table-header" ]) rows
+;;
+
+let body ?attrs:extra rows =
+  Node.tbody ~attrs:(attrs ?attrs:extra [ "loon-table-body" ]) rows
+;;
+
+let footer ?attrs:extra rows =
+  Node.tfoot ~attrs:(attrs ?attrs:extra [ "loon-table-footer" ]) rows
+;;
 
 let row ?attrs:extra ?key ?(selected = false) cells =
   Node.tr
     ?key
     ~attrs:
       (attrs ?attrs:extra [ "loon-table-row" ]
-       @ if selected then [ data "state" "selected"; aria "selected" "true" ] else [])
+       @
+       if selected
+       then [ data "state" "selected"; aria "selected" "true" ]
+       else [])
     cells
 ;;
 
 let head ?attrs:extra ?(align = Align.Left) children =
   Node.th
-    ~attrs:(attrs ?attrs:extra [ "loon-table-head" ] @ [ Attr.create "scope" "col"; Align.attr align ])
+    ~attrs:
+      (attrs ?attrs:extra [ "loon-table-head" ]
+       @ [ Attr.create "scope" "col"; Align.attr align ])
     children
 ;;
 
@@ -51,7 +75,9 @@ let cell ?attrs:extra ?(align = Align.Left) ?colspan children =
   Node.td
     ~attrs:
       (attrs ?attrs:extra [ "loon-table-cell" ]
-       @ (Align.attr align :: Option.value_map colspan ~default:[] ~f:(fun c -> [ Attr.colspan c ])))
+       @ (Align.attr align
+          :: Option.value_map colspan ~default:[] ~f:(fun c ->
+            [ Attr.colspan c ])))
     children
 ;;
 
@@ -81,7 +107,9 @@ let view ?attrs ?striped ?hover ?dense ?caption ?footer:foot ~columns rows =
      ; body
          (List.map rows ~f:(fun r ->
             row
-              (List.map columns ~f:(fun (c : _ Column.t) -> cell ~align:c.align [ c.cell r ]))))
+              (List.map columns ~f:(fun (c : _ Column.t) ->
+                 cell ~align:c.align [ c.cell r ]))))
      ]
-     @ Option.value_map foot ~default:[] ~f:(fun cells -> [ footer [ row cells ] ]))
+     @ Option.value_map foot ~default:[] ~f:(fun cells ->
+       [ footer [ row cells ] ]))
 ;;

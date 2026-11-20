@@ -30,14 +30,27 @@ let columns =
     ]
 ;;
 
-let names rows = List.map rows ~f:(fun p -> p.name) |> String.concat ~sep:" " |> print_endline
+let names rows =
+  List.map rows ~f:(fun p -> p.name) |> String.concat ~sep:" " |> print_endline
+;;
 
 let%expect_test "visible_rows" =
   names (Data_table.visible_rows ~columns ~filter:"" ~sort:None people);
   names (Data_table.visible_rows ~columns ~filter:" MATH " ~sort:None people);
-  names (Data_table.visible_rows ~columns ~filter:"" ~sort:(Some ("age", Descending)) people);
-  names (Data_table.visible_rows ~columns ~filter:"a" ~sort:(Some ("name", Ascending)) people);
-  [%expect {|
+  names
+    (Data_table.visible_rows
+       ~columns
+       ~filter:""
+       ~sort:(Some ("age", Descending))
+       people);
+  names
+    (Data_table.visible_rows
+       ~columns
+       ~filter:"a"
+       ~sort:(Some ("name", Ascending))
+       people);
+  [%expect
+    {|
     Ada Grace Alan Edsger
     Ada Alan
     Grace Edsger Alan Ada
@@ -61,7 +74,10 @@ let rows handle =
   Handle.last_result handle
   |> get_vdom
   |> Virtual_dom_test_helpers.Node_helpers.unsafe_convert_exn
-  |> (fun n -> Virtual_dom_test_helpers.Node_helpers.select n ~selector:"tbody td:nth-child(2)")
+  |> (fun n ->
+  Virtual_dom_test_helpers.Node_helpers.select
+    n
+    ~selector:"tbody td:nth-child(2)")
   |> List.map ~f:Virtual_dom_test_helpers.Node_helpers.inner_text
   |> String.concat ~sep:" "
   |> print_endline
@@ -69,10 +85,13 @@ let rows handle =
 
 let%expect_test "the whole table" =
   let handle =
-    Bonsai_web_test.Handle.create (Bonsai_web_test.Result_spec.vdom get_vdom) (component ())
+    Bonsai_web_test.Handle.create
+      (Bonsai_web_test.Result_spec.vdom get_vdom)
+      (component ())
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div class="loon-data-table">
       <div class="loon-data-table-toolbar">
         <div class="loon-data-table-filter">
@@ -195,7 +214,9 @@ let%expect_test "the whole table" =
 
 let%expect_test "sorting, filtering and selecting" =
   let handle =
-    Bonsai_web_test.Handle.create (Bonsai_web_test.Result_spec.vdom get_vdom) (component ())
+    Bonsai_web_test.Handle.create
+      (Bonsai_web_test.Result_spec.vdom get_vdom)
+      (component ())
   in
   let click selector = Handle.click_on handle ~get_vdom ~selector in
   click "th:nth-child(4) button";
@@ -204,7 +225,8 @@ let%expect_test "sorting, filtering and selecting" =
   rows handle;
   click "th:nth-child(4) button";
   rows handle;
-  [%expect {|
+  [%expect
+    {|
     Ada Alan Edsger Grace
     Grace Edsger Alan Ada
     Ada Grace Alan Edsger
@@ -219,14 +241,16 @@ let%expect_test "sorting, filtering and selecting" =
   click "tr:nth-child(2) td input";
   Handle.recompute_view handle;
   print_s [%sexp ((Handle.last_result handle).selected : String.Set.t)];
-  [%expect {|
+  [%expect
+    {|
     Ada Alan
     (Ada Alan)
     Ada Grace Alan Edsger
     (Ada Alan Grace)
     |}];
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div class="loon-data-table">
       <div class="loon-data-table-toolbar">
         <div class="loon-data-table-filter">
@@ -345,10 +369,15 @@ let%expect_test "sorting, filtering and selecting" =
       </div>
     </div>
     |}];
-  Handle.input_text handle ~get_vdom ~selector:"input[type=search]" ~text:"nobody";
+  Handle.input_text
+    handle
+    ~get_vdom
+    ~selector:"input[type=search]"
+    ~text:"nobody";
   Handle.recompute_view handle;
   Render.html ~selector:"tbody" (get_vdom (Handle.last_result handle));
-  [%expect {|
+  [%expect
+    {|
     <tbody class="loon-table-body">
       <tr class="loon-table-row">
         <td data-align="center" colspan="4" class="loon-data-table-empty loon-table-cell"> No results. </td>
@@ -364,10 +393,13 @@ let%expect_test "pages" =
       (component ~page_size:3 ())
   in
   rows handle;
-  Render.html ~selector:".loon-data-table-footer" (get_vdom (Handle.last_result handle));
+  Render.html
+    ~selector:".loon-data-table-footer"
+    (get_vdom (Handle.last_result handle));
   Handle.click_on handle ~get_vdom ~selector:"[aria-label='Next page']";
   rows handle;
-  [%expect {|
+  [%expect
+    {|
     Ada Grace Alan
     <div class="loon-data-table-footer">
       <div aria-live="polite" class="loon-data-table-status"> 0 of 4 rows selected </div>

@@ -27,6 +27,8 @@ let basic =
         ; Node.text "Source"
         ]
     ]
+;;
+
 (*$*)
 
 (*$ With a label *)
@@ -43,9 +45,11 @@ let page =
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "orientation", "Separator.Orientation.t", "Horizontal (default) or Vertical."
+          [ "orientation", "Orientation.t", "Horizontal (default) or Vertical."
           ; "label", "string", "Text in the middle of the line."
-          ; "semantic", "bool", "role=\"separator\" rather than decorative (default false)."
+          ; ( "semantic"
+            , "bool"
+            , "role=\"separator\" rather than decorative (default false)." )
           ]
       ]
     [ Doc.static ~page "Horizontal and vertical" basic

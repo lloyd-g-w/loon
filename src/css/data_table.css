@@ -54,7 +54,7 @@
   overflow: hidden;
 }
 .loon-data-table-frame .loon-table-header {
-  background: color-mix(in oklch, var(--loon-muted) 55%, transparent);
+  background: color-mix(in oklab, var(--loon-muted) 55%, transparent);
 }
 .loon-data-table-frame .loon-table-header > .loon-table-row {
   border-bottom: 1px solid var(--loon-border);

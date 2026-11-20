@@ -10,7 +10,8 @@ let%expect_test "weeks" =
     List.map week ~f:(fun d -> sprintf "%2d" (Date.day d))
     |> String.concat ~sep:" "
     |> print_endline);
-  [%expect {|
+  [%expect
+    {|
     26 27 28 29 30 31  1
      2  3  4  5  6  7  8
      9 10 11 12 13 14 15
@@ -44,9 +45,15 @@ let%expect_test "moved" =
       print_s
         [%message
           name
-            ~_:(Calendar.moved ~week_start:Mon ~shift:false ~key d : Date.t option)]);
-  print_s [%sexp (Calendar.moved ~week_start:Mon ~shift:true ~key:PageDown d : Date.t option)];
-  [%expect {|
+            ~_:
+              (Calendar.moved ~week_start:Mon ~shift:false ~key d
+               : Date.t option)]);
+  print_s
+    [%sexp
+      (Calendar.moved ~week_start:Mon ~shift:true ~key:PageDown d
+       : Date.t option)];
+  [%expect
+    {|
     (left (2026-01-30))
     (right (2026-02-01))
     (up (2026-01-24))
@@ -70,14 +77,17 @@ let component () =
       match Date.day_of_week d with
       | Sat | Sun -> true
       | _ -> false)
-
+;;
 
 let%expect_test "the month" =
   let handle =
-    Bonsai_web_test.Handle.create (Bonsai_web_test.Result_spec.vdom get_vdom) (component ())
+    Bonsai_web_test.Handle.create
+      (Bonsai_web_test.Result_spec.vdom get_vdom)
+      (component ())
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div class="loon-calendar">
       <div class="loon-calendar-header">
         <button type="button" aria-label="Previous month" class="loon-calendar-nav" @on_click>
@@ -480,21 +490,29 @@ let%expect_test "the month" =
 
 let%expect_test "picking, keys and months" =
   let handle =
-    Bonsai_web_test.Handle.create (Bonsai_web_test.Result_spec.vdom get_vdom) (component ())
+    Bonsai_web_test.Handle.create
+      (Bonsai_web_test.Result_spec.vdom get_vdom)
+      (component ())
   in
   let selected () =
     Handle.recompute_view handle;
-    print_s [%sexp ((Handle.last_result handle).selected : Date.t option)] in
+    print_s [%sexp ((Handle.last_result handle).selected : Date.t option)]
+  in
   let caption () =
     Handle.recompute_view handle;
-    Render.html ~selector:".loon-calendar-caption" (get_vdom (Handle.last_result handle))
+    Render.html
+      ~selector:".loon-calendar-caption"
+      (get_vdom (Handle.last_result handle))
   in
   Handle.click_on handle ~get_vdom ~selector:"[id$=day-2026-11-24]";
   selected ();
   [%expect {| (2026-11-24) |}];
   (* weekends can't be picked *)
-  Render.html ~selector:"[id$=day-2026-11-22]" (get_vdom (Handle.last_result handle));
-  [%expect {|
+  Render.html
+    ~selector:"[id$=day-2026-11-22]"
+    (get_vdom (Handle.last_result handle));
+  [%expect
+    {|
     <button type="button"
             id="loonbonsai_path_replaced_in_test-day-2026-11-22"
             aria-label="Sunday, 22 November 2026"
@@ -507,7 +525,8 @@ let%expect_test "picking, keys and months" =
   caption ();
   Handle.recompute_view handle;
   Render.html ~selector:"[tabindex='0']" (get_vdom (Handle.last_result handle));
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key ArrowDown))
     ("default prevented" (key ArrowDown))
     <div id="loonbonsai_path_replaced_in_test-caption"
@@ -524,10 +543,13 @@ let%expect_test "picking, keys and months" =
   Handle.click_on handle ~get_vdom ~selector:"[aria-label='Previous month']";
   caption ();
   (* not before [min] *)
-  Render.html ~selector:"[aria-label='Previous month']" (get_vdom (Handle.last_result handle));
+  Render.html
+    ~selector:"[aria-label='Previous month']"
+    (get_vdom (Handle.last_result handle));
   Handle.recompute_view handle;
   Render.html ~selector:"[tabindex='0']" (get_vdom (Handle.last_result handle));
-  [%expect {|
+  [%expect
+    {|
     <div id="loonbonsai_path_replaced_in_test-caption"
          aria-live="polite"
          class="loon-calendar-caption"> October 2026 </div>
@@ -546,7 +568,8 @@ let%expect_test "picking, keys and months" =
   Handle.keydown handle ~get_vdom ~selector:".loon-calendar-grid" ~key:PageUp;
   Handle.recompute_view handle;
   Render.html ~selector:"[tabindex='0']" (get_vdom (Handle.last_result handle));
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key PageUp))
     <button type="button"
             id="loonbonsai_path_replaced_in_test-day-2026-10-15"

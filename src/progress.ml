@@ -23,17 +23,19 @@ module Size = struct
 end
 
 let view
-  ?attrs:extra
-  ?(tone = Tone.Primary)
-  ?(size = Size.Md)
-  ?max:(maximum = 100.)
-  ?label
-  ?value
-  ()
+      ?attrs:extra
+      ?(tone = Tone.Primary)
+      ?(size = Size.Md)
+      ?max:(maximum = 100.)
+      ?label
+      ?value
+      ()
   =
   let fraction =
     Option.map value ~f:(fun v ->
-      if Float.(maximum <= 0.) then 0. else Float.clamp_exn (v /. maximum) ~min:0. ~max:1.)
+      if Float.(maximum <= 0.)
+      then 0.
+      else Float.clamp_exn (v /. maximum) ~min:0. ~max:1.)
   in
   let state =
     match fraction with
@@ -45,7 +47,10 @@ let view
     ~attrs:
       (attrs
          ?attrs:extra
-         [ "loon-progress"; "loon-progress-" ^ Tone.name tone; "loon-progress-" ^ Size.name size ]
+         [ "loon-progress"
+         ; "loon-progress-" ^ Tone.name tone
+         ; "loon-progress-" ^ Size.name size
+         ]
        @ [ Attr.role "progressbar"
          ; aria "valuemin" "0"
          ; aria "valuemax" (Float.to_string_hum ~strip_zero:true maximum)
@@ -54,7 +59,12 @@ let view
        @ (match value with
           | None -> []
           | Some v ->
-            [ aria "valuenow" (Float.to_string_hum ~strip_zero:true (Float.clamp_exn v ~min:0. ~max:maximum)) ])
+            [ aria
+                "valuenow"
+                (Float.to_string_hum
+                   ~strip_zero:true
+                   (Float.clamp_exn v ~min:0. ~max:maximum))
+            ])
        @ Option.value_map label ~default:[] ~f:(fun l -> [ aria "label" l ]))
     [ Node.div
         ~attrs:

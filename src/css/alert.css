@@ -39,22 +39,22 @@
   align-self: center;
 }
 .loon-alert-info {
-  --loon-alert-tone: color-mix(in oklch, var(--loon-accent) 80%, var(--loon-foreground));
-  background: color-mix(in oklch, var(--loon-accent-soft) 55%, var(--loon-surface));
-  border-color: color-mix(in oklch, var(--loon-accent) 25%, var(--loon-border));
+  --loon-alert-tone: color-mix(in oklab, var(--loon-accent) 80%, var(--loon-foreground));
+  background: color-mix(in oklab, var(--loon-accent-soft) 55%, var(--loon-surface));
+  border-color: color-mix(in oklab, var(--loon-accent) 25%, var(--loon-border));
 }
 .loon-alert-success {
-  --loon-alert-tone: color-mix(in oklch, var(--loon-success) 75%, var(--loon-foreground));
-  background: color-mix(in oklch, var(--loon-success-soft) 55%, var(--loon-surface));
-  border-color: color-mix(in oklch, var(--loon-success) 25%, var(--loon-border));
+  --loon-alert-tone: color-mix(in oklab, var(--loon-success) 75%, var(--loon-foreground));
+  background: color-mix(in oklab, var(--loon-success-soft) 55%, var(--loon-surface));
+  border-color: color-mix(in oklab, var(--loon-success) 25%, var(--loon-border));
 }
 .loon-alert-warning {
-  --loon-alert-tone: color-mix(in oklch, var(--loon-warning) 60%, var(--loon-foreground));
-  background: color-mix(in oklch, var(--loon-warning-soft) 60%, var(--loon-surface));
-  border-color: color-mix(in oklch, var(--loon-warning) 30%, var(--loon-border));
+  --loon-alert-tone: color-mix(in oklab, var(--loon-warning) 60%, var(--loon-foreground));
+  background: color-mix(in oklab, var(--loon-warning-soft) 60%, var(--loon-surface));
+  border-color: color-mix(in oklab, var(--loon-warning) 30%, var(--loon-border));
 }
 .loon-alert-danger {
-  --loon-alert-tone: color-mix(in oklch, var(--loon-danger) 80%, var(--loon-foreground));
-  background: color-mix(in oklch, var(--loon-danger-soft) 55%, var(--loon-surface));
-  border-color: color-mix(in oklch, var(--loon-danger) 25%, var(--loon-border));
+  --loon-alert-tone: color-mix(in oklab, var(--loon-danger) 80%, var(--loon-foreground));
+  background: color-mix(in oklab, var(--loon-danger-soft) 55%, var(--loon-surface));
+  border-color: color-mix(in oklab, var(--loon-danger) 25%, var(--loon-border));
 }

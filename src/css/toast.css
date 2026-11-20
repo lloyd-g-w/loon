@@ -48,7 +48,7 @@
 .loon-toast-warning { --loon-toast-tone: var(--loon-warning); }
 .loon-toast-danger {
   --loon-toast-tone: var(--loon-danger);
-  border-color: color-mix(in oklch, var(--loon-danger) 35%, var(--loon-border));
+  border-color: color-mix(in oklab, var(--loon-danger) 35%, var(--loon-border));
 }
 .loon-toast-icon {
   flex: none;

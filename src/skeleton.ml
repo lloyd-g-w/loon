@@ -19,15 +19,23 @@ let view ?attrs:extra ?(shape = Shape.Rect) ?width ?height () =
   in
   Node.div
     ~attrs:
-      (attrs ?attrs:extra [ "loon-skeleton"; "loon-skeleton-" ^ Shape.name shape ]
+      (attrs
+         ?attrs:extra
+         [ "loon-skeleton"; "loon-skeleton-" ^ Shape.name shape ]
        @ [ aria "hidden" "true" ]
-       @ if List.is_empty style then [] else [ Attr.style (Css_gen.concat style) ])
+       @
+       if List.is_empty style then [] else [ Attr.style (Css_gen.concat style) ]
+      )
     []
 ;;
 
 let text ?attrs:extra ?(lines = 3) () =
   Node.div
-    ~attrs:(attrs ?attrs:extra [ "loon-skeleton-lines" ] @ [ aria "hidden" "true" ])
+    ~attrs:
+      (attrs ?attrs:extra [ "loon-skeleton-lines" ] @ [ aria "hidden" "true" ])
     (List.init lines ~f:(fun i ->
-       view ~shape:Text ?width:(if i = lines - 1 && lines > 1 then Some "60%" else None) ()))
+       view
+         ~shape:Text
+         ?width:(if i = lines - 1 && lines > 1 then Some "60%" else None)
+         ()))
 ;;

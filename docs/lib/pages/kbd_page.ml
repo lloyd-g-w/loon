@@ -11,7 +11,9 @@ let page = "kbd"
 let keys =
   Node.div
     ~attrs:[ Attr.class_ "docs-stack" ]
-    [ Node.div ~attrs:[ Attr.class_ "docs-row" ] [ Kbd.view "Esc"; Kbd.view "Tab"; Kbd.view "K" ]
+    [ Node.div
+        ~attrs:[ Attr.class_ "docs-row" ]
+        [ Kbd.view "Esc"; Kbd.view "Tab"; Kbd.view "K" ]
     ; Node.div
         ~attrs:[ Attr.class_ "docs-row" ]
         [ Kbd.combo [ "Cmd"; "K" ]
@@ -19,18 +21,26 @@ let keys =
         ; Kbd.combo ~symbols:false [ "Ctrl"; "Alt"; "Delete" ]
         ]
     ]
+;;
+
 (*$*)
 
 (*$ In a sentence *)
 let sentence =
   Node.p
-    ~attrs:[ Attr.create "style" "color: var(--loon-muted-foreground); font-size: 0.875rem" ]
+    ~attrs:
+      [ Attr.create
+          "style"
+          "color: var(--loon-muted-foreground); font-size: 0.875rem"
+      ]
     [ Node.text "Press "
     ; Kbd.combo [ "Cmd"; "K" ]
     ; Node.text " to search, or "
     ; Kbd.view "?"
     ; Node.text " for every shortcut."
     ]
+;;
+
 (*$*)
 
 let page =
@@ -45,8 +55,13 @@ let page =
       ; Doc.props
           [ "Kbd.view key", "string", "One key."
           ; "Kbd.combo keys", "string list", "Keys pressed together."
-          ; "symbols", "bool", "Show Cmd, Shift, Alt, Ctrl, Enter… as ⌘ ⇧ ⌥ ⌃ ↵ (default true)."
+          ; ( "symbols"
+            , "bool"
+            , "Show Cmd, Shift, Alt, Ctrl, Enter… as ⌘ ⇧ ⌥ ⌃ ↵ (default true)."
+            )
           ]
       ]
-    [ Doc.static ~page "Keys and combinations" keys; Doc.static ~page "In a sentence" sentence ]
+    [ Doc.static ~page "Keys and combinations" keys
+    ; Doc.static ~page "In a sentence" sentence
+    ]
 ;;

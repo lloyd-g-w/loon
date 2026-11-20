@@ -24,14 +24,14 @@
   border-bottom: 0;
 }
 .loon-table-hover .loon-table-body > .loon-table-row:hover {
-  background: color-mix(in oklch, var(--loon-muted) 60%, transparent);
+  background: color-mix(in oklab, var(--loon-muted) 60%, transparent);
 }
 .loon-table-striped .loon-table-body > .loon-table-row:nth-child(even) {
-  background: color-mix(in oklch, var(--loon-muted) 45%, transparent);
+  background: color-mix(in oklab, var(--loon-muted) 45%, transparent);
 }
 .loon-table-row[data-state="selected"],
 .loon-table-hover .loon-table-body > .loon-table-row[data-state="selected"]:hover {
-  background: color-mix(in oklch, var(--loon-accent-soft) 70%, transparent);
+  background: color-mix(in oklab, var(--loon-accent-soft) 70%, transparent);
 }
 .loon-table-head {
   height: 2.5rem;
@@ -61,7 +61,7 @@
 }
 .loon-table-footer {
   border-top: 1px solid var(--loon-border);
-  background: color-mix(in oklch, var(--loon-muted) 50%, transparent);
+  background: color-mix(in oklab, var(--loon-muted) 50%, transparent);
   font-weight: 500;
 }
 .loon-table-footer > .loon-table-row {

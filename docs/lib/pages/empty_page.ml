@@ -12,21 +12,28 @@ let projects =
   Empty.view
     ~bordered:true
     ~icon:Folder
-    ~description:"Projects keep your files, people and settings together. Make one to get started."
+    ~description:
+      "Projects keep your files, people and settings together. Make one to get \
+       started."
     ~actions:
       [ Button.with_icon Plus "New project"
       ; Button.view ~variant:Outline [ Node.text "Import" ]
       ]
     "No projects yet"
+;;
+
 (*$*)
 
 (*$ No search results *)
 let search =
   Empty.view
     ~icon:Search
-    ~description:"Nothing matches “bonsia”. Check the spelling or try fewer words."
+    ~description:
+      "Nothing matches “bonsia”. Check the spelling or try fewer words."
     ~actions:[ Button.view ~variant:Ghost [ Node.text "Clear search" ] ]
     "No results"
+;;
+
 (*$*)
 
 let page =
@@ -35,7 +42,8 @@ let page =
     ~title:"Empty"
     ~group:Feedback
     ~description:"What to show when there is nothing to show."
-    ~usage:{|Empty.view ~icon:Inbox ~description:"New mail shows up here." "No messages"|}
+    ~usage:
+      {|Empty.view ~icon:Inbox ~description:"New mail shows up here." "No messages"|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
@@ -45,5 +53,7 @@ let page =
           ; "bordered", "bool", "A dashed outline around it (default false)."
           ]
       ]
-    [ Doc.static ~page "No projects yet" projects; Doc.static ~page "No search results" search ]
+    [ Doc.static ~page "No projects yet" projects
+    ; Doc.static ~page "No search results" search
+    ]
 ;;

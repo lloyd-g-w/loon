@@ -51,7 +51,14 @@ let hide_failed (ev : Js_of_ocaml.Dom_html.event Js.t) =
       target##setAttribute (Js.string "data-state") (Js.string "error")))
 ;;
 
-let view ?attrs:extra ?(size = Size.Md) ?(shape = Shape.Circle) ?src ?status name =
+let view
+      ?attrs:extra
+      ?(size = Size.Md)
+      ?(shape = Shape.Circle)
+      ?src
+      ?status
+      name
+  =
   Node.span
     ~attrs:
       (attrs
@@ -62,11 +69,12 @@ let view ?attrs:extra ?(size = Size.Md) ?(shape = Shape.Circle) ?src ?status nam
             | Circle -> "loon-avatar-circle"
             | Square -> "loon-avatar-square")
          ]
-       @ [ Attr.style (Css_gen.create ~field:"--loon-avatar-hue" ~value:(Int.to_string (hue name))) ])
+       @ [ Attr.css_var ~name:"loon-avatar-hue" (Int.to_string (hue name)) ])
     (List.filter_opt
        [ Some
            (Node.span
-              ~attrs:[ Attr.class_ "loon-avatar-fallback"; aria "hidden" "true" ]
+              ~attrs:
+                [ Attr.class_ "loon-avatar-fallback"; aria "hidden" "true" ]
               [ Node.text (initials name) ])
        ; Option.map src ~f:(fun src ->
            Node.img
@@ -77,10 +85,13 @@ let view ?attrs:extra ?(size = Size.Md) ?(shape = Shape.Circle) ?src ?status nam
                ; Attr.create "loading" "lazy"
                ; Attr.on_error hide_failed
                ]
-             ()
-         )
+             ())
        ; (match src with
-          | None -> Some (Node.span ~attrs:[ Attr.class_ "loon-sr-only" ] [ Node.text name ])
+          | None ->
+            Some
+              (Node.span
+                 ~attrs:[ Attr.class_ "loon-sr-only" ]
+                 [ Node.text name ])
           | Some _ -> None)
        ; Option.map status ~f:(fun status ->
            let status =
@@ -92,7 +103,8 @@ let view ?attrs:extra ?(size = Size.Md) ?(shape = Shape.Circle) ?src ?status nam
            in
            Node.span
              ~attrs:
-               [ Attr.classes [ "loon-avatar-status"; "loon-avatar-status-" ^ status ]
+               [ Attr.classes
+                   [ "loon-avatar-status"; "loon-avatar-status-" ^ status ]
                ; Attr.title status
                ]
              [])
@@ -102,12 +114,15 @@ let view ?attrs:extra ?(size = Size.Md) ?(shape = Shape.Circle) ?src ?status nam
 let group ?attrs:extra ?(size = Size.Md) ?max avatars =
   let shown, hidden =
     match max with
-    | Some max when List.length avatars > max -> List.take avatars max, List.drop avatars max
+    | Some max when List.length avatars > max ->
+      List.take avatars max, List.drop avatars max
     | _ -> avatars, []
   in
   Node.div
     ~attrs:
-      (attrs ?attrs:extra [ "loon-avatar-group"; "loon-avatar-group-" ^ Size.name size ]
+      (attrs
+         ?attrs:extra
+         [ "loon-avatar-group"; "loon-avatar-group-" ^ Size.name size ]
        @ [ Attr.role "group" ])
     (shown
      @

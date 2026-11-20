@@ -19,7 +19,14 @@ module Variant = struct
   ;;
 end
 
-let view ?attrs:extra ?(variant = Variant.Neutral) ?icon ?title ?action description =
+let view
+      ?attrs:extra
+      ?(variant = Variant.Neutral)
+      ?icon
+      ?title
+      ?action
+      description
+  =
   let icon =
     match icon with
     | None -> Some (Variant.icon variant)
@@ -42,7 +49,9 @@ let view ?attrs:extra ?(variant = Variant.Neutral) ?icon ?title ?action descript
               ~attrs:[ Attr.class_ "loon-alert-body" ]
               (List.filter_opt
                  [ Option.map title ~f:(fun title ->
-                     Node.div ~attrs:[ Attr.class_ "loon-alert-title" ] [ Node.text title ])
+                     Node.div
+                       ~attrs:[ Attr.class_ "loon-alert-title" ]
+                       [ Node.text title ])
                  ; (if List.is_empty description
                     then None
                     else

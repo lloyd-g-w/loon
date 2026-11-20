@@ -17,7 +17,8 @@ let%expect_test "entries" =
   List.iter [ 1; 3; 4; 5; 6; 7; 10 ] ~f:(fun page -> show ~page ~pages:10);
   show ~page:50 ~pages:10;
   show ~page:1 ~pages:0;
-  [%expect {|
+  [%expect
+    {|
     [1] 2 3 4 5
     [1] 2 3 4 5 … 10
     1 2 [3] 4 5 … 10
@@ -29,8 +30,11 @@ let%expect_test "entries" =
     1 … 6 7 8 9 10
     |}];
   print_s
-    [%sexp (Pagination.entries ~siblings:2 ~page:10 ~pages:20 () : Pagination.Entry.t list)];
-  [%expect {|
+    [%sexp
+      (Pagination.entries ~siblings:2 ~page:10 ~pages:20 ()
+       : Pagination.Entry.t list)];
+  [%expect
+    {|
     ((Page 1) Ellipsis (Page 8) (Page 9) (Page 10) (Page 11) (Page 12) Ellipsis
      (Page 20))
     |}]
@@ -43,7 +47,8 @@ let%expect_test "next, previous and page links" =
       (Pagination.component ~pages:(Bonsai_web.Bonsai.return 10))
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <nav aria-label="Pagination" class="loon-pagination">
       <ul class="loon-pagination-list">
         <li>
@@ -103,10 +108,17 @@ let%expect_test "next, previous and page links" =
       </ul>
     </nav>
     |}];
-  Handle.click_on handle ~get_vdom:(fun t -> t.view) ~selector:"[aria-label='Next page']";
-  Handle.click_on handle ~get_vdom:(fun t -> t.view) ~selector:"[aria-label='Page 5']";
+  Handle.click_on
+    handle
+    ~get_vdom:(fun t -> t.view)
+    ~selector:"[aria-label='Next page']";
+  Handle.click_on
+    handle
+    ~get_vdom:(fun t -> t.view)
+    ~selector:"[aria-label='Page 5']";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <nav aria-label="Pagination" class="loon-pagination">
         <ul class="loon-pagination-list">
           <li>
@@ -176,9 +188,13 @@ let%expect_test "next, previous and page links" =
             <button type="button"
                     aria-label="Next page"
     |}];
-  Handle.click_on handle ~get_vdom:(fun t -> t.view) ~selector:"[aria-label='Page 10']";
+  Handle.click_on
+    handle
+    ~get_vdom:(fun t -> t.view)
+    ~selector:"[aria-label='Page 10']";
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <nav aria-label="Pagination" class="loon-pagination">
       <ul class="loon-pagination-list">
         <li>

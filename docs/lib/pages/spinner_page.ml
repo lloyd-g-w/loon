@@ -12,6 +12,8 @@ let sizes =
   Node.div
     ~attrs:[ Attr.class_ "docs-row" ]
     (List.map Spinner.Size.all ~f:(fun size -> Spinner.view ~size ()))
+;;
+
 (*$*)
 
 (*$ In context
@@ -23,11 +25,16 @@ let in_context =
         ~attrs:
           [ Attr.create
               "style"
-              "display: inline-flex; gap: 0.5rem; align-items: center; color: var(--loon-muted-foreground); font-size: 0.875rem"
+              "display: inline-flex; gap: 0.5rem; align-items: center; color: \
+               var(--loon-muted-foreground); font-size: 0.875rem"
           ]
         [ Spinner.view ~size:Sm (); Node.text "Syncing 12 files…" ]
-    ; Badge.view ~variant:Outline [ Spinner.view ~size:Sm ~label:"Deploying" (); Node.text "Deploying" ]
+    ; Badge.view
+        ~variant:Outline
+        [ Spinner.view ~size:Sm ~label:"Deploying" (); Node.text "Deploying" ]
     ]
+;;
+
 (*$*)
 
 let page =
