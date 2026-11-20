@@ -29,6 +29,11 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+/* Busy: still legible, a little muted, with the spinner saying why. */
+.loon-button[aria-busy="true"] {
+  opacity: 0.85;
+  cursor: progress;
+}
 .loon-button .loon-icon {
   font-size: 1rem;
 }

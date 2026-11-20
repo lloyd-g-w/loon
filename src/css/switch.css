@@ -9,12 +9,10 @@
   cursor: pointer;
   user-select: none;
 }
+/* Muted text rather than opacity, which the switch inside could not undo. */
 .loon-switch-label[data-disabled="true"] {
   cursor: not-allowed;
-  opacity: 0.5;
-}
-.loon-switch-label[data-disabled="true"] > button {
-  opacity: 1;
+  color: var(--loon-muted-foreground);
 }
 
 .loon-switch {
@@ -51,9 +49,15 @@
 .loon-switch:focus-visible {
   box-shadow: 0 0 0 2px var(--loon-background), 0 0 0 4px var(--loon-ring);
 }
+/* Disabled: a flat thumb rather than opacity, which would leave a light
+   track all but invisible. */
 .loon-switch:disabled {
   cursor: not-allowed;
-  opacity: 0.5;
+  box-shadow: none;
+}
+.loon-switch:disabled[data-state="checked"] {
+  background: color-mix(in oklab, var(--loon-primary) 45%, var(--loon-background));
+  box-shadow: none;
 }
 .loon-switch-thumb {
   display: block;
@@ -70,6 +74,13 @@
 }
 .loon-dark .loon-switch[data-state="unchecked"] .loon-switch-thumb {
   background: var(--loon-foreground);
+}
+.loon-switch:disabled .loon-switch-thumb {
+  background: var(--loon-muted);
+  box-shadow: none;
+}
+.loon-dark .loon-switch:disabled[data-state="unchecked"] .loon-switch-thumb {
+  background: var(--loon-muted-foreground);
 }
 
 @media (pointer: coarse) {

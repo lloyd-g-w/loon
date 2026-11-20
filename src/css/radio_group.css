@@ -32,7 +32,7 @@
   margin-top: 0.0625rem;
   padding: 0;
   border-radius: 999px;
-  border: 1px solid var(--loon-input);
+  border: 1px solid var(--loon-control-border);
   background: var(--loon-surface);
   box-shadow: var(--loon-shadow-sm);
   cursor: pointer;
@@ -49,7 +49,7 @@
   cursor: not-allowed;
 }
 .loon-radio:hover:not(:disabled) {
-  border-color: color-mix(in oklab, var(--loon-input) 60%, var(--loon-foreground));
+  border-color: color-mix(in oklab, var(--loon-control-border) 50%, var(--loon-foreground));
 }
 .loon-radio:focus-visible {
   box-shadow: 0 0 0 2px var(--loon-background), 0 0 0 4px var(--loon-ring);

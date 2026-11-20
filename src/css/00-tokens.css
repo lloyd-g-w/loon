@@ -12,6 +12,8 @@
   --loon-subtle: oklch(0.945 0.008 250);
   --loon-border: oklch(0.91 0.008 250);
   --loon-input: oklch(0.88 0.01 250);
+  /* The edge of an unchecked checkbox or radio: 3:1 against the background. */
+  --loon-control-border: oklch(0.62 0.015 255);
   --loon-primary: oklch(0.24 0.025 255);
   --loon-primary-foreground: oklch(0.985 0.003 250);
   --loon-secondary: oklch(0.955 0.008 250);
@@ -65,6 +67,7 @@
   --loon-subtle: oklch(0.28 0.015 255);
   --loon-border: oklch(0.3 0.014 255);
   --loon-input: oklch(0.34 0.015 255);
+  --loon-control-border: oklch(0.55 0.015 255);
   --loon-primary: oklch(0.95 0.006 250);
   --loon-primary-foreground: oklch(0.2 0.02 255);
   --loon-secondary: oklch(0.27 0.014 255);
