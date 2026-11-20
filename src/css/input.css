@@ -1,0 +1,99 @@
+.loon-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  border-radius: var(--loon-radius-sm);
+  border: 1px solid var(--loon-input);
+  background: var(--loon-surface);
+  color: var(--loon-foreground);
+  font: inherit;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  box-shadow: var(--loon-shadow-sm);
+  outline: none;
+  transition: border-color var(--loon-duration) var(--loon-ease),
+    box-shadow var(--loon-duration) var(--loon-ease);
+}
+.loon-input::placeholder {
+  color: var(--loon-muted-foreground);
+  opacity: 1;
+}
+.loon-input:hover:not(:disabled):not(:focus) {
+  border-color: color-mix(in oklch, var(--loon-input) 70%, var(--loon-foreground));
+}
+.loon-input:focus-visible {
+  border-color: var(--loon-ring);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--loon-ring) 25%, transparent);
+}
+.loon-input[aria-invalid="true"] {
+  border-color: var(--loon-danger);
+}
+.loon-input[aria-invalid="true"]:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--loon-danger) 22%, transparent);
+}
+.loon-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background: var(--loon-muted);
+}
+.loon-input {
+  height: 2.25rem;
+  padding: 0 0.75rem;
+}
+.loon-input[type="file"] {
+  padding: 0.3rem 0.75rem;
+}
+.loon-input[type="search"]::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+.loon-input[type="number"] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* An input with a leading icon and/or a trailing addon. */
+.loon-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.loon-input-group .loon-input {
+  flex: 1;
+}
+.loon-input-icon {
+  position: absolute;
+  left: 0.75rem;
+  font-size: 1rem;
+  color: var(--loon-muted-foreground);
+  pointer-events: none;
+}
+.loon-input-group-leading .loon-input {
+  padding-left: 2.25rem;
+}
+.loon-input-addon {
+  position: absolute;
+  right: 0.25rem;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: var(--loon-muted-foreground);
+  font-size: 0.8125rem;
+}
+.loon-input-addon > :not(.loon-button):not(.loon-toggle) {
+  padding-right: 0.5rem;
+}
+.loon-input-addon .loon-button {
+  height: 1.75rem;
+  padding: 0 0.625rem;
+}
+.loon-input-addon .loon-button-icon {
+  width: 1.75rem;
+  padding: 0;
+}
+.loon-input-group-trailing .loon-input {
+  padding-right: var(--loon-input-addon-width, 3.25rem);
+}
+.loon-input-group[data-disabled="true"] .loon-input-icon {
+  opacity: 0.5;
+}
+

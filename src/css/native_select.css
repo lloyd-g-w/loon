@@ -1,0 +1,68 @@
+.loon-native-select-control {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  border-radius: var(--loon-radius-sm);
+  border: 1px solid var(--loon-input);
+  background: var(--loon-surface);
+  color: var(--loon-foreground);
+  font: inherit;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  box-shadow: var(--loon-shadow-sm);
+  outline: none;
+  transition: border-color var(--loon-duration) var(--loon-ease),
+    box-shadow var(--loon-duration) var(--loon-ease);
+}
+.loon-native-select-control::placeholder {
+  color: var(--loon-muted-foreground);
+  opacity: 1;
+}
+.loon-native-select-control:hover:not(:disabled):not(:focus) {
+  border-color: color-mix(in oklch, var(--loon-input) 70%, var(--loon-foreground));
+}
+.loon-native-select-control:focus-visible {
+  border-color: var(--loon-ring);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--loon-ring) 25%, transparent);
+}
+.loon-native-select-control[aria-invalid="true"] {
+  border-color: var(--loon-danger);
+}
+.loon-native-select-control[aria-invalid="true"]:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--loon-danger) 22%, transparent);
+}
+.loon-native-select-control:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background: var(--loon-muted);
+}
+.loon-native-select {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.loon-native-select-control {
+  height: 2.25rem;
+  padding: 0 2.25rem 0 0.75rem;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+.loon-native-select-control[data-placeholder="true"] {
+  color: var(--loon-muted-foreground);
+}
+.loon-native-select-control option {
+  color: var(--loon-foreground);
+  background: var(--loon-surface);
+}
+.loon-native-select-chevron {
+  position: absolute;
+  right: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--loon-muted-foreground);
+  pointer-events: none;
+}
+.loon-native-select[data-disabled="true"] .loon-native-select-chevron {
+  opacity: 0.5;
+}

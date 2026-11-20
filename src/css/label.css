@@ -1,0 +1,13 @@
+.loon-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--loon-foreground);
+  user-select: none;
+}
+.loon-label-required {
+  color: var(--loon-danger);
+}
