@@ -31,17 +31,17 @@
 }
 .loon-badge-accent {
   background: var(--loon-accent-soft);
-  color: color-mix(in oklch, var(--loon-accent) 75%, var(--loon-foreground));
+  color: color-mix(in oklab, var(--loon-accent) 75%, var(--loon-foreground));
 }
 .loon-badge-success {
   background: var(--loon-success-soft);
-  color: color-mix(in oklch, var(--loon-success) 70%, var(--loon-foreground));
+  color: color-mix(in oklab, var(--loon-success) 70%, var(--loon-foreground));
 }
 .loon-badge-warning {
   background: var(--loon-warning-soft);
-  color: color-mix(in oklch, var(--loon-warning) 55%, var(--loon-foreground));
+  color: color-mix(in oklab, var(--loon-warning) 55%, var(--loon-foreground));
 }
 .loon-badge-danger {
   background: var(--loon-danger-soft);
-  color: color-mix(in oklch, var(--loon-danger) 75%, var(--loon-foreground));
+  color: color-mix(in oklab, var(--loon-danger) 75%, var(--loon-foreground));
 }

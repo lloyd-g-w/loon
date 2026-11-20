@@ -62,14 +62,14 @@
     inset 0 1px 0 oklch(1 0 0 / 0.08);
 }
 .loon-button-primary:hover:not(:disabled) {
-  background: color-mix(in oklch, var(--loon-primary) 88%, var(--loon-background));
+  background: color-mix(in oklab, var(--loon-primary) 88%, var(--loon-background));
 }
 .loon-button-secondary {
   background: var(--loon-secondary);
   color: var(--loon-secondary-foreground);
 }
 .loon-button-secondary:hover:not(:disabled) {
-  background: color-mix(in oklch, var(--loon-secondary) 85%, var(--loon-foreground) 8%);
+  background: color-mix(in oklab, var(--loon-secondary) 85%, var(--loon-foreground) 8%);
 }
 .loon-button-outline {
   background: var(--loon-surface);
@@ -89,7 +89,7 @@
   box-shadow: var(--loon-shadow-sm);
 }
 .loon-button-accent:hover:not(:disabled) {
-  background: color-mix(in oklch, var(--loon-accent) 88%, var(--loon-foreground));
+  background: color-mix(in oklab, var(--loon-accent) 88%, var(--loon-foreground));
 }
 .loon-button-danger {
   background: var(--loon-danger);
@@ -97,7 +97,7 @@
   box-shadow: var(--loon-shadow-sm);
 }
 .loon-button-danger:hover:not(:disabled) {
-  background: color-mix(in oklch, var(--loon-danger) 88%, var(--loon-foreground));
+  background: color-mix(in oklab, var(--loon-danger) 88%, var(--loon-foreground));
 }
 .loon-button-link {
   background: transparent;

@@ -57,7 +57,7 @@
   color: var(--loon-secondary-foreground);
 }
 .loon-toggle-outline[data-state="on"] {
-  border-color: color-mix(in oklch, var(--loon-input) 60%, var(--loon-foreground));
+  border-color: color-mix(in oklab, var(--loon-input) 60%, var(--loon-foreground));
 }
 .loon-toggle:focus-visible {
   box-shadow: 0 0 0 2px var(--loon-background), 0 0 0 4px var(--loon-ring);
