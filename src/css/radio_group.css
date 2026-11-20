@@ -84,3 +84,9 @@
   line-height: 1.4;
   color: var(--loon-muted-foreground);
 }
+
+@media (pointer: coarse) {
+  .loon-radio-group-vertical {
+    gap: 1rem;
+  }
+}

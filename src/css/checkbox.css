@@ -66,3 +66,9 @@
 .loon-checkbox[aria-invalid="true"]:not([data-state="checked"]) {
   border-color: var(--loon-danger);
 }
+
+@media (pointer: coarse) {
+  .loon-checkbox-label {
+    min-height: 2.75rem;
+  }
+}

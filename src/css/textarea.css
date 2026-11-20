@@ -42,3 +42,10 @@
   resize: vertical;
   field-sizing: content;
 }
+
+/* Phones: 16px text, or iOS zooms in on focus. */
+@media (pointer: coarse) {
+  .loon-textarea {
+    font-size: 1rem;
+  }
+}

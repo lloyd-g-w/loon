@@ -71,3 +71,9 @@
 .loon-dark .loon-switch[data-state="unchecked"] .loon-switch-thumb {
   background: var(--loon-foreground);
 }
+
+@media (pointer: coarse) {
+  .loon-switch-label {
+    min-height: 2.75rem;
+  }
+}

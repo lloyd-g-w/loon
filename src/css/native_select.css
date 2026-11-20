@@ -66,3 +66,11 @@
 .loon-native-select[data-disabled="true"] .loon-native-select-chevron {
   opacity: 0.5;
 }
+
+/* Phones: 16px text, or iOS zooms in on focus; and a taller target. */
+@media (pointer: coarse) {
+  .loon-native-select-control {
+    font-size: 1rem;
+    height: 2.75rem;
+  }
+}
