@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+# Builds loon and runs every test: the dune expect tests (components, the
+# docs app, the CLI's cram tests) and the browser e2e over the docs site
+# (e2e/run.sh), in Chromium; `./check --full` runs the e2e in Chromium,
+# Firefox and WebKit and forces the dune tests to run again. (prigh's is
+# called ./test; here test/ is the components' tests.)
+#
+# Enters `nix develop` when dune is not on the PATH. Playwright and its
+# browsers come from nixpkgs (the flake's), unless PLAYWRIGHT_MODULE and
+# PLAYWRIGHT_BROWSERS_PATH are set; fonts are DejaVu through a fonts.conf
+# of its own unless FONTCONFIG_FILE is set. Logs of failed steps are kept.
+set -euo pipefail
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+engines=chromium
+force=()
+case "${1:-}" in
+"") ;;
+--full)
+	engines="chromium firefox webkit"
+	force=(--force)
+	;;
+*)
+	echo "usage: ./check [--full]" >&2
+	exit 2
+	;;
+esac
+
+if ! command -v dune >/dev/null; then
+	exec nix develop --accept-flake-config "$root" -c "$0" "$@"
+fi
+
+if [ -z "${PLAYWRIGHT_MODULE:-}" ] || [ -z "${PLAYWRIGHT_BROWSERS_PATH:-}" ]; then
+	mapfile -t playwright < <(nix build --accept-flake-config --no-link --print-out-paths \
+		--inputs-from "$root" nixpkgs#playwright-test nixpkgs#playwright-driver.browsers)
+	export PLAYWRIGHT_MODULE="${playwright[0]}/lib/node_modules/playwright/index.mjs"
+	export PLAYWRIGHT_BROWSERS_PATH="${playwright[1]}"
+fi
+if [[ $engines == *webkit* ]] && [ "$(uname)" = Linux ] && [ -z "${__EGL_VENDOR_LIBRARY_DIRS:-}" ]; then
+	mesa="$(nix build --accept-flake-config --no-link --print-out-paths \
+		--inputs-from "$root" nixpkgs#mesa)"
+	export __EGL_VENDOR_LIBRARY_DIRS="$mesa/share/glvnd/egl_vendor.d"
+fi
+
+logs="$(mktemp -d /tmp/loon-check.XXXXXX)"
+if [ -z "${FONTCONFIG_FILE:-}" ]; then
+	dejavu="$(nix build --accept-flake-config --no-link --print-out-paths \
+		--inputs-from "$root" nixpkgs#dejavu_fonts)"
+	cat >"$logs/fonts.conf" <<CONF
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <dir>$dejavu/share/fonts</dir>
+  <cachedir>$logs/font-cache</cachedir>
+</fontconfig>
+CONF
+	export FONTCONFIG_FILE="$logs/fonts.conf"
+fi
+
+start=$EPOCHREALTIME
+elapsed() { awk "BEGIN { printf \"%.0fs\", $EPOCHREALTIME - $1 }"; }
+failed=""
+step() {
+	local name=$1 t=$EPOCHREALTIME
+	shift
+	if "$@" >"$logs/$name.log" 2>&1; then
+		echo "ok    $name ($(elapsed "$t"))"
+	else
+		echo "FAIL  $name ($(elapsed "$t")): $logs/$name.log"
+		cat "$logs/$name.log"
+		failed="$failed $name"
+	fi
+}
+
+step build dune build --root "$root"
+if [ -n "$failed" ]; then
+	echo "the build failed" >&2
+	exit 1
+fi
+# The e2e reads the built site, so it runs alongside the dune tests.
+e2e_start=$EPOCHREALTIME
+ENGINES="$engines" LOON_DOCS="$root/_build/default/docs/bin/site" \
+	bash "$root/e2e/run.sh" >"$logs/e2e.log" 2>&1 &
+e2e=$!
+step "dune tests" dune build --root "$root" @runtest "${force[@]}"
+if wait "$e2e"; then
+	echo "ok    e2e: $engines ($(elapsed "$e2e_start"))"
+else
+	echo "FAIL  e2e: $engines ($(elapsed "$e2e_start")): $logs/e2e.log"
+	cat "$logs/e2e.log"
+	failed="$failed e2e"
+fi
+
+echo "$(elapsed "$start") in all"
+if [ -n "$failed" ]; then
+	echo "failed:$failed (logs in $logs)" >&2
+	exit 1
+fi
+rm -rf "$logs"

@@ -12,12 +12,14 @@ await run(async (engine, url) => {
   checkErrors(errors, "home");
 
   const all = await pages(page);
+  const groups = await page.$$eval(".docs-nav-group", (gs) =>
+    gs.map((g) => `${g.querySelector(".docs-nav-heading").textContent.trim()}: ${[...g.querySelectorAll(".docs-nav-link")].map((l) => l.textContent.trim()).join(", ")}`),
+  );
+  for (const g of groups) console.log(`sidebar ${g}`);
   const guides = await page.$$eval(".docs-nav-group:first-child .docs-nav-link", (ls) =>
     ls.map((l) => l.textContent.trim()),
   );
   console.log(`guides: ${guides.join(", ")}`);
-  const groups = await page.$$eval(".docs-nav-heading", (hs) => hs.map((h) => h.textContent.trim()));
-  if (groups[0] !== "Getting started") console.log(`first group: ${groups[0]}`);
 
   // Each page, reached from the sidebar.
   let bad = 0;

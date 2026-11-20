@@ -31,14 +31,20 @@ let page =
       ; Doc.p
           "Each component comes with the components and helpers it uses, and its CSS \
            is added to the directory's loon.css. Files you already have are left alone \
-           unless you pass -overwrite."
+           unless you pass -overwrite; -css-files keeps one stylesheet per component \
+           in css/ instead."
       ; Doc.h2 "Commands"
       ; Doc.table
           [ "Command"; "What it does" ]
           [ [ Doc.code "loon list"; Doc.text "The components, with a line about each." ]
           ; [ Doc.code "loon init"; Doc.text "Creates the ui directory and its dune file." ]
+          ; [ Doc.code "loon info NAME"
+            ; Doc.text "What a component is, its files and what it needs."
+            ]
           ; [ Doc.code "loon add NAME…"
-            ; Doc.text "Copies components and their dependencies."
+            ; Doc.text
+                "Copies components and their dependencies (-all for every one, \
+                 -dry-run to see what it would do)."
             ]
           ; [ Doc.code "loon diff NAME"
             ; Doc.text "Shows how your copy differs from loon's."

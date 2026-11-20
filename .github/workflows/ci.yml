@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  # The dune tests: components' expect tests, the docs app's, the CLI's cram
+  # tests. The OxCaml toolchain comes from prigh's binary cache (the flake's
+  # nixConfig, accepted here).
+  dune:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            accept-flake-config = true
+      - run: nix develop --accept-flake-config -c dune build @runtest
+
+  # The docs site, built whole-program by Nix, in Chromium, Firefox and WebKit.
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            accept-flake-config = true
+      - run: nix build --accept-flake-config -L .#checks.x86_64-linux.e2e

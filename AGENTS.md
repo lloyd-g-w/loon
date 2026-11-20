@@ -19,11 +19,11 @@ a library (`loon`) or copied into a project with `loon add`.
   cache). In scripts, `nix print-dev-env > /tmp/loon-env.sh` once, then
   `source /tmp/loon-env.sh` is instant.
 - Build and test: `dune build @runtest` then `dune promote` when the diff is
-  right. `./test` runs everything (dune tests and the browser e2e).
+  right. `./check` runs everything (dune tests and the browser e2e).
 - Only one dune process at a time per checkout.
 - Look at what you build: `node e2e/shot.mjs OUT.png [WxH] [light|dark]
   [#/slug]` screenshots the built site (with `PLAYWRIGHT_MODULE`,
-  `PLAYWRIGHT_BROWSERS_PATH` and `FONTCONFIG_FILE` set; see `./test`).
+  `PLAYWRIGHT_BROWSERS_PATH` and `FONTCONFIG_FILE` set; see `./check`).
 
 ## Components
 
