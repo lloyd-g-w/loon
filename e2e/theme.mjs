@@ -12,7 +12,7 @@ const theme = (page) =>
 await run(async (engine, url) => {
   const { browser, page, errors } = await open(engine);
   await page.goto(`${url}#/button`);
-  await ready(page);
+  await ready(page, "button");
   console.log(`default: ${await theme(page)}`);
   console.log(`toggle: ${await page.getAttribute(".docs-theme-toggle", "aria-label")}`);
   await page.click(".docs-theme-toggle");

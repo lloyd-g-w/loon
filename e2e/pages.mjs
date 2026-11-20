@@ -50,7 +50,7 @@ await run(async (engine, url) => {
 
   // Back and forward.
   await page.goto(`${url}#/installation`);
-  await ready(page);
+  await ready(page, "installation");
   await page.click('.docs-nav-link[data-slug="theming"]');
   await waitForHash(page, "#/theming");
   await page.click('.docs-nav-link[data-slug="cli"]');
@@ -84,7 +84,7 @@ await run(async (engine, url) => {
 
   // The pager.
   await page.goto(`${url}#/installation`);
-  await ready(page);
+  await ready(page, "installation");
   console.log(`pager: ${await text(page, ".docs-pager")}`);
   await page.click(".docs-pager-next");
   await page.waitForSelector('.docs-article[data-page="theming"]');

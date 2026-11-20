@@ -641,11 +641,52 @@ a.docs-chip:hover {
 .docs-props td:first-child {
   white-space: nowrap;
 }
+.docs-props td:last-child {
+  min-width: 15rem;
+}
+/* Scroll shadows: a hint that wide content goes on sideways. */
+.docs-props,
+.docs-pre,
+.docs-preview {
+  --docs-shadow: color-mix(in oklch, var(--loon-foreground) 14%, transparent);
+}
+.docs-props,
+.docs-pre {
+  background-image:
+    linear-gradient(to right, var(--docs-scroll-bg, var(--loon-background)) 30%, transparent),
+    linear-gradient(to left, var(--docs-scroll-bg, var(--loon-background)) 30%, transparent),
+    radial-gradient(farthest-side at 0 50%, var(--docs-shadow), transparent),
+    radial-gradient(farthest-side at 100% 50%, var(--docs-shadow), transparent);
+  background-position: left center, right center, left center, right center;
+  background-repeat: no-repeat;
+  background-size: 2.5rem 100%, 2.5rem 100%, 0.875rem 100%, 0.875rem 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+.docs-pre {
+  --docs-scroll-bg: var(--docs-code-bg);
+}
 
 /* Code */
 .docs-codeblock {
   position: relative;
+  display: flex;
+  align-items: flex-start;
   margin: 1rem 0;
+  border: 1px solid var(--docs-code-border);
+  border-radius: var(--loon-radius-lg);
+  background: var(--docs-code-bg);
+}
+.docs-codeblock > .docs-pre {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  border-radius: inherit;
+  background-color: transparent;
+}
+.docs-codeblock > .docs-copy {
+  position: static;
+  flex: none;
+  margin: 0.4rem 0.4rem 0 0;
 }
 .docs-pre {
   margin: 0;
@@ -661,7 +702,10 @@ a.docs-chip:hover {
   scrollbar-width: thin;
 }
 .docs-codeblock .docs-pre {
-  padding-right: 3rem;
+  padding-right: 0.75rem;
+}
+.docs-app :where(code, kbd, samp, pre) {
+  font-family: var(--loon-font-mono);
 }
 .docs-pre code {
   font-family: inherit;

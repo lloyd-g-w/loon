@@ -12,7 +12,7 @@ const results = async (page) => {
 await run(async (engine, url) => {
   const { browser, page, errors } = await open(engine);
   await page.goto(`${url}#/installation`);
-  await ready(page);
+  await ready(page, "installation");
   await page.click(".docs-search-trigger");
   await page.waitForSelector(".docs-search");
   await page.waitForFunction(() => document.activeElement?.id === "docs-search-input");

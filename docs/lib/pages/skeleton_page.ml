@@ -12,7 +12,7 @@ let card =
   Node.div
     ~attrs:
       [ Attr.class_ "docs-row"
-      ; Attr.create "style" "align-items: flex-start; flex-wrap: nowrap"
+      ; Attr.create "style" "align-items: flex-start; flex-wrap: nowrap; width: 100%; max-width: 24rem"
       ]
     [ Skeleton.view ~shape:Circle ~width:"3rem" ~height:"3rem" ()
     ; Node.div
@@ -29,7 +29,7 @@ let card =
 (*$ A picture and a paragraph *)
 let media =
   Node.div
-    ~attrs:[ Attr.class_ "docs-stack"; Attr.create "style" "max-width: 22rem" ]
+    ~attrs:[ Attr.class_ "docs-stack"; Attr.create "style" "width: 100%; max-width: 22rem" ]
     [ Skeleton.view ~height:"10rem" ()
     ; Skeleton.view ~shape:Text ~width:"70%" ()
     ; Skeleton.view ~shape:Text ~width:"40%" ()

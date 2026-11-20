@@ -73,7 +73,7 @@ await run(async (engine, url) => {
   }
   console.log(`sideways overflow: ${wide.length ? wide.join("; ") : "none"}`);
   await page.goto(`${url}#/button`);
-  await ready(page);
+  await ready(page, "button");
   await screenshot(page, `${device}-button`);
   checkErrors(errors, device);
   await browser.close();

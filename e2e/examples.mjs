@@ -5,7 +5,7 @@ import { checkErrors, open, ready, run, screenshot, text } from "./lib.mjs";
 await run(async (engine, url) => {
   const { browser, page, errors } = await open(engine);
   await page.goto(`${url}#/button`);
-  await ready(page);
+  await ready(page, "button");
   const example = page.locator(".docs-example").first();
   const tabs = example.locator(".loon-tabs-trigger");
   console.log(`tabs: ${(await tabs.allTextContents()).join(" ")}; selected ${await example.locator('[aria-selected="true"]').textContent()}`);

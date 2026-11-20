@@ -13,9 +13,11 @@ let accents =
   Node.div
     ~attrs:[ Attr.class_ "docs-stack" ]
     (List.map Theme.Accent.all ~f:(fun accent ->
-       Theme.root
-         ~accent
-         ~attrs:[ Attr.class_ "docs-row"; Attr.style (Css_gen.background_color (`Name "transparent")) ]
+       Node.div
+         ~attrs:
+           [ Attr.class_ "docs-row"
+           ; Attr.create "data-loon-accent" (Theme.Accent.name accent)
+           ]
          [ Button.view ~variant:Accent [ Node.text (String.capitalize (Theme.Accent.name accent)) ]
          ; Badge.view ~variant:Accent [ Node.text "Badge" ]
          ; Button.view ~variant:Outline [ Node.text "Focus me" ]

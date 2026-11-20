@@ -68,8 +68,10 @@ export async function open(engineName, { device = "desktop", colorScheme = "ligh
   return { browser, context, page, errors };
 }
 
-export async function ready(page) {
-  await page.waitForSelector(".docs-article");
+// The page drawn, and its fonts loaded; with [slug], that page's article (a
+// goto that only changes the hash keeps the old one for a frame or two).
+export async function ready(page, slug) {
+  await page.waitForSelector(slug === undefined ? ".docs-article" : `.docs-article[data-page="${slug}"]`);
   await page.evaluate(() =>
     Promise.all([
       document.fonts.load('1em "Recursive Sans"'),
