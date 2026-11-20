@@ -70,7 +70,12 @@ export async function open(engineName, { device = "desktop", colorScheme = "ligh
 
 export async function ready(page) {
   await page.waitForSelector(".docs-article");
-  await page.evaluate(() => document.fonts && document.fonts.ready);
+  await page.evaluate(() =>
+    Promise.all([
+      document.fonts.load('1em "Recursive Sans"'),
+      document.fonts.load('1em "Recursive Mono"'),
+    ]).then(() => document.fonts.ready),
+  );
 }
 
 // Prints and clears the errors the page logged since the last check.

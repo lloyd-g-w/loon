@@ -1,0 +1,12 @@
+; Expect tests for the docs app's pure parts: routes, highlighting, search.
+
+(library
+ (name loon_docs_test)
+ (enabled_if %{bin-available:node})
+ (preprocess
+  (pps ppx_jane js_of_ocaml-ppx))
+ (inline_tests
+  (modes js)
+  (flags
+   (-source-tree-root .)))
+ (libraries core expect_test_helpers_core loon_docs))

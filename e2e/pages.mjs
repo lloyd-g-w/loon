@@ -96,7 +96,8 @@ await run(async (engine, url) => {
 
   // Topnav: Components goes to the first component's page.
   await page.click(".docs-topnav-link:nth-child(2)");
-  await page.waitForFunction(() => document.querySelector(".docs-topnav-link[data-active]"));
+  await page.waitForSelector('.docs-article:not([data-page="introduction"])');
+  console.log(`components: ${await page.evaluate(() => location.hash)}`);
   console.log(`topnav active: ${await text(page, ".docs-topnav-link[data-active]")}`);
   checkErrors(errors, "navigation");
   await browser.close();

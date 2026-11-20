@@ -114,12 +114,14 @@ let page =
           (List.map variables ~f:(fun (name, what) -> [ Doc.code name; Doc.text what ]))
       ; Doc.h2 "Overriding"
       ; Doc.p
-          "Set variables after loon.css, on :root for the whole app or on any element \
-           for its subtree. Colours are written in oklch, which keeps lightness even \
+          "Set variables in a stylesheet after loon.css: on the theme's classes \
+           (.loon-light, .loon-dark) for the whole app, or on any element for its \
+           subtree. Colours are written in oklch, which keeps lightness even \
            across hues; any CSS colour works."
       ; Doc.pre
           ~lang:Css
-          ":root {\n\
+          ".loon-light,\n\
+           .loon-dark {\n\
           \  --loon-radius: 0.375rem;\n\
           \  --loon-font: \"Inter\", system-ui, sans-serif;\n\
           }\n\n\

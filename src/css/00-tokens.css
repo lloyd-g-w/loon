@@ -6,7 +6,6 @@
   --loon-background: oklch(0.995 0.002 250);
   --loon-foreground: oklch(0.2 0.02 255);
   --loon-surface: oklch(1 0 0);
-  --loon-surface-foreground: var(--loon-foreground);
   --loon-overlay: oklch(1 0 0);
   --loon-muted: oklch(0.965 0.006 250);
   --loon-muted-foreground: oklch(0.5 0.02 255);
@@ -36,14 +35,23 @@
     0 10px 20px -15px oklch(0.2 0.02 255 / 0.2);
 
   --loon-radius: 0.625rem;
-  --loon-radius-sm: calc(var(--loon-radius) - 0.25rem);
-  --loon-radius-lg: calc(var(--loon-radius) + 0.25rem);
   --loon-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
   --loon-font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas,
     monospace;
   --loon-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --loon-duration: 160ms;
+}
+
+/* Variables made of others are computed where they are declared, so they are
+   declared again on every themed element: a .loon-dark inside a .loon-light
+   (or a subtree with its own --loon-radius) gets its own values. */
+.loon,
+.loon-light,
+.loon-dark {
+  --loon-surface-foreground: var(--loon-foreground);
+  --loon-radius-sm: calc(var(--loon-radius) - 0.25rem);
+  --loon-radius-lg: calc(var(--loon-radius) + 0.25rem);
 }
 
 .loon-dark {

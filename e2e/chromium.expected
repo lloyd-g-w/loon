@@ -14,6 +14,7 @@ pager: PreviousIntroductionNextTheming
 next: Theming
 missing: Page not found | Not found · loon
 back home: #/
+components: #/button
 topnav active: Components
 == theme
 default: html light/teal, app light/teal, background oklch(0.995 0.002 250)
