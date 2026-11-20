@@ -73,6 +73,7 @@
 }
 .loon-button-outline {
   background: var(--loon-surface);
+  color: var(--loon-foreground);
   border-color: var(--loon-input);
   box-shadow: var(--loon-shadow-sm);
 }
@@ -82,6 +83,7 @@
 }
 .loon-button-ghost {
   background: transparent;
+  color: var(--loon-foreground);
 }
 .loon-button-accent {
   background: var(--loon-accent);

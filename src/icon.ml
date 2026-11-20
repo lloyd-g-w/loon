@@ -130,9 +130,9 @@ let shape : Shape.t -> Node.t = function
     Node.create_svg
       "circle"
       ~attrs:
-        [ Attr.create "cx" (Float.to_string cx)
-        ; Attr.create "cy" (Float.to_string cy)
-        ; Attr.create "r" (Float.to_string r)
+        [ Attr.create "cx" (Printf.sprintf "%g" cx)
+        ; Attr.create "cy" (Printf.sprintf "%g" cy)
+        ; Attr.create "r" (Printf.sprintf "%g" r)
         ]
       []
 ;;

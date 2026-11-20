@@ -45,36 +45,36 @@
   animation: loon-fade-in var(--loon-duration) var(--loon-ease);
 }
 
-.loon-tabs-segmented .loon-tabs-list {
+.loon-tabs-segmented > .loon-tabs-list {
   padding: 0.1875rem;
   gap: 0.125rem;
   background: var(--loon-muted);
   border-radius: var(--loon-radius);
 }
-.loon-tabs-segmented .loon-tabs-trigger {
+.loon-tabs-segmented > .loon-tabs-list > .loon-tabs-trigger {
   height: 1.875rem;
   padding: 0 0.75rem;
   border-radius: var(--loon-radius-sm);
 }
-.loon-tabs-segmented .loon-tabs-trigger[data-state="active"] {
+.loon-tabs-segmented > .loon-tabs-list > .loon-tabs-trigger[data-state="active"] {
   background: var(--loon-surface);
   color: var(--loon-foreground);
   box-shadow: var(--loon-shadow-sm), 0 0 0 1px var(--loon-border);
 }
 
-.loon-tabs-underline .loon-tabs-list {
+.loon-tabs-underline > .loon-tabs-list {
   align-self: stretch;
   gap: 1.25rem;
   border-bottom: 1px solid var(--loon-border);
 }
-.loon-tabs-underline .loon-tabs-trigger {
+.loon-tabs-underline > .loon-tabs-list > .loon-tabs-trigger {
   height: 2.5rem;
   padding: 0 0.125rem;
   margin-bottom: -1px;
   border-bottom: 2px solid transparent;
   border-radius: 0;
 }
-.loon-tabs-underline .loon-tabs-trigger[data-state="active"] {
+.loon-tabs-underline > .loon-tabs-list > .loon-tabs-trigger[data-state="active"] {
   color: var(--loon-foreground);
   border-bottom-color: var(--loon-accent);
 }
