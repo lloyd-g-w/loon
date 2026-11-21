@@ -207,13 +207,17 @@ module Radio_item = struct
     -> Menu.Item.t
 end
 
-let radio_group ?(attrs = []) ?on_item_preview ~value ~on_value_change items =
-  Menu.group
-    ~attrs:([ data "slot" "dropdown-menu-radio-group"; Attr.role "group" ] @ attrs)
+let radio_group ?attrs ?on_item_preview ~value ~on_value_change items =
+  Menu.radio_group
+    ?attrs
+    ~value
+    ~on_value_change
     (List.map items ~f:(fun (item : Radio_item.t) ->
        item ~checked:value ~on_value_change ~on_item_preview))
 ;;
 
+(* Menu's radio item (its group gives the checked state and the select),
+   with picker.tsx's check on the right and the hover preview. *)
 let radio_item
   ?(attrs = [])
   ?(class_ = "")
@@ -224,37 +228,22 @@ let radio_item
   children
   : Radio_item.t
   =
-  fun ~checked ~on_value_change ~on_item_preview ->
-  let is_checked = String.equal checked value in
+  fun ~checked:_ ~on_value_change:_ ~on_item_preview ->
   let preview =
     match on_item_preview with
     | None -> []
     | Some f ->
       [ Attr.on_mousemove (fun _ -> f value); Attr.on_focus (fun _ -> f value) ]
   in
-  Menu.item
-    ~attrs:
-      ([ data "slot" "dropdown-menu-radio-item"
-       ; Attr.role "menuitemradio"
-       ; aria "checked" (Bool.to_string is_checked)
-       ; data "state" (if is_checked then "checked" else "unchecked")
-       ]
-       @ preview
-       @ attrs)
-    ~class_:(Cn.cn [ radio_item_class; class_ ])
+  Menu.radio_item
+    ~attrs:(preview @ attrs)
+    ~class_
+    ~indicator:(Loon.Icon.view ~class_:"size-4 pointer-coarse:size-5" Check)
     ?disabled
     ?text_value
     ~close_on_select
-    ~on_select:(on_value_change value)
-    (Node.span
-       ~attrs:
-         [ Attr.class_ "pointer-events-none absolute right-2 flex items-center justify-center"
-         ; data "slot" "dropdown-menu-radio-item-indicator"
-         ]
-       (if is_checked
-        then [ Loon.Icon.view ~class_:"size-4 pointer-coarse:size-5" Check ]
-        else [])
-     :: children)
+    ~value
+    children
 ;;
 
 let separator ?attrs ?class_ () = Menu.separator ?attrs ?class_ ()
