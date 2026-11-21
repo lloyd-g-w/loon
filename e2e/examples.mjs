@@ -88,7 +88,12 @@ await run(async (engine, url) => {
     await settle(page);
     await page.locator(`[data-page="${slug}"] ${trigger}`).first().click();
     await page.waitForSelector(content);
-    await page.waitForTimeout(300);
+    // Until its enter animation (a sheet slides in for 500ms) is over.
+    await page.waitForTimeout(50);
+    await page.evaluate((sel) =>
+      Promise.all(document.querySelector(sel).getAnimations({ subtree: true }).map((a) => a.finished)),
+      content,
+    );
     const r = await page.evaluate((sel) => {
       const el = document.querySelector(sel);
       const b = el.getBoundingClientRect();
