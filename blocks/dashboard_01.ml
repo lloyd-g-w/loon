@@ -974,11 +974,24 @@ module Drag = struct
       with
       | _ -> ())
   ;;
+
+  (* Applied by a state machine, so that events between renders see the
+     drag as it is (not as the last render saw it). *)
+  module Action = struct
+    type nonrec t =
+      | Start of t (** pointer down *)
+      | Move of float (** the pointer's y *)
+      | Release (** pointer up *)
+      | Toggle of t (** Space or Enter: pick up, or drop *)
+      | Step of int (** the arrows *)
+      | Cancel
+    [@@deriving sexp_of]
+  end
 end
 
 let dnd_instructions_id = "DndDescribedBy-0"
 
-let drag_handle ~(drag : Drag.t option) ~set_drag ~drop ~ids id =
+let drag_handle ~(drag : Drag.t option) ~(inject : Drag.Action.t -> unit Effect.t) ~ids id =
   let active =
     match drag with
     | Some d -> d.id = id
@@ -999,8 +1012,8 @@ let drag_handle ~(drag : Drag.t option) ~set_drag ~drop ~ids id =
           else
             Effect.Many
               [ Drag.capture ev
-              ; set_drag
-                  (Some
+              ; inject
+                  (Start
                      { Drag.id
                      ; start_y = pointer_y ev
                      ; dy = 0.
@@ -1009,23 +1022,16 @@ let drag_handle ~(drag : Drag.t option) ~set_drag ~drop ~ids id =
                      ; ids
                      })
               ])
-      ; Attr.on_pointermove (fun ev ->
-          match drag with
-          | Some d when active && not d.keyboard ->
-            set_drag (Some { d with dy = pointer_y ev -. d.start_y })
-          | _ -> Effect.Ignore)
-      ; Attr.on_pointerup (fun _ ->
-          match drag with
-          | Some d when active && not d.keyboard -> drop d
-          | _ -> Effect.Ignore)
+      ; Attr.on_pointermove (fun ev -> inject (Move (pointer_y ev)))
+      ; Attr.on_pointerup (fun _ -> inject Release)
       ; Attr.on_keydown (fun ev ->
           let stop = Dom_util.prevent_default ev in
-          match Dom_util.key ev, drag with
-          | (Space | Enter), None ->
+          match Dom_util.key ev with
+          | Space | Enter ->
             Effect.Many
               [ stop
-              ; set_drag
-                  (Some
+              ; inject
+                  (Toggle
                      { Drag.id
                      ; start_y = 0.
                      ; dy = 0.
@@ -1034,12 +1040,9 @@ let drag_handle ~(drag : Drag.t option) ~set_drag ~drop ~ids id =
                      ; ids
                      })
               ]
-          | (Space | Enter), Some d when active -> Effect.Many [ stop; drop d ]
-          | Escape, Some _ when active -> Effect.Many [ stop; set_drag None ]
-          | ArrowDown, Some d when active ->
-            Effect.Many [ stop; set_drag (Some { d with dy = d.dy +. d.height }) ]
-          | ArrowUp, Some d when active ->
-            Effect.Many [ stop; set_drag (Some { d with dy = d.dy -. d.height }) ]
+          | Escape when active -> Effect.Many [ stop; inject Cancel ]
+          | ArrowDown when active -> Effect.Many [ stop; inject (Step 1) ]
+          | ArrowUp when active -> Effect.Many [ stop; inject (Step (-1)) ]
           | _ -> Effect.Ignore)
       ]
     [ Icon.view ~class_:"size-3 text-muted-foreground" Grip_vertical
@@ -1067,7 +1070,7 @@ let editable_cell ~sleep ~(item : Data.t) ~field ~label value =
     ]
 ;;
 
-let columns ~sleep ~(cells : Row_cells.t Int.Map.t) ~drag ~set_drag ~drop =
+let columns ~sleep ~(cells : Row_cells.t Int.Map.t) ~drag ~inject =
   let cells_of (row : Data.t Data_table.Row.t) = Map.find_exn cells row.original.id in
   let outline_badge children =
     Badge.view ~variant:Outline ~class_:"px-1.5 text-muted-foreground" children
@@ -1082,7 +1085,7 @@ let columns ~sleep ~(cells : Row_cells.t Int.Map.t) ~drag ~set_drag ~drop =
           List.map (Data_table.rows table) ~f:(fun (r : Data.t Data_table.Row.t) ->
             r.original.id)
         in
-        [ drag_handle ~drag ~set_drag ~drop ~ids row.original.id ])
+        [ drag_handle ~drag ~inject ~ids row.original.id ])
       ()
   ; Data_table.Column.create
       ~id:"select"
@@ -1183,8 +1186,33 @@ let array_move list ~from ~to_ =
 let data_table (initial_data : Data.t list) (local_ graph) =
   let is_mobile = Use_mobile.component graph in
   let sleep = Bonsai.Clock.sleep graph in
-  let data, set_data = Bonsai.state initial_data graph in
-  let drag, set_drag = Bonsai.state None graph in
+  let model, inject =
+    Bonsai.state_machine
+      ~default_model:(initial_data, None)
+      ~apply_action:(fun _ (data, drag) (action : Drag.Action.t) ->
+        (* [arrayMove] over the whole data, from the dragged row's index to
+           the one it is dropped on. *)
+        let drop (d : Drag.t) =
+          match Drag.target d with
+          | Some (from, to_) when from <> to_ ->
+            let index id = fst (List.findi_exn data ~f:(fun _ (r : Data.t) -> r.id = id)) in
+            array_move data ~from:(index d.id) ~to_:(index (List.nth_exn d.ids to_))
+          | _ -> data
+        in
+        match action, drag with
+        | Start d, _ -> data, Some d
+        | Move y, Some d when not d.keyboard -> data, Some { d with dy = y -. d.start_y }
+        | Release, Some d when not d.keyboard -> drop d, None
+        | Toggle d, None -> data, Some d
+        | Toggle d', Some d when d.id = d'.id -> drop d, None
+        | Step n, Some d when d.keyboard ->
+          data, Some { d with dy = d.dy +. (Float.of_int n *. d.height) }
+        | Cancel, _ -> data, None
+        | _ -> data, drag)
+      graph
+  in
+  let data = Bonsai.map model ~f:fst in
+  let drag = Bonsai.map model ~f:snd in
   let cells =
     Bonsai.assoc
       (module Int)
@@ -1193,27 +1221,9 @@ let data_table (initial_data : Data.t list) (local_ graph) =
       ~f:(fun _ item (local_ graph) -> row_cells ~is_mobile item graph)
       graph
   in
-  let drop =
-    let%arr data and set_data and set_drag in
-    fun (d : Drag.t) ->
-      let reorder =
-        match Drag.target d with
-        | Some (from, to_) when from <> to_ ->
-          (* [arrayMove] over the whole data, from the dragged row's index
-             to the one it is dropped on. *)
-          let index id = fst (List.findi_exn data ~f:(fun _ (r : Data.t) -> r.id = id)) in
-          set_data
-            (array_move
-               data
-               ~from:(index d.id)
-               ~to_:(index (List.nth_exn d.ids to_)))
-        | _ -> Effect.Ignore
-      in
-      Effect.Many [ set_drag None; reorder ]
-  in
   let columns =
-    let%arr sleep and cells and drag and set_drag and drop in
-    columns ~sleep ~cells ~drag ~set_drag ~drop
+    let%arr sleep and cells and drag and inject in
+    columns ~sleep ~cells ~drag ~inject
   in
   let table =
     Data_table.component
