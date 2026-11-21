@@ -47,7 +47,8 @@ val trigger : ?attrs:Attr.t list -> ?class_:string -> t -> Node.t list -> Node.t
 
 (** The trigger's attributes, for another element to be the trigger:
     shadcn's [<CollapsibleTrigger asChild>], as in
-    [Button.view ~attrs:(Collapsible.trigger_attrs c) ...]. *)
+    [Button.view ~attrs:(Collapsible.trigger_attrs c) ...] (without
+    [data-slot]: the element keeps its own, as with Radix's [Slot]). *)
 val trigger_attrs : t -> Attr.t list
 
 (** The panel: [hidden] while closed (its children kept, so their state

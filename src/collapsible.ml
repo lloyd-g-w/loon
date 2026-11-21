@@ -141,7 +141,6 @@ let trigger_attrs t =
   [ aria "controls" (content_id t)
   ; aria_bool "expanded" t.open_
   ; data "state" (state t.open_)
-  ; data "slot" "collapsible-trigger"
   ]
   @
   if t.disabled
@@ -154,6 +153,7 @@ let trigger ?(attrs = []) ?class_ t children =
     ~attrs:
       ([ Attr.type_ "button" ]
        @ trigger_attrs t
+       @ [ data "slot" "collapsible-trigger" ]
        @ class_attr class_
        @ attrs)
     children
