@@ -21,7 +21,8 @@ val guard : id:string -> [ `Start | `End ] -> Node.t
 val on_mount : [ `First_tabbable | `Self | `Selector of string ] -> Attr.t
 
 (** Focuses the element with id [id], without scrolling, after the next
-    render. *)
+    render, unless an open dialog not containing it has taken focus meanwhile
+    (a dialog a menu item opened). *)
 val restore : string -> unit Effect.t
 
 (** Focuses the element whenever [focused] becomes true (an item highlighted

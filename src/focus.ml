@@ -132,9 +132,34 @@ let restore id =
       let (_ : Dom_html.animation_frame_request_id) =
         Dom_html.window##requestAnimationFrame
           (Js.wrap_callback (fun (_ : Js.number_t) ->
-             Option.iter
-               (Js.Opt.to_option (Dom_html.document##getElementById (Js.string id)))
-               ~f:focus_no_scroll))
+             (* Not when an open dialog has taken focus meanwhile (one a
+                menu item opened). *)
+             let target = Js.Opt.to_option (Dom_html.document##getElementById (Js.string id)) in
+             let in_other_dialog =
+               Js.Opt.case
+                 Dom_html.document##.activeElement
+                 (fun () -> false)
+                 (fun a ->
+                   match
+                     Js.Opt.to_option
+                       ((Js.Unsafe.coerce a)##closest
+                          (Js.string
+                             "[role=dialog][data-state=open], \
+                              [role=alertdialog][data-state=open]")
+                        : Dom_html.element Js.t Js.opt)
+                   with
+                   | None -> false
+                   | Some dialog ->
+                     (match target with
+                      | None -> true
+                      | Some target ->
+                        not (Js.to_bool (dialog##contains (target :> Dom.node Js.t)))))
+             in
+             if not in_other_dialog
+             then
+               Option.iter
+                 target
+                 ~f:focus_no_scroll))
       in
       ()))
 ;;
