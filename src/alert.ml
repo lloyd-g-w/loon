@@ -2,65 +2,54 @@ open! Import
 
 module Variant = struct
   type t =
-    | Neutral
-    | Info
-    | Success
-    | Warning
-    | Danger
+    | Default
+    | Destructive
   [@@deriving enumerate, sexp_of, compare, equal]
 
-  let name t = String.lowercase (Sexp.to_string (sexp_of_t t))
+  let name = function
+    | Default -> "default"
+    | Destructive -> "destructive"
+  ;;
 
-  let icon : t -> Icon.t = function
-    | Neutral | Info -> Info
-    | Success -> Circle_check
-    | Warning -> Triangle_exclamation_point
-    | Danger -> Circle_exclamation_point
+  let classes = function
+    | Default -> "bg-card text-card-foreground"
+    | Destructive ->
+      "bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 \
+       [&>svg]:text-current"
   ;;
 end
 
-let view
-      ?attrs:extra
-      ?(variant = Variant.Neutral)
-      ?icon
-      ?title
-      ?action
-      description
-  =
-  let icon =
-    match icon with
-    | None -> Some (Variant.icon variant)
-    | Some icon -> icon
-  in
-  let role =
-    match variant with
-    | Warning | Danger -> "alert"
-    | Neutral | Info | Success -> "status"
-  in
+let base =
+  "relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-lg border px-4 py-3 \
+   text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 \
+   [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current"
+;;
+
+let class_list ?(variant = Variant.Default) ?class_ () =
+  [ base; Variant.classes variant ] @ Option.to_list class_
+;;
+
+let classes ?variant ?class_ () = Cn.cn (class_list ?variant ?class_ ())
+
+let root ?(attrs = []) ?class_ ?variant children =
   Node.div
     ~attrs:
-      (attrs ?attrs:extra [ "loon-alert"; "loon-alert-" ^ Variant.name variant ]
-       @ [ Attr.role role ])
-    (List.filter_opt
-       [ Option.map icon ~f:(fun icon ->
-           Icon.view ~attrs:[ Attr.class_ "loon-alert-icon" ] icon)
-       ; Some
-           (Node.div
-              ~attrs:[ Attr.class_ "loon-alert-body" ]
-              (List.filter_opt
-                 [ Option.map title ~f:(fun title ->
-                     Node.div
-                       ~attrs:[ Attr.class_ "loon-alert-title" ]
-                       [ Node.text title ])
-                 ; (if List.is_empty description
-                    then None
-                    else
-                      Some
-                        (Node.div
-                           ~attrs:[ Attr.class_ "loon-alert-description" ]
-                           description))
-                 ]))
-       ; Option.map action ~f:(fun action ->
-           Node.div ~attrs:[ Attr.class_ "loon-alert-action" ] [ action ])
-       ])
+      ([ data "slot" "alert"; Attr.role "alert"; Cn.attr (class_list ?variant ?class_ ()) ]
+       @ attrs)
+    children
+;;
+
+let div slot classes ?(attrs = []) ?class_ children =
+  Node.div ~attrs:([ data "slot" slot; Cn.with_class ?class_ [ classes ] ] @ attrs) children
+;;
+
+let title =
+  div "alert-title" "col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight"
+;;
+
+let description =
+  div
+    "alert-description"
+    "col-start-2 grid justify-items-start gap-1 text-sm text-muted-foreground \
+     [&_p]:leading-relaxed"
 ;;

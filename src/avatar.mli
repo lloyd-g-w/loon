@@ -1,47 +1,80 @@
-(** A person's picture, or their initials where there is none (or it fails
-    to load), and groups of them. *)
+(** An image element with a fallback for representing the user. Port of
+    shadcn/ui's [Avatar] (Radix Avatar: the image shows once it has loaded;
+    the fallback until then, and if it fails).
+
+    {[
+      Avatar.component
+        (return (fun avatar ->
+           [ Avatar.image avatar ~src:"https://github.com/shadcn.png" ~alt:"@shadcn" ()
+           ; Avatar.fallback avatar [ Node.text "CN" ]
+           ]))
+        graph
+    ]} *)
 
 open! Import
 
 module Size : sig
   type t =
-    | Xs
+    | Default
     | Sm
-    | Md
     | Lg
-    | Xl
   [@@deriving enumerate, sexp_of, compare, equal]
 
+  (** [default], [sm], [lg], as in [data-size]. *)
   val name : t -> string
 end
 
-module Shape : sig
+module Status : sig
+  (** The image's: Radix's [imageLoadingStatus]. *)
   type t =
-    | Circle
-    | Square
+    | Loading
+    | Loaded
+    | Error
   [@@deriving enumerate, sexp_of, compare, equal]
 end
 
-(** Up to two letters: the first letters of the first and last words of
-    [name] ("Ada Lovelace" is "AL", "plato" is "P"). *)
-val initials : string -> string
+(** The avatar's state, for its image and fallback. *)
+type t
 
-(** [name] is the image's alt text and the source of the initials. The
-    initials are drawn underneath, so they show while the image loads and if
-    it fails. *)
+(** Controlled: [status] is the image's, which it reports with
+    [on_status_change] when it loads or fails. *)
 val view
   :  ?attrs:Attr.t list
+  -> ?class_:string
   -> ?size:Size.t
-  -> ?shape:Shape.t
-  -> ?src:string
-  -> ?status:[ `Online | `Busy | `Away | `Offline ]
-  -> string
+  -> status:Status.t
+  -> on_status_change:(Status.t -> unit Effect.t)
+  -> (t -> Node.t list)
   -> Node.t
 
-(** Overlapping avatars; past [max], the rest are counted in a "+N". *)
-val group
+(** Keeps the image's status ([Loading] at first). *)
+val component
   :  ?attrs:Attr.t list
+  -> ?class_:string
   -> ?size:Size.t
-  -> ?max:int
-  -> Node.t list
+  -> (t -> Node.t list) Bonsai.t
+  -> local_ Bonsai.graph
+  -> Node.t Bonsai.t
+
+(** An [<img>]: hidden while it loads, gone if it fails. *)
+val image
+  :  ?attrs:Attr.t list
+  -> ?class_:string
+  -> ?alt:string
+  -> t
+  -> src:string
+  -> unit
   -> Node.t
+
+(** Shown unless the image has loaded (initials, an icon). *)
+val fallback : ?attrs:Attr.t list -> ?class_:string -> t -> Node.t list -> Node.t
+
+(** A dot (or a small icon) at the avatar's bottom right, sized by the
+    avatar's size: put it among the avatar's children. *)
+val badge : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
+
+(** Overlapping avatars. *)
+val group : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
+
+(** A "+3" at the end of a group, sized as its avatars. *)
+val group_count : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t

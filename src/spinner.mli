@@ -1,14 +1,8 @@
-(** A spinning indicator that something is loading. *)
+(** An indicator that can be used to show a loading state. Port of
+    shadcn/ui's [Spinner]: Lucide's [loader-circle], spinning; size and
+    colour it with [class_] ([size-6 text-blue-500]). *)
 
 open! Import
 
-module Size : sig
-  type t =
-    | Sm
-    | Md
-    | Lg
-  [@@deriving enumerate, sexp_of, compare, equal]
-end
-
-(** [label] (default "Loading") is read by screen readers. *)
-val view : ?attrs:Attr.t list -> ?size:Size.t -> ?label:string -> unit -> Node.t
+(** [role="status"], [aria-label="Loading"]. *)
+val view : ?attrs:Attr.t list -> ?class_:string -> unit -> Node.t
