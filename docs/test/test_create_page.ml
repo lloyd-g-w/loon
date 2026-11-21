@@ -64,10 +64,13 @@ let vars h names =
   match Node_helpers.select_first_exn (view h) ~selector:"[data-create-preview]" with
   | Element { attributes; _ } ->
     let vars =
-      List.Assoc.find attributes "custom-css-vars" ~equal:String.equal
-      |> Option.value ~default:"()"
-      |> Sexp.of_string
-      |> [%of_sexp: (string * string) list]
+      List.Assoc.find attributes "style" ~equal:String.equal
+      |> Option.value ~default:""
+      |> String.split ~on:';'
+      |> List.filter_map ~f:(fun decl ->
+        match String.lsplit2 decl ~on:':' with
+        | Some (k, v) -> Some (String.strip k, String.strip v)
+        | None -> None)
     in
     List.iter names ~f:(fun n ->
       printf "%s: %s\n" n (List.Assoc.find vars n ~equal:String.equal |> Option.value ~default:"-"))
@@ -91,7 +94,6 @@ let%expect_test "first load writes the preset; the pickers show it" =
   [%expect {|
     query: preset=bIkeymG&item=preview-02
     Menu
-    Base Radix UI
     Style Vega
     Base Color Neutral
     Theme Neutral
@@ -102,13 +104,13 @@ let%expect_test "first load writes the preset; the pickers show it" =
     Radius Default
     Menu Default
     Menu Accent Subtle
-    --primary: -
-    --radius: -
+    --primary: oklch(0.205 0 0)
+    --radius: 0.625rem
     |}]
 ;;
 
-let%expect_test "base colour, theme and radius update the query and the preview" =
-  let h, q, _ = page () in
+let%expect_test "base colour, theme, radius, font and mode restyle the preview" =
+  let h, q, mode = page () in
   choose h "baseColor" "stone";
   query q;
   choose h "theme" "blue";
@@ -116,13 +118,21 @@ let%expect_test "base colour, theme and radius update the query and the preview"
   choose h "radius" "large";
   query q;
   vars h [ "--background"; "--primary"; "--radius" ];
+  choose h "font" "geist";
+  Bonsai.Expert.Var.set mode Loon.Theme.Mode.Dark;
+  vars h [ "--background"; "--primary"; "--radius"; "--font-sans"; "--font-heading" ];
   [%expect {|
     query: preset=bJfDPe2y&item=preview-02
     query: preset=bJfEY2ZE&item=preview-02
     query: preset=bJfEY2dM&item=preview-02
-    --background: -
-    --primary: -
-    --radius: -
+    --background: oklch(1 0 0)
+    --primary: oklch(0.488 0.243 264.376)
+    --radius: 0.875rem
+    --background: oklch(0.147 0.004 49.25)
+    --primary: oklch(0.424 0.199 265.638)
+    --radius: 0.875rem
+    --font-sans: var(--font-geist-sans), 'Geist Variable', sans-serif
+    --font-heading: var(--font-geist-sans), 'Geist Variable', sans-serif
     |}]
 ;;
 
@@ -184,14 +194,15 @@ let%expect_test "open preset" =
   let h, q, _ = page () in
   key h KeyO;
   Handle.input_text h ~get_vdom:Fn.id ~selector:"#preset-code" ~text:"--preset b4DxGlzePJ";
+  Handle.recompute_view h;
   Handle.submit_form h ~get_vdom:Fn.id ~selector:"form";
   Handle.recompute_view h;
   query q;
   texts h "[data-picker=theme]";
   [%expect {|
     ("default prevented" (key KeyO))
-    query: preset=bIkeymG&item=preview-02
-    Theme Neutral
+    query: preset=b4DxGlzePJ&item=preview-02
+    Theme Blue
     |}]
 ;;
 
@@ -291,5 +302,36 @@ let%expect_test "D toggles the site's mode" =
   [%expect {|
     ("default prevented" (key KeyD))
     Dark
+    |}]
+;;
+
+let%expect_test "Navigate shows a component's examples in the preview" =
+  let h, q, _ = page () in
+  key h ~ctrl:true KeyP;
+  click h "[data-item=button-example]";
+  query q;
+  texts h "[data-slot=example] > div:first-child";
+  print_s
+    [%sexp
+      (Option.is_some (Node_helpers.select_first (view h) ~selector:"[data-item=preview]")
+       : bool)];
+  [%expect {|
+    ("default prevented" (key KeyP))
+    query: preset=bIkeymG&item=button-example
+    Demo
+    Size
+    Default
+    Outline
+    Secondary
+    Ghost
+    Destructive
+    Link
+    Icon
+    With Icon
+    Rounded
+    Spinner
+    Link as a button
+    Counter
+    false
     |}]
 ;;

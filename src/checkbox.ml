@@ -39,26 +39,28 @@ let view
       ([ Attr.type_ "button"
        ; Attr.role "checkbox"
        ; aria "checked" (State.aria checked)
-       ; aria_bool "required" required
-       ; data "state" (State.name checked)
-       ; Attr.value "on"
-       ; data "slot" "checkbox"
-       ; Cn.with_class
-           ?class_
-           [ "peer size-4 shrink-0 rounded-[4px] border border-input shadow-xs \
-              transition-shadow outline-none focus-visible:border-ring \
-              focus-visible:ring-[3px] focus-visible:ring-ring/50 \
-              disabled:cursor-not-allowed disabled:opacity-50 \
-              aria-invalid:border-destructive aria-invalid:ring-destructive/20 \
-              data-[state=checked]:border-primary data-[state=checked]:bg-primary \
-              data-[state=checked]:text-primary-foreground dark:bg-input/30 \
-              dark:aria-invalid:ring-destructive/40 dark:data-[state=checked]:bg-primary"
-           ]
-       ; Attr.on_keydown (fun ev ->
-           match Dom_util.key ev with
-           | Enter -> Dom_util.prevent_default ev
-           | _ -> Effect.Ignore)
        ]
+       (* Radix leaves aria-required out unless [required] is given. *)
+       @ (if required then [ aria "required" "true" ] else [])
+       @ [ data "state" (State.name checked)
+         ; Attr.value "on"
+         ; data "slot" "checkbox"
+         ; Cn.with_class
+             ?class_
+             [ "peer size-4 shrink-0 rounded-[4px] border border-input shadow-xs \
+                transition-shadow outline-none focus-visible:border-ring \
+                focus-visible:ring-[3px] focus-visible:ring-ring/50 \
+                disabled:cursor-not-allowed disabled:opacity-50 \
+                aria-invalid:border-destructive aria-invalid:ring-destructive/20 \
+                data-[state=checked]:border-primary data-[state=checked]:bg-primary \
+                data-[state=checked]:text-primary-foreground dark:bg-input/30 \
+                dark:aria-invalid:ring-destructive/40 dark:data-[state=checked]:bg-primary"
+             ]
+         ; Attr.on_keydown (fun ev ->
+             match Dom_util.key ev with
+             | Enter -> Dom_util.prevent_default ev
+             | _ -> Effect.Ignore)
+         ]
        @ Option.value_map id ~default:[] ~f:(fun id -> [ Attr.id id ])
        @ (if invalid then [ aria "invalid" "true" ] else [])
        @ disabled_attrs

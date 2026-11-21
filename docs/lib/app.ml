@@ -313,15 +313,27 @@ let search_trigger ~open_search =
     ]
 ;;
 
-let site_header ~section ~mobile_open ~set_mobile_open ~open_search ~toggle_mode =
+let site_header
+  ~section
+  ~mobile_open
+  ~set_mobile_open
+  ~open_search
+  ~toggle_mode
+  ~designer_actions
+  =
   Node.header
     ~attrs:[ Attr.class_ "sticky top-0 z-50 w-full bg-background" ]
     [ Node.div
-        ~attrs:[ Attr.class_ "container-wrapper px-6 3xl:fixed:px-0" ]
+        ~attrs:
+          [ Attr.class_
+              "container-wrapper px-6 group-has-data-[slot=designer]/layout:max-w-none \
+               3xl:fixed:px-0"
+          ]
         [ Node.div
             ~attrs:
               [ Attr.class_
                   "flex h-(--header-height) items-center **:data-[slot=separator]:h-4! \
+                   group-has-data-[slot=designer]/layout:fixed:max-w-none \
                    3xl:fixed:container"
               ]
             [ mobile_nav ~open_:mobile_open ~set_open:set_mobile_open
@@ -337,6 +349,18 @@ let site_header ~section ~mobile_open ~set_mobile_open ~open_search ~toggle_mode
                 ; github_link
                 ; separator ()
                 ; mode_switcher ~on_click:toggle_mode
+                  (* shadcn's DesignerActions: Get Code on Create (its "Open in
+                     v0" has no loon counterpart). *)
+                ; (match designer_actions with
+                   | None -> Node.none
+                   | Some actions ->
+                     Node.div
+                       ~attrs:
+                         [ Attr.class_
+                             "hidden items-center gap-2 \
+                              group-has-data-[slot=designer]/layout:md:flex"
+                         ]
+                       [ separator (); actions ])
                 ; Node.div
                     ~attrs:[ Attr.class_ "flex items-center gap-2 md:hidden" ]
                     [ separator ()
@@ -366,6 +390,7 @@ let site_footer =
     ~attrs:
       [ Attr.class_
           "group-has-[.section-soft]/body:bg-surface/40 \
+           group-has-[[data-slot=designer]]/body:hidden \
            group-has-[[data-slot=docs]]/body:hidden dark:bg-transparent \
            dark:group-has-[.section-soft]/body:bg-surface/40 3xl:fixed:bg-transparent"
       ]
@@ -1190,7 +1215,8 @@ module Result = struct
     { title : string
     ; value : string (* what the search matches; unique *)
     ; hash : string
-    ; kind : [ `Nav | `Page | `Component | `Example ]
+    ; kind :
+        [ `Nav | `Style of string (* its icon's SVG *) | `Page | `Component | `Example ]
     ; context : string option (* an example's page, shown after its title *)
     ; install : string option (* what ⌘C copies *)
     }
@@ -1221,6 +1247,26 @@ let search_groups : (string * Result.t list) list =
        ; install = None
        ; context = None
        }) )
+   :: ( "Styles"
+      , List.filter_map Create_config.styles ~f:(fun (style : Create_style.t) ->
+          if Option.is_some (Create_config.style_disabled style.name)
+          then None
+          else
+            Some
+              { Result.title = style.title
+              ; value = sprintf "Style %s %s" style.title style.description
+              ; hash =
+                  Customize_query.to_hash
+                    ~slug:"create"
+                    (Customize_query.to_string
+                       [ ( "preset"
+                         , Create_preset.encode
+                             { Create_config.reset_preset with style = style.name } )
+                       ])
+              ; kind = `Style style.icon
+              ; install = None
+              ; context = Some "Open style in Create"
+              }) )
    :: List.map docs_groups ~f:(fun (s, ps) -> page_group (Doc.Section.title s) ps))
   @ List.filter_map Doc.Section.all ~f:(fun s ->
     match Doc.Section.is_docs s, in_section s with
@@ -1273,6 +1319,12 @@ let search_item ~go (r : Result.t) =
              ]
            []
        | `Nav | `Page -> Icon.view Arrow_right
+       | `Style icon ->
+         Node.inner_html
+           ~tag:"span"
+           ~attrs:[ Attr.class_ "contents" ]
+           ~this_html_is_sanitized_and_is_totally_safe_trust_me:icon
+           ()
        | `Example -> Icon.view Square_dashed)
     ; Node.text r.title
     ; (match r.context with
@@ -1396,7 +1448,12 @@ let title_of (shown : Shown.t) =
      | None -> "loon")
 ;;
 
-let docs_layout ~current content =
+let docs_layout ?sidebar ~current content =
+  let sidebar =
+    match sidebar with
+    | Some s -> s
+    | None -> docs_sidebar ~current
+  in
   Node.div
     ~attrs:[ Attr.class_ "container-wrapper flex flex-1 flex-col px-2" ]
     [ Node.div
@@ -1416,7 +1473,7 @@ let docs_layout ~current content =
                     3xl:fixed:px-3"
                  ])
           ]
-        [ docs_sidebar ~current
+        [ sidebar
         ; Node.div ~attrs:[ Attr.class_ "h-full w-full" ] [ content ]
         ]
     ]
@@ -1461,8 +1518,11 @@ let main_view (shown : Shown.t) ~outline ~mode ~set_mode ~hash ~set_hash (local_
      | Some page ->
        let content = page_content page graph in
        let links = docs_copy_page page graph in
+       (* Built once: not again on every change in the page's examples. *)
+       let sidebar = docs_sidebar ~current:slug in
        let%arr content and outline and links in
        docs_layout
+         ~sidebar
          ~current:slug
          (docs_page
             ~links
@@ -1561,28 +1621,41 @@ let docs ~hash ~set_hash (local_ graph) =
         main_view shown ~outline ~mode ~set_mode:set_mode_saved ~hash ~set_hash graph)
       graph
   in
-  let%arr main
-  and shown
-  and mode
-  and set_mode
-  and nav_open
-  and set_nav_open
-  and search_open
-  and set_search_open
-  and search
-  and set_search
-  and open_search in
+  let designer_actions =
+    Bonsai.enum
+      (module Shown)
+      ~match_:shown
+      ~with_:(fun shown (local_ graph) ->
+        match shown with
+        | Tool "create" ->
+          Bonsai.map
+            (Create_page.header_actions
+               ~query:(Bonsai.map hash ~f:Customize_query.of_hash)
+               graph)
+            ~f:Option.some
+        | _ -> Bonsai.return None)
+      graph
+  in
   let toggle_mode =
+    let%arr mode and set_mode in
     let m = Loon.Theme.Mode.toggle mode in
     Effect.Many
       [ set_mode m
       ; Effect.of_thunk (fun () -> Browser.set_item "loon-docs-mode" (mode_name m))
       ]
   in
-  let go hash =
-    Effect.Many [ set_search_open false; Effect.of_thunk (fun () -> Browser.set_hash hash) ]
+  let go =
+    let%arr set_search_open in
+    fun hash ->
+      Effect.Many [ set_search_open false; Effect.of_thunk (fun () -> Browser.set_hash hash) ]
   in
   let global_keys =
+    let%arr nav_open
+    and set_nav_open
+    and search_open
+    and set_search_open
+    and search
+    and open_search in
     Vdom.Attr.Global_listeners.keydown ~phase:Bubbling ~f:(fun ev ->
       let ctrl =
         Js_of_ocaml.Js.to_bool ev##.ctrlKey || Js_of_ocaml.Js.to_bool ev##.metaKey
@@ -1607,26 +1680,44 @@ let docs ~hash ~set_hash (local_ graph) =
              ])
       | _ -> Effect.Ignore)
   in
+  (* The header, footer and search dialog each in their own [arr], so that a
+     change in the page's examples does not build them again. *)
+  let header =
+    let%arr shown
+    and nav_open
+    and set_nav_open
+    and open_search
+    and toggle_mode
+    and designer_actions in
+    site_header
+      ~section:(Shown.section shown)
+      ~mobile_open:nav_open
+      ~set_mobile_open:set_nav_open
+      ~open_search
+      ~toggle_mode
+      ~designer_actions
+  in
+  let search_dialog =
+    let%arr search_open and set_search_open and search and set_search and go in
+    search_dialog
+      ~open_:search_open
+      ~on_open_change:set_search_open
+      ~state:search
+      ~on_change:set_search
+      ~go
+  in
+  let%arr main and header and search_dialog and global_keys in
   Node.div
     ~attrs:
       [ Attr.create "data-slot" "layout"
-      ; Attr.class_ "group/layout relative z-10 flex min-h-svh flex-col bg-background"
+      ; Attr.class_ "group/layout relative z-10 flex min-h-svh flex-col bg-background \
+           has-data-[slot=designer]:h-svh has-data-[slot=designer]:overflow-hidden"
       ; global_keys
       ]
-    [ site_header
-        ~section:(Shown.section shown)
-        ~mobile_open:nav_open
-        ~set_mobile_open:set_nav_open
-        ~open_search
-        ~toggle_mode
+    [ header
     ; Node.main ~attrs:[ Attr.id "main"; Attr.class_ "flex min-h-0 flex-1 flex-col" ] [ main ]
     ; site_footer
     ; search_dialog
-        ~open_:search_open
-        ~on_open_change:set_search_open
-        ~state:search
-        ~on_change:set_search
-        ~go
     ]
 ;;
 

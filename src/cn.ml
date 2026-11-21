@@ -1,5 +1,23 @@
 open! Import
 
+(* Base's [String.lsplit2]/[rsplit2] raise and catch [Not_found] when the
+   character is absent, which is slow under js_of_ocaml; these do not. *)
+module String = struct
+  include String
+
+  let lsplit2 s ~on =
+    match String.index s on with
+    | None -> None
+    | Some i -> Some (String.prefix s i, String.drop_prefix s (i + 1))
+  ;;
+
+  let rsplit2 s ~on =
+    match String.rindex s on with
+    | None -> None
+    | Some i -> Some (String.prefix s i, String.drop_prefix s (i + 1))
+  ;;
+end
+
 (* A class is [variants:...:base], where a variant may hold [:] inside
    brackets or parentheses ([data-[state=open]:], [has-[>svg]:]). *)
 let split_variants cls =
@@ -428,6 +446,21 @@ let merge classes =
   kept
 ;;
 
-let cn strings = String.concat ~sep:" " (merge (classes strings))
-let attr strings = Attr.classes (merge (classes strings))
+(* As tailwind-merge, a cache of results: the same class lists come back on
+   every render. *)
+let cache = Hashtbl.create (module String)
+
+let merged strings =
+  let key = String.concat ~sep:"\n" strings in
+  match Hashtbl.find cache key with
+  | Some r -> r
+  | None ->
+    let r = merge (classes strings) in
+    if Hashtbl.length cache >= 2000 then Hashtbl.clear cache;
+    Hashtbl.set cache ~key ~data:r;
+    r
+;;
+
+let cn strings = String.concat ~sep:" " (merged strings)
+let attr strings = Attr.classes (merged strings)
 let with_class ?class_ strings = attr (strings @ Option.to_list class_)

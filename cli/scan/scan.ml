@@ -118,19 +118,28 @@ let tokens (s : string) =
 ;;
 
 let module_refs source =
-  let rec go acc ~after_open = function
-    | [] -> acc
+  (* [module X = struct] defines X here: [X.y] then means this one. *)
+  let rec go acc ~local ~after_open = function
+    | [] -> Set.diff acc local
     | (Token.Dotted m : Token.t) :: rest ->
-      go (Set.add acc m) ~after_open:false rest
+      go (Set.add acc m) ~local ~after_open:false rest
     | Ident m :: rest when after_open ->
-      go (Set.add acc m) ~after_open:false rest
+      go (Set.add acc m) ~local ~after_open:false rest
+    | Word "module" :: Ident m :: rest ->
+      (* [module X = Button] names Button as [open Button] does. *)
+      let rest =
+        match rest with
+        | Other :: rest -> rest
+        | rest -> rest
+      in
+      go acc ~local:(Set.add local m) ~after_open:true rest
     | Word ("open" | "include") :: Other :: rest ->
       (* [open!] *)
-      go acc ~after_open:true rest
-    | Word ("open" | "include") :: rest -> go acc ~after_open:true rest
-    | _ :: rest -> go acc ~after_open:false rest
+      go acc ~local ~after_open:true rest
+    | Word ("open" | "include") :: rest -> go acc ~local ~after_open:true rest
+    | _ :: rest -> go acc ~local ~after_open:false rest
   in
-  go String.Set.empty ~after_open:false (tokens source)
+  go String.Set.empty ~local:String.Set.empty ~after_open:false (tokens source)
 ;;
 
 let is_class_char c = Char.is_alphanum c || Char.equal c '-' || Char.equal c '_'
@@ -223,8 +232,12 @@ let c = '"' and d = '\'' and e = 'a'
 let y = Button.view ~variant:Outline [ Icon.view Plus ]
 let z : Dom_util.t = t.Tab.id
 include Theme
-type 'a t = 'a Foo.t|};
-  [%expect {| (Button Dom_util Foo Icon Import Tab Theme) |}]
+type 'a t = 'a Foo.t
+module Command = struct type t = Create end
+let w : Command.t = Command.Create
+module B = Badge
+module type S = sig end|};
+  [%expect {| (Badge Button Dom_util Foo Icon Import Tab Theme) |}]
 ;;
 
 let%expect_test "class_literals and css_classes" =

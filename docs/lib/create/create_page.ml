@@ -605,6 +605,7 @@ module Actions = struct
     ; reset : unit Effect.t (* asks first *)
     ; toggle_mode : unit Effect.t
     ; open_preset : unit Effect.t
+    ; navigate : unit Effect.t
     ; undo : unit Effect.t option
     ; redo : unit Effect.t option
     }
@@ -638,7 +639,11 @@ let main_menu graph (actions : Actions.t Bonsai.t) =
            ~align_offset:(-8.)
            t
            [ Picker.group
-               [ item ~on_select:actions.open_preset "Open Preset..." "O"
+               [ item
+                   ~on_select:actions.navigate
+                   "Navigate..."
+                   (if mac then "⌘P" else "Ctrl+P")
+               ; item ~on_select:actions.open_preset "Open Preset..." "O"
                ; item ~on_select:actions.shuffle "Shuffle" "R"
                ; item ~on_select:actions.toggle_mode "Light/Dark" "D"
                ]
@@ -697,6 +702,7 @@ let copy_preset graph (code : string Bonsai.t) =
 
 let preset_example = "b2D0wqNxT"
 
+(* open-preset.tsx: a dialog, or a drawer on a phone. *)
 let open_preset_dialog graph ~open_ ~set_open (env : Env.t Bonsai.t) =
   let input, set_input = Bonsai.state "" graph in
   let%arr open_ and set_open and input and set_input and env in
@@ -710,78 +716,108 @@ let open_preset_dialog graph ~open_ ~set_open (env : Env.t Bonsai.t) =
     | None -> Effect.Ignore
     | Some p -> Effect.Many [ env.set p; on_open_change false ]
   in
-  Loon.Dialog.view ~open_ ~on_open_change (fun d ->
-    [ Loon.Dialog.content
-        ~class_:(Ui.dialog_content_class ^ " dark")
-        ~initial_focus:"#preset-code"
-        d
-        [ Node.create
-            "form"
-            ~attrs:
-              [ Attr.on_submit (fun ev ->
-                  Effect.Many [ Loon.Dom_util.prevent_default ev; submit ])
-              ]
-            [ Loon.Dialog.header
-                ~class_:"gap-2"
-                [ Loon.Dialog.title ~class_:Ui.dialog_title_class d [ text "Open Preset" ]
-                ; Loon.Dialog.description
-                    d
-                    [ text "Paste a preset code to load a saved configuration." ]
-                ]
-            ; div
-                "py-4"
-                [ Node.div
-                    ~attrs:
-                      ([ Attr.create "data-slot" "field"
-                       ; Attr.class_ "group/field flex w-full flex-col gap-2"
-                       ]
-                       @ if invalid then [ Attr.create "data-invalid" "true" ] else [])
-                    [ Node.label
-                        ~attrs:[ Attr.for_ "preset-code"; Attr.class_ "sr-only" ]
-                        [ text "Preset code" ]
-                    ; Node.input
-                        ~attrs:
-                          [ Attr.id "preset-code"
-                          ; Attr.create "data-slot" "input"
-                          ; Attr.string_property "value" input
-                          ; Attr.placeholder
-                              (sprintf "%s or --preset %s" preset_example preset_example)
-                          ; Attr.create "autocapitalize" "none"
-                          ; Attr.create "autocorrect" "off"
-                          ; Attr.create "spellcheck" "false"
-                          ; Attr.create "aria-invalid" (Bool.to_string invalid)
-                          ; Attr.class_ (Loon.Cn.cn [ Ui.input_class; "h-10 w-full md:h-8" ])
-                          ; Attr.on_input (fun _ s -> set_input s)
-                          ]
-                        ()
-                    ]
-                ]
-            ; Node.div
-                ~attrs:
-                  [ Attr.create "data-slot" "dialog-footer"
-                  ; Attr.class_
-                      (Loon.Cn.cn
-                         [ "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"
-                         ; Ui.dialog_footer_class
-                         ])
-                  ]
-                [ Ui.button
-                    ~variant:Outline
-                    ~on_click:(on_open_change false)
-                    [ text "Cancel" ]
-                ; Node.button
-                    ~attrs:
-                      ([ Attr.type_ "submit"
-                       ; Attr.create "data-slot" "button"
-                       ; Attr.create "data-action" "open"
-                       ; Attr.class_ (Ui.button_classes ())
-                       ]
-                       @ if Option.is_none next then [ Attr.disabled ] else [])
-                    [ text "Open" ]
-                ]
-            ]
+  let title = "Open Preset" in
+  let description = "Paste a preset code to load a saved configuration." in
+  let form children =
+    Node.create
+      "form"
+      ~attrs:
+        [ Attr.on_submit (fun ev ->
+            Effect.Many [ Loon.Dom_util.prevent_default ev; submit ])
         ]
-    ])
+      children
+  in
+  let fields =
+    Node.div
+      ~attrs:
+        ([ Attr.create "data-slot" "field"
+         ; Attr.class_ "group/field flex w-full flex-col gap-2"
+         ]
+         @ if invalid then [ Attr.create "data-invalid" "true" ] else [])
+      [ Node.label
+          ~attrs:[ Attr.for_ "preset-code"; Attr.class_ "sr-only" ]
+          [ text "Preset code" ]
+      ; Node.input
+          ~attrs:
+            [ Attr.id "preset-code"
+            ; Attr.create "data-slot" "input"
+            ; Attr.string_property "value" input
+            ; Attr.placeholder (sprintf "%s or --preset %s" preset_example preset_example)
+            ; Attr.create "autocapitalize" "none"
+            ; Attr.create "autocorrect" "off"
+            ; Attr.create "spellcheck" "false"
+            ; Attr.create "aria-invalid" (Bool.to_string invalid)
+            ; Attr.class_ (Loon.Cn.cn [ Ui.input_class; "h-10 w-full md:h-8" ])
+            ; Attr.on_input (fun _ s -> set_input s)
+            ]
+          ()
+      ]
+  in
+  let open_button ?class_ () =
+    Node.button
+      ~attrs:
+        ([ Attr.type_ "submit"
+         ; Attr.create "data-slot" "button"
+         ; Attr.create "data-action" "open"
+         ; Attr.class_ (Ui.button_classes ?class_ ())
+         ]
+         @ if Option.is_none next then [ Attr.disabled ] else [])
+      [ text "Open" ]
+  in
+  if env.is_mobile
+  then
+    Loon.Drawer.view ~id:"open-preset" ~open_ ~on_open_change (fun d ->
+      [ Loon.Drawer.content
+          ~class_:"dark rounded-t-2xl!"
+          d
+          [ Loon.Drawer.header
+              [ Loon.Drawer.title ~class_:"text-xl" d [ text title ]
+              ; Loon.Drawer.description d [ text description ]
+              ]
+          ; form
+              [ div "px-4 py-2" [ fields ]
+              ; Loon.Drawer.footer
+                  [ open_button ~class_:"h-10" ()
+                  ; Ui.button
+                      ~variant:Outline
+                      ~class_:"h-10"
+                      ~on_click:(on_open_change false)
+                      [ text "Cancel" ]
+                  ]
+              ]
+          ]
+      ])
+  else
+    Loon.Dialog.view ~open_ ~on_open_change (fun d ->
+      [ Loon.Dialog.content
+          ~class_:(Ui.dialog_content_class ^ " dark")
+          ~initial_focus:"#preset-code"
+          d
+          [ form
+              [ Loon.Dialog.header
+                  ~class_:"gap-2"
+                  [ Loon.Dialog.title ~class_:Ui.dialog_title_class d [ text title ]
+                  ; Loon.Dialog.description d [ text description ]
+                  ]
+              ; div "py-4" [ fields ]
+              ; Node.div
+                  ~attrs:
+                    [ Attr.create "data-slot" "dialog-footer"
+                    ; Attr.class_
+                        (Loon.Cn.cn
+                           [ "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"
+                           ; Ui.dialog_footer_class
+                           ])
+                    ]
+                  [ Ui.button
+                      ~variant:Outline
+                      ~on_click:(on_open_change false)
+                      [ text "Cancel" ]
+                  ; open_button ()
+                  ]
+              ]
+          ]
+      ])
 ;;
 
 let reset_dialog ~open_ ~set_open ~confirm =
@@ -789,7 +825,6 @@ let reset_dialog ~open_ ~set_open ~confirm =
   Loon.Alert_dialog.view ~open_ ~on_open_change:set_open (fun d ->
     [ Loon.Alert_dialog.content
         ~size:Sm
-        ~class_:"dark"
         d
         [ Loon.Alert_dialog.header
             [ Loon.Alert_dialog.title d [ text "Reset to defaults?" ]
@@ -842,7 +877,7 @@ let code_panel ~name ~copied ~on_copy body =
     ]
 ;;
 
-let get_code_dialog graph (preset : Create_preset.t Bonsai.t) =
+let get_code_dialog ?(action = "get-code") graph (preset : Create_preset.t Bonsai.t) =
   let open_, set_open = Bonsai.state false graph in
   let tab, set_tab = Bonsai.state Tab.Project graph in
   let copied, set_copied = Bonsai.state_opt graph in
@@ -952,7 +987,7 @@ let get_code_dialog graph (preset : Create_preset.t Bonsai.t) =
   Loon.Dialog.view ~open_ ~on_open_change:set_open (fun d ->
     [ Loon.Dialog.trigger
         d
-        (Ui.button ~attrs:[ Attr.create "data-action" "get-code" ] [ text "Get Code" ])
+        (Ui.button ~attrs:[ Attr.create "data-action" action ] [ text "Get Code" ])
     ; Loon.Dialog.content
         ~class_:
           "dark bg-popover text-popover-foreground ring-foreground/10 border-0 ring-1 \
@@ -980,6 +1015,47 @@ let get_code_dialog graph (preset : Create_preset.t Bonsai.t) =
             ]
         ]
     ])
+;;
+
+(* action-menu.tsx: the preview's blocks and each component's examples. *)
+let navigate_dialog graph ~open_ ~set_open (env : Env.t Bonsai.t) =
+  let state, set_state = Bonsai.state Loon.Command.State.empty graph in
+  let%arr open_ and set_open and state and set_state and env in
+  let on_open_change o =
+    Effect.Many
+      [ set_open o; (if o then set_state Loon.Command.State.empty else Effect.Ignore) ]
+  in
+  let item ~keywords (value, label) =
+    Loon.Command.item
+      ~attrs:
+        [ Attr.create "data-item" value
+        ; Attr.create "data-checked" (Bool.to_string (String.equal env.params.item value))
+        ]
+      ~class_:"px-2"
+      ~value:(label ^ " " ^ keywords)
+      ~on_select:(Effect.Many [ env.set_item value; set_open false ])
+      [ text label ]
+  in
+  Loon.Command.dialog
+    ~id:"create-navigate"
+    ~class_:"animate-none!"
+    ~loop:true
+    ~open_
+    ~on_open_change
+    ~state
+    ~on_change:set_state
+    [ Loon.Command.input ~placeholder:"Search" ()
+    ; Loon.Command.list
+        [ Loon.Command.empty [ text "No items found." ]
+        ; Loon.Command.group
+            (List.map
+               [ "preview", "Preview" ]
+               ~f:(item ~keywords:"block blocks component components")
+             @ List.map
+                 Create_examples.items
+                 ~f:(item ~keywords:"item items component components"))
+        ]
+    ]
 ;;
 
 (* {1 The preview} *)
@@ -1023,7 +1099,11 @@ let preview graph ~(env : Env.t Bonsai.t) ~(shown : Create_preset.t Bonsai.t) =
     in
     { Create_preview.Info.style; font = font shown.font; font_heading = font heading }
   in
-  let block = Create_preview.component ~info item graph in
+  let block =
+    match%sub Bonsai.map item ~f:Create_examples.mem with
+    | true -> Create_examples.component item graph
+    | false -> Create_preview.component ~info item graph
+  in
   let%arr block and env and shown in
   Node.div
     ~attrs:
@@ -1043,7 +1123,9 @@ let preview graph ~(env : Env.t Bonsai.t) ~(shown : Create_preset.t Bonsai.t) =
                :: Create_preview_style.attrs ~mode:env.mode shown)
             [ block ]
         ]
-    ; preview_switcher ~item:env.params.item ~set_item:env.set_item
+    ; (if List.Assoc.mem Create_preview.items env.params.item ~equal:String.equal
+       then preview_switcher ~item:env.params.item ~set_item:env.set_item
+       else Node.none)
     ]
 ;;
 
@@ -1057,6 +1139,7 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
   let history, set_history = Bonsai.state' Create_history.empty graph in
   let open_preset_open, set_open_preset_open = Bonsai.state false graph in
   let reset_open, set_reset_open = Bonsai.state false graph in
+  let navigate_open, set_navigate_open = Bonsai.state false graph in
   let normal_query = Bonsai.map params ~f:Create_params.to_query in
   (* shadcn writes the preset into a URL without one (hasSyncedPresetToUrl);
      every state is recorded for undo. *)
@@ -1104,7 +1187,7 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
   in
   let actions =
     let%arr env and history and set_history and set_query and mode and set_mode
-    and set_open_preset_open and set_reset_open in
+    and set_open_preset_open and set_reset_open and navigate_open and set_navigate_open in
     let move step =
       Option.map (step history) ~f:(fun (h, q) ->
         Effect.Many [ set_history (fun _ -> h); set_query q ])
@@ -1115,6 +1198,7 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
     ; reset = set_reset_open true
     ; toggle_mode = set_mode (Mode.toggle mode)
     ; open_preset = set_open_preset_open true
+    ; navigate = set_navigate_open (not navigate_open)
     ; undo = move Create_history.undo
     ; redo = move Create_history.redo
     }
@@ -1127,8 +1211,7 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
   let separator = Bonsai.return (Ui.field_separator ~class_:"hidden md:block" ()) in
   let pickers =
     Bonsai.all
-      [ base_picker graph env
-      ; style_picker graph env
+      [ style_picker graph env
       ; separator
       ; base_color_picker graph env
       ; theme_picker graph env
@@ -1144,6 +1227,8 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
       ; accent_picker graph env
       ]
   in
+  (* The base is fixed: shadcn shows its picker on phones only. *)
+  let base_picker = base_picker graph env in
   let copy = copy_preset graph (Bonsai.map params ~f:Create_params.code) in
   let open_preset =
     open_preset_dialog graph ~open_:open_preset_open ~set_open:set_open_preset_open env
@@ -1151,10 +1236,13 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
   let reset =
     reset_dialog ~open_:reset_open ~set_open:set_reset_open ~confirm:confirm_reset
   in
+  let navigate =
+    navigate_dialog graph ~open_:navigate_open ~set_open:set_navigate_open env
+  in
   let get_code = get_code_dialog graph (Bonsai.map params ~f:(fun p -> p.preset)) in
   let preview = preview graph ~env ~shown in
-  let%arr menu and pickers and copy and open_preset and reset and get_code and preview
-  and actions and set_open_preset_open and is_mobile in
+  let%arr menu and pickers and base_picker and copy and open_preset and reset and get_code
+  and navigate and preview and actions and set_open_preset_open and is_mobile in
   let shortcuts =
     Attr.Global_listeners.keydown ~phase:Bubbling ~f:(fun ev ->
       let open Js_of_ocaml in
@@ -1164,6 +1252,8 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
         | KeyD -> "d"
         | KeyO -> "o"
         | KeyZ -> "z"
+        | KeyY -> "y"
+        | KeyP -> "p"
         | _ -> ""
       in
       let editable = Browser.in_browser () && Browser.active_element_is_editable () in
@@ -1185,6 +1275,7 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
           | Open_preset -> actions.open_preset
           | Undo -> Option.value actions.undo ~default:Effect.Ignore
           | Redo -> Option.value actions.redo ~default:Effect.Ignore
+          | Navigate -> actions.navigate
         in
         Effect.Many [ Loon.Dom_util.prevent_default ev; run ])
   in
@@ -1213,7 +1304,7 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
               ~class_:
                 "flex-row gap-2.5 py-px **:data-[slot=field-separator]:-mx-4 \
                  **:data-[slot=field-separator]:w-auto md:flex-col md:gap-3.25"
-              pickers
+              (if is_mobile then pickers @ [ base_picker ] else pickers)
           ]
       ; Ui.card_footer
           ~class_:
@@ -1232,17 +1323,12 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
                   ~attrs:[ Attr.class_ "w-full truncate text-center font-medium" ]
                   [ text "Shuffle" ]
               ]
-          ; footer_button
-              ~action:"reset"
-              ~class_:"shrink-0 md:hidden"
-              ~on_click:actions.reset
-              [ text "Reset" ]
           ]
       (* [*:] where shadcn has [**:]: the dialog stays in this footer (loon's
          overlays are in the top layer, not portalled), and its buttons must
          keep their width. *)
       ; Ui.card_footer
-          ~class_:"-mt-3 flex min-w-0 gap-2 md:flex-col md:*:[button,a]:w-full"
+          ~class_:"-mt-3 hidden min-w-0 gap-2 md:flex md:flex-col md:*:[button,a]:w-full"
           [ get_code ]
       ]
   in
@@ -1251,13 +1337,14 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
       [ Attr.create "data-tool" "create"
       ; shortcuts
       ; Attr.class_
-          "relative z-10 flex h-[calc(100svh-var(--docs-header,3.5rem))] min-h-0 flex-1 \
-           flex-col overflow-hidden bg-linear-to-b from-background to-muted/40 \
-           dark:bg-none dark:bg-background [--customizer-width:--spacing(48)] \
+          "relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden section-soft \
+           [--customizer-width:--spacing(48)] \
            [--gap:--spacing(4)] md:[--gap:--spacing(6)] \
            2xl:[--customizer-width:--spacing(56)]"
       ]
     [ Customize_fonts.style
+      (* shadcn's page has no heading; the page's name for screen readers. *)
+    ; Node.h1 ~attrs:[ Attr.class_ "sr-only" ] [ text "Create" ]
     ; Node.div
         ~attrs:
           [ Attr.create "data-slot" "designer"
@@ -1268,5 +1355,11 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
         [ preview; customizer ]
     ; open_preset
     ; reset
+    ; navigate
     ]
+;;
+
+let header_actions ~query (local_ graph) =
+  let preset = Bonsai.map query ~f:(fun q -> (Create_params.of_query q).preset) in
+  get_code_dialog ~action:"header-get-code" graph preset
 ;;

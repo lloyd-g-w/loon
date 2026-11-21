@@ -59,6 +59,8 @@ type t =
   ; open_mobile : bool
   ; set_open_mobile : bool -> unit Effect.t
   ; is_mobile : bool
+  ; tooltip : string option
+  ; set_tooltip : string option -> unit Effect.t
   }
 
 let cookie_name = "sidebar_state"
@@ -100,6 +102,8 @@ let create
       ~open_mobile
       ~on_open_mobile_change
       ~is_mobile
+      ?open_tooltip
+      ?(on_open_tooltip_change = fun _ -> Effect.Ignore)
       ()
   =
   let set_open value =
@@ -112,6 +116,8 @@ let create
   ; open_mobile
   ; set_open_mobile = on_open_mobile_change
   ; is_mobile
+  ; tooltip = open_tooltip
+  ; set_tooltip = on_open_tooltip_change
   }
 ;;
 
@@ -125,11 +131,14 @@ let component ?(default_open = true) ?(persist = true) (local_ graph) =
   let open_, set_open = Bonsai.state initial graph in
   let open_mobile, set_open_mobile = Bonsai.state false graph in
   let is_mobile = Use_mobile.component graph in
+  let tooltip, set_tooltip = Bonsai.state None graph in
   let%arr open_
   and set_open
   and open_mobile
   and set_open_mobile
-  and is_mobile in
+  and is_mobile
+  and tooltip
+  and set_tooltip in
   create
     ~persist
     ~open_
@@ -137,6 +146,8 @@ let component ?(default_open = true) ?(persist = true) (local_ graph) =
     ~open_mobile
     ~on_open_mobile_change:set_open_mobile
     ~is_mobile
+    ?open_tooltip:tooltip
+    ~on_open_tooltip_change:set_tooltip
     ()
 ;;
 
@@ -185,109 +196,40 @@ let provider ?(attrs = []) ?class_ ?(keyboard_shortcut = true) t children =
     children
 ;;
 
-(* The sheet the sidebar becomes on phones: shadcn's [SheetContent] with
-   its overlay, a modal dialog (Esc or a click on the overlay closes it,
-   Tab stays inside). *)
+(* The sheet the sidebar becomes on phones: shadcn's [Sheet], its close
+   button hidden by [[&>button]:hidden] as in shadcn. *)
 let mobile_sheet ~attrs ~side t children =
-  if not t.open_mobile
-  then Node.none
-  else (
-    let id = "sidebar-mobile" in
-    let close = t.set_open_mobile false in
-    let focus_inside (el : Dom_html.element Js.t) =
-      let active : Dom_html.element Js.t Js.opt =
-        (Js.Unsafe.coerce Dom_html.document)##.activeElement
-      in
-      let inside =
-        Js.Opt.case
-          active
-          (fun () -> false)
-          (fun active -> Js.to_bool ((Js.Unsafe.coerce el)##contains active))
-      in
-      if not inside
-      then Effect.Expert.handle_non_dom_event_exn (Focus.first_in id)
-    in
-    let side_classes =
-      match (side : Side.t) with
-      | Left ->
-        "inset-y-0 left-0 h-full w-3/4 border-r \
-         data-[state=closed]:slide-out-to-left \
-         data-[state=open]:slide-in-from-left sm:max-w-sm"
-      | Right ->
-        "inset-y-0 right-0 h-full w-3/4 border-l \
-         data-[state=closed]:slide-out-to-right \
-         data-[state=open]:slide-in-from-right sm:max-w-sm"
-    in
-    Node.div
-      [ Node.div
-          ~attrs:
-            [ data "state" "open"
-            ; data "slot" "sheet-overlay"
-            ; Attr.class_
-                "fixed inset-0 z-50 bg-black/50 \
-                 data-[state=closed]:animate-out \
-                 data-[state=closed]:fade-out-0 data-[state=open]:animate-in \
-                 data-[state=open]:fade-in-0"
-            ; Attr.on_click (fun _ -> close)
-            ]
-          []
-      ; Focus.guard ~id `Start
-      ; Node.div
-          ~attrs:
-            ([ Attr.id id
-             ; Attr.role "dialog"
-             ; aria "modal" "true"
-             ; aria "labelledby" (id ^ "-title")
-             ; aria "describedby" (id ^ "-description")
-             ; data "state" "open"
-             ; Attr.tabindex (-1)
-             ; data "sidebar" "sidebar"
-             ; data "slot" "sidebar"
-             ; data "mobile" "true"
-             ; Attr.__css_vars_no_kebabs [ "--sidebar-width", width_mobile ]
-             ; Cn.attr
-                 [ "fixed z-50 flex flex-col gap-4 bg-background shadow-lg \
-                    transition ease-in-out data-[state=closed]:animate-out \
-                    data-[state=closed]:duration-300 \
-                    data-[state=open]:animate-in \
-                    data-[state=open]:duration-500"
-                 ; side_classes
-                 ; "w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground \
-                    [&>button]:hidden"
-                 ]
-             ; Attr.on_keydown (fun ev ->
-                 match Dom_util.key ev with
-                 | Escape -> Effect.Many [ Dom_util.stop ev; close ]
-                 | _ -> Effect.Ignore)
-             ; After_render.attr ~name:"sidebar-mobile-focus" focus_inside
-             ]
-             @ attrs)
-          [ Node.div
-              ~attrs:
-                [ data "slot" "sheet-header"
-                ; Attr.class_ "flex flex-col gap-1.5 p-4 sr-only"
-                ]
-              [ Node.h2
-                  ~attrs:
-                    [ Attr.id (id ^ "-title")
-                    ; data "slot" "sheet-title"
-                    ; Attr.class_ "font-semibold text-foreground"
-                    ]
-                  [ Node.text "Sidebar" ]
-              ; Node.p
-                  ~attrs:
-                    [ Attr.id (id ^ "-description")
-                    ; data "slot" "sheet-description"
-                    ; Attr.class_ "text-sm text-muted-foreground"
-                    ]
-                  [ Node.text "Displays the mobile sidebar." ]
+  Sheet.view
+    ~id:"sidebar-mobile"
+    ~open_:t.open_mobile
+    ~on_open_change:t.set_open_mobile
+    (fun sheet ->
+       [ Sheet.content
+           ~side:
+             (match (side : Side.t) with
+              | Left -> Left
+              | Right -> Right)
+           ~class_:
+             "w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground \
+              [&>button]:hidden"
+           ~attrs:
+             ([ data "sidebar" "sidebar"
+              ; Attr.suppress_merge_warnings (data "slot" "sidebar")
+              ; data "mobile" "true"
+              ; Attr.__css_vars_no_kebabs [ "--sidebar-width", width_mobile ]
               ]
-          ; Node.div
-              ~attrs:[ Attr.class_ "flex h-full w-full flex-col" ]
-              children
-          ]
-      ; Focus.guard ~id `End
-      ])
+              @ attrs)
+           sheet
+           [ Sheet.header
+               ~class_:"sr-only"
+               [ Sheet.title sheet [ Node.text "Sidebar" ]
+               ; Sheet.description sheet [ Node.text "Displays the mobile sidebar." ]
+               ]
+           ; Node.div
+               ~attrs:[ Attr.class_ "flex h-full w-full flex-col" ]
+               children
+           ]
+       ])
 ;;
 
 let root
@@ -637,68 +579,57 @@ let menu_button_classes
     ]
 ;;
 
-(* The tooltip of a menu button: in the page after it (Radix puts it in a
-   portal), shown while the button is hovered or focused and the sidebar
-   is collapsed to its icons; [fixed], so the sidebar's [overflow-hidden]
-   does not clip it, and placed at the button's right when shown. *)
-let place_tooltip (ev : #Dom_html.event Js.t) =
-  Effect.of_thunk (fun () ->
-    Js.Opt.iter
-      (Js.Unsafe.coerce ev)##.currentTarget
-      (fun (button : Dom_html.element Js.t) ->
-         Js.Opt.iter
-           (Js.Unsafe.coerce button)##.nextElementSibling
-           (fun (tip : Dom_html.element Js.t) ->
-              let rect = button##getBoundingClientRect in
-              let style = (Js.Unsafe.coerce tip)##.style in
-              style##.left
-              := Js.string (sprintf "%gpx" (Js.to_float rect##.right +. 5.));
-              style##.top
-              := Js.string
-                   (sprintf
-                      "%gpx"
-                      ((Js.to_float rect##.top +. Js.to_float rect##.bottom)
-                       /. 2.)))))
+module Menu_tooltip = struct
+  type nonrec t =
+    { sidebar : t
+    ; id : string
+    ; hidden : bool option
+    ; text : string
+    }
+end
+
+let menu_tooltip ?id ?hidden sidebar text =
+  let id =
+    match id with
+    | Some id -> id
+    | None ->
+      "sidebar-tooltip-"
+      ^ String.map text ~f:(fun c -> if Char.is_alphanum c then c else '-')
+  in
+  { Menu_tooltip.sidebar; id; hidden; text }
 ;;
 
-let tooltip_view ~hidden text =
-  Node.div
-    ~attrs:
-      [ Attr.role "tooltip"
-      ; data "slot" "tooltip-content"
-      ; data "side" "right"
-      ; Attr.class_
-          (Cn.cn
-             [ "z-50 w-fit origin-(--radix-tooltip-content-transform-origin) \
-                animate-in rounded-md bg-foreground px-3 py-1.5 text-xs \
-                text-balance text-background fade-in-0 zoom-in-95 \
-                data-[side=bottom]:slide-in-from-top-2 \
-                data-[side=left]:slide-in-from-right-2 \
-                data-[side=right]:slide-in-from-left-2 \
-                data-[side=top]:slide-in-from-bottom-2 \
-                data-[state=closed]:animate-out data-[state=closed]:fade-out-0 \
-                data-[state=closed]:zoom-out-95"
-             ; (match hidden with
-                | `Unless_collapsed ->
-                  "pointer-events-none fixed hidden -translate-y-1/2 \
-                   group-data-[collapsible=icon]:peer-hover/menu-button:block \
-                   group-data-[collapsible=icon]:peer-focus-visible/menu-button:block"
-                | `Never ->
-                  "pointer-events-none fixed hidden -translate-y-1/2 \
-                   peer-hover/menu-button:block \
-                   peer-focus-visible/menu-button:block")
-             ])
-      ]
-    [ Node.text text
-    ; Node.div
-        ~attrs:
-          [ Attr.class_
-              "absolute top-1/2 left-0 z-50 size-2.5 -translate-x-1/2 \
-               -translate-y-1/2 rotate-45 rounded-[2px] bg-foreground \
-               fill-foreground"
-          ]
-        []
-    ]
+let with_tooltip (tooltip : Menu_tooltip.t) button =
+  let t = tooltip.sidebar in
+  let hidden =
+    match tooltip.hidden with
+    | Some hidden -> hidden
+    | None -> t.open_ || t.is_mobile
+  in
+  let open_ =
+    (not hidden) && [%equal: string option] t.tooltip (Some tooltip.id)
+  in
+  Tooltip.view
+    ~id:tooltip.id
+    ~open_
+    ~on_open_change:(fun o ->
+      if o
+      then if hidden then Effect.Ignore else t.set_tooltip (Some tooltip.id)
+      else if [%equal: string option] t.tooltip (Some tooltip.id)
+      then t.set_tooltip None
+      else Effect.Ignore)
+    (fun tip ->
+       [ (* The button keeps its [data-slot], as Radix's Slot keeps the
+            child's props. *)
+         Slot.merge
+           [ data "slot" "sidebar-menu-button" ]
+           (Tooltip.trigger tip button)
+       ; Tooltip.content
+           ~side:Right
+           ~align:Center
+           tip
+           [ Node.text tooltip.text ]
+       ])
 ;;
 
 let menu_button
@@ -708,7 +639,6 @@ let menu_button
       ?(size = Menu_button_size.Default)
       ?(is_active = false)
       ?tooltip
-      ?(tooltip_hidden = true)
       ?href
       ?on_click
       children
@@ -720,10 +650,6 @@ let menu_button
       ; Attr.class_ (menu_button_classes ~variant ~size ?class_ ())
       ]
     @ on_click_attrs on_click
-    @ (match tooltip with
-       | None -> []
-       | Some _ ->
-         [ Attr.on_pointerenter place_tooltip; Attr.on_focus place_tooltip ])
     @ attrs
   in
   let button =
@@ -733,9 +659,7 @@ let menu_button
   in
   match tooltip with
   | None -> button
-  | Some text ->
-    let hidden = if tooltip_hidden then `Unless_collapsed else `Never in
-    Node.fragment [ button; tooltip_view ~hidden text ]
+  | Some tooltip -> with_tooltip tooltip button
 ;;
 
 let menu_action

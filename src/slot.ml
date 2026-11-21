@@ -13,7 +13,11 @@ let rec merge ?(defaults = []) attrs (node : Node.t) : Node.t =
              then None
              else Some attr)
          in
-         Attr.many ((a :: attrs) @ defaults)))
+         (* The part's attributes replace the child's of the same name (a
+            collapsible trigger's [data-state] over a tooltip trigger's):
+            on purpose, so without virtual_dom's warning. *)
+         Attr.many
+           ((a :: List.map attrs ~f:Attr.suppress_merge_warnings) @ defaults)))
   | Lazy { t; _ } -> merge ~defaults attrs (Lazy.force t)
   | Fragment (((Element _ | Lazy _) as first) :: rest) ->
     Node.fragment (merge ~defaults attrs first :: rest)

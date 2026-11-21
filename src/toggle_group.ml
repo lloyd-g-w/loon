@@ -43,7 +43,10 @@ let root ?(attrs = []) ?class_ ?variant ?size ?(spacing = 0) ?orientation ?(disa
   let children = children t in
   Node.div
     ~attrs:
-      ([ Attr.role "group"
+      ([ Attr.role
+           (match kind with
+            | Single _ -> "radiogroup"
+            | Multiple _ -> "toolbar")
        ; Attr.create "dir" "ltr"
        ; data "slot" "toggle-group"
        ]

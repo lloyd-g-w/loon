@@ -68,7 +68,8 @@ let page =
            on [:root], dark values under [.dark], mapped into Tailwind by [@theme \
            inline]. So [bg-primary text-primary-foreground] in a component is the \
            theme's primary colour, and a shadcn theme (from ui.shadcn.com/themes or \
-           tweakcn) drops straight in."
+           tweakcn) drops straight in: edit the variables in the [loon.css] that \
+           [loon init] writes, or override them in a stylesheet loaded after loon's."
       ; Doc.pre
           ~lang:Css
           ":root {\n\
@@ -106,7 +107,7 @@ let page =
       ; Doc.h2 "Adding colours"
       ; Doc.p
           "Declare a variable in both modes and map it in [@theme inline], in the \
-           stylesheet Tailwind compiles:"
+           stylesheet Tailwind compiles (the CLI's [loon.css]):"
       ; Doc.pre
           ~lang:Css
           ":root {\n\

@@ -21,6 +21,11 @@ val guard : id:string -> [ `Start | `End ] -> Node.t
     (Radix's FocusScope). *)
 val on_mount : [ `First_tabbable | `Keep | `Self | `Selector of string ] -> Attr.t
 
+(** For the overlays closing in this render: no focus back where it was
+    when they leave the page (Radix's onCloseAutoFocus prevented, as a
+    non-modal popover does after a click outside). *)
+val no_restore : unit Effect.t
+
 (** Focuses the element with id [id], without scrolling, after the next
     render, unless an open dialog not containing it has taken focus meanwhile
     (a dialog a menu item opened). *)

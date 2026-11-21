@@ -81,7 +81,7 @@ await each(b, (p) =>
   p.evaluate(() => {
     const i = document.createElement("input");
     i.id = "parity-outside-input";
-    i.style.cssText = "position:fixed;left:8px;bottom:8px;z-index:1";
+    i.style.cssText = "position:fixed;left:8px;bottom:8px;z-index:2147483647";
     document.body.append(i);
   }),
 );

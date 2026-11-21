@@ -28,7 +28,14 @@ let variables ~(mode : Loon.Theme.Mode.t) (p : Create_preset.t) =
 let attrs ~mode (p : Create_preset.t) =
   [ Attr.create "data-create-preview" ""
   ; Attr.create "data-menu-color" p.menu_color
-  ; Attr.__css_vars_no_kebabs (variables ~mode p)
+  (* An attribute, not [Attr.style] (which drops custom properties) nor a
+     css-vars hook (which tests cannot see). *)
+  ; Attr.create
+      "style"
+      (List.map (variables ~mode p) ~f:(fun (field, value) ->
+         Css_gen.create ~field ~value)
+       |> Css_gen.concat
+       |> Css_gen.to_string_css)
   ; Attr.classes
       ([ Customize_fonts.root_class ]
        @

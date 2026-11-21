@@ -31,22 +31,24 @@ let view
       ([ Attr.type_ "button"
        ; Attr.role "switch"
        ; aria_bool "checked" checked
-       ; aria_bool "required" required
-       ; state
-       ; Attr.value "on"
-       ; data "slot" "switch"
-       ; data "size" (Size.name size)
-       ; Cn.with_class
-           ?class_
-           [ "peer group/switch inline-flex shrink-0 items-center rounded-full border \
-              border-transparent shadow-xs transition-all outline-none \
-              focus-visible:border-ring focus-visible:ring-[3px] \
-              focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 \
-              data-[size=default]:h-[1.15rem] data-[size=default]:w-8 \
-              data-[size=sm]:h-3.5 data-[size=sm]:w-6 data-[state=checked]:bg-primary \
-              data-[state=unchecked]:bg-input dark:data-[state=unchecked]:bg-input/80"
-           ]
        ]
+       (* Radix leaves aria-required out unless [required] is given. *)
+       @ (if required then [ aria "required" "true" ] else [])
+       @ [ state
+         ; Attr.value "on"
+         ; data "slot" "switch"
+         ; data "size" (Size.name size)
+         ; Cn.with_class
+             ?class_
+             [ "peer group/switch inline-flex shrink-0 items-center rounded-full border \
+                border-transparent shadow-xs transition-all outline-none \
+                focus-visible:border-ring focus-visible:ring-[3px] \
+                focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 \
+                data-[size=default]:h-[1.15rem] data-[size=default]:w-8 \
+                data-[size=sm]:h-3.5 data-[size=sm]:w-6 data-[state=checked]:bg-primary \
+                data-[state=unchecked]:bg-input dark:data-[state=unchecked]:bg-input/80"
+             ]
+         ]
        @ Option.value_map id ~default:[] ~f:(fun id -> [ Attr.id id ])
        @ (if invalid then [ aria "invalid" "true" ] else [])
        @ disabled_attrs

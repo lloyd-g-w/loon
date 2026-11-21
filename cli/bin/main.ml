@@ -122,7 +122,7 @@ let diff =
 
 let css =
   Command.basic
-    ~summary:"print loon.css: Tailwind's input (the theme, and the styles of components not yet ported)"
+    ~summary:"print loon.css: Tailwind's input (the theme, and sonner's styles)"
     (let%map_open.Command () = return () in
      fun () -> print_string (Registry.Css.full ()))
 ;;

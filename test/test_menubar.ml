@@ -66,7 +66,6 @@ let%expect_test "shadcn's classes" =
   [%expect {|
     <div data-slot="menubar"
          role="menubar"
-         aria-orientation="horizontal"
          class="bg-background border flex gap-1 h-9 items-center p-1 rounded-md shadow-xs">
       <button data-slot="menubar-trigger"
               type="button"
@@ -78,6 +77,7 @@ let%expect_test "shadcn's classes" =
               data-state="open"
               tabindex="0"
               class="data-[state=open]:bg-accent data-[state=open]:text-accent-foreground flex focus:bg-accent focus:text-accent-foreground font-medium items-center outline-hidden px-2 py-1 rounded-sm select-none text-sm"
+              @on_blur
               @on_click
               @on_focus
               @on_keydown
@@ -170,7 +170,7 @@ let%expect_test "a click opens a menu; hovering another trigger switches to it" 
   let handle = Render.handle ~classes:false bar in
   Handle.show handle;
   [%expect {|
-    <div data-slot="menubar" role="menubar" aria-orientation="horizontal">
+    <div data-slot="menubar" role="menubar">
       <button data-slot="menubar-trigger"
               type="button"
               role="menuitem"
@@ -179,6 +179,7 @@ let%expect_test "a click opens a menu; hovering another trigger switches to it" 
               aria-expanded="false"
               data-state="closed"
               tabindex="0"
+              @on_blur
               @on_click
               @on_focus
               @on_keydown
@@ -203,6 +204,7 @@ let%expect_test "a click opens a menu; hovering another trigger switches to it" 
               aria-expanded="false"
               data-state="closed"
               tabindex="-1"
+              @on_blur
               @on_click
               @on_focus
               @on_keydown
@@ -250,7 +252,7 @@ let%expect_test "the keyboard: arrows between triggers and between open menus" =
   Handle.show handle;
   [%expect {|
     ("default prevented" (key ArrowRight))
-    <div data-slot="menubar" role="menubar" aria-orientation="horizontal">
+    <div data-slot="menubar" role="menubar">
       <button data-slot="menubar-trigger"
               type="button"
               role="menuitem"
@@ -259,6 +261,7 @@ let%expect_test "the keyboard: arrows between triggers and between open menus" =
               aria-expanded="false"
               data-state="closed"
               tabindex="-1"
+              @on_blur
               @on_click
               @on_focus
               @on_keydown
@@ -283,6 +286,7 @@ let%expect_test "the keyboard: arrows between triggers and between open menus" =
               aria-expanded="false"
               data-state="closed"
               tabindex="0"
+              @on_blur
               @on_click
               @on_focus
               @on_keydown
@@ -301,7 +305,8 @@ let%expect_test "the keyboard: arrows between triggers and between open menus" =
       > Always Show Bookmarks Bar state=unchecked checked=false
         Reload
     |}];
-  (* ArrowRight on an item without a sub-menu: the next menu, wrapping *)
+  (* ArrowRight on an item without a sub-menu: the next menu, wrapping, with
+     nothing highlighted (as Radix's) *)
   Drive.key handle content ArrowRight;
   print handle;
   [%expect {|
@@ -310,16 +315,18 @@ let%expect_test "the keyboard: arrows between triggers and between open menus" =
     trigger Edit state=closed disabled
     trigger View state=closed
     menubar-content
-      > New Tab ⌘T
+        New Tab ⌘T
         New Window
         Share state=closed
         Print...
     |}];
   Drive.key handle content ArrowDown;
   Drive.key handle content ArrowDown;
+  Drive.key handle content ArrowDown;
   Drive.key handle content ArrowRight;
   print handle;
   [%expect {|
+    ("default prevented" (key ArrowDown))
     ("default prevented" (key ArrowDown))
     ("default prevented" (key ArrowDown))
     ("default prevented" (key ArrowRight))
@@ -345,12 +352,14 @@ let%expect_test "the keyboard: arrows between triggers and between open menus" =
     trigger Edit state=closed disabled
     trigger View state=open
     menubar-content
-      > Always Show Bookmarks Bar state=unchecked checked=false
+        Always Show Bookmarks Bar state=unchecked checked=false
         Reload
     |}];
+  Drive.key handle content ArrowDown;
   Drive.key handle content Enter;
   print handle;
   [%expect {|
+    ("default prevented" (key ArrowDown))
     ("default prevented" (key Enter))
     trigger File state=closed
     trigger Edit state=closed disabled
