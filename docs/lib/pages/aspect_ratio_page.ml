@@ -26,7 +26,7 @@ let demo =
 let page =
   Doc.page
     ~slug:page
-    ~title:"Aspect Ratio"
+    ~title:"Aspect ratio"
     ~group:Display
     ~description:"Displays content within a desired ratio."
     ~usage:
