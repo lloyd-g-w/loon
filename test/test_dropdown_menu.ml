@@ -31,13 +31,16 @@ let%expect_test "opens on click, arrows skip disabled items, Enter chooses" =
   [%expect
     {|
     <div data-state="closed" class="loon-floating">
-      <button id="loonbonsai_path_replaced_in_test-trigger"
+      <button type="button"
+              data-slot="button"
+              data-variant="default"
+              data-size="default"
+              id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="menu"
               aria-expanded="false"
               aria-controls="loonbonsai_path_replaced_in_test-content"
               data-state="closed"
-              type="button"
-              class="loon-button loon-button-md loon-button-primary"
+              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"
               @on_click
               @on_keydown> Menu </button>
     </div>
@@ -47,13 +50,16 @@ let%expect_test "opens on click, arrows skip disabled items, Enter chooses" =
   [%expect
     {|
     <div data-state="open" class="loon-floating">
-      <button id="loonbonsai_path_replaced_in_test-trigger"
+      <button type="button"
+              data-slot="button"
+              data-variant="default"
+              data-size="default"
+              id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="menu"
               aria-expanded="true"
               aria-controls="loonbonsai_path_replaced_in_test-content"
               data-state="open"
-              type="button"
-              class="loon-button loon-button-md loon-button-primary"
+              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"
               @on_click
               @on_keydown> Menu </button>
       <div aria-hidden="true" class="loon-click-away" @on_click> </div>
@@ -74,8 +80,18 @@ let%expect_test "opens on click, arrows skip disabled items, Enter chooses" =
              class="loon-menu-item"
              @on_click
              @on_mousemove>
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-pencil">
-            <path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"> </path>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true"
+               class="lucide lucide-pencil">
+            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"> </path>
             <path d="m15 5 4 4"> </path>
           </svg>
           <span class="loon-menu-text"> Rename </span>
@@ -119,13 +135,13 @@ let%expect_test "opens on click, arrows skip disabled items, Enter chooses" =
     ("default prevented" (key ArrowDown))
     ("default prevented" (key ArrowDown))
 
-        <button id="loonbonsai_path_replaced_in_test-trigger"
+                data-size="default"
+                id="loonbonsai_path_replaced_in_test-trigger"
                 aria-haspopup="menu"
                 aria-expanded="true"
                 aria-controls="loonbonsai_path_replaced_in_test-content"
                 data-state="open"
-                type="button"
-                class="loon-button loon-button-md loon-button-primary"
+                class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"
                 @on_click
                 @on_keydown> Menu </button>
         <div aria-hidden="true" class="loon-click-away" @on_click> </div>
@@ -147,9 +163,12 @@ let%expect_test "opens on click, arrows skip disabled items, Enter chooses" =
                class="loon-menu-item"
                @on_click
                @on_mousemove>
-            <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-pencil">
-              <path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"> </path>
-              <path d="m15 5 4 4"> </path>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+
             </svg>
             <span class="loon-menu-text"> Rename </span>
             <span class="loon-menu-shortcut"> ⌘E </span>
@@ -215,7 +234,17 @@ let%expect_test "opens on click, arrows skip disabled items, Enter chooses" =
                @on_mousemove>
     -|      <span class="loon-menu-indicator"> </span>
     +|      <span class="loon-menu-indicator">
-    +|        <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-check">
+    +|        <svg xmlns="http://www.w3.org/2000/svg"
+    +|             width="24"
+    +|             height="24"
+    +|             viewBox="0 0 24 24"
+    +|             fill="none"
+    +|             stroke="currentColor"
+    +|             stroke-width="2"
+    +|             stroke-linecap="round"
+    +|             stroke-linejoin="round"
+    +|             aria-hidden="true"
+    +|             class="lucide lucide-check">
     +|          <path d="M20 6 9 17l-5-5"> </path>
     +|        </svg>
     +|      </span>
@@ -243,13 +272,16 @@ let%expect_test "opens on click, arrows skip disabled items, Enter chooses" =
     ("default prevented" (key Enter))
     selected delete
     <div data-state="closed" class="loon-floating">
-      <button id="loonbonsai_path_replaced_in_test-trigger"
+      <button type="button"
+              data-slot="button"
+              data-variant="default"
+              data-size="default"
+              id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="menu"
               aria-expanded="false"
               aria-controls="loonbonsai_path_replaced_in_test-content"
               data-state="closed"
-              type="button"
-              class="loon-button loon-button-md loon-button-primary"
+              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"
               @on_click
               @on_keydown> Menu </button>
     </div>
@@ -264,13 +296,16 @@ let%expect_test "keyboard opening, clicking items, Escape and clicking away" =
     {|
     ("default prevented" (key ArrowUp))
     <div data-state="open" class="loon-floating">
-      <button id="loonbonsai_path_replaced_in_test-trigger"
+      <button type="button"
+              data-slot="button"
+              data-variant="default"
+              data-size="default"
+              id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="menu"
               aria-expanded="true"
               aria-controls="loonbonsai_path_replaced_in_test-content"
               data-state="open"
-              type="button"
-              class="loon-button loon-button-md loon-button-primary"
+              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"
               @on_click
               @on_keydown> Menu </button>
       <div aria-hidden="true" class="loon-click-away" @on_click> </div>
@@ -292,8 +327,18 @@ let%expect_test "keyboard opening, clicking items, Escape and clicking away" =
              class="loon-menu-item"
              @on_click
              @on_mousemove>
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-pencil">
-            <path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"> </path>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true"
+               class="lucide lucide-pencil">
+            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"> </path>
             <path d="m15 5 4 4"> </path>
           </svg>
           <span class="loon-menu-text"> Rename </span>
@@ -336,13 +381,16 @@ let%expect_test "keyboard opening, clicking items, Escape and clicking away" =
     {|
     ("default prevented" (key Escape))
     <div data-state="closed" class="loon-floating">
-      <button id="loonbonsai_path_replaced_in_test-trigger"
+      <button type="button"
+              data-slot="button"
+              data-variant="default"
+              data-size="default"
+              id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="menu"
               aria-expanded="false"
               aria-controls="loonbonsai_path_replaced_in_test-content"
               data-state="closed"
-              type="button"
-              class="loon-button loon-button-md loon-button-primary"
+              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"
               @on_click
               @on_keydown> Menu </button>
     </div>
@@ -357,13 +405,16 @@ let%expect_test "keyboard opening, clicking items, Escape and clicking away" =
   [%expect
     {|
     <div data-state="closed" class="loon-floating">
-      <button id="loonbonsai_path_replaced_in_test-trigger"
+      <button type="button"
+              data-slot="button"
+              data-variant="default"
+              data-size="default"
+              id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="menu"
               aria-expanded="false"
               aria-controls="loonbonsai_path_replaced_in_test-content"
               data-state="closed"
-              type="button"
-              class="loon-button loon-button-md loon-button-primary"
+              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"
               @on_click
               @on_keydown> Menu </button>
     </div>

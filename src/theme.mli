@@ -1,5 +1,6 @@
-(** The theme a subtree uses: light or dark, and an accent colour. Wrap the
-    app in [root] (or put [attrs] on its outermost element). *)
+(** Light and dark mode. shadcn/ui's theme is CSS variables on [:root],
+    with dark values under the class [dark] on an ancestor (usually
+    [<html>]): [root ~mode:Dark] is a [div] with that class. *)
 
 open! Import
 
@@ -16,30 +17,12 @@ module Mode : sig
   val preferred : unit -> t
 end
 
-module Accent : sig
-  type t =
-    | Teal
-    | Lake
-    | Moss
-    | Ember
-    | Iris
-  [@@deriving enumerate, sexp, compare, equal]
+(** The attributes of a themed subtree's root: the class [dark] in [Dark]
+    mode. *)
+val attrs : ?mode:Mode.t -> unit -> Attr.t list
 
-  val name : t -> string
-end
-
-(** The attributes of a themed subtree's root: the class [loon], and
-    [loon-light] or [loon-dark] and [data-loon-accent] for the [mode] and
-    [accent] given. Either omitted, the subtree keeps its surroundings' (and
-    at the top of the page, light and teal). *)
-val attrs : ?mode:Mode.t -> ?accent:Accent.t -> unit -> Attr.t list
-
-(** A [div] with [attrs ?mode ?accent ()]: e.g. [root ~accent:Iris] inside a
-    dark page is dark and iris. *)
-
-val root
-  :  ?attrs:Attr.t list
-  -> ?mode:Mode.t
-  -> ?accent:Accent.t
-  -> Node.t list
-  -> Node.t
+(** A [div] with [attrs ?mode ()]: the subtree is dark with [Dark], else its
+    surroundings' mode (nothing undoes a [dark] ancestor). Every colour comes from the theme's
+    variables, so the subtree's text and background follow it:
+    [bg-background text-foreground]. *)
+val root : ?attrs:Attr.t list -> ?mode:Mode.t -> Node.t list -> Node.t

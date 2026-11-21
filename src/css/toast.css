@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-toaster {
   position: fixed;
   z-index: 100;
@@ -150,4 +152,5 @@
   .loon-toast[data-state="closed"] {
     transform: none;
   }
+}
 }

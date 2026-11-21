@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 /* The open/closed height animation, shared with Accordion: a one-row grid
    whose row goes from 0fr to 1fr. */
 .loon-collapsible-content,
@@ -74,4 +76,5 @@
   .loon-accordion-chevron {
     transition: none !important;
   }
+}
 }

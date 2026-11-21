@@ -72,19 +72,38 @@ let%expect_test "a toast's HTML" =
             aria-atomic="true"
             data-state="open"
             class="loon-toast loon-toast-success">
-          <svg viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
                aria-hidden="true"
-               class="loon-icon loon-icon-check-circle loon-toast-icon">
-            <circle cx="12" cy="12" r="9.5"> </circle>
-            <path d="m8.5 12.5 2.5 2.5 4.5-5"> </path>
+               class="loon-toast-icon lucide lucide-circle-check">
+            <circle cx="12" cy="12" r="10"> </circle>
+            <path d="m16 9-5.5 5.5L8 12"> </path>
           </svg>
           <div class="loon-toast-body">
             <div class="loon-toast-title"> Saved </div>
             <div class="loon-toast-description"> All good. </div>
           </div>
           <button type="button" aria-label="Dismiss" class="loon-toast-close" @on_click>
-            <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-x">
-              <path d="M18 6 6 18M6 6l12 12"> </path>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"
+                 class="lucide lucide-x">
+              <path d="M18 6 6 18"> </path>
+              <path d="m6 6 12 12"> </path>
             </svg>
           </button>
         </li>
@@ -98,8 +117,19 @@ let%expect_test "a toast's HTML" =
           </div>
           <button type="button" class="loon-toast-action" @on_click> Undo </button>
           <button type="button" aria-label="Dismiss" class="loon-toast-close" @on_click>
-            <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-x">
-              <path d="M18 6 6 18M6 6l12 12"> </path>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"
+                 class="lucide lucide-x">
+              <path d="M18 6 6 18"> </path>
+              <path d="m6 6 12 12"> </path>
             </svg>
           </button>
         </li>

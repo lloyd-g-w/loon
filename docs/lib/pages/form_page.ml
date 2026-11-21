@@ -117,18 +117,16 @@ let signup (local_ graph) =
   in
   match submitted with
   | Some address ->
-    Card.view
-      ~attrs:
-        [ Attr.style (Css_gen.create ~field:"width" ~value:"min(100%, 28rem)") ]
-      ~title:"Check your inbox"
-      ~description:(sprintf "We sent a link to %s to confirm it's you." address)
-      ~footer:
-        [ Button.view
-            ~variant:Outline
-            ~on_click:(set_submitted None)
-            [ Node.text "Back" ]
-        ]
-      []
+    Card.root
+      ~class_:"w-full max-w-md"
+      [ Card.header
+          [ Card.title [ Node.text "Check your inbox" ]
+          ; Card.description
+              [ Node.text (sprintf "We sent a link to %s to confirm it's you." address) ]
+          ]
+      ; Card.footer
+          [ Button.view ~variant:Outline ~on_click:(set_submitted None) [ Node.text "Back" ] ]
+      ]
   | None ->
     let strength = Signup.strength password.value in
     Node.form
@@ -137,17 +135,13 @@ let signup (local_ graph) =
         ; Attr.create "novalidate" ""
         ; Attr.style (Css_gen.create ~field:"width" ~value:"min(100%, 28rem)")
         ]
-      [ Card.view
-          ~title:"Create an account"
-          ~description:"Start your 14-day trial. No card needed."
-          ~footer:
-            [ Button.view
-                ~type_:`Submit
-                ~attrs:
-                  [ Attr.style (Css_gen.create ~field:"width" ~value:"100%") ]
-                [ Node.text "Create account" ]
-            ]
-          [ Node.div
+      [ Card.root
+          [ Card.header
+              [ Card.title [ Node.text "Create an account" ]
+              ; Card.description [ Node.text "Start your 14-day trial. No card needed." ]
+              ]
+          ; Card.content
+            [ Node.div
               ~attrs:
                 [ Attr.class_ "docs-stack"
                 ; Attr.style (Css_gen.create ~field:"gap" ~value:"1.125rem")
@@ -248,6 +242,9 @@ let signup (local_ graph) =
                        ~on_change:set_terms
                        ())
               ]
+            ]
+          ; Card.footer
+              [ Button.view ~type_:`Submit ~class_:"w-full" [ Node.text "Create account" ] ]
           ]
       ]
 ;;

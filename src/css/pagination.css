@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-pagination {
   display: flex;
   justify-content: center;
@@ -88,4 +90,5 @@
   .loon-pagination-ellipsis {
     width: 1.25rem;
   }
+}
 }

@@ -49,7 +49,7 @@ let view_options (local_ graph) =
   Dropdown_menu.component
     ~align:End
     ~trigger:(fun attrs ->
-      Button.view ~attrs ~variant:Outline ~size:Icon [ Icon.view More_horizontal ])
+      Button.view ~attrs ~variant:Outline ~size:Icon [ Icon.view Ellipsis ])
     items
     graph
 (*$*)

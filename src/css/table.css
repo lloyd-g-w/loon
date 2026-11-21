@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-table-container {
   position: relative;
   width: 100%;
@@ -81,4 +83,5 @@
 }
 .loon-table-footer > .loon-table-row {
   border-bottom: 0;
+}
 }

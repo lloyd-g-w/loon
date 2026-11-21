@@ -30,9 +30,9 @@ module Payment = struct
   let badge t =
     let variant : Badge.Variant.t =
       match t.status with
-      | "Success" -> Success
-      | "Processing" -> Accent
-      | _ -> Danger
+      | "Success" -> Default
+      | "Processing" -> Secondary
+      | _ -> Destructive
     in
     Badge.view ~variant [ Node.text t.status ]
   ;;

@@ -13,10 +13,10 @@ module Variant = struct
 
   let icon : t -> Icon.t option = function
     | Neutral -> None
-    | Success -> Some Check_circle
+    | Success -> Some Circle_check
     | Info -> Some Info
-    | Warning -> Some Alert_triangle
-    | Danger -> Some Alert_circle
+    | Warning -> Some Triangle_exclamation_point
+    | Danger -> Some Circle_exclamation_point
   ;;
 end
 

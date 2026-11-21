@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 /* The root of a loon page (Loon.Theme.root or class="loon"). */
 .loon {
   font-family: var(--loon-font);
@@ -38,7 +40,7 @@
   border: 0;
 }
 
-.loon-icon {
+:where([class*="loon-"]) svg.lucide {
   display: inline-block;
   flex: none;
   width: 1em;
@@ -112,4 +114,5 @@
     animation-duration: 1ms !important;
     transition-duration: 1ms !important;
   }
+}
 }

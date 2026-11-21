@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-field {
   display: flex;
   gap: 0.5rem;
@@ -37,7 +39,7 @@
   color: var(--loon-danger);
   animation: loon-fade-in var(--loon-duration) var(--loon-ease);
 }
-.loon-field-error .loon-icon {
+.loon-field-error svg.lucide {
   margin-top: 0.1rem;
   font-size: 0.875rem;
 }
@@ -64,4 +66,5 @@
 }
 .loon-fieldset > .loon-field-description {
   margin-top: -0.75rem;
+}
 }

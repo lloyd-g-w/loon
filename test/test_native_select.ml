@@ -27,10 +27,19 @@ let%expect_test "a placeholder until something is chosen" =
           <option #value="nz"> New Zealand </option>
           <option disabled="" #value="aq"> Antarctica </option>
         </select>
-        <svg viewBox="0 0 24 24"
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
              aria-hidden="true"
-             class="loon-icon loon-icon-chevrons-up-down loon-native-select-chevron">
-          <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+             class="loon-native-select-chevron lucide lucide-chevrons-up-down">
+          <path d="m7 15 5 5 5-5"> </path>
+          <path d="m7 9 5-5 5 5"> </path>
         </svg>
       </div>
     </div>
@@ -52,12 +61,19 @@ let%expect_test "a placeholder until something is chosen" =
     +|      <option selected="" #value="nz"> New Zealand </option>
             <option disabled="" #value="aq"> Antarctica </option>
           </select>
-          <svg viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
                aria-hidden="true"
-               class="loon-icon loon-icon-chevrons-up-down loon-native-select-chevron">
-            <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+               class="loon-native-select-chevron lucide lucide-chevrons-up-down">
+            <path d="m7 15 5 5 5-5"> </path>
+            <path d="m7 9 5-5 5 5"> </path>
           </svg>
-        </div>
-      </div>
     |}]
 ;;

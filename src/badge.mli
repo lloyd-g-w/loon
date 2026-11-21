@@ -1,19 +1,33 @@
-(** A small label: a status, a count, a tag. *)
+(** Displays a badge or a component that looks like a badge. Port of
+    shadcn/ui's [Badge]. *)
 
 open! Import
 
 module Variant : sig
   type t =
-    | Neutral
-    | Primary
+    | Default
+    | Secondary
+    | Destructive
     | Outline
-    | Accent
-    | Success
-    | Warning
-    | Danger
+    | Ghost
+    | Link
   [@@deriving enumerate, sexp_of, compare, equal]
 
   val name : t -> string
 end
 
-val view : ?attrs:Attr.t list -> ?variant:Variant.t -> ?dot:bool -> Node.t list -> Node.t
+(** shadcn's [badgeVariants]. *)
+val classes : ?variant:Variant.t -> ?class_:string -> unit -> string
+
+(** A [<span>]. *)
+val view : ?attrs:Attr.t list -> ?class_:string -> ?variant:Variant.t -> Node.t list -> Node.t
+
+(** An [<a>] that looks like a badge (and darkens on hover): shadcn's
+    [<Badge asChild><a>]. *)
+val link
+  :  ?attrs:Attr.t list
+  -> ?class_:string
+  -> ?variant:Variant.t
+  -> href:string
+  -> Node.t list
+  -> Node.t

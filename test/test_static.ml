@@ -14,9 +14,20 @@ let%expect_test "alert" =
   [%expect
     {|
     <div role="status" class="loon-alert loon-alert-neutral">
-      <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-alert-icon loon-icon loon-icon-info">
-        <circle cx="12" cy="12" r="9.5"> </circle>
-        <path d="M12 16v-4.5M12 8h.01"> </path>
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="24"
+           height="24"
+           viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2"
+           stroke-linecap="round"
+           stroke-linejoin="round"
+           aria-hidden="true"
+           class="loon-alert-icon lucide lucide-info">
+        <circle cx="12" cy="12" r="10"> </circle>
+        <path d="M12 16v-4"> </path>
+        <path d="M12 8h.01"> </path>
       </svg>
       <div class="loon-alert-body">
         <div class="loon-alert-title"> Heads up </div>
@@ -24,9 +35,20 @@ let%expect_test "alert" =
       </div>
     </div>
     <div role="status" class="loon-alert loon-alert-info">
-      <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-alert-icon loon-icon loon-icon-info">
-        <circle cx="12" cy="12" r="9.5"> </circle>
-        <path d="M12 16v-4.5M12 8h.01"> </path>
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="24"
+           height="24"
+           viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2"
+           stroke-linecap="round"
+           stroke-linejoin="round"
+           aria-hidden="true"
+           class="loon-alert-icon lucide lucide-info">
+        <circle cx="12" cy="12" r="10"> </circle>
+        <path d="M12 16v-4"> </path>
+        <path d="M12 8h.01"> </path>
       </svg>
       <div class="loon-alert-body">
         <div class="loon-alert-title"> Heads up </div>
@@ -34,11 +56,19 @@ let%expect_test "alert" =
       </div>
     </div>
     <div role="status" class="loon-alert loon-alert-success">
-      <svg viewBox="0 0 24 24"
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="24"
+           height="24"
+           viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2"
+           stroke-linecap="round"
+           stroke-linejoin="round"
            aria-hidden="true"
-           class="loon-alert-icon loon-icon loon-icon-check-circle">
-        <circle cx="12" cy="12" r="9.5"> </circle>
-        <path d="m8.5 12.5 2.5 2.5 4.5-5"> </path>
+           class="loon-alert-icon lucide lucide-circle-check">
+        <circle cx="12" cy="12" r="10"> </circle>
+        <path d="m16 9-5.5 5.5L8 12"> </path>
       </svg>
       <div class="loon-alert-body">
         <div class="loon-alert-title"> Heads up </div>
@@ -46,11 +76,20 @@ let%expect_test "alert" =
       </div>
     </div>
     <div role="alert" class="loon-alert loon-alert-warning">
-      <svg viewBox="0 0 24 24"
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="24"
+           height="24"
+           viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2"
+           stroke-linecap="round"
+           stroke-linejoin="round"
            aria-hidden="true"
-           class="loon-alert-icon loon-icon loon-icon-alert-triangle">
-        <path d="M10.3 3.9 2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"> </path>
-        <path d="M12 9.5v4M12 17h.01"> </path>
+           class="loon-alert-icon lucide lucide-triangle-exclamation-point">
+        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"> </path>
+        <path d="M12 9v4"> </path>
+        <path d="M12 17h.01"> </path>
       </svg>
       <div class="loon-alert-body">
         <div class="loon-alert-title"> Heads up </div>
@@ -58,11 +97,20 @@ let%expect_test "alert" =
       </div>
     </div>
     <div role="alert" class="loon-alert loon-alert-danger">
-      <svg viewBox="0 0 24 24"
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="24"
+           height="24"
+           viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2"
+           stroke-linecap="round"
+           stroke-linejoin="round"
            aria-hidden="true"
-           class="loon-alert-icon loon-icon loon-icon-alert-circle">
-        <circle cx="12" cy="12" r="9.5"> </circle>
-        <path d="M12 7.5v5M12 16h.01"> </path>
+           class="loon-alert-icon lucide lucide-circle-exclamation-point">
+        <circle cx="12" cy="12" r="10"> </circle>
+        <line x1="12" x2="12" y1="8" y2="12"> </line>
+        <line x1="12" x2="12.01" y1="16" y2="16"> </line>
       </svg>
       <div class="loon-alert-body">
         <div class="loon-alert-title"> Heads up </div>
@@ -184,15 +232,29 @@ let%expect_test "separator, skeleton, spinner, kbd, empty" =
     {|
     <div class="loon-empty">
       <div class="loon-empty-icon">
-        <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-inbox">
-          <path d="M22 12h-6l-2 3h-4l-2-3H2"> </path>
-          <path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1Z"> </path>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true"
+             class="lucide lucide-inbox">
+          <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"> </polyline>
+          <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"> </path>
         </svg>
       </div>
       <h3 class="loon-empty-title"> No messages </h3>
       <p class="loon-empty-description"> New messages show up here. </p>
       <div class="loon-empty-actions">
-        <button type="button" class="loon-button loon-button-md loon-button-primary"> Compose </button>
+        <button type="button"
+                data-slot="button"
+                data-variant="default"
+                data-size="default"
+                class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"> Compose </button>
       </div>
     </div>
     |}]
@@ -259,7 +321,17 @@ let%expect_test "breadcrumb" =
           <a href="/" class="loon-breadcrumb-link"> Home </a>
         </li>
         <li role="presentation" aria-hidden="true" class="loon-breadcrumb-separator">
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-chevron-right">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true"
+               class="lucide lucide-chevron-right">
             <path d="m9 18 6-6-6-6"> </path>
           </svg>
         </li>
@@ -278,21 +350,51 @@ let%expect_test "breadcrumb" =
           <a href="/" class="loon-breadcrumb-link"> Home </a>
         </li>
         <li role="presentation" aria-hidden="true" class="loon-breadcrumb-separator">
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-chevron-right">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true"
+               class="lucide lucide-chevron-right">
             <path d="m9 18 6-6-6-6"> </path>
           </svg>
         </li>
         <li class="loon-breadcrumb-item">
           <span aria-label="3 more" role="img" class="loon-breadcrumb-ellipsis">
-            <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-more-horizontal">
-              <circle cx="5" cy="12" r="1"> </circle>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"
+                 class="lucide lucide-ellipsis">
               <circle cx="12" cy="12" r="1"> </circle>
               <circle cx="19" cy="12" r="1"> </circle>
+              <circle cx="5" cy="12" r="1"> </circle>
             </svg>
           </span>
         </li>
         <li role="presentation" aria-hidden="true" class="loon-breadcrumb-separator">
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-chevron-right">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true"
+               class="lucide lucide-chevron-right">
             <path d="m9 18 6-6-6-6"> </path>
           </svg>
         </li>
@@ -352,12 +454,10 @@ let%expect_test "table" =
 ;;
 
 let%expect_test "theme root" =
-  Render.html (Theme.root [ Node.text "inherits both" ]);
-  Render.html (Theme.root ~accent:Iris [ Node.text "inherits the mode" ]);
-  Render.html (Theme.root ~mode:Dark ~accent:Teal [ Node.text "dark, teal" ]);
+  Render.html (Theme.root [ Node.text "inherits" ]);
+  Render.html (Theme.root ~mode:Dark [ Node.text "dark" ]);
   [%expect {|
-    <div class="loon"> inherits both </div>
-    <div data-loon-accent="iris" class="loon"> inherits the mode </div>
-    <div data-loon-accent="teal" class="loon loon-dark"> dark, teal </div>
+    <div class="bg-background loon text-foreground"> inherits </div>
+    <div class="bg-background dark loon text-foreground"> dark </div>
     |}]
 ;;

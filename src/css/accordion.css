@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-accordion {
   width: 100%;
 }
@@ -48,4 +50,5 @@
   color: var(--loon-muted-foreground);
   font-size: 0.875rem;
   line-height: 1.6;
+}
 }

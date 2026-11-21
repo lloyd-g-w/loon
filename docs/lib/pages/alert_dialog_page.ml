@@ -18,7 +18,7 @@ let delete_account (local_ graph) =
         "This cannot be undone. It will permanently delete your account and remove your \
          data from our servers."
       ~trigger:(fun attrs ->
-        Button.view ~attrs ~variant:Danger [ Icon.view Trash; Node.text "Delete account" ])
+        Button.view ~attrs ~variant:Destructive [ Icon.view Trash; Node.text "Delete account" ])
       (let%arr set_deleted in
        set_deleted true)
       graph
@@ -27,7 +27,7 @@ let delete_account (local_ graph) =
   Node.div
     ~attrs:[ Vdom.Attr.class_ "docs-row" ]
     [ dialog
-    ; (if deleted then Badge.view ~variant:Danger [ Node.text "Deleted" ] else Node.none)
+    ; (if deleted then Badge.view ~variant:Destructive [ Node.text "Deleted" ] else Node.none)
     ]
 (*$*)
 

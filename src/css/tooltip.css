@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-tooltip {
   position: relative;
   display: inline-flex;
@@ -60,4 +62,5 @@
     opacity: 0;
     visibility: hidden;
   }
+}
 }

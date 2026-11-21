@@ -49,7 +49,7 @@ let view
           ; Attr.id error_id
           ; Attr.role "alert"
           ]
-        [ Icon.view Alert_circle; Node.text e ])
+        [ Icon.view Circle_exclamation_point; Node.text e ])
   in
   let orientation_class =
     match orientation with

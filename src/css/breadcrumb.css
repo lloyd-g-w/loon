@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-breadcrumb-list {
   display: flex;
   flex-wrap: wrap;
@@ -43,4 +45,5 @@
   justify-content: center;
   width: 1.5rem;
   height: 1.5rem;
+}
 }

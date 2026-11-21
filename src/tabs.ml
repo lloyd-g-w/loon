@@ -1,128 +1,210 @@
 open! Import
 
-module Tab = struct
+module Orientation = struct
   type t =
-    { id : string
-    ; label : Node.t
-    ; content : Node.t
-    ; disabled : bool
-    }
+    | Horizontal
+    | Vertical
+  [@@deriving enumerate, sexp_of, compare, equal]
 
-  let create ?(disabled = false) ~id ~label content =
-    { id; label = Node.text label; content; disabled }
+  let name = function
+    | Horizontal -> "horizontal"
+    | Vertical -> "vertical"
   ;;
 end
 
-module Variant = struct
+module List_variant = struct
   type t =
-    | Segmented
-    | Underline
+    | Default
+    | Line
   [@@deriving enumerate, sexp_of, compare, equal]
 
-  let name t = String.lowercase (Sexp.to_string (sexp_of_t t))
+  let name = function
+    | Default -> "default"
+    | Line -> "line"
+  ;;
+
+  let classes = function
+    | Default -> "bg-muted"
+    | Line -> "gap-1 bg-transparent"
+  ;;
 end
 
-let trigger_id ~name id = sprintf "%s-tab-%s" name id
-let panel_id ~name id = sprintf "%s-panel-%s" name id
+type t =
+  { value : string
+  ; on_change : string -> unit Effect.t
+  ; id : string
+  ; orientation : Orientation.t
+  }
 
-(** The tab [key] moves to from [active], skipping disabled ones. *)
-let moved (tabs : Tab.t list) ~active ~(key : Js_of_ocaml.Dom_html.Keyboard_code.t) =
-  let enabled = List.filter tabs ~f:(fun t -> not t.disabled) |> Array.of_list in
-  let n = Array.length enabled in
+module Trigger = struct
+  type t =
+    { attrs : Attr.t list
+    ; class_ : string option
+    ; disabled : bool
+    ; value : string
+    ; children : Node.t list
+    }
+end
+
+let trigger_id t value = t.id ^ "-trigger-" ^ value
+let content_id t value = t.id ^ "-content-" ^ value
+
+let view ?(attrs = []) ?class_ ?(orientation = Orientation.Horizontal) ?(id = "tabs") ~value
+  ~on_change children
+  =
+  let t = { value; on_change; id; orientation } in
+  Node.div
+    ~attrs:
+      ([ data "slot" "tabs"
+       ; Attr.create "dir" "ltr"
+       ; data "orientation" (Orientation.name orientation)
+       ; Cn.with_class
+           ?class_
+           [ "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col" ]
+       ]
+       @ attrs)
+    (children t)
+;;
+
+let component ?attrs ?class_ ?orientation ~default_value children (local_ graph) =
+  let open Bonsai.Let_syntax in
+  let value, set_value = Bonsai.state default_value graph in
+  let id = Bonsai.path_id graph in
+  let%arr value and set_value and id and children in
+  view ?attrs ?class_ ?orientation ~id ~value ~on_change:set_value children
+;;
+
+(* The trigger an arrow key (or Home, End) moves to from [value]'s,
+   wrapping round and skipping disabled ones. *)
+let moved t (triggers : Trigger.t list) ~value ~(key : Js_of_ocaml.Dom_html.Keyboard_code.t) =
+  let enabled = List.filter triggers ~f:(fun tr -> not tr.disabled) in
+  let n = List.length enabled in
   if n = 0
   then None
   else (
     let index =
-      Array.findi enabled ~f:(fun _ t -> String.equal t.id active)
-      |> Option.value_map ~default:0 ~f:fst
+      List.findi enabled ~f:(fun _ tr -> String.equal tr.value value)
+      |> Option.map ~f:fst
     in
-    match key with
-    | ArrowRight -> Some enabled.((index + 1) % n).id
-    | ArrowLeft -> Some enabled.((index - 1 + n) % n).id
-    | Home -> Some enabled.(0).id
-    | End -> Some enabled.(n - 1).id
-    | _ -> None)
+    let step d =
+      Some
+        (match index with
+         | None -> if d > 0 then 0 else n - 1
+         | Some i -> (i + d + n) % n)
+    in
+    let next =
+      match t.orientation, key with
+      | Horizontal, ArrowRight | Vertical, ArrowDown -> step 1
+      | Horizontal, ArrowLeft | Vertical, ArrowUp -> step (-1)
+      | _, Home -> Some 0
+      | _, End -> Some (n - 1)
+      | _ -> None
+    in
+    Option.map next ~f:(fun i -> (List.nth_exn enabled i).value))
 ;;
 
-let view ?attrs:extra ?(variant = Variant.Segmented) ~name ~active ~on_change tabs =
-  let active =
-    if List.exists tabs ~f:(fun (t : Tab.t) -> String.equal t.id active)
-    then active
-    else (
-      match tabs with
-      | [] -> active
-      | t :: _ -> t.id)
-  in
-  let trigger (tab : Tab.t) =
-    let selected = String.equal tab.id active in
+let list ?(attrs = []) ?class_ ?(variant = List_variant.Default) t triggers =
+  let trigger (tr : Trigger.t) =
+    let active = String.equal tr.value t.value in
     Node.button
       ~attrs:
-        ([ Attr.classes [ "loon-tabs-trigger" ]
-         ; Attr.type_ "button"
+        ([ Attr.type_ "button"
          ; Attr.role "tab"
-         ; Attr.id (trigger_id ~name tab.id)
-         ; aria_bool "selected" selected
-         ; aria "controls" (panel_id ~name tab.id)
-         ; data "state" (if selected then "active" else "inactive")
-         ; Attr.tabindex (if selected then 0 else -1)
-         ; Attr.on_click (fun _ -> if selected then Effect.Ignore else on_change tab.id)
+         ; aria_bool "selected" active
+         ; aria "controls" (content_id t tr.value)
+         ; data "state" (if active then "active" else "inactive")
+         ; Attr.id (trigger_id t tr.value)
+         ; data "orientation" (Orientation.name t.orientation)
+         ; Attr.tabindex (if active then 0 else -1)
+         ; data "slot" "tabs-trigger"
+         ; Cn.with_class
+             ?class_:tr.class_
+             [ "relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center \
+                gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium \
+                whitespace-nowrap text-foreground/60 transition-all \
+                group-data-[orientation=vertical]/tabs:w-full \
+                group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground \
+                focus-visible:border-ring focus-visible:ring-[3px] \
+                focus-visible:ring-ring/50 focus-visible:outline-1 \
+                focus-visible:outline-ring disabled:pointer-events-none \
+                disabled:opacity-50 \
+                group-data-[variant=default]/tabs-list:data-[state=active]:shadow-sm \
+                group-data-[variant=line]/tabs-list:data-[state=active]:shadow-none \
+                dark:text-muted-foreground dark:hover:text-foreground \
+                [&_svg]:pointer-events-none [&_svg]:shrink-0 \
+                [&_svg:not([class*='size-'])]:size-4"
+             ; "group-data-[variant=line]/tabs-list:bg-transparent \
+                group-data-[variant=line]/tabs-list:data-[state=active]:bg-transparent \
+                dark:group-data-[variant=line]/tabs-list:data-[state=active]:border-transparent \
+                dark:group-data-[variant=line]/tabs-list:data-[state=active]:bg-transparent"
+             ; "data-[state=active]:bg-background data-[state=active]:text-foreground \
+                dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 \
+                dark:data-[state=active]:text-foreground"
+             ; "after:absolute after:bg-foreground after:opacity-0 after:transition-opacity \
+                group-data-[orientation=horizontal]/tabs:after:inset-x-0 \
+                group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] \
+                group-data-[orientation=horizontal]/tabs:after:h-0.5 \
+                group-data-[orientation=vertical]/tabs:after:inset-y-0 \
+                group-data-[orientation=vertical]/tabs:after:-right-1 \
+                group-data-[orientation=vertical]/tabs:after:w-0.5 \
+                group-data-[variant=line]/tabs-list:data-[state=active]:after:opacity-100"
+             ]
          ]
-         @ if tab.disabled then [ Attr.disabled ] else [])
-      [ tab.label ]
+         @ (if tr.disabled
+            then [ Attr.disabled; data "disabled" "" ]
+            else [ Attr.on_click (fun _ -> t.on_change tr.value) ])
+         @ tr.attrs)
+      tr.children
   in
   let on_keydown ev =
-    match moved tabs ~active ~key:(Dom_util.key ev) with
+    match moved t triggers ~value:t.value ~key:(Dom_util.key ev) with
     | None -> Effect.Ignore
-    | Some id ->
+    | Some value ->
       Effect.Many
         [ Dom_util.prevent_default ev
-        ; on_change id
-        ; Dom_util.focus_selector ("#" ^ trigger_id ~name id)
+        ; t.on_change value
+        ; Dom_util.focus_selector (sprintf "[id=%S]" (trigger_id t value))
         ]
   in
   Node.div
-    ~attrs:(attrs ?attrs:extra [ "loon-tabs"; "loon-tabs-" ^ Variant.name variant ])
-    (Node.div
-       ~attrs:
-         [ Attr.class_ "loon-tabs-list"
-         ; Attr.role "tablist"
-         ; Attr.on_keydown on_keydown
-         ]
-       (List.map tabs ~f:trigger)
-     :: List.filter_map tabs ~f:(fun (tab : Tab.t) ->
-       Option.some_if
-         (String.equal tab.id active)
-         (Node.div
-            ~key:tab.id
-            ~attrs:
-              [ Attr.class_ "loon-tabs-panel"
-              ; Attr.role "tabpanel"
-              ; Attr.id (panel_id ~name tab.id)
-              ; aria "labelledby" (trigger_id ~name tab.id)
-              ; Attr.tabindex 0
-              ]
-            [ tab.content ])))
+    ~attrs:
+      ([ Attr.role "tablist"
+       ; aria "orientation" (Orientation.name t.orientation)
+       ; data "slot" "tabs-list"
+       ; data "variant" (List_variant.name variant)
+       ; Cn.with_class
+           ?class_
+           [ "group/tabs-list inline-flex w-fit items-center justify-center rounded-lg \
+              p-[3px] text-muted-foreground group-data-[orientation=horizontal]/tabs:h-9 \
+              group-data-[orientation=vertical]/tabs:h-fit \
+              group-data-[orientation=vertical]/tabs:flex-col \
+              data-[variant=line]:rounded-none"
+           ; List_variant.classes variant
+           ]
+       ; Attr.on_keydown on_keydown
+       ]
+       @ attrs)
+    (List.map triggers ~f:trigger)
 ;;
 
-let component ?attrs ?variant ?default tabs (local_ graph) =
-  let active, set_active = Bonsai.state_opt ?default_model:default graph in
-  let name = Bonsai.path_id graph in
-  let open Bonsai.Let_syntax in
-  let%arr active
-  and set_active
-  and name
-  and tabs in
-  let active =
-    match active, tabs with
-    | Some active, _ -> active
-    | None, (first : Tab.t) :: _ -> first.id
-    | None, [] -> ""
-  in
-  view
-    ?attrs
-    ?variant
-    ~name:("loon" ^ name)
-    ~active
-    ~on_change:(fun id -> set_active (Some id))
-    tabs
+let trigger ?(attrs = []) ?class_ ?(disabled = false) ~value children =
+  { Trigger.attrs; class_; disabled; value; children }
+;;
+
+let content ?(attrs = []) ?class_ t ~value children =
+  let active = String.equal value t.value in
+  Node.div
+    ~attrs:
+      ([ data "state" (if active then "active" else "inactive")
+       ; data "orientation" (Orientation.name t.orientation)
+       ; Attr.role "tabpanel"
+       ; aria "labelledby" (trigger_id t value)
+       ; Attr.id (content_id t value)
+       ; Attr.tabindex 0
+       ; data "slot" "tabs-content"
+       ; Cn.with_class ?class_ [ "flex-1 outline-none" ]
+       ]
+       @ (if active then [] else [ Attr.hidden ])
+       @ attrs)
+    (if active then children else [])
 ;;

@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-toggle-group {
   display: inline-flex;
   align-items: center;
@@ -31,4 +33,5 @@
 .loon-toggle-group > .loon-toggle-outline:focus-visible {
   position: relative;
   z-index: 1;
+}
 }

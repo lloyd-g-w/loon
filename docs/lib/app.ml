@@ -46,10 +46,6 @@ let shown_of_hash hash =
   if Option.is_some (find_page slug) then slug else ""
 ;;
 
-let accent_of_name name =
-  List.find Theme.Accent.all ~f:(fun a -> String.equal (Theme.Accent.name a) name)
-;;
-
 let mode_name : Theme.Mode.t -> string = function
   | Light -> "light"
   | Dark -> "dark"
@@ -172,21 +168,30 @@ let example_view ~(page : Doc.Page.t) index (example : Doc.Example.t) (local_ gr
     ; Node.div
         ~attrs:[ Attr.class_ "docs-example-card" ]
         [ Loon.Tabs.view
-            ~variant:Underline
-            ~name:(sprintf "ex-%s-%d" page.slug index)
-            ~active:tab
+            ~id:(sprintf "ex-%s-%d" page.slug index)
+            ~value:tab
             ~on_change:set_tab
-            [ Loon.Tabs.Tab.create
-                ~id:"preview"
-                ~label:"Preview"
-                (Node.div ~attrs:[ Attr.class_ "docs-preview" ] [ preview ])
-            ; Loon.Tabs.Tab.create
-                ~id:"code"
-                ~label:"Code"
-                (Node.pre
-                   ~attrs:[ Attr.class_ "docs-pre docs-example-code" ]
-                   [ Highlight.view example.source ])
-            ]
+            ~class_:"gap-0"
+            (fun tabs ->
+               [ Loon.Tabs.list
+                   ~variant:Line
+                   ~class_:"docs-example-tabs"
+                   tabs
+                   [ Loon.Tabs.trigger ~value:"preview" [ Node.text "Preview" ]
+                   ; Loon.Tabs.trigger ~value:"code" [ Node.text "Code" ]
+                   ]
+               ; Loon.Tabs.content
+                   tabs
+                   ~value:"preview"
+                   [ Node.div ~attrs:[ Attr.class_ "docs-preview" ] [ preview ] ]
+               ; Loon.Tabs.content
+                   tabs
+                   ~value:"code"
+                   [ Node.pre
+                       ~attrs:[ Attr.class_ "docs-pre docs-example-code" ]
+                       [ Highlight.view example.source ]
+                   ]
+               ])
         ; Code_block.copy_button ~label:"Copy example" example.source
         ]
     ]
@@ -466,101 +471,6 @@ let search_dialog ~query ~set_query ~selected ~set_selected ~move ~close ~go =
     ]
 ;;
 
-(* {1 The accent picker} *)
-
-let accent_picker ~accent ~set_accent ~open_ ~set_open =
-  Node.div
-    ~attrs:[ Attr.class_ "docs-accent" ]
-    ([ Node.button
-         ~attrs:
-           [ Attr.type_ "button"
-           ; Attr.class_ "docs-icon-button docs-accent-trigger"
-           ; Attr.create "aria-label" "Accent colour"
-           ; Attr.title "Accent colour"
-           ; Attr.create "aria-haspopup" "menu"
-           ; Attr.create "aria-expanded" (Bool.to_string open_)
-           ; Attr.on_click (fun _ ->
-               if open_
-               then set_open false
-               else
-                 Effect.Many
-                   [ set_open true
-                   ; Loon.Dom_util.focus_selector
-                       ".docs-accent-option[aria-checked=\"true\"]"
-                   ])
-           ]
-         [ Node.span
-             ~attrs:
-               [ Attr.class_ "docs-swatch"
-               ; Attr.create "data-loon-accent" (Theme.Accent.name accent)
-               ]
-             []
-         ]
-     ]
-     @
-     if not open_
-     then []
-     else
-       [ Node.div
-           ~attrs:[ Attr.class_ "docs-click-away"; Attr.on_click (fun _ -> set_open false) ]
-           []
-       ; Node.div
-           ~attrs:
-             [ Attr.class_ "docs-accent-menu"
-             ; Attr.create "role" "menu"
-             ; Attr.create "aria-label" "Accent colour"
-             ; Attr.on_keydown (fun ev ->
-                 match Loon.Dom_util.key ev with
-                 | Tab -> set_open false
-                 | Escape ->
-                   Effect.Many
-                     [ set_open false; Loon.Dom_util.focus_selector ".docs-accent-trigger" ]
-                 | ArrowDown ->
-                   Effect.Many
-                     [ Loon.Dom_util.prevent_default ev
-                     ; Effect.of_thunk (fun () -> Browser.move_focus ".docs-accent-option" 1)
-                     ]
-                 | ArrowUp ->
-                   Effect.Many
-                     [ Loon.Dom_util.prevent_default ev
-                     ; Effect.of_thunk (fun () -> Browser.move_focus ".docs-accent-option" (-1))
-                     ]
-                 | _ -> Effect.Ignore)
-             ]
-           [ Node.div ~attrs:[ Attr.class_ "docs-accent-heading" ] [ Node.text "Accent" ]
-           ; Node.div
-               ~attrs:[ Attr.class_ "docs-accent-options" ]
-               (List.map Theme.Accent.all ~f:(fun a ->
-                  let name = Theme.Accent.name a in
-                  let checked = Theme.Accent.equal a accent in
-                  Node.button
-                    ~attrs:
-                      [ Attr.type_ "button"
-                      ; Attr.class_ "docs-accent-option"
-                      ; Attr.create "role" "menuitemradio"
-                      ; Attr.create "aria-checked" (Bool.to_string checked)
-                      ; Attr.create "data-accent" name
-                      ; Attr.tabindex (-1)
-                      ; Attr.on_click (fun _ ->
-                          Effect.Many
-                            [ set_accent a
-                            ; set_open false
-                            ; Loon.Dom_util.focus_selector ".docs-accent-trigger"
-                            ])
-                      ]
-                    [ Node.span
-                        ~attrs:
-                          [ Attr.class_ "docs-swatch"; Attr.create "data-loon-accent" name ]
-                        []
-                    ; Node.span [ Node.text (String.capitalize name) ]
-                    ; (if checked
-                       then Icon.view ~attrs:[ Attr.class_ "docs-accent-check" ] Check
-                       else Node.none)
-                    ]))
-           ]
-       ])
-;;
-
 (* {1 The app} *)
 
 let anchor_of_hash hash =
@@ -581,12 +491,7 @@ let component (local_ graph) =
     | Some "light" -> Light
     | _ -> Theme.Mode.preferred ()
   in
-  let initial_accent =
-    Option.bind (Browser.get_item "loon-docs-accent") ~f:accent_of_name
-    |> Option.value ~default:Theme.Accent.Teal
-  in
   let mode, set_mode = Bonsai.state initial_mode graph in
-  let accent, set_accent = Bonsai.state initial_accent graph in
   let nav_open, set_nav_open = Bonsai.state false graph in
   let search_open, set_search_open = Bonsai.state false graph in
   let search, update_search = Bonsai.state' ("", 0) graph in
@@ -604,19 +509,15 @@ let component (local_ graph) =
     let%arr update_search in
     fun delta -> update_search (fun m -> move_selection m delta)
   in
-  let accent_open, set_accent_open = Bonsai.state false graph in
   let outline, set_outline = Bonsai.state [] graph in
   (* The document follows the theme: its background and scrollbars. *)
   Bonsai.Edge.on_change
     ~trigger:`Before_display
-    ~equal:[%equal: Theme.Mode.t * Theme.Accent.t]
-    (Bonsai.both mode accent)
+    ~equal:[%equal: Theme.Mode.t]
+    mode
     ~callback:
-      (Bonsai.return (fun (mode, accent) ->
-         Effect.of_thunk (fun () ->
-           Browser.set_root_theme
-             ~mode:(mode_name mode)
-             ~accent:(Theme.Accent.name accent))))
+      (Bonsai.return (fun mode ->
+         Effect.of_thunk (fun () -> Browser.set_root_theme ~mode:(mode_name mode))))
     graph;
   Bonsai.Edge.on_change'
     ~trigger:`After_display
@@ -694,8 +595,6 @@ let component (local_ graph) =
   and current = shown
   and mode
   and set_mode
-  and accent
-  and set_accent
   and nav_open
   and set_nav_open
   and search_open
@@ -705,21 +604,12 @@ let component (local_ graph) =
   and selected
   and set_selected
   and move_selected
-  and accent_open
-  and set_accent_open
   and outline
   and open_search in
   let set_mode m =
     Effect.Many
       [ set_mode m
       ; Effect.of_thunk (fun () -> Browser.set_item "loon-docs-mode" (mode_name m))
-      ]
-  in
-  let set_accent a =
-    Effect.Many
-      [ set_accent a
-      ; Effect.of_thunk (fun () ->
-          Browser.set_item "loon-docs-accent" (Theme.Accent.name a))
       ]
   in
   let go hash =
@@ -740,7 +630,6 @@ let component (local_ graph) =
       | Slash when (not search_open) && not (Browser.active_element_is_editable ()) ->
         Effect.Many [ Loon.Dom_util.prevent_default ev; open_search ]
       | Escape when nav_open -> set_nav_open false
-      | Escape when accent_open -> set_accent_open false
       | _ -> Effect.Ignore)
   in
   let mod_key = if Browser.is_mac () then "⌘" else "Ctrl" in
@@ -754,7 +643,6 @@ let component (local_ graph) =
   in
   Theme.root
     ~mode
-    ~accent
     ~attrs:[ Attr.class_ "docs-app"; global_keys ]
     [ Node.a
         ~attrs:
@@ -811,11 +699,6 @@ let component (local_ graph) =
                     ~attrs:[ Attr.class_ "docs-kbd docs-search-trigger-kbd" ]
                     [ Node.text (mod_key ^ " K") ]
                 ]
-            ; accent_picker
-                ~accent
-                ~set_accent
-                ~open_:accent_open
-                ~set_open:set_accent_open
             ; icon_button
                 ~attrs:
                   [ Attr.class_ "docs-theme-toggle"

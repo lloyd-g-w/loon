@@ -1,7 +1,7 @@
 /* loon's stylesheet is compiled by Tailwind CSS v4 from the class strings in
    the components' sources, as shadcn/ui's is: these files, concatenated in
-   name order, are its input, kept next to the .ml files it scans. */
+   name order, are its input (with an @source line naming the sources, which
+   the build adds). */
 @import "tailwindcss" source(none);
-@source "./*.ml";
 
 @custom-variant dark (&:is(.dark *));

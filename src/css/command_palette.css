@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-command {
   display: flex;
   flex-direction: column;
@@ -89,4 +91,5 @@
   .loon-command-input {
     font-size: 1rem;
   }
+}
 }

@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-avatar {
   --loon-avatar-size: 2.5rem;
   position: relative;
@@ -39,7 +41,7 @@
   color: oklch(0.38 0.08 var(--loon-avatar-hue, 250));
   background: oklch(0.93 0.035 var(--loon-avatar-hue, 250));
 }
-.loon-dark .loon-avatar-fallback {
+.dark .loon-avatar-fallback {
   color: oklch(0.9 0.05 var(--loon-avatar-hue, 250));
   background: oklch(0.36 0.05 var(--loon-avatar-hue, 250));
 }
@@ -86,4 +88,5 @@
   background: var(--loon-muted);
   color: var(--loon-muted-foreground);
   font-size: calc(var(--loon-avatar-size) * 0.32);
+}
 }

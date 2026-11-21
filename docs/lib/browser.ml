@@ -26,10 +26,9 @@ let set_item key value =
      | _ -> ())
 ;;
 
-let set_root_theme ~mode ~accent =
+let set_root_theme ~mode =
   let root = Dom_html.document##.documentElement in
-  root##.className := Js.string ("loon-" ^ mode);
-  root##setAttribute (Js.string "data-loon-accent") (Js.string accent)
+  root##.className := Js.string (if String.equal mode "dark" then "dark" else "")
 ;;
 
 let set_title title = Dom_html.document##.title := Js.string title

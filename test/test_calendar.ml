@@ -91,7 +91,17 @@ let%expect_test "the month" =
     <div class="loon-calendar">
       <div class="loon-calendar-header">
         <button type="button" aria-label="Previous month" class="loon-calendar-nav" @on_click>
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-chevron-left">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true"
+               class="lucide lucide-chevron-left">
             <path d="m15 18-6-6 6-6"> </path>
           </svg>
         </button>
@@ -99,7 +109,17 @@ let%expect_test "the month" =
              aria-live="polite"
              class="loon-calendar-caption"> November 2026 </div>
         <button type="button" aria-label="Next month" class="loon-calendar-nav" @on_click>
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-chevron-right">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true"
+               class="lucide lucide-chevron-right">
             <path d="m9 18 6-6-6-6"> </path>
           </svg>
         </button>
@@ -554,7 +574,17 @@ let%expect_test "picking, keys and months" =
          aria-live="polite"
          class="loon-calendar-caption"> October 2026 </div>
     <button type="button" aria-label="Previous month" disabled="" class="loon-calendar-nav">
-      <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-chevron-left">
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="24"
+           height="24"
+           viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2"
+           stroke-linecap="round"
+           stroke-linejoin="round"
+           aria-hidden="true"
+           class="lucide lucide-chevron-left">
         <path d="m15 18-6-6 6-6"> </path>
       </svg>
     </button>

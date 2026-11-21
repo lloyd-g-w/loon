@@ -9,54 +9,69 @@ let page = "introduction"
 
 (*$ A taste
    Components compose like any other Vdom: this card is a Card, Badges,
-   Buttons and Tabs. Switch the accent and theme from the top bar. *)
+   Buttons and Tabs. *)
 let taste (local_ graph) =
-  let member ~name ~email ~role ~variant =
+  let member ~name ~email ~role ~(variant : Badge.Variant.t) =
     Node.div
-      ~attrs:[ Attr.class_ "docs-member" ]
+      ~attrs:[ Attr.class_ "flex items-center gap-3" ]
       [ Node.div
-          ~attrs:[ Attr.class_ "docs-member-avatar" ]
+          ~attrs:
+            [ Attr.class_
+                "flex size-9 items-center justify-center rounded-full bg-muted text-sm \
+                 font-medium"
+            ]
           [ Node.text (String.prefix name 1) ]
       ; Node.div
-          ~attrs:[ Attr.class_ "docs-member-who" ]
-          [ Node.div ~attrs:[ Attr.class_ "docs-member-name" ] [ Node.text name ]
-          ; Node.div ~attrs:[ Attr.class_ "docs-member-email" ] [ Node.text email ]
+          ~attrs:[ Attr.class_ "grid flex-1 gap-0.5" ]
+          [ Node.div ~attrs:[ Attr.class_ "text-sm font-medium leading-none" ] [ Node.text name ]
+          ; Node.div ~attrs:[ Attr.class_ "text-sm text-muted-foreground" ] [ Node.text email ]
           ]
       ; Badge.view ~variant [ Node.text role ]
       ]
   in
-  let team =
-    Node.div
-      ~attrs:[ Attr.class_ "docs-stack" ]
-      [ member ~name:"Ada Lovelace" ~email:"ada@example.com" ~role:"Owner" ~variant:Accent
-      ; member ~name:"Grace Hopper" ~email:"grace@example.com" ~role:"Admin" ~variant:Neutral
-      ; member ~name:"Alan Turing" ~email:"alan@example.com" ~role:"Invited" ~variant:Outline
-      ]
-  in
   let tabs =
     Tabs.component
-      (Bonsai.return
-         [ Tabs.Tab.create ~id:"members" ~label:"Members" team
-         ; Tabs.Tab.create
-             ~id:"activity"
-             ~label:"Activity"
-             (Node.p
-                ~attrs:[ Attr.class_ "docs-member-email" ]
-                [ Node.text "Grace deployed main to production 3 minutes ago." ])
-         ])
+      ~default_value:"members"
+      (Bonsai.return (fun tabs ->
+         [ Tabs.list
+             tabs
+             [ Tabs.trigger ~value:"members" [ Node.text "Members" ]
+             ; Tabs.trigger ~value:"activity" [ Node.text "Activity" ]
+             ]
+         ; Tabs.content
+             tabs
+             ~value:"members"
+             ~class_:"grid gap-4 pt-2"
+             [ member ~name:"Ada Lovelace" ~email:"ada@example.com" ~role:"Owner" ~variant:Default
+             ; member ~name:"Grace Hopper" ~email:"grace@example.com" ~role:"Admin" ~variant:Secondary
+             ; member ~name:"Alan Turing" ~email:"alan@example.com" ~role:"Invited" ~variant:Outline
+             ]
+         ; Tabs.content
+             tabs
+             ~value:"activity"
+             ~class_:"pt-2"
+             [ Node.p
+                 ~attrs:[ Attr.class_ "text-sm text-muted-foreground" ]
+                 [ Node.text "Grace deployed main to production 3 minutes ago." ]
+             ]
+         ]))
       graph
   in
   let%arr tabs in
-  Card.view
-    ~attrs:[ Attr.style (Css_gen.max_width (`Rem 26.)) ]
-    ~title:"Your team"
-    ~description:"Invite people to collaborate on this project."
-    ~action:(Badge.view ~variant:Success ~dot:true [ Node.text "Live" ])
-    ~footer:
-      [ Button.view ~variant:Ghost [ Node.text "Cancel" ]
-      ; Button.with_icon Plus "Invite"
-      ]
-    [ tabs ]
+  Card.root
+    ~class_:"w-full max-w-md"
+    [ Card.header
+        [ Card.title [ Node.text "Your team" ]
+        ; Card.description [ Node.text "Invite people to collaborate on this project." ]
+        ; Card.action [ Badge.view ~variant:Outline [ Node.text "Live" ] ]
+        ]
+    ; Card.content [ tabs ]
+    ; Card.footer
+        ~class_:"justify-end gap-2"
+        [ Button.view ~variant:Ghost [ Node.text "Cancel" ]
+        ; Button.view [ Icon.view Plus; Node.text "Invite" ]
+        ]
+    ]
 (*$*)
 
 let page =

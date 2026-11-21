@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-textarea {
   display: block;
   width: 100%;
@@ -48,4 +50,5 @@
   .loon-textarea {
     font-size: 1rem;
   }
+}
 }

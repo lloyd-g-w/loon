@@ -29,7 +29,9 @@
  (action
   (with-stdout-to
    loon.input.css
-   (system "cat css/*.css"))))
+   (progn
+    (system "cat css/*.css")
+    (echo "\n@source \"./*.ml\";\n")))))
 
 (rule
  (target loon.css)

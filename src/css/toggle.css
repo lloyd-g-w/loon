@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-toggle {
   display: inline-flex;
   align-items: center;
@@ -21,7 +23,7 @@
     border-color var(--loon-duration) var(--loon-ease),
     box-shadow var(--loon-duration) var(--loon-ease);
 }
-.loon-toggle .loon-icon {
+.loon-toggle svg.lucide {
   font-size: 1rem;
 }
 .loon-toggle-sm {
@@ -66,4 +68,5 @@
     height: 2.75rem;
     min-width: 2.75rem;
   }
+}
 }

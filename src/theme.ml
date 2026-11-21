@@ -25,30 +25,15 @@ module Mode = struct
   ;;
 end
 
-module Accent = struct
-  type t =
-    | Teal
-    | Lake
-    | Moss
-    | Ember
-    | Iris
-  [@@deriving enumerate, sexp, compare, equal]
-
-  let name t = String.lowercase (Sexp.to_string (sexp_of_t t))
-end
-
-let attrs ?mode ?accent () =
-  Attr.classes
-    ("loon"
-     ::
-     (match (mode : Mode.t option) with
-      | None -> []
-      | Some Light -> [ "loon-light" ]
-      | Some Dark -> [ "loon-dark" ]))
-  :: Option.value_map accent ~default:[] ~f:(fun accent ->
-    [ data "loon-accent" (Accent.name accent) ])
+let attrs ?mode () =
+  match (mode : Mode.t option) with
+  (* [loon]: the base styles of the components not yet ported. *)
+  | Some Dark -> [ Attr.classes [ "loon"; "dark" ] ]
+  | Some Light | None -> [ Attr.class_ "loon" ]
 ;;
 
-let root ?attrs:(extra = []) ?mode ?accent children =
-  Node.div ~attrs:(attrs ?mode ?accent () @ extra) children
+let root ?attrs:(extra = []) ?mode children =
+  Node.div
+    ~attrs:(attrs ?mode () @ [ Attr.classes [ "bg-background"; "text-foreground" ] ] @ extra)
+    children
 ;;

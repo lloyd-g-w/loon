@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-dialog,
 .loon-alert-dialog {
   position: fixed;
@@ -102,4 +104,5 @@
     top: 0.5rem;
     right: 0.5rem;
   }
+}
 }

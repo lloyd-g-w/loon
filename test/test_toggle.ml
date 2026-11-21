@@ -68,8 +68,18 @@ let%expect_test "clicking presses and releases it" =
               data-state="off"
               class="loon-toggle loon-toggle-ghost loon-toggle-md"
               @on_click>
-        <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-pencil">
-          <path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"> </path>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true"
+             class="lucide lucide-pencil">
+          <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"> </path>
           <path d="m15 5 4 4"> </path>
         </svg>
       </button>
@@ -90,12 +100,20 @@ let%expect_test "clicking presses and releases it" =
     +|          data-state="on"
                 class="loon-toggle loon-toggle-ghost loon-toggle-md"
                 @on_click>
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-pencil">
-            <path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"> </path>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true"
+               class="lucide lucide-pencil">
+            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"> </path>
             <path d="m15 5 4 4"> </path>
           </svg>
-        </button>
-      </div>
     |}]
 ;;
 
@@ -155,8 +173,19 @@ let%expect_test "single: one at most, pressing again releases" =
                 class="loon-toggle loon-toggle-group-item loon-toggle-md loon-toggle-outline"
                 @on_click
                 @on_keydown>
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-arrow-right">
-            <path d="M5 12h14M12 5l7 7-7 7"> </path>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true"
+               class="lucide lucide-arrow-right">
+            <path d="M5 12h14"> </path>
+            <path d="m12 5 7 7-7 7"> </path>
           </svg>
         </button>
       </div>
@@ -303,8 +332,19 @@ let%expect_test "single and required: pressing the pressed one does nothing" =
                 class="loon-toggle loon-toggle-ghost loon-toggle-group-item loon-toggle-md"
                 @on_click
                 @on_keydown>
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-arrow-right">
-            <path d="M5 12h14M12 5l7 7-7 7"> </path>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true"
+               class="lucide lucide-arrow-right">
+            <path d="M5 12h14"> </path>
+            <path d="m12 5 7 7-7 7"> </path>
           </svg>
         </button>
       </div>
@@ -358,8 +398,19 @@ let%expect_test "multiple: any number; arrow keys move focus only" =
                 class="loon-toggle loon-toggle-ghost loon-toggle-group-item loon-toggle-md"
                 @on_click
                 @on_keydown>
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-arrow-right">
-            <path d="M5 12h14M12 5l7 7-7 7"> </path>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true"
+               class="lucide lucide-arrow-right">
+            <path d="M5 12h14"> </path>
+            <path d="m12 5 7 7-7 7"> </path>
           </svg>
         </button>
       </div>

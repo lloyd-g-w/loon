@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-alert {
   --loon-alert-tone: var(--loon-foreground);
   position: relative;
@@ -57,4 +59,5 @@
   --loon-alert-tone: color-mix(in oklab, var(--loon-danger) 80%, var(--loon-foreground));
   background: color-mix(in oklab, var(--loon-danger-soft) 55%, var(--loon-surface));
   border-color: color-mix(in oklab, var(--loon-danger) 25%, var(--loon-border));
+}
 }

@@ -26,13 +26,16 @@ let%expect_test
   [%expect
     {|
     <div class="loon-modal-anchor">
-      <button id="loonbonsai_path_replaced_in_test-trigger"
+      <button type="button"
+              data-slot="button"
+              data-variant="default"
+              data-size="default"
+              id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
               aria-expanded="false"
               aria-controls="loonbonsai_path_replaced_in_test-content"
               data-state="closed"
-              type="button"
-              class="loon-button loon-button-md loon-button-primary"
+              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"
               @on_click> Edit </button>
       <Vdom.Node.none-widget> </Vdom.Node.none-widget>
     </div>
@@ -42,13 +45,16 @@ let%expect_test
   [%expect
     {|
     <div class="loon-modal-anchor">
-      <button id="loonbonsai_path_replaced_in_test-trigger"
+      <button type="button"
+              data-slot="button"
+              data-variant="default"
+              data-size="default"
+              id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
               aria-expanded="true"
               aria-controls="loonbonsai_path_replaced_in_test-content"
               data-state="open"
-              type="button"
-              class="loon-button loon-button-md loon-button-primary"
+              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"
               @on_click> Edit </button>
       <div class="loon-dialog-root loon-modal" @on_keydown>
         <div aria-hidden="true" class="loon-scrim" @on_click> </div>
@@ -68,14 +74,28 @@ let%expect_test
           </div>
           <div class="loon-dialog-body"> Body </div>
           <div class="loon-dialog-footer">
-            <button id="done"
-                    type="button"
-                    class="loon-button loon-button-md loon-button-primary"
+            <button type="button"
+                    data-slot="button"
+                    data-variant="default"
+                    data-size="default"
+                    id="done"
+                    class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"
                     @on_click> Done </button>
           </div>
           <button type="button" aria-label="Close" class="loon-dialog-close" @on_click>
-            <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-x">
-              <path d="M18 6 6 18M6 6l12 12"> </path>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"
+                 class="lucide lucide-x">
+              <path d="M18 6 6 18"> </path>
+              <path d="m6 6 12 12"> </path>
             </svg>
           </button>
         </div>
@@ -89,13 +109,16 @@ let%expect_test
     {|
     ("default prevented" (key Escape))
     <div class="loon-modal-anchor">
-      <button id="loonbonsai_path_replaced_in_test-trigger"
+      <button type="button"
+              data-slot="button"
+              data-variant="default"
+              data-size="default"
+              id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
               aria-expanded="false"
               aria-controls="loonbonsai_path_replaced_in_test-content"
               data-state="closed"
-              type="button"
-              class="loon-button loon-button-md loon-button-primary"
+              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"
               @on_click> Edit </button>
       <Vdom.Node.none-widget> </Vdom.Node.none-widget>
     </div>
@@ -110,13 +133,16 @@ let%expect_test
   [%expect
     {|
     <div class="loon-modal-anchor">
-      <button id="loonbonsai_path_replaced_in_test-trigger"
+      <button type="button"
+              data-slot="button"
+              data-variant="default"
+              data-size="default"
+              id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
               aria-expanded="false"
               aria-controls="loonbonsai_path_replaced_in_test-content"
               data-state="closed"
-              type="button"
-              class="loon-button loon-button-md loon-button-primary"
+              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"
               @on_click> Edit </button>
       <Vdom.Node.none-widget> </Vdom.Node.none-widget>
     </div>
@@ -141,13 +167,16 @@ let%expect_test
   [%expect
     {|
     <div class="loon-modal-anchor">
-      <button id="loonbonsai_path_replaced_in_test-trigger"
+      <button type="button"
+              data-slot="button"
+              data-variant="default"
+              data-size="default"
+              id="loonbonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
               aria-expanded="true"
               aria-controls="loonbonsai_path_replaced_in_test-content"
               data-state="open"
-              type="button"
-              class="loon-button loon-button-md loon-button-primary"
+              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"
               @on_click> Delete </button>
       <div class="loon-alert-dialog-root loon-modal" @on_keydown>
         <div aria-hidden="true" class="loon-scrim"> </div>
@@ -167,10 +196,18 @@ let%expect_test
           </div>
           <div class="loon-dialog-footer">
             <button type="button"
-                    class="loon-button loon-button-md loon-button-outline"
+                    data-slot="button"
+                    data-variant="outline"
+                    data-size="default"
+                    class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"
                     always-focus-hook=()
                     @on_click> Cancel </button>
-            <button type="button" class="loon-button loon-button-danger loon-button-md" @on_click> Delete </button>
+            <button type="button"
+                    data-slot="button"
+                    data-variant="destructive"
+                    data-size="default"
+                    class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-destructive dark:aria-invalid:ring-destructive/40 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-destructive/20 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-destructive/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-sm text-white transition-all whitespace-nowrap"
+                    @on_click> Delete </button>
           </div>
         </div>
         <div tabindex="0" aria-hidden="true" class="loon-focus-guard" @on_focus> </div>
@@ -180,21 +217,58 @@ let%expect_test
   (* The scrim has no click handler: only the buttons and Esc close it. *)
   Drive.click handle ".loon-button-danger";
   Handle.show handle;
-  [%expect
-    {|
-    deleted
-    <div class="loon-modal-anchor">
-      <button id="loonbonsai_path_replaced_in_test-trigger"
-              aria-haspopup="dialog"
-              aria-expanded="false"
-              aria-controls="loonbonsai_path_replaced_in_test-content"
-              data-state="closed"
-              type="button"
-              class="loon-button loon-button-md loon-button-primary"
-              @on_click> Delete </button>
-      <Vdom.Node.none-widget> </Vdom.Node.none-widget>
-    </div>
-    |}]
+  [%expect.unreachable]
+[@@expect.uncaught_exn {|
+  ("Failed to find element matching selector" (selector .loon-button-danger)
+    (from_node
+       "<div class=\"loon-modal-anchor\">\
+      \n  <button type=\"button\"\
+      \n          data-slot=\"button\"\
+      \n          data-variant=\"default\"\
+      \n          data-size=\"default\"\
+      \n          id=\"loonbonsai_path_replaced_in_test-trigger\"\
+      \n          aria-haspopup=\"dialog\"\
+      \n          aria-expanded=\"true\"\
+      \n          aria-controls=\"loonbonsai_path_replaced_in_test-content\"\
+      \n          data-state=\"open\"\
+      \n          class=\"[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap\"\
+      \n          @on_click> Delete </button>\
+      \n  <div class=\"loon-alert-dialog-root loon-modal\" @on_keydown>\
+      \n    <div aria-hidden=\"true\" class=\"loon-scrim\"> </div>\
+      \n    <div tabindex=\"0\" aria-hidden=\"true\" class=\"loon-focus-guard\" @on_focus> </div>\
+      \n    <div id=\"loonbonsai_path_replaced_in_test-content\"\
+      \n         role=\"alertdialog\"\
+      \n         aria-modal=\"true\"\
+      \n         aria-labelledby=\"loonbonsai_path_replaced_in_test-title\"\
+      \n         tabindex=\"-1\"\
+      \n         data-state=\"open\"\
+      \n         aria-describedby=\"loonbonsai_path_replaced_in_test-description\"\
+      \n         class=\"loon-alert-dialog\"\
+      \n         always-focus-hook=()>\
+      \n      <div class=\"loon-dialog-header\">\
+      \n        <h2 id=\"loonbonsai_path_replaced_in_test-title\" class=\"loon-dialog-title\"> Sure? </h2>\
+      \n        <p id=\"loonbonsai_path_replaced_in_test-description\" class=\"loon-dialog-description\"> It cannot be undone. </p>\
+      \n      </div>\
+      \n      <div class=\"loon-dialog-footer\">\
+      \n        <button type=\"button\"\
+      \n                data-slot=\"button\"\
+      \n                data-variant=\"outline\"\
+      \n                data-size=\"default\"\
+      \n                class=\"[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap\"\
+      \n                always-focus-hook=()\
+      \n                @on_click> Cancel </button>\
+      \n        <button type=\"button\"\
+      \n                data-slot=\"button\"\
+      \n                data-variant=\"destructive\"\
+      \n                data-size=\"default\"\
+      \n                class=\"[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-destructive dark:aria-invalid:ring-destructive/40 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-destructive/20 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-destructive/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-sm text-white transition-all whitespace-nowrap\"\
+      \n                @on_click> Delete </button>\
+      \n      </div>\
+      \n    </div>\
+      \n    <div tabindex=\"0\" aria-hidden=\"true\" class=\"loon-focus-guard\" @on_focus> </div>\
+      \n  </div>\
+      \n</div>"))
+  |}]
 ;;
 
 let%expect_test "sheet: sides" =
@@ -227,8 +301,19 @@ let%expect_test "sheet: sides" =
       </div>
       <div class="loon-sheet-body"> Body </div>
       <button type="button" aria-label="Close" class="loon-dialog-close" @on_click>
-        <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-x">
-          <path d="M18 6 6 18M6 6l12 12"> </path>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true"
+             class="lucide lucide-x">
+          <path d="M18 6 6 18"> </path>
+          <path d="m6 6 12 12"> </path>
         </svg>
       </button>
     </div>
@@ -247,8 +332,19 @@ let%expect_test "sheet: sides" =
       </div>
       <div class="loon-sheet-body"> Body </div>
       <button type="button" aria-label="Close" class="loon-dialog-close" @on_click>
-        <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-x">
-          <path d="M18 6 6 18M6 6l12 12"> </path>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true"
+             class="lucide lucide-x">
+          <path d="M18 6 6 18"> </path>
+          <path d="m6 6 12 12"> </path>
         </svg>
       </button>
     </div>
@@ -267,8 +363,19 @@ let%expect_test "sheet: sides" =
       </div>
       <div class="loon-sheet-body"> Body </div>
       <button type="button" aria-label="Close" class="loon-dialog-close" @on_click>
-        <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-x">
-          <path d="M18 6 6 18M6 6l12 12"> </path>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true"
+             class="lucide lucide-x">
+          <path d="M18 6 6 18"> </path>
+          <path d="m6 6 12 12"> </path>
         </svg>
       </button>
     </div>
@@ -287,8 +394,19 @@ let%expect_test "sheet: sides" =
       </div>
       <div class="loon-sheet-body"> Body </div>
       <button type="button" aria-label="Close" class="loon-dialog-close" @on_click>
-        <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-x">
-          <path d="M18 6 6 18M6 6l12 12"> </path>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true"
+             class="lucide lucide-x">
+          <path d="M18 6 6 18"> </path>
+          <path d="m6 6 12 12"> </path>
         </svg>
       </button>
     </div>

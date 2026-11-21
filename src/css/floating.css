@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-floating {
   position: relative;
   display: inline-flex;
@@ -65,4 +67,5 @@
     opacity: 0;
     transform: translateY(4px) scale(0.98);
   }
+}
 }

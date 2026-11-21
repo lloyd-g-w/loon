@@ -16,7 +16,7 @@ val get_item : string -> string option
 val set_item : string -> string -> unit
 
 (** Puts the theme's classes on [<html>], so its background follows. *)
-val set_root_theme : mode:string -> accent:string -> unit
+val set_root_theme : mode:string -> unit
 
 val set_title : string -> unit
 val scroll_to_top : unit -> unit

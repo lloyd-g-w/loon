@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-separator {
   flex: none;
   background: var(--loon-border);
@@ -37,4 +39,5 @@
 .loon-separator-vertical.loon-separator-labelled::after {
   width: 1px;
   height: auto;
+}
 }

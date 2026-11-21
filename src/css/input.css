@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-input {
   display: block;
   width: 100%;
@@ -155,4 +157,5 @@
   .loon-input-addon .loon-toggle {
     height: 2.25rem;
   }
+}
 }

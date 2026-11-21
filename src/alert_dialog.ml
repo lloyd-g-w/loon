@@ -33,7 +33,7 @@ let view
               ~on_click:close
               [ Node.text cancel_label ]
           ; Button.view
-              ~variant:(if danger then Danger else Primary)
+              ~variant:(if danger then Destructive else Default)
               ~on_click:(Effect.Many [ close; on_confirm ])
               [ Node.text confirm_label ]
           ]

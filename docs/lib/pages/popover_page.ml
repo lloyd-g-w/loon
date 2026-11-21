@@ -19,7 +19,7 @@ let share (local_ graph) =
        ; Node.code [ Node.text "loon.dev/s/k3j9x" ]
        ; Popover.footer
            [ Button.view ~size:Sm ~variant:Ghost ~on_click:close [ Node.text "Done" ]
-           ; Button.with_icon ~size:Sm ~on_click:close Copy "Copy link"
+           ; Button.view ~size:Sm ~on_click:close [ Icon.view Copy; Node.text "Copy link" ]
            ]
        ]))
     graph

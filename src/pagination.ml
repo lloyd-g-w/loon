@@ -59,7 +59,7 @@ let view ?attrs:extra ?siblings ?(compact = false) ~page ~pages ~on_change () =
           Node.li
             [ Node.span
                 ~attrs:[ Attr.class_ "loon-pagination-ellipsis"; aria "hidden" "true" ]
-                [ Icon.view More_horizontal ]
+                [ Icon.view Ellipsis ]
             ]
         | Page p ->
           let current = p = page in

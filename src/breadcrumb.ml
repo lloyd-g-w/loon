@@ -35,7 +35,7 @@ let view ?attrs:extra ?max_items ?separator items =
               ; aria "label" (sprintf "%d more" hidden)
               ; Attr.role "img"
               ]
-            [ Icon.view More_horizontal ]
+            [ Icon.view Ellipsis ]
         ]
     | `Item (item : Item.t) ->
       let current = i = last in

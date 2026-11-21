@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 /* A checkbox with a label: the label's text toggles it too. */
 .loon-checkbox-label {
   display: inline-flex;
@@ -69,4 +71,5 @@
   .loon-checkbox-label {
     min-height: 2.75rem;
   }
+}
 }

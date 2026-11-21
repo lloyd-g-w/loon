@@ -31,11 +31,11 @@ module Invoice = struct
   let status_badge t =
     let variant : Badge.Variant.t =
       match t.status with
-      | "Paid" -> Success
-      | "Pending" -> Warning
-      | _ -> Neutral
+      | "Paid" -> Default
+      | "Pending" -> Secondary
+      | _ -> Outline
     in
-    Badge.view ~dot:true ~variant [ Node.text t.status ]
+    Badge.view ~variant [ Node.text t.status ]
   ;;
 end
 

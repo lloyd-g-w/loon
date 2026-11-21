@@ -1,7 +1,8 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 /* loon's theme: every colour, radius and shadow the components use is one of
    these variables. Override them on :root (or any element) to restyle. */
-:root,
-.loon-light {
+:root {
   color-scheme: light;
   --loon-background: oklch(0.995 0.002 250);
   --loon-foreground: oklch(0.2 0.02 255);
@@ -46,17 +47,16 @@
 }
 
 /* Variables made of others are computed where they are declared, so they are
-   declared again on every themed element: a .loon-dark inside a .loon-light
+   declared again on every themed element: a .dark inside a :root
    (or a subtree with its own --loon-radius) gets its own values. */
 .loon,
-.loon-light,
-.loon-dark {
+.dark {
   --loon-surface-foreground: var(--loon-foreground);
   --loon-radius-sm: calc(var(--loon-radius) - 0.25rem);
   --loon-radius-lg: calc(var(--loon-radius) + 0.25rem);
 }
 
-.loon-dark {
+.dark {
   color-scheme: dark;
   --loon-background: oklch(0.17 0.012 255);
   --loon-foreground: oklch(0.96 0.005 250);
@@ -118,29 +118,30 @@
   --loon-accent-soft: oklch(0.95 0.035 290);
   --loon-ring: oklch(0.6 0.18 290 / 0.55);
 }
-.loon-dark[data-loon-accent="teal"],
-.loon-dark [data-loon-accent="teal"] {
+.dark[data-loon-accent="teal"],
+.dark [data-loon-accent="teal"] {
   --loon-accent: oklch(0.72 0.12 205);
   --loon-accent-soft: oklch(0.3 0.05 205);
   --loon-ring: oklch(0.72 0.12 205 / 0.6);
 }
-.loon-dark[data-loon-accent="lake"],
-.loon-dark [data-loon-accent="lake"] {
+.dark[data-loon-accent="lake"],
+.dark [data-loon-accent="lake"] {
   --loon-accent: oklch(0.72 0.13 250);
   --loon-accent-soft: oklch(0.3 0.06 250);
 }
-.loon-dark[data-loon-accent="moss"],
-.loon-dark [data-loon-accent="moss"] {
+.dark[data-loon-accent="moss"],
+.dark [data-loon-accent="moss"] {
   --loon-accent: oklch(0.74 0.14 145);
   --loon-accent-soft: oklch(0.3 0.06 145);
 }
-.loon-dark[data-loon-accent="ember"],
-.loon-dark [data-loon-accent="ember"] {
+.dark[data-loon-accent="ember"],
+.dark [data-loon-accent="ember"] {
   --loon-accent: oklch(0.75 0.15 50);
   --loon-accent-soft: oklch(0.32 0.07 50);
 }
-.loon-dark[data-loon-accent="iris"],
-.loon-dark [data-loon-accent="iris"] {
+.dark[data-loon-accent="iris"],
+.dark [data-loon-accent="iris"] {
   --loon-accent: oklch(0.72 0.15 290);
   --loon-accent-soft: oklch(0.3 0.08 290);
+}
 }

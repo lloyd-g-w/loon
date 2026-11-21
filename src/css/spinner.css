@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-spinner {
   display: inline-flex;
   flex: none;
@@ -18,4 +20,5 @@
 }
 .loon-spinner-track {
   opacity: 0.18;
+}
 }

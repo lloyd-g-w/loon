@@ -95,9 +95,19 @@ let%expect_test "the whole table" =
     <div class="loon-data-table">
       <div class="loon-data-table-toolbar">
         <div class="loon-data-table-filter">
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-            <circle cx="11" cy="11" r="7"> </circle>
-            <path d="m20 20-3.5-3.5"> </path>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true"
+               class="lucide lucide-search">
+            <path d="m21 21-4.34-4.34"> </path>
+            <circle cx="11" cy="11" r="8"> </circle>
           </svg>
           <input type="search" placeholder="Filter…" aria-label="Filter rows" #value="" @on_input/>
         </div>
@@ -118,10 +128,19 @@ let%expect_test "the whole table" =
                 <th aria-sort="none" scope="col" data-align="left" class="loon-table-head">
                   <button type="button" data-sort="none" class="loon-data-table-sort" @on_click>
                     Name
-                    <svg viewBox="0 0 24 24"
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
                          aria-hidden="true"
-                         class="loon-data-table-sort-icon loon-icon loon-icon-chevrons-up-down">
-                      <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+                         class="loon-data-table-sort-icon lucide lucide-chevrons-up-down">
+                      <path d="m7 15 5 5 5-5"> </path>
+                      <path d="m7 9 5-5 5 5"> </path>
                     </svg>
                   </button>
                 </th>
@@ -131,20 +150,38 @@ let%expect_test "the whole table" =
                     class="loon-data-table-secondary loon-table-head">
                   <button type="button" data-sort="none" class="loon-data-table-sort" @on_click>
                     Role
-                    <svg viewBox="0 0 24 24"
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
                          aria-hidden="true"
-                         class="loon-data-table-sort-icon loon-icon loon-icon-chevrons-up-down">
-                      <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+                         class="loon-data-table-sort-icon lucide lucide-chevrons-up-down">
+                      <path d="m7 15 5 5 5-5"> </path>
+                      <path d="m7 9 5-5 5 5"> </path>
                     </svg>
                   </button>
                 </th>
                 <th aria-sort="none" scope="col" data-align="right" class="loon-table-head">
                   <button type="button" data-sort="none" class="loon-data-table-sort" @on_click>
                     Age
-                    <svg viewBox="0 0 24 24"
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
                          aria-hidden="true"
-                         class="loon-data-table-sort-icon loon-icon loon-icon-chevrons-up-down">
-                      <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+                         class="loon-data-table-sort-icon lucide lucide-chevrons-up-down">
+                      <path d="m7 15 5 5 5-5"> </path>
+                      <path d="m7 9 5-5 5 5"> </path>
                     </svg>
                   </button>
                 </th>
@@ -257,9 +294,19 @@ let%expect_test "sorting, filtering and selecting" =
     <div class="loon-data-table">
       <div class="loon-data-table-toolbar">
         <div class="loon-data-table-filter">
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-            <circle cx="11" cy="11" r="7"> </circle>
-            <path d="m20 20-3.5-3.5"> </path>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true"
+               class="lucide lucide-search">
+            <path d="m21 21-4.34-4.34"> </path>
+            <circle cx="11" cy="11" r="8"> </circle>
           </svg>
           <input type="search" placeholder="Filter…" aria-label="Filter rows" #value="" @on_input/>
         </div>
@@ -280,10 +327,19 @@ let%expect_test "sorting, filtering and selecting" =
                 <th aria-sort="none" scope="col" data-align="left" class="loon-table-head">
                   <button type="button" data-sort="none" class="loon-data-table-sort" @on_click>
                     Name
-                    <svg viewBox="0 0 24 24"
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
                          aria-hidden="true"
-                         class="loon-data-table-sort-icon loon-icon loon-icon-chevrons-up-down">
-                      <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+                         class="loon-data-table-sort-icon lucide lucide-chevrons-up-down">
+                      <path d="m7 15 5 5 5-5"> </path>
+                      <path d="m7 9 5-5 5 5"> </path>
                     </svg>
                   </button>
                 </th>
@@ -293,20 +349,38 @@ let%expect_test "sorting, filtering and selecting" =
                     class="loon-data-table-secondary loon-table-head">
                   <button type="button" data-sort="none" class="loon-data-table-sort" @on_click>
                     Role
-                    <svg viewBox="0 0 24 24"
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
                          aria-hidden="true"
-                         class="loon-data-table-sort-icon loon-icon loon-icon-chevrons-up-down">
-                      <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+                         class="loon-data-table-sort-icon lucide lucide-chevrons-up-down">
+                      <path d="m7 15 5 5 5-5"> </path>
+                      <path d="m7 9 5-5 5 5"> </path>
                     </svg>
                   </button>
                 </th>
                 <th aria-sort="none" scope="col" data-align="right" class="loon-table-head">
                   <button type="button" data-sort="none" class="loon-data-table-sort" @on_click>
                     Age
-                    <svg viewBox="0 0 24 24"
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
                          aria-hidden="true"
-                         class="loon-data-table-sort-icon loon-icon loon-icon-chevrons-up-down">
-                      <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+                         class="loon-data-table-sort-icon lucide lucide-chevrons-up-down">
+                      <path d="m7 15 5 5 5-5"> </path>
+                      <path d="m7 9 5-5 5 5"> </path>
                     </svg>
                   </button>
                 </th>
@@ -416,7 +490,17 @@ let%expect_test "pages" =
                     aria-label="Previous page"
                     disabled=""
                     class="loon-pagination-link loon-pagination-step">
-              <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-chevron-left">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   aria-hidden="true"
+                   class="lucide lucide-chevron-left">
                 <path d="m15 18-6-6 6-6"> </path>
               </svg>
               <span class="loon-pagination-step-text"> Previous </span>
@@ -429,7 +513,17 @@ let%expect_test "pages" =
                     class="loon-pagination-link loon-pagination-step"
                     @on_click>
               <span class="loon-pagination-step-text"> Next </span>
-              <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-chevron-right">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   aria-hidden="true"
+                   class="lucide lucide-chevron-right">
                 <path d="m9 18 6-6-6-6"> </path>
               </svg>
             </button>

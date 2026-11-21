@@ -14,7 +14,17 @@ let%expect_test "each state" =
             data-state="checked"
             class="loon-checkbox"
             @on_click>
-      <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-checkbox-mark loon-icon loon-icon-check">
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="24"
+           height="24"
+           viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2"
+           stroke-linecap="round"
+           stroke-linejoin="round"
+           aria-hidden="true"
+           class="loon-checkbox-mark lucide lucide-check">
         <path d="M20 6 9 17l-5-5"> </path>
       </svg>
     </button>
@@ -30,7 +40,17 @@ let%expect_test "each state" =
             data-state="indeterminate"
             class="loon-checkbox"
             @on_click>
-      <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-checkbox-mark loon-icon loon-icon-minus">
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="24"
+           height="24"
+           viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2"
+           stroke-linecap="round"
+           stroke-linejoin="round"
+           aria-hidden="true"
+           class="loon-checkbox-mark lucide lucide-minus">
         <path d="M5 12h14"> </path>
       </svg>
     </button>
@@ -92,9 +112,17 @@ let%expect_test "clicking toggles it; disabled ones have no handler" =
     -|            @on_click> </button>
     +|            class="loon-checkbox"
     +|            @on_click>
-    +|      <svg viewBox="0 0 24 24"
+    +|      <svg xmlns="http://www.w3.org/2000/svg"
+    +|           width="24"
+    +|           height="24"
+    +|           viewBox="0 0 24 24"
+    +|           fill="none"
+    +|           stroke="currentColor"
+    +|           stroke-width="2"
+    +|           stroke-linecap="round"
+    +|           stroke-linejoin="round"
     +|           aria-hidden="true"
-    +|           class="loon-checkbox-mark loon-icon loon-icon-check">
+    +|           class="loon-checkbox-mark lucide lucide-check">
     +|        <path d="M20 6 9 17l-5-5"> </path>
     +|      </svg>
     +|    </button>
@@ -118,9 +146,17 @@ let%expect_test "clicking toggles it; disabled ones have no handler" =
     +|            data-state="unchecked"
     -|            class="loon-checkbox"
     -|            @on_click>
-    -|      <svg viewBox="0 0 24 24"
+    -|      <svg xmlns="http://www.w3.org/2000/svg"
+    -|           width="24"
+    -|           height="24"
+    -|           viewBox="0 0 24 24"
+    -|           fill="none"
+    -|           stroke="currentColor"
+    -|           stroke-width="2"
+    -|           stroke-linecap="round"
+    -|           stroke-linejoin="round"
     -|           aria-hidden="true"
-    -|           class="loon-checkbox-mark loon-icon loon-icon-check">
+    -|           class="loon-checkbox-mark lucide lucide-check">
     -|        <path d="M20 6 9 17l-5-5"> </path>
     -|      </svg>
     -|    </button>
@@ -146,9 +182,17 @@ let%expect_test "clicking toggles it; disabled ones have no handler" =
               data-state="checked"
               disabled=""
               class="loon-checkbox">
-        <svg viewBox="0 0 24 24"
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
              aria-hidden="true"
-             class="loon-checkbox-mark loon-icon loon-icon-check">
+             class="loon-checkbox-mark lucide lucide-check">
           <path d="M20 6 9 17l-5-5"> </path>
         </svg>
       </button>

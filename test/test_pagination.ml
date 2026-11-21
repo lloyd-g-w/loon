@@ -56,7 +56,17 @@ let%expect_test "next, previous and page links" =
                   aria-label="Previous page"
                   disabled=""
                   class="loon-pagination-link loon-pagination-step">
-            <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-chevron-left">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"
+                 class="lucide lucide-chevron-left">
               <path d="m15 18-6-6 6-6"> </path>
             </svg>
             <span class="loon-pagination-step-text"> Previous </span>
@@ -84,10 +94,20 @@ let%expect_test "next, previous and page links" =
         </li>
         <li>
           <span aria-hidden="true" class="loon-pagination-ellipsis">
-            <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-more-horizontal">
-              <circle cx="5" cy="12" r="1"> </circle>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"
+                 class="lucide lucide-ellipsis">
               <circle cx="12" cy="12" r="1"> </circle>
               <circle cx="19" cy="12" r="1"> </circle>
+              <circle cx="5" cy="12" r="1"> </circle>
             </svg>
           </span>
         </li>
@@ -100,7 +120,17 @@ let%expect_test "next, previous and page links" =
                   class="loon-pagination-link loon-pagination-step"
                   @on_click>
             <span class="loon-pagination-step-text"> Next </span>
-            <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-chevron-right">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"
+                 class="lucide lucide-chevron-right">
               <path d="m9 18 6-6-6-6"> </path>
             </svg>
           </button>
@@ -128,7 +158,17 @@ let%expect_test "next, previous and page links" =
     -|              class="loon-pagination-link loon-pagination-step">
     +|              class="loon-pagination-link loon-pagination-step"
     +|              @on_click>
-              <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-chevron-left">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   aria-hidden="true"
+                   class="lucide lucide-chevron-left">
                 <path d="m15 18-6-6 6-6"> </path>
               </svg>
               <span class="loon-pagination-step-text"> Previous </span>
@@ -139,10 +179,20 @@ let%expect_test "next, previous and page links" =
     +|    </li>
     +|    <li>
     +|      <span aria-hidden="true" class="loon-pagination-ellipsis">
-    +|        <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-more-horizontal">
-    +|          <circle cx="5" cy="12" r="1"> </circle>
+    +|        <svg xmlns="http://www.w3.org/2000/svg"
+    +|             width="24"
+    +|             height="24"
+    +|             viewBox="0 0 24 24"
+    +|             fill="none"
+    +|             stroke="currentColor"
+    +|             stroke-width="2"
+    +|             stroke-linecap="round"
+    +|             stroke-linejoin="round"
+    +|             aria-hidden="true"
+    +|             class="lucide lucide-ellipsis">
     +|          <circle cx="12" cy="12" r="1"> </circle>
     +|          <circle cx="19" cy="12" r="1"> </circle>
+    +|          <circle cx="5" cy="12" r="1"> </circle>
     +|        </svg>
     +|      </span>
     +|    </li>
@@ -174,19 +224,19 @@ let%expect_test "next, previous and page links" =
           </li>
           <li>
             <span aria-hidden="true" class="loon-pagination-ellipsis">
-              <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-more-horizontal">
-                <circle cx="5" cy="12" r="1"> </circle>
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   aria-hidden="true"
+                   class="lucide lucide-ellipsis">
                 <circle cx="12" cy="12" r="1"> </circle>
                 <circle cx="19" cy="12" r="1"> </circle>
-              </svg>
-            </span>
-          </li>
-          <li>
-            <button type="button" aria-label="Page 10" class="loon-pagination-link" @on_click> 10 </button>
-          </li>
-          <li>
-            <button type="button"
-                    aria-label="Next page"
     |}];
   Handle.click_on
     handle
@@ -202,7 +252,17 @@ let%expect_test "next, previous and page links" =
                   aria-label="Previous page"
                   class="loon-pagination-link loon-pagination-step"
                   @on_click>
-            <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-chevron-left">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"
+                 class="lucide lucide-chevron-left">
               <path d="m15 18-6-6 6-6"> </path>
             </svg>
             <span class="loon-pagination-step-text"> Previous </span>
@@ -213,10 +273,20 @@ let%expect_test "next, previous and page links" =
         </li>
         <li>
           <span aria-hidden="true" class="loon-pagination-ellipsis">
-            <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-more-horizontal">
-              <circle cx="5" cy="12" r="1"> </circle>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"
+                 class="lucide lucide-ellipsis">
               <circle cx="12" cy="12" r="1"> </circle>
               <circle cx="19" cy="12" r="1"> </circle>
+              <circle cx="5" cy="12" r="1"> </circle>
             </svg>
           </span>
         </li>
@@ -246,7 +316,17 @@ let%expect_test "next, previous and page links" =
                   disabled=""
                   class="loon-pagination-link loon-pagination-step">
             <span class="loon-pagination-step-text"> Next </span>
-            <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-chevron-right">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"
+                 class="lucide lucide-chevron-right">
               <path d="m9 18 6-6-6-6"> </path>
             </svg>
           </button>

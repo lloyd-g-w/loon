@@ -72,7 +72,7 @@ let settings (local_ graph) =
   in
   let%arr a
   and b in
-  Card.container
+  Card.root ~class_:"px-6"
     ~attrs:
       [ Attr.style (Css_gen.create ~field:"width" ~value:"min(100%, 26rem)") ]
     [ a

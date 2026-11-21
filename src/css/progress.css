@@ -1,3 +1,5 @@
+/* Not yet ported to shadcn/ui: kept below Tailwind's utilities. */
+@layer components {
 .loon-progress {
   --loon-progress-tone: var(--loon-primary);
   position: relative;
@@ -31,4 +33,5 @@
   to {
     transform: translateX(250%);
   }
+}
 }

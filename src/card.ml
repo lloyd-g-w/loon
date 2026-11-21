@@ -1,54 +1,30 @@
 open! Import
 
-let container ?attrs:extra children =
-  Node.div ~attrs:(attrs ?attrs:extra [ "loon-card" ]) children
+let div slot classes ?(attrs = []) ?class_ children =
+  Node.div
+    ~attrs:([ data "slot" slot; Cn.with_class ?class_ [ classes ] ] @ attrs)
+    children
 ;;
 
-let header ?attrs:extra children =
-  Node.div ~attrs:(attrs ?attrs:extra [ "loon-card-header" ]) children
+let root =
+  div
+    "card"
+    "flex flex-col gap-6 rounded-xl border bg-card py-6 text-card-foreground shadow-sm"
 ;;
 
-let title ?attrs:extra text =
-  Node.h3 ~attrs:(attrs ?attrs:extra [ "loon-card-title" ]) [ Node.text text ]
+let header =
+  div
+    "card-header"
+    "@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 \
+     has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6"
 ;;
 
-let description ?attrs:extra text =
-  Node.p ~attrs:(attrs ?attrs:extra [ "loon-card-description" ]) [ Node.text text ]
+let title = div "card-title" "leading-none font-semibold"
+let description = div "card-description" "text-sm text-muted-foreground"
+
+let action =
+  div "card-action" "col-start-2 row-span-2 row-start-1 self-start justify-self-end"
 ;;
 
-let content ?attrs:extra children =
-  Node.div ~attrs:(attrs ?attrs:extra [ "loon-card-content" ]) children
-;;
-
-let footer ?attrs:extra children =
-  Node.div ~attrs:(attrs ?attrs:extra [ "loon-card-footer" ]) children
-;;
-
-let view ?attrs ?title:title_text ?description:description_text ?action ?footer:foot children
-  =
-  let heading =
-    List.filter_opt
-      [ Option.map title_text ~f:(fun t -> title t)
-      ; Option.map description_text ~f:(fun d -> description d)
-      ]
-  in
-  let header =
-    match heading, action with
-    | [], None -> []
-    | heading, None -> [ header heading ]
-    | heading, Some action ->
-      [ header
-          [ Node.div ~attrs:[ Attr.class_ "loon-card-heading" ] heading
-          ; Node.div ~attrs:[ Attr.class_ "loon-card-action" ] [ action ]
-          ]
-      ]
-  in
-  container
-    ?attrs
-    (header
-     @ (if List.is_empty children then [] else [ content children ])
-     @
-     match foot with
-     | None -> []
-     | Some foot -> [ footer foot ])
-;;
+let content = div "card-content" "px-6"
+let footer = div "card-footer" "flex items-center px-6 [.border-t]:pt-6"

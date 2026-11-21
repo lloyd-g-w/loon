@@ -48,10 +48,19 @@ let%expect_test "select: open, move, choose, typeahead" =
                 @on_click
                 @on_keydown>
           <span class="loon-select-value"> Pick one </span>
-          <svg viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
                aria-hidden="true"
-               class="loon-icon loon-icon-chevrons-up-down loon-select-chevron">
-            <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+               class="loon-select-chevron lucide lucide-chevrons-up-down">
+            <path d="m7 15 5 5 5-5"> </path>
+            <path d="m7 9 5-5 5 5"> </path>
           </svg>
         </button>
       </div>
@@ -76,10 +85,19 @@ let%expect_test "select: open, move, choose, typeahead" =
                 @on_click
                 @on_keydown>
           <span class="loon-select-value"> Pick one </span>
-          <svg viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
                aria-hidden="true"
-               class="loon-icon loon-icon-chevrons-up-down loon-select-chevron">
-            <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+               class="loon-select-chevron lucide lucide-chevrons-up-down">
+            <path d="m7 15 5 5 5-5"> </path>
+            <path d="m7 9 5-5 5 5"> </path>
           </svg>
         </button>
         <div aria-hidden="true" class="loon-click-away" @on_click> </div>
@@ -155,12 +173,12 @@ let%expect_test "select: open, move, choose, typeahead" =
     {|
     ("default prevented" (key ArrowDown))
 
-                  @on_keydown>
-            <span class="loon-select-value"> Pick one </span>
-            <svg viewBox="0 0 24 24"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
                  aria-hidden="true"
-                 class="loon-icon loon-icon-chevrons-up-down loon-select-chevron">
-              <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+                 class="loon-select-chevron lucide lucide-chevrons-up-down">
+              <path d="m7 15 5 5 5-5"> </path>
+              <path d="m7 9 5-5 5 5"> </path>
             </svg>
           </button>
           <div aria-hidden="true" class="loon-click-away" @on_click> </div>
@@ -240,10 +258,19 @@ let%expect_test "select: open, move, choose, typeahead" =
                 @on_click
                 @on_keydown>
           <span class="loon-select-value"> Blueberry </span>
-          <svg viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
                aria-hidden="true"
-               class="loon-icon loon-icon-chevrons-up-down loon-select-chevron">
-            <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+               class="loon-select-chevron lucide lucide-chevrons-up-down">
+            <path d="m7 15 5 5 5-5"> </path>
+            <path d="m7 9 5-5 5 5"> </path>
           </svg>
         </button>
       </div>
@@ -268,10 +295,19 @@ let%expect_test "select: open, move, choose, typeahead" =
                 @on_click
                 @on_keydown>
           <span class="loon-select-value"> Carrot </span>
-          <svg viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
                aria-hidden="true"
-               class="loon-icon loon-icon-chevrons-up-down loon-select-chevron">
-            <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+               class="loon-select-chevron lucide lucide-chevrons-up-down">
+            <path d="m7 15 5 5 5-5"> </path>
+            <path d="m7 9 5-5 5 5"> </path>
           </svg>
         </button>
       </div>
@@ -298,10 +334,19 @@ let%expect_test "select: open, move, choose, typeahead" =
                 @on_click
                 @on_keydown>
           <span class="loon-select-value"> Apple </span>
-          <svg viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
                aria-hidden="true"
-               class="loon-icon loon-icon-chevrons-up-down loon-select-chevron">
-            <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+               class="loon-select-chevron lucide lucide-chevrons-up-down">
+            <path d="m7 15 5 5 5-5"> </path>
+            <path d="m7 9 5-5 5 5"> </path>
           </svg>
         </button>
       </div>
@@ -334,10 +379,19 @@ let%expect_test "combobox: search then choose" =
                 @on_click
                 @on_keydown>
           <span class="loon-select-value"> Pick one </span>
-          <svg viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
                aria-hidden="true"
-               class="loon-icon loon-icon-chevrons-up-down loon-select-chevron">
-            <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+               class="loon-select-chevron lucide lucide-chevrons-up-down">
+            <path d="m7 15 5 5 5-5"> </path>
+            <path d="m7 9 5-5 5 5"> </path>
           </svg>
         </button>
         <div aria-hidden="true" class="loon-click-away" @on_click> </div>
@@ -350,9 +404,19 @@ let%expect_test "combobox: search then choose" =
              @on_keydown>
           <div class="loon-command">
             <div class="loon-command-search">
-              <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-                <circle cx="11" cy="11" r="7"> </circle>
-                <path d="m20 20-3.5-3.5"> </path>
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   aria-hidden="true"
+                   class="lucide lucide-search">
+                <path d="m21 21-4.34-4.34"> </path>
+                <circle cx="11" cy="11" r="8"> </circle>
               </svg>
               <input type="text"
                      role="combobox"
@@ -445,10 +509,19 @@ let%expect_test "combobox: search then choose" =
                 @on_click
                 @on_keydown>
           <span class="loon-select-value"> Pick one </span>
-          <svg viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
                aria-hidden="true"
-               class="loon-icon loon-icon-chevrons-up-down loon-select-chevron">
-            <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+               class="loon-select-chevron lucide lucide-chevrons-up-down">
+            <path d="m7 15 5 5 5-5"> </path>
+            <path d="m7 9 5-5 5 5"> </path>
           </svg>
         </button>
         <div aria-hidden="true" class="loon-click-away" @on_click> </div>
@@ -461,9 +534,19 @@ let%expect_test "combobox: search then choose" =
              @on_keydown>
           <div class="loon-command">
             <div class="loon-command-search">
-              <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-                <circle cx="11" cy="11" r="7"> </circle>
-                <path d="m20 20-3.5-3.5"> </path>
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   aria-hidden="true"
+                   class="lucide lucide-search">
+                <path d="m21 21-4.34-4.34"> </path>
+                <circle cx="11" cy="11" r="8"> </circle>
               </svg>
               <input type="text"
                      role="combobox"
@@ -524,10 +607,19 @@ let%expect_test "combobox: search then choose" =
                 @on_click
                 @on_keydown>
           <span class="loon-select-value"> Carrot </span>
-          <svg viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
                aria-hidden="true"
-               class="loon-icon loon-icon-chevrons-up-down loon-select-chevron">
-            <path d="m7 15 5 5 5-5M7 9l5-5 5 5"> </path>
+               class="loon-select-chevron lucide lucide-chevrons-up-down">
+            <path d="m7 15 5 5 5-5"> </path>
+            <path d="m7 9 5-5 5 5"> </path>
           </svg>
         </button>
       </div>

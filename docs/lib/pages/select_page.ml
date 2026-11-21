@@ -56,7 +56,7 @@ let timezone (local_ graph) =
              ]
          ; Select.Group.create
              ~label:"Elsewhere"
-             [ Select.Option_.create ~icon:Home ~label:"Auckland (NZST)" "nzst"
+             [ Select.Option_.create ~icon:House ~label:"Auckland (NZST)" "nzst"
              ; Select.Option_.create ~label:"London (GMT)" "gmt"
              ; Select.Option_.create ~disabled:true ~label:"Mars (MTC)" "mtc"
              ]

@@ -1,64 +1,60 @@
-(** Buttons, and links that look like them. *)
+(** Displays a button or a component that looks like a button. Port of
+    shadcn/ui's [Button]. *)
 
 open! Import
 
 module Variant : sig
   type t =
-    | Primary
-    | Secondary
+    | Default
+    | Destructive
     | Outline
+    | Secondary
     | Ghost
-    | Accent
-    | Danger
     | Link
   [@@deriving enumerate, sexp_of, compare, equal]
 
+  (** shadcn's name, as in [data-variant]: [default], [destructive], ... *)
   val name : t -> string
 end
 
 module Size : sig
   type t =
+    | Default
+    | Xs
     | Sm
-    | Md
     | Lg
     | Icon
+    | Icon_xs
+    | Icon_sm
+    | Icon_lg
   [@@deriving enumerate, sexp_of, compare, equal]
 
+  (** shadcn's name, as in [data-size]: [default], [icon-sm], ... *)
   val name : t -> string
 end
 
-(** A [<button type="button">]. [loading] shows a spinner and disables it. *)
+(** shadcn's [buttonVariants]: the classes of a button of this variant and
+    size, then [class_], for other elements that should look like one. *)
+val classes : ?variant:Variant.t -> ?size:Size.t -> ?class_:string -> unit -> string
+
+(** A [<button>] ([type="button"] unless [type_] says otherwise). *)
 val view
   :  ?attrs:Attr.t list
+  -> ?class_:string
   -> ?variant:Variant.t
   -> ?size:Size.t
   -> ?disabled:bool
-  -> ?loading:bool
   -> ?type_:[ `Button | `Submit | `Reset ]
   -> ?on_click:unit Effect.t
   -> Node.t list
   -> Node.t
 
-(** A button with a leading icon. *)
-val with_icon
-  :  ?attrs:Attr.t list
-  -> ?variant:Variant.t
-  -> ?size:Size.t
-  -> ?disabled:bool
-  -> ?on_click:unit Effect.t
-  -> Icon.t
-  -> string
-  -> Node.t
-
-(** An [<a>] styled as a button. *)
+(** An [<a>] that looks like a button: shadcn's [<Button asChild><a>]. *)
 val link
   :  ?attrs:Attr.t list
+  -> ?class_:string
   -> ?variant:Variant.t
   -> ?size:Size.t
   -> href:string
   -> Node.t list
   -> Node.t
-
-(** The classes a button of this variant and size has, for other elements
-    that should look like one (e.g. a dialog's trigger). *)
-val classes : ?variant:Variant.t -> ?size:Size.t -> unit -> string list

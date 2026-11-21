@@ -16,7 +16,7 @@ let projects =
       "Projects keep your files, people and settings together. Make one to get \
        started."
     ~actions:
-      [ Button.with_icon Plus "New project"
+      [ Button.view [ Icon.view Plus; Node.text "New project" ]
       ; Button.view ~variant:Outline [ Node.text "Import" ]
       ]
     "No projects yet"

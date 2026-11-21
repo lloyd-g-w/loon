@@ -13,9 +13,9 @@ module Variant = struct
 
   let icon : t -> Icon.t = function
     | Neutral | Info -> Info
-    | Success -> Check_circle
-    | Warning -> Alert_triangle
-    | Danger -> Alert_circle
+    | Success -> Circle_check
+    | Warning -> Triangle_exclamation_point
+    | Danger -> Circle_exclamation_point
   ;;
 end
 

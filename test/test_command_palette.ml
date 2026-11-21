@@ -61,9 +61,19 @@ let%expect_test "typing filters, arrows move, Enter runs" =
     {|
     <div class="loon-command">
       <div class="loon-command-search">
-        <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-          <circle cx="11" cy="11" r="7"> </circle>
-          <path d="m20 20-3.5-3.5"> </path>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true"
+             class="lucide lucide-search">
+          <path d="m21 21-4.34-4.34"> </path>
+          <circle cx="11" cy="11" r="8"> </circle>
         </svg>
         <input type="text"
                role="combobox"
@@ -93,9 +103,21 @@ let%expect_test "typing filters, arrows move, Enter runs" =
                class="loon-option"
                @on_click
                @on_mousemove>
-            <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-calendar">
-              <path d="M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"> </path>
-              <path d="M16 2v4M8 2v4M3 10h18"> </path>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"
+                 class="lucide lucide-calendar">
+              <path d="M8 2v3"> </path>
+              <path d="M16 2v3"> </path>
+              <rect x="3" y="3" width="18" height="18" rx="2"> </rect>
+              <path d="M3 9h18"> </path>
             </svg>
             <span class="loon-menu-text"> Calendar </span>
           </div>
@@ -149,11 +171,12 @@ let%expect_test "typing filters, arrows move, Enter runs" =
   Handle.show_diff handle;
   [%expect
     {|
-      <div class="loon-command">
-        <div class="loon-command-search">
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-            <circle cx="11" cy="11" r="7"> </circle>
-            <path d="m20 20-3.5-3.5"> </path>
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true"
+               class="lucide lucide-search">
+            <path d="m21 21-4.34-4.34"> </path>
+            <circle cx="11" cy="11" r="8"> </circle>
           </svg>
           <input type="text"
                  role="combobox"
@@ -187,9 +210,21 @@ let%expect_test "typing filters, arrows move, Enter runs" =
                  class="loon-option"
                  @on_click
                  @on_mousemove>
-    -|        <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-calendar">
-    -|          <path d="M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"> </path>
-    -|          <path d="M16 2v4M8 2v4M3 10h18"> </path>
+    -|        <svg xmlns="http://www.w3.org/2000/svg"
+    -|             width="24"
+    -|             height="24"
+    -|             viewBox="0 0 24 24"
+    -|             fill="none"
+    -|             stroke="currentColor"
+    -|             stroke-width="2"
+    -|             stroke-linecap="round"
+    -|             stroke-linejoin="round"
+    -|             aria-hidden="true"
+    -|             class="lucide lucide-calendar">
+    -|          <path d="M8 2v3"> </path>
+    -|          <path d="M16 2v3"> </path>
+    -|          <rect x="3" y="3" width="18" height="18" rx="2"> </rect>
+    -|          <path d="M3 9h18"> </path>
     -|        </svg>
     -|        <span class="loon-menu-text"> Calendar </span>
     -|      </div>
@@ -246,11 +281,12 @@ let%expect_test "typing filters, arrows move, Enter runs" =
     {|
     ("default prevented" (key ArrowDown))
 
-      <div class="loon-command">
-        <div class="loon-command-search">
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-            <circle cx="11" cy="11" r="7"> </circle>
-            <path d="m20 20-3.5-3.5"> </path>
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true"
+               class="lucide lucide-search">
+            <path d="m21 21-4.34-4.34"> </path>
+            <circle cx="11" cy="11" r="8"> </circle>
           </svg>
           <input type="text"
                  role="combobox"
@@ -316,9 +352,19 @@ let%expect_test "typing filters, arrows move, Enter runs" =
     {|
     <div class="loon-command">
       <div class="loon-command-search">
-        <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-          <circle cx="11" cy="11" r="7"> </circle>
-          <path d="m20 20-3.5-3.5"> </path>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true"
+             class="lucide lucide-search">
+          <path d="m21 21-4.34-4.34"> </path>
+          <circle cx="11" cy="11" r="8"> </circle>
         </svg>
         <input type="text"
                role="combobox"
@@ -384,9 +430,19 @@ let%expect_test "the palette opens in a dialog and closes when an item runs" =
             <h2 id="loonbonsai_path_replaced_in_test-title" class="loon-visually-hidden"> Command palette </h2>
             <div class="loon-command">
               <div class="loon-command-search">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-search">
-                  <circle cx="11" cy="11" r="7"> </circle>
-                  <path d="m20 20-3.5-3.5"> </path>
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="24"
+                     height="24"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"
+                     class="lucide lucide-search">
+                  <path d="m21 21-4.34-4.34"> </path>
+                  <circle cx="11" cy="11" r="8"> </circle>
                 </svg>
                 <input type="text"
                        role="combobox"
@@ -417,9 +473,21 @@ let%expect_test "the palette opens in a dialog and closes when an item runs" =
                        class="loon-option"
                        @on_click
                        @on_mousemove>
-                    <svg viewBox="0 0 24 24" aria-hidden="true" class="loon-icon loon-icon-calendar">
-                      <path d="M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"> </path>
-                      <path d="M16 2v4M8 2v4M3 10h18"> </path>
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true"
+                         class="lucide lucide-calendar">
+                      <path d="M8 2v3"> </path>
+                      <path d="M16 2v3"> </path>
+                      <rect x="3" y="3" width="18" height="18" rx="2"> </rect>
+                      <path d="M3 9h18"> </path>
                     </svg>
                     <span class="loon-menu-text"> Calendar </span>
                   </div>
