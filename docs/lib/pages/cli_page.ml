@@ -29,10 +29,10 @@ let page =
       ; Doc.h2 "Add components"
       ; Doc.pre ~lang:Shell "loon add button tabs\nloon add dialog -dir lib/ui"
       ; Doc.p
-          "Each component comes with the components and helpers it uses, and its CSS \
-           is added to the directory's [loon.css]. Files you already have are left \
-           alone unless you pass [-overwrite]; [-css-files] keeps one stylesheet per \
-           component in [css/] instead."
+          "Each component comes with the components and helpers it uses. Their styles \
+           are their Tailwind classes: the directory's [loon.css] holds the theme and \
+           is Tailwind's input, compiled by the rule [loon init] writes in its dune \
+           file. Files you already have are left alone unless you pass [-overwrite]."
       ; Doc.h2 "Commands"
       ; Doc.table
           [ "Command"; "What it does" ]

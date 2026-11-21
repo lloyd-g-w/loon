@@ -87,16 +87,17 @@ let page =
           [ Doc.text "loon is a component library for "
           ; Doc.link ~href:"https://github.com/janestreet/bonsai" "Bonsai_web"
           ; Doc.text
-              ", built on OxCaml. It follows the idea that made shadcn/ui popular: \
-               components are not a black box. Each one is a single, readable OCaml \
-               module and a small stylesheet, so you can use loon as a library or copy \
-               a component into your project and change whatever you like."
+              ", built on OxCaml: a port of shadcn/ui, with its components, Tailwind \
+               classes and Radix behaviour. As with shadcn, components are not a black \
+               box: each one is a single, readable OCaml module, so you can use loon as \
+               a library or copy a component into your project and change whatever you \
+               like."
           ]
       ; Doc.ul
           [ [ Doc.text "Accessible by default: WAI-ARIA roles, keyboard support and \
                         visible focus rings." ]
-          ; [ Doc.text "Themed entirely by "; Doc.code "--loon-*"
-            ; Doc.text " CSS variables, with a dark mode and five accents." ]
+          ; [ Doc.text "shadcn's theme: CSS variables like "; Doc.code "--primary"
+            ; Doc.text ", with a dark mode." ]
           ; [ Doc.text "Plain Bonsai: stateless parts are functions returning "
             ; Doc.code "Vdom.Node.t"
             ; Doc.text "; stateful ones come both controlled and as Bonsai components." ]
@@ -108,7 +109,7 @@ let page =
           [ [ Doc.link ~href:"#/installation" "Installation"
             ; Doc.text ": add loon to a dune project, with nix." ]
           ; [ Doc.link ~href:"#/theming" "Theming"
-            ; Doc.text ": colours, radius, fonts, dark mode and accents." ]
+            ; Doc.text ": colours, radius and dark mode." ]
           ; [ Doc.link ~href:"#/cli" "The loon CLI"
             ; Doc.text ": copy components into your project and own them." ]
           ]

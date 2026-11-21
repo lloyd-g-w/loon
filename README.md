@@ -1,24 +1,26 @@
 # loon
 
-Calm, well-made components for [Bonsai_web](https://github.com/janestreet/bonsai),
-on [OxCaml](https://oxcaml.org). In the spirit of
-[shadcn/ui](https://ui.shadcn.com): a small set of accessible components,
-themed by CSS variables, that you can use as a library — or copy into your
-project with `loon add` and make your own.
+[shadcn/ui](https://ui.shadcn.com), ported to
+[Bonsai_web](https://github.com/janestreet/bonsai) on
+[OxCaml](https://oxcaml.org): the same components — the same Tailwind
+classes, DOM, data attributes and Radix behaviour — as OCaml modules. Use
+them as a library, or copy them into your project with `loon add` and make
+them your own, as with shadcn.
 
-- **Accessible**: the WAI-ARIA pattern for each widget — roles, keyboard
-  (arrows, Home/End, typeahead, Esc), focus kept in dialogs and returned
-  after, visible focus rings.
-- **Themeable**: a few dozen `--loon-*` variables; light and dark, five
-  accents (teal, lake, moss, ember, iris), per subtree.
-- **Phones first-class**: 44px touch targets, sheets and native pickers
-  where they suit a phone better.
-- **Plain OCaml**: a stateless `view` you control, or a Bonsai `component`
-  that keeps its state; each one module with a documented `.mli`.
+- **shadcn's look, exactly**: the new-york-v4 style, neutral theme, Lucide
+  icons; styled by Tailwind v4 from the components' class strings.
+- **Radix's behaviour**: roles, ARIA, keyboard and focus as Radix
+  Primitives do them.
+- **Plain OCaml**: each component one module with a documented `.mli`;
+  composed like shadcn's parts (`Card.root`, `Card.header`, ...); stateful
+  ones as a controlled `view` or a Bonsai `component`.
 
-The documentation site (`nix build .#docs`, or `dune build` then open
-`_build/default/docs/bin/site/index.html` over http) shows every component
-live next to its source.
+The port is in progress: Button, Badge, Card and Tabs are ported; the other
+components still have loon's earlier styles.
+
+The documentation site (`nix build .#docs`, or `dune build` then serve
+`_build/default/docs/bin/site/` over http) shows every component live next
+to its source.
 
 ## Quick start
 
@@ -37,8 +39,8 @@ Depend on it in dune:
  (libraries bonsai_web loon))
 ```
 
-Load the stylesheet — link `loon.css` (installed in `share/loon/`), or let
-OCaml put it in the page — and wrap the app in a theme:
+Load the stylesheet — link `loon.css` (installed in `share/loon/`, built by
+Tailwind from loon's sources), or let OCaml put it in the page:
 
 ```ocaml
 open! Core
@@ -49,13 +51,14 @@ open Loon
 let app (local_ graph) =
   let count, set_count = Bonsai.state 0 graph in
   let%arr count and set_count in
-  Theme.root
-    ~mode:(Theme.Mode.preferred ())
-    [ Card.view
-        ~title:"Counter"
-        ~description:(sprintf "Pressed %d times." count)
-        ~footer:[ Button.view ~on_click:(set_count (count + 1)) [ Vdom.Node.text "Press" ] ]
-        []
+  Card.root
+    ~class_:"w-full max-w-sm"
+    [ Card.header
+        [ Card.title [ Vdom.Node.text "Counter" ]
+        ; Card.description [ Vdom.Node.textf "Pressed %d times." count ]
+        ]
+    ; Card.footer
+        [ Button.view ~on_click:(set_count (count + 1)) [ Vdom.Node.text "Press" ] ]
     ]
 ;;
 
@@ -75,27 +78,16 @@ let () =
 | Navigation | Tabs, Breadcrumb, Pagination |
 | Feedback | Alert, Toast, Progress, Spinner, Skeleton, Empty |
 
-Plus `Icon` (line icons sized and coloured by the text), `Theme` and
-`Stylesheet`, and the helpers the components share (`Floating`, `Modal`,
-`List_nav`, `Roving`, `Fuzzy`, …).
+Plus `Icon` (Lucide), `Cn` (shadcn's `cn`: class names, with a
+tailwind-merge), `Theme` and `Stylesheet`, and the helpers the components
+share (`Floating`, `Modal`, `List_nav`, `Roving`, `Fuzzy`, …).
 
 ## Theming
 
-Everything is a `--loon-*` variable (colours in oklch, radii, shadows,
-fonts, durations), set by the theme's classes `.loon-light` and
-`.loon-dark` and by `data-loon-accent`. `Theme.root ~mode ~accent` (or
-`Theme.attrs`) themes a subtree, so a dark panel can sit in a light page.
-Override any of them in a stylesheet after `loon.css`:
-
-```css
-.loon-light,
-.loon-dark {
-  --loon-radius: 0.375rem;
-  --loon-font: "Inter", system-ui, sans-serif;
-}
-```
-
-The docs' Theming page lists every variable.
+shadcn's theme: CSS variables (`--background`, `--primary`, `--radius`, ...)
+on `:root`, and dark values under the class `dark` (on `<html>`, or
+`Theme.root ~mode:Dark` for a subtree). Override them in a stylesheet after
+`loon.css`, as you would shadcn's `globals.css`.
 
 ## Copying components: the CLI
 
@@ -108,21 +100,22 @@ loon diff                                 # how your copies differ from loon's
 ```
 
 `loon add` takes `-dir DIR` (default `src/ui`), `-overwrite`, `-dry-run`,
-`-all` and `-css-files` (one stylesheet per component rather than one
-`loon.css`). The copies are yours: write `Ui.Button.view` where the docs
-write `Loon.Button.view`.
+and `-all`. The project's `loon.css` (the theme) is Tailwind's input: the
+dune file `loon init` writes compiles it with `tailwindcss`, scanning the
+components for their classes. The copies are yours: write `Ui.Button.view`
+where the docs write `Loon.Button.view`.
 
 ## Development
 
 ```sh
-nix develop          # prigh's OxCaml toolchain, from its binary cache
+nix develop          # prigh's OxCaml toolchain (binary cache), tailwindcss, node
 dune build @runtest  # expect tests (components, the docs app, the CLI)
 ./check              # build, dune tests, and the e2e in Chromium
 ./check --full       # the e2e in Chromium, Firefox and WebKit
 ```
 
 The e2e (`e2e/run.sh`) drives the built docs site with Playwright: every
-page, navigation, theme and accent, the examples' tabs and copying, search,
+page, navigation, the theme toggle, the examples' tabs and copying, search,
 and phones (no sideways scrolling, the sidebar sheet, 44px targets). It
 diffs what it sees with `e2e/<engine>.expected`; `UPDATE=1` rewrites them
 and `SHOTS=dir` keeps screenshots. Nix runs it too:
@@ -133,5 +126,6 @@ See `AGENTS.md` for the conventions a component follows, and
 
 ## Licence
 
-MIT. The docs site bundles the Recursive fonts (SIL Open Font Licence,
-`docs/bin/recursive-OFL.txt`) and temporal-polyfill (MIT).
+MIT. loon is derived from shadcn/ui (MIT), and includes tw-animate-css
+(MIT) and Lucide's icons (ISC); the docs site bundles the Geist fonts (OFL)
+and temporal-polyfill (MIT). See `THIRD_PARTY_NOTICES.md`.
