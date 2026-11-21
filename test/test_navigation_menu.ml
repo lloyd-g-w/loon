@@ -643,6 +643,7 @@ let%expect_test "without a viewport, the content drops down in its item" =
                  data-orientation="horizontal"
                  data-state="open"
                  data-slot="navigation-menu-content"
+                 loon-presence=()
                  @on_keydown
                  @on_pointerenter
                  @on_pointerleave>
