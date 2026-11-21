@@ -1,5 +1,9 @@
-(** A single-line text field, optionally with a leading icon and a trailing
-    addon (text, a button, a keyboard hint) inside its border. *)
+(** Displays a form input field or a component that looks like an input
+    field. Port of shadcn/ui's [Input]: an [<input>].
+
+    {[
+      Input.view ~type_:Email ~placeholder:"Email" ()
+    ]} *)
 
 open! Import
 
@@ -12,36 +16,48 @@ module Type : sig
     | Number
     | Url
     | Tel
+    | File
+    | Date
+    | Time
   [@@deriving enumerate, sexp_of, compare, equal]
 
+  (** The [type] attribute: [text], [email], ... *)
   val name : t -> string
 end
 
-(** Controlled: [value] is shown, [on_input] gets each edit. [attrs] go on
-    the [<input>] (give it an id, a name, autocomplete...). [invalid] marks
-    it [aria-invalid] and draws it in the danger colour. *)
+(** shadcn's classes for an input, then [class_]. *)
+val classes : ?class_:string -> unit -> string
+
+(** An [<input>] ([type="text"] unless [type_] says otherwise). With
+    [value] it is controlled (give [on_input] too); without, the browser
+    keeps what is typed. [invalid] sets [aria-invalid="true"], which draws
+    it in the destructive colour. *)
 val view
   :  ?attrs:Attr.t list
+  -> ?class_:string
   -> ?type_:Type.t
+  -> ?id:string
+  -> ?name:string
   -> ?placeholder:string
   -> ?disabled:bool
+  -> ?required:bool
   -> ?invalid:bool
-  -> ?leading:Icon.t
-  -> ?trailing:Node.t
-  -> ?on_enter:unit Effect.t
-  -> value:string
-  -> on_input:(string -> unit Effect.t)
+  -> ?value:string
+  -> ?on_input:(string -> unit Effect.t)
   -> unit
   -> Node.t
 
-(** Keeps the text; [default] (or empty) at first. *)
+(** Keeps the text, [default_value] (or empty) at first. *)
 val component
   :  ?attrs:Attr.t list
+  -> ?class_:string
   -> ?type_:Type.t
+  -> ?id:string
+  -> ?name:string
   -> ?placeholder:string
   -> ?disabled:bool
-  -> ?leading:Icon.t
-  -> ?trailing:Node.t
-  -> ?default:string
+  -> ?required:bool
+  -> ?invalid:bool
+  -> ?default_value:string
   -> local_ Bonsai.graph
   -> string Control.t Bonsai.t

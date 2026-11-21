@@ -63,7 +63,10 @@ export async function open(engineName, { device = "desktop", colorScheme = "ligh
   const errors = [];
   page.on("pageerror", (e) => errors.push(String(e)));
   page.on("console", (m) => {
-    if (m.type() === "error") errors.push(m.text());
+    // Firefox reports third-party images' cookies (the examples' GitHub
+    // avatars) as console errors; they are not the page's.
+    if (m.type() === "error" && !/Cookie “[^”]*” has been rejected/.test(m.text()))
+      errors.push(m.text());
   });
   return { browser, context, page, errors };
 }

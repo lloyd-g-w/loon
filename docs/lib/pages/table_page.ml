@@ -1,92 +1,47 @@
 open! Core
 open Bonsai_web
 open Loon
-open! Bonsai.Let_syntax
 module Node = Vdom.Node
-module Attr = Vdom.Attr
 
 let page = "table"
 
-module Invoice = struct
-  type t =
-    { id : string
-    ; status : string
-    ; method_ : string
-    ; amount : float
-    }
-
-  let all =
-    [ { id = "INV001"; status = "Paid"; method_ = "Credit card"; amount = 250. }
-    ; { id = "INV002"; status = "Pending"; method_ = "PayPal"; amount = 150. }
-    ; { id = "INV003"
-      ; status = "Unpaid"
-      ; method_ = "Bank transfer"
-      ; amount = 350.
-      }
-    ; { id = "INV004"; status = "Paid"; method_ = "Credit card"; amount = 450. }
-    ; { id = "INV005"; status = "Paid"; method_ = "PayPal"; amount = 550. }
-    ]
-  ;;
-
-  let status_badge t =
-    let variant : Badge.Variant.t =
-      match t.status with
-      | "Paid" -> Default
-      | "Pending" -> Secondary
-      | _ -> Outline
-    in
-    Badge.view ~variant [ Node.text t.status ]
-  ;;
-end
-
-(*$ Invoices *)
-let dollars amount =
-  "$" ^ Float.to_string_hum ~decimals:2 ~delimiter:',' amount
-;;
-
+(*$ Demo *)
 let invoices =
-  let total = List.sum (module Float) Invoice.all ~f:(fun i -> i.amount) in
-  Table.view
-    ~caption:"Your recent invoices."
-    ~columns:
-      Table.Column.
-        [ text "Invoice" (fun (i : Invoice.t) -> i.id)
-        ; create "Status" Invoice.status_badge
-        ; text "Method" (fun (i : Invoice.t) -> i.method_)
-        ; text ~align:Right "Amount" (fun (i : Invoice.t) -> dollars i.amount)
-        ]
-    ~footer:
-      [ Table.cell ~colspan:3 [ Node.text "Total" ]
-      ; Table.cell ~align:Right [ Node.text (dollars total) ]
-      ]
-    Invoice.all
+  [ "INV001", "Paid", "$250.00", "Credit Card"
+  ; "INV002", "Pending", "$150.00", "PayPal"
+  ; "INV003", "Unpaid", "$350.00", "Bank Transfer"
+  ; "INV004", "Paid", "$450.00", "Credit Card"
+  ; "INV005", "Paid", "$550.00", "PayPal"
+  ; "INV006", "Pending", "$200.00", "Bank Transfer"
+  ; "INV007", "Unpaid", "$300.00", "Credit Card"
+  ]
 ;;
 
-(*$*)
-
-(*$ Striped and dense, from the parts *)
-let parts =
-  Table.table
-    ~striped:true
-    ~dense:true
-    [ Table.header
+let demo =
+  Table.root
+    [ Table.caption [ Node.text "A list of your recent invoices." ]
+    ; Table.header
         [ Table.row
-            [ Table.head [ Node.text "Key" ]
-            ; Table.head [ Node.text "Action" ]
+            [ Table.head ~class_:"w-[100px]" [ Node.text "Invoice" ]
+            ; Table.head [ Node.text "Status" ]
+            ; Table.head [ Node.text "Method" ]
+            ; Table.head ~class_:"text-right" [ Node.text "Amount" ]
             ]
         ]
     ; Table.body
-        (List.map
-           [ [ "Cmd"; "K" ], "Open the command palette"
-           ; [ "Cmd"; "Shift"; "P" ], "Run a command"
-           ; [ "Esc" ], "Close a dialog"
-           ; [ "?" ], "Show every shortcut"
-           ]
-           ~f:(fun (keys, action) ->
-             Table.row
-               [ Table.cell [ Kbd.combo keys ]
-               ; Table.cell [ Node.text action ]
-               ]))
+        (List.map invoices ~f:(fun (invoice, status, amount, method_) ->
+           Table.row
+             [ Table.cell ~class_:"font-medium" [ Node.text invoice ]
+             ; Table.cell [ Node.text status ]
+             ; Table.cell [ Node.text method_ ]
+             ; Table.cell ~class_:"text-right" [ Node.text amount ]
+             ]))
+    ; Table.footer
+        [ Table.row
+            [ Table.cell ~col_span:3 [ Node.text "Total" ]
+            ; Table.cell ~class_:"text-right" [ Node.text "$2,500.00" ]
+            ]
+        ]
     ]
 ;;
 
@@ -97,30 +52,44 @@ let page =
     ~slug:page
     ~title:"Table"
     ~group:Display
-    ~description:"Rows and columns of data, styled."
+    ~description:"A responsive table component."
     ~usage:
-      {|Table.view ~columns:Table.Column.[ text "Name" name; text ~align:Right "Age" age ] people|}
-    ~body:
-      [ Doc.h2 "Arguments"
-      ; Doc.props
-          [ ( "columns"
-            , "'row Table.Column.t list"
-            , "A header and how to show each row's cell." )
-          ; "caption", "string", "Under the table."
-          ; "footer", "Vdom.Node.t list", "Cells of a footer row."
-          ; "striped", "bool", "Shade every other row."
-          ; ( "hover"
-            , "bool"
-            , "Highlight the row under the pointer (default true)." )
-          ; "dense", "bool", "Less padding."
+      {|Table.root
+  [ Table.caption [ Node.text "A list of your recent invoices." ]
+  ; Table.header
+      [ Table.row
+          [ Table.head ~class_:"w-[100px]" [ Node.text "Invoice" ]
+          ; Table.head [ Node.text "Status" ]
+          ; Table.head [ Node.text "Method" ]
+          ; Table.head ~class_:"text-right" [ Node.text "Amount" ]
           ]
-      ; Doc.p
-          "[Table.table], [header], [body], [footer], [row], [head] and [cell] \
-           build tables of any shape. Wide tables scroll sideways in their own \
-           box, with a shadow at the edge that has more. For sorting, filtering \
-           and selecting, see [Data_table]."
       ]
-    [ Doc.static ~page "Invoices" invoices
-    ; Doc.static ~page "Striped and dense, from the parts" parts
-    ]
+  ; Table.body
+      [ Table.row
+          [ Table.cell ~class_:"font-medium" [ Node.text "INV001" ]
+          ; Table.cell [ Node.text "Paid" ]
+          ; Table.cell [ Node.text "Credit Card" ]
+          ; Table.cell ~class_:"text-right" [ Node.text "$250.00" ]
+          ]
+      ]
+  ]|}
+    ~body:
+      [ Doc.h2 "Parts"
+      ; Doc.table
+          [ "Part"; "Renders" ]
+          (List.map
+             [ ( "Table.root"
+               , "<table> in a <div> that scrolls sideways when it is too wide"
+               )
+             ; "Table.header, body, footer", "<thead>, <tbody>, <tfoot>"
+             ; "Table.row", "<tr>; ~selected:true sets data-state=\"selected\""
+             ; ( "Table.head, cell"
+               , "<th>, <td>; Table.cell ~col_span spans columns" )
+             ; "Table.caption", "<caption>, below the table"
+             ]
+             ~f:(fun (part, renders) -> [ Doc.code part; Doc.text renders ]))
+      ; Doc.p
+          "For sorting, filtering, selection and pagination, see [Data_table]."
+      ]
+    [ Doc.static ~page "Demo" demo ]
 ;;

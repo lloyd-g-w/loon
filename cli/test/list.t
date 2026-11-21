@@ -2,11 +2,11 @@
 comment (the list grows with loon, so only some are checked here).
 
   $ loon list | grep -E '^(button|tabs|theme|import|dom_util) '
-  button         Displays a button or a component that looks like a button.
-  dom_util       Small DOM effects the components share: moving focus and reading keys.
-  import         What every component opens: Core, Vdom, Bonsai and small helpers.
-  tabs           A set of layered sections of content, known as tab panels, that are displayed one at a time.
-  theme          Light and dark mode.
+  button           Displays a button or a component that looks like a button.
+  dom_util         Small DOM effects the components share: moving focus and reading keys.
+  import           What every component opens: Core, Vdom, Bonsai and small helpers.
+  tabs             A set of layered sections of content, known as tab panels, that are displayed one at a time.
+  theme            Light and dark mode.
 
 Every line has a name and a description.
 
@@ -25,8 +25,7 @@ component.
 
   $ loon css | grep '^/\* loon: ' | head -3
   /* loon: theme */
-  /* loon: accordion */
-  /* loon: alert */
+  /* loon: sonner */
 
 Unknown names get suggestions.
 

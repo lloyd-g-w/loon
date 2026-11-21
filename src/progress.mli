@@ -1,34 +1,15 @@
-(** A bar showing how far along a task is, or that it is under way when
-    that is unknown ([value] absent). *)
+(** Displays an indicator showing the completion progress of a task,
+    typically displayed as a progress bar. Port of shadcn/ui's [Progress]
+    (Radix Progress's [role="progressbar"], [aria-value*] and
+    [data-state="loading|complete|indeterminate"]). *)
 
 open! Import
 
-module Tone : sig
-  type t =
-    | Primary
-    | Accent
-    | Success
-    | Warning
-    | Danger
-  [@@deriving enumerate, sexp_of, compare, equal]
-end
-
-module Size : sig
-  type t =
-    | Sm
-    | Md
-    | Lg
-  [@@deriving enumerate, sexp_of, compare, equal]
-end
-
-(** [value] out of [max] (default 100), clamped. [label] names it for screen
-    readers. *)
+(** [value] out of [max] (default 100); without [value], indeterminate. *)
 val view
   :  ?attrs:Attr.t list
-  -> ?tone:Tone.t
-  -> ?size:Size.t
+  -> ?class_:string
   -> ?max:float
-  -> ?label:string
   -> ?value:float
   -> unit
   -> Node.t

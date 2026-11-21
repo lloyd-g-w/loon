@@ -15,10 +15,24 @@ end
 
 (** [move ~enabled ~current key]: the index (into the list of
     items, whose [enabled] flags are given) that [key] moves to from
-    [current]; arrows wrap. Both arrow axes move in a [Horizontal] group
-    and a [Vertical] one alike, as WAI-ARIA radio groups do. *)
+    [current]; arrows wrap. Both arrow axes move, as in a Radix group
+    without an orientation. *)
 val move
   :  enabled:bool list
   -> current:int
   -> Dom_html.Keyboard_code.t
   -> int option
+
+(** For a keydown on an item of a group: the [value] of the item [key]
+    moves to, and an effect focusing it. In a browser the items are the
+    elements matching [item] inside the event's item's closest [group], in
+    document order (their [value] attribute; disabled when they have
+    [disabled]); elsewhere (tests), [fallback]: values and whether
+    enabled, with [current] the item's value. *)
+val next
+  :  Dom_html.keyboardEvent Js.t
+  -> group:string
+  -> item:string
+  -> fallback:(string * bool) list
+  -> current:string
+  -> (string * unit Effect.t) option

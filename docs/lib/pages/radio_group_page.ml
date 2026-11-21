@@ -5,119 +5,247 @@ open! Bonsai.Let_syntax
 module Node = Vdom.Node
 module Attr = Vdom.Attr
 
-(* Examples sit in a column no wider than a form would be. *)
-let narrow nodes =
-  Node.div
-    ~attrs:
-      [ Attr.class_ "docs-stack"
-      ; Attr.style (Css_gen.create ~field:"width" ~value:"min(100%, 24rem)")
-      ]
-    nodes
-;;
-
 let page = "radio_group"
 
-(*$ Default *)
-let default (local_ graph) =
-  let%arr density =
+(*$ Demo *)
+let demo (local_ graph) =
+  let%arr group =
     Radio_group.component
-      ~default:"comfortable"
-      [ Radio_group.Item.create ~value:"default" "Default"
-      ; Radio_group.Item.create ~value:"comfortable" "Comfortable"
-      ; Radio_group.Item.create ~value:"compact" "Compact"
-      ]
+      ~class_:"w-fit"
+      ~default_value:"comfortable"
+      (return (fun group ->
+         List.map
+           [ "default", "r1", "Default"
+           ; "comfortable", "r2", "Comfortable"
+           ; "compact", "r3", "Compact"
+           ]
+           ~f:(fun (value, id, label) ->
+             Node.div
+               ~attrs:[ Attr.class_ "flex items-center gap-3" ]
+               [ Radio_group.item group ~value ~id
+               ; Label.view ~for_:id [ Node.text label ]
+               ])))
       graph
   in
-  density.view
-;;
-
+  group.view
 (*$*)
 
-(*$ With descriptions *)
-let plans (local_ graph) =
-  let%arr plan =
+(*$ Description
+   Radio items with a description, laid out with [Field]. *)
+let description (local_ graph) =
+  let%arr group =
     Radio_group.component
-      ~default:"pro"
-      [ Radio_group.Item.create
-          ~value:"hobby"
-          ~description:"For side projects. Free forever."
-          "Hobby"
-      ; Radio_group.Item.create
-          ~value:"pro"
-          ~description:"Unlimited projects and priority support. $12/month."
-          "Pro"
-      ; Radio_group.Item.create
-          ~value:"enterprise"
-          ~description:"SSO, audit logs and a person to call."
-          ~disabled:true
-          "Enterprise (contact us)"
-      ]
+      ~class_:"w-fit"
+      ~default_value:"comfortable"
+      (return (fun group ->
+         List.map
+           [ "default", "desc-r1", "Default", "Standard spacing for most use cases."
+           ; "comfortable", "desc-r2", "Comfortable", "More space between elements."
+           ; "compact", "desc-r3", "Compact", "Minimal spacing for dense layouts."
+           ]
+           ~f:(fun (value, id, label, description) ->
+             Field.root
+               ~orientation:Horizontal
+               [ Radio_group.item group ~value ~id
+               ; Field.content
+                   [ Field.label ~for_:id [ Node.text label ]
+                   ; Field.description [ Node.text description ]
+                   ]
+               ])))
       graph
   in
-  narrow
-    [ Field.set ~legend:"Plan" [ plan.view ]
-    ; Node.p
-        ~attrs:[ Attr.class_ "loon-field-description" ]
-        [ Node.textf "Chosen: %s" (Option.value plan.value ~default:"nothing") ]
+  group.view
+(*$*)
+
+(*$ Choice Card
+   [Field.label] wraps the whole [Field] for a clickable card. *)
+let choice_card (local_ graph) =
+  let%arr group =
+    Radio_group.component
+      ~class_:"max-w-sm"
+      ~default_value:"plus"
+      (return (fun group ->
+         List.map
+           [ "plus", "plus-plan", "Plus", "For individuals and small teams."
+           ; "pro", "pro-plan", "Pro", "For growing businesses."
+           ; "enterprise", "enterprise-plan", "Enterprise", "For large teams and enterprises."
+           ]
+           ~f:(fun (value, id, title, description) ->
+             Field.label
+               ~for_:id
+               [ Field.root
+                   ~orientation:Horizontal
+                   [ Field.content
+                       [ Field.title [ Node.text title ]
+                       ; Field.description [ Node.text description ]
+                       ]
+                   ; Radio_group.item group ~value ~id
+                   ]
+               ])))
+      graph
+  in
+  group.view
+(*$*)
+
+(*$ Fieldset
+   [Field.set] and [Field.legend] group the radio items with a label and a
+   description. *)
+let fieldset (local_ graph) =
+  let%arr group =
+    Radio_group.component
+      ~default_value:"monthly"
+      (return (fun group ->
+         List.map
+           [ "monthly", "plan-monthly", "Monthly ($9.99/month)"
+           ; "yearly", "plan-yearly", "Yearly ($99.99/year)"
+           ; "lifetime", "plan-lifetime", "Lifetime ($299.99)"
+           ]
+           ~f:(fun (value, id, label) ->
+             Field.root
+               ~orientation:Horizontal
+               [ Radio_group.item group ~value ~id
+               ; Field.label ~for_:id ~class_:"font-normal" [ Node.text label ]
+               ])))
+      graph
+  in
+  Field.set
+    ~class_:"w-full max-w-xs"
+    [ Field.legend ~variant:Label [ Node.text "Subscription Plan" ]
+    ; Field.description
+        [ Node.text "Yearly and lifetime plans offer significant savings." ]
+    ; group.view
     ]
-;;
-
 (*$*)
 
-(*$ Horizontal *)
-let horizontal (local_ graph) =
-  let%arr size =
+(*$ Disabled
+   [~disabled:true] on an item skips it (and on the group, every item). *)
+let disabled (local_ graph) =
+  let%arr group =
     Radio_group.component
-      ~orientation:Horizontal
-      ~default:"m"
-      (List.map [ "XS"; "S"; "M"; "L"; "XL" ] ~f:(fun s ->
-         Radio_group.Item.create ~value:(String.lowercase s) s))
+      ~class_:"w-fit"
+      ~default_value:"option2"
+      (return (fun group ->
+         [ Field.root
+             ~orientation:Horizontal
+             ~disabled:true
+             [ Radio_group.item group ~value:"option1" ~id:"disabled-1" ~disabled:true
+             ; Field.label ~for_:"disabled-1" ~class_:"font-normal" [ Node.text "Disabled" ]
+             ]
+         ; Field.root
+             ~orientation:Horizontal
+             [ Radio_group.item group ~value:"option2" ~id:"disabled-2"
+             ; Field.label ~for_:"disabled-2" ~class_:"font-normal" [ Node.text "Option 2" ]
+             ]
+         ; Field.root
+             ~orientation:Horizontal
+             [ Radio_group.item group ~value:"option3" ~id:"disabled-3"
+             ; Field.label ~for_:"disabled-3" ~class_:"font-normal" [ Node.text "Option 3" ]
+             ]
+         ]))
       graph
   in
-  size.view
-;;
+  group.view
+(*$*)
 
+(*$ Invalid
+   [~invalid:true] on the items sets [aria-invalid]; on the fields it turns
+   the labels destructive. *)
+let invalid (local_ graph) =
+  let%arr group =
+    Radio_group.component
+      ~default_value:"email"
+      (return (fun group ->
+         List.map
+           [ "email", "invalid-email", "Email only"
+           ; "sms", "invalid-sms", "SMS only"
+           ; "both", "invalid-both", "Both Email & SMS"
+           ]
+           ~f:(fun (value, id, label) ->
+             Field.root
+               ~orientation:Horizontal
+               ~invalid:true
+               [ Radio_group.item group ~value ~id ~invalid:true
+               ; Field.label ~for_:id ~class_:"font-normal" [ Node.text label ]
+               ])))
+      graph
+  in
+  Field.set
+    ~class_:"w-full max-w-xs"
+    [ Field.legend ~variant:Label [ Node.text "Notification Preferences" ]
+    ; Field.description [ Node.text "Choose how you want to receive notifications." ]
+    ; group.view
+    ]
+(*$*)
+
+(*$ Controlled
+   [Radio_group.view] takes the value and [on_change]: here from a state
+   shown below the group. *)
+let controlled (local_ graph) =
+  let value, set_value = Bonsai.state (Some "comfortable") graph in
+  let%arr value and set_value in
+  Node.div
+    ~attrs:[ Attr.class_ "grid gap-4" ]
+    [ Radio_group.view
+        ~class_:"w-fit"
+        ~value
+        ~on_change:(fun v -> set_value (Some v))
+        (fun group ->
+          List.map
+            [ "default", "ctl-r1", "Default"
+            ; "comfortable", "ctl-r2", "Comfortable"
+            ; "compact", "ctl-r3", "Compact"
+            ]
+            ~f:(fun (value, id, label) ->
+              Node.div
+                ~attrs:[ Attr.class_ "flex items-center gap-3" ]
+                [ Radio_group.item group ~value ~id
+                ; Label.view ~for_:id [ Node.text label ]
+                ]))
+    ; Node.p
+        ~attrs:[ Attr.class_ "text-sm text-muted-foreground" ]
+        [ Node.text ("Density: " ^ Option.value value ~default:"none") ]
+    ]
 (*$*)
 
 let page =
   Doc.page
     ~slug:page
-    ~title:"Radio group"
+    ~title:"Radio Group"
     ~group:Forms
-    ~description:"Choose one of a few options, all in view."
+    ~description:
+      "A set of checkable buttons\u{2014}known as radio buttons\u{2014}where no more than \
+       one of the buttons can be checked at a time."
     ~usage:
-      {|Radio_group.view ~name:"plan" ~value ~on_change:set_value
-  [ Radio_group.Item.create ~value:"hobby" "Hobby"
-  ; Radio_group.Item.create ~value:"pro" "Pro"
-  ]|}
+      {|Radio_group.view ~value ~on_change:set_value (fun group ->
+  [ Radio_group.item group ~value:"default" ~id:"r1"
+  ; Label.view ~for_:"r1" [ Node.text "Default" ]
+  ])|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ ( "value"
-            , "string option"
-            , "The chosen item's value; None before one is chosen." )
+          [ "value", "string option", "The checked item's value."
           ; ( "on_change"
             , "string -> unit Effect.t"
-            , "Gets the newly chosen value." )
-          ; ( "name"
-            , "string"
-            , "Scopes the elements' ids: one per group on a page (the \
-               component makes its own)." )
+            , "Gets an item's value when it is clicked or reached by the arrow keys." )
           ; ( "orientation"
             , "Roving.Orientation.t"
-            , "Vertical (default) or Horizontal." )
-          ; ( "disabled"
-            , "bool"
-            , "Disables every item; Item.create ~disabled disables one." )
+            , "Sets [aria-orientation]; the arrow keys work either way." )
+          ; "disabled", "bool", "Disables every item."
+          ; "required", "bool", "Sets [aria-required]."
+          ; "class_", "string", "More Tailwind classes, merged last (they win conflicts)."
+          ; "attrs", "Vdom.Attr.t list", "Extra attributes."
           ]
-      ; Doc.h2 "Keyboard"
       ; Doc.p
-          "Tab moves to the chosen option. The arrow keys choose the next or \
-           previous option, wrapping and skipping disabled ones; Home and End \
-           the first and last."
+          "[Radio_group.item group ~value] is one radio button, with [?id] (for a label), \
+           [?disabled] and [?invalid]. [Radio_group.component ~default_value children \
+           graph] keeps the value in Bonsai and returns a [string option Control.t]."
       ]
-    [ Doc.example ~page "Default" default
-    ; Doc.example ~page "With descriptions" plans
-    ; Doc.example ~page "Horizontal" horizontal
+    [ Doc.example ~page "Demo" demo
+    ; Doc.example ~page "Description" description
+    ; Doc.example ~page "Choice Card" choice_card
+    ; Doc.example ~page "Fieldset" fieldset
+    ; Doc.example ~page "Disabled" disabled
+    ; Doc.example ~page "Invalid" invalid
+    ; Doc.example ~page "Controlled" controlled
     ]
 ;;

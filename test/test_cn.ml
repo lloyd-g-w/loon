@@ -43,3 +43,10 @@ let%expect_test "unknown classes and duplicates" =
   show [ "[&_svg:not([class*='size-'])]:size-4"; "[&_svg:not([class*='size-'])]:size-3" ];
   [%expect {| [&_svg:not([class*='size-'])]:size-3 |}]
 ;;
+
+let%expect_test "arbitrary properties conflict by property" =
+  show [ "p-3 [--cell-size:--spacing(8)]"; "p-0 [--cell-size:--spacing(9.5)]" ];
+  [%expect {| p-0 [--cell-size:--spacing(9.5)] |}];
+  show [ "[--cell-size:--spacing(8)]"; "md:[--cell-size:--spacing(12)]" ];
+  [%expect {| [--cell-size:--spacing(8)] md:[--cell-size:--spacing(12)] |}]
+;;

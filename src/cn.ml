@@ -70,7 +70,20 @@ let sides4 = [ "t"; "r"; "b"; "l"; "s"; "e"; "x"; "y" ]
 
 (* The conflict group of a base class (without variants and [!]), and the
    groups it overrides besides its own. *)
+let arbitrary_property base =
+  (* [[--cell-size:--spacing(8)]]: an arbitrary property, grouped by its name. *)
+  if String.is_prefix base ~prefix:"[" && String.is_suffix base ~suffix:"]"
+  then
+    Option.map
+      (String.lsplit2 (String.sub base ~pos:1 ~len:(String.length base - 2)) ~on:':')
+      ~f:(fun (property, _) -> "[" ^ property, [])
+  else None
+;;
+
 let group base : (string * string list) option =
+  match arbitrary_property base with
+  | Some g -> Some g
+  | None ->
   let base = String.chop_prefix_if_exists base ~prefix:"-" in
   let first_of prefixes =
     List.find_map prefixes ~f:(fun (prefix, g) ->

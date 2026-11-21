@@ -9,20 +9,16 @@ let page = "tabs"
 
 (*$ Demo *)
 let demo (local_ graph) =
-  let name = Input.component ~default:"Pedro Duarte" graph in
-  let username = Input.component ~default:"@peduarte" graph in
-  let current = Input.component ~type_:Password graph in
-  let new_ = Input.component ~type_:Password graph in
+  let name = Input.component ~id:"tabs-demo-name" ~default_value:"Pedro Duarte" graph in
+  let username =
+    Input.component ~id:"tabs-demo-username" ~default_value:"@peduarte" graph
+  in
+  let current = Input.component ~id:"tabs-demo-current" ~type_:Password graph in
+  let new_ = Input.component ~id:"tabs-demo-new" ~type_:Password graph in
   let field ~id ~label (control : string Control.t) =
     Node.div
       ~attrs:[ Attr.class_ "grid gap-3" ]
-      [ Label.text ~for_:id label
-      ; Input.view
-          ~attrs:[ Attr.id id ]
-          ~value:control.value
-          ~on_input:control.set
-          ()
-      ]
+      [ Label.view ~for_:id [ Node.text label ]; control.view ]
   in
   let tabs =
     Tabs.component

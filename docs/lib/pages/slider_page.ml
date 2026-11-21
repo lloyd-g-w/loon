@@ -5,71 +5,111 @@ open! Bonsai.Let_syntax
 module Node = Vdom.Node
 module Attr = Vdom.Attr
 
-(* Examples sit in a column no wider than a form would be. *)
-let narrow nodes =
-  Node.div
-    ~attrs:
-      [ Attr.class_ "docs-stack"
-      ; Attr.style (Css_gen.create ~field:"width" ~value:"min(100%, 24rem)")
-      ]
-    nodes
-;;
-
 let page = "slider"
 
-(*$ Default *)
-let default (local_ graph) =
-  let%arr volume = Slider.component ~default:40. ~show_value:true graph in
-  narrow [ volume.view ]
-;;
-
+(*$ Demo *)
+let demo (local_ graph) =
+  let%arr slider =
+    Slider.component ~default_value:[ 50. ] ~max:100. ~step:1. ~class_:"w-[60%]" graph
+  in
+  slider.view
 (*$*)
 
-(*$ With a label and a format *)
-let temperature (local_ graph) =
-  let%arr temp =
+(*$ Range
+   Two values make two thumbs, with the range between them filled. *)
+let range (local_ graph) =
+  let%arr slider =
     Slider.component
-      ~min:16.
-      ~max:30.
-      ~step:0.5
-      ~default:21.5
-      ~show_value:true
-      ~format:(fun t -> sprintf "%.1f °C" t)
+      ~default_value:[ 25.; 50. ]
+      ~max:100.
+      ~step:5.
+      ~class_:"mx-auto w-full max-w-xs"
       graph
   in
-  narrow
-    [ Field.view
-        ~id:"slider-temp"
-        ~label:"Thermostat"
-        ~description:
-          (if Float.(temp.value > 24.) then "Toasty." else "Just right.")
-        (fun attrs ->
-           Slider.view
-             ~attrs
-             ~min:16.
-             ~max:30.
-             ~step:0.5
-             ~show_value:true
-             ~format:(fun t -> sprintf "%.1f °C" t)
-             ~value:temp.value
-             ~on_change:temp.set
-             ())
-    ]
-;;
+  slider.view
+(*$*)
 
+(*$ Multiple Thumbs *)
+let multiple (local_ graph) =
+  let%arr slider =
+    Slider.component
+      ~default_value:[ 10.; 20.; 70. ]
+      ~max:100.
+      ~step:10.
+      ~class_:"mx-auto w-full max-w-xs"
+      graph
+  in
+  slider.view
+(*$*)
+
+(*$ Vertical *)
+let vertical (local_ graph) =
+  let first =
+    Slider.component
+      ~default_value:[ 50. ]
+      ~max:100.
+      ~step:1.
+      ~orientation:Vertical
+      ~class_:"h-40"
+      graph
+  in
+  let second =
+    Slider.component
+      ~default_value:[ 25. ]
+      ~max:100.
+      ~step:1.
+      ~orientation:Vertical
+      ~class_:"h-40"
+      graph
+  in
+  let%arr first and second in
+  Node.div
+    ~attrs:
+      [ Attr.class_ "mx-auto flex w-full max-w-xs items-center justify-center gap-6" ]
+    [ first.view; second.view ]
+(*$*)
+
+(*$ Controlled
+   [Slider.view] takes the values and gets the new ones in [on_change]. *)
+let controlled (local_ graph) =
+  let value, set_value = Bonsai.state [ 0.3; 0.7 ] graph in
+  let%arr value and set_value in
+  Node.div
+    ~attrs:[ Attr.class_ "mx-auto grid w-full max-w-xs gap-3" ]
+    [ Node.div
+        ~attrs:[ Attr.class_ "flex items-center justify-between gap-2" ]
+        [ Label.view ~for_:"slider-demo-temperature" [ Node.text "Temperature" ]
+        ; Node.span
+            ~attrs:[ Attr.class_ "text-sm text-muted-foreground" ]
+            [ Node.text
+                (String.concat
+                   ~sep:", "
+                   (List.map value ~f:(Float.to_string_hum ~strip_zero:true)))
+            ]
+        ]
+    ; Slider.view
+        ~attrs:[ Attr.id "slider-demo-temperature" ]
+        ~value
+        ~on_change:set_value
+        ~min:0.
+        ~max:1.
+        ~step:0.1
+        ()
+    ]
 (*$*)
 
 (*$ Disabled *)
-let disabled =
-  narrow
-    [ Slider.view
-        ~disabled:true
-        ~value:60.
-        ~on_change:(fun _ -> Effect.Ignore)
-        ()
-    ]
-;;
-
+let disabled (local_ graph) =
+  let%arr slider =
+    Slider.component
+      ~default_value:[ 50. ]
+      ~max:100.
+      ~step:1.
+      ~disabled:true
+      ~class_:"mx-auto w-full max-w-xs"
+      graph
+  in
+  slider.view
 (*$*)
 
 let page =
@@ -77,28 +117,41 @@ let page =
     ~slug:page
     ~title:"Slider"
     ~group:Forms
-    ~description:
-      "Picks a number in a range by dragging, or with the arrow keys."
-    ~usage:{|Slider.view ~min:0. ~max:100. ~value ~on_change:set_value ()|}
+    ~description:"An input where the user selects a value from within a given range."
+    ~usage:{|Slider.component ~default_value:[ 33. ] ~max:100. ~step:1. graph|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "value", "float", "The current value (clamped to the range)."
+          [ ( "value"
+            , "float list"
+            , "One thumb per value, in increasing order (controlled [view])." )
           ; ( "on_change"
-            , "float -> unit Effect.t"
-            , "Gets each new value while dragging." )
-          ; ( "min, max, step"
-            , "float"
-            , "The range (0 to 100 by default) and its increments (1)." )
-          ; "show_value", "bool", "Prints the value beside the track."
-          ; ( "format"
-            , "float -> string"
-            , "How the value is printed and announced." )
-          ; "disabled", "bool", "Greys it out."
+            , "float list -> unit Effect.t"
+            , "Gets the values after each move: sorted and on a step." )
+          ; ( "default_value"
+            , "float list"
+            , "The first values of [component]; [[min; max]] by default." )
+          ; "min, max", "float", "The ends of the range: 0 and 100 by default."
+          ; "step", "float", "The values a thumb stops at; 1 by default."
+          ; ( "min_steps_between_thumbs"
+            , "int"
+            , "How many steps apart thumbs must stay; 0 by default." )
+          ; "orientation", "Slider.Orientation.t", "[Horizontal] or [Vertical]."
+          ; "disabled", "bool", "Fades it and ignores the pointer and keys."
+          ; "class_", "string", "More Tailwind classes for the root, merged last."
+          ; "attrs", "Vdom.Attr.t list", "Extra attributes for the root."
           ]
+      ; Doc.h2 "Keyboard"
+      ; Doc.p
+          "On a thumb: the arrow keys move it a step, Shift with an arrow or Page Up \
+           and Page Down ten steps, Home and End to the ends. A thumb dragged past \
+           another swaps places with it."
       ]
-    [ Doc.example ~page "Default" default
-    ; Doc.example ~page "With a label and a format" temperature
-    ; Doc.static ~page "Disabled" disabled
+    [ Doc.example ~page "Demo" demo
+    ; Doc.example ~page "Range" range
+    ; Doc.example ~page "Multiple Thumbs" multiple
+    ; Doc.example ~page "Vertical" vertical
+    ; Doc.example ~page "Controlled" controlled
+    ; Doc.example ~page "Disabled" disabled
     ]
 ;;

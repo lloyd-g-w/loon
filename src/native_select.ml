@@ -1,72 +1,155 @@
 open! Import
 
-module Item = struct
+module Size = struct
   type t =
-    { value : string
-    ; label : string
-    ; disabled : bool
-    }
+    | Default
+    | Sm
+  [@@deriving enumerate, sexp_of, compare, equal]
 
-  let create ?(disabled = false) ~value label = { value; label; disabled }
+  let name = function
+    | Default -> "default"
+    | Sm -> "sm"
+  ;;
 end
 
+(* The <select>'s value is set as a property before its options exist, so
+   the browser would select the first; set it again once they do. *)
+module Value_hook = Vdom.Attr.Hooks.Make (struct
+    module State = Unit
+
+    module Input = struct
+      type t = string [@@deriving sexp_of]
+
+      let combine _ b = b
+    end
+
+    let set (el : Js_of_ocaml.Dom_html.element Js_of_ocaml.Js.t) value =
+      let select : Js_of_ocaml.Dom_html.selectElement Js_of_ocaml.Js.t =
+        Js_of_ocaml.Js.Unsafe.coerce el
+      in
+      select##.value := Js_of_ocaml.Js.string value
+    ;;
+
+    let init _ _ = ()
+
+    let on_mount =
+      `Schedule_immediately_after_this_dom_patch_completes
+        (fun value () el -> set el value)
+    ;;
+
+    let update ~old_input:_ ~new_input () el = set el new_input
+    let destroy _ () _ = ()
+  end)
+
 let view
-      ?attrs:extra
-      ?(disabled = false)
-      ?(invalid = false)
-      ?placeholder
-      ~value
-      ~on_change
-      (items : Item.t list)
+  ?(attrs = [])
+  ?class_
+  ?(size = Size.Default)
+  ?id
+  ?name
+  ?(disabled = false)
+  ?(required = false)
+  ?(invalid = false)
+  ?value
+  ?on_change
+  options
   =
-  let matched =
-    List.exists items ~f:(fun item -> String.equal item.value value)
-  in
-  let option ?(disabled = false) ~selected v label =
-    Node.option
-      ~attrs:
-        ([ Attr.value v ]
-         @ (if selected then [ Attr.selected ] else [])
-         @ if disabled then [ Attr.disabled ] else [])
-      [ Node.text label ]
-  in
-  let placeholder =
-    match placeholder with
-    | None -> []
-    | Some p -> [ option ~disabled:true ~selected:(not matched) "" p ]
-  in
+  let opt f = Option.value_map ~default:[] ~f:(fun x -> [ f x ]) in
   Node.div
     ~attrs:
-      [ Attr.class_ "loon-native-select"
-      ; data "disabled" (Bool.to_string disabled)
+      [ Attr.class_
+          "group/native-select relative w-fit has-[select:disabled]:opacity-50"
+      ; data "slot" "native-select-wrapper"
       ]
     [ Node.select
         ~attrs:
-          (attrs ?attrs:extra [ "loon-native-select-control" ]
-           @ [ Attr.value value
-             ; Attr.on_change (fun _ v -> on_change v)
-             ; data "placeholder" (Bool.to_string (not matched))
-             ]
+          ([ data "slot" "native-select"
+           ; data "size" (Size.name size)
+           ; Cn.with_class
+               ?class_
+               [ "h-9 w-full min-w-0 appearance-none rounded-md border border-input \
+                  bg-transparent px-3 py-2 pr-9 text-sm shadow-xs \
+                  transition-[color,box-shadow] outline-none selection:bg-primary \
+                  selection:text-primary-foreground placeholder:text-muted-foreground \
+                  disabled:pointer-events-none disabled:cursor-not-allowed \
+                  data-[size=sm]:h-8 data-[size=sm]:py-1 dark:bg-input/30 \
+                  dark:hover:bg-input/50"
+               ; "focus-visible:border-ring focus-visible:ring-[3px] \
+                  focus-visible:ring-ring/50"
+               ; "aria-invalid:border-destructive aria-invalid:ring-destructive/20 \
+                  dark:aria-invalid:ring-destructive/40"
+               ]
+           ]
+           @ opt Attr.id id
+           @ opt Attr.name name
            @ (if disabled then [ Attr.disabled ] else [])
-           @ if invalid then [ aria "invalid" "true" ] else [])
-        (placeholder
-         @ List.map items ~f:(fun item ->
-           option
-             ~disabled:item.disabled
-             ~selected:(String.equal item.value value)
-             item.value
-             item.label))
+           @ (if required then [ Attr.create "required" "" ] else [])
+           @ (if invalid then [ aria "invalid" "true" ] else [])
+           @ opt Attr.value value
+           @ opt
+               (fun v -> Vdom.Attr.create_hook "native-select-value" (Value_hook.create v))
+               value
+           @ opt (fun f -> Attr.on_change (fun _ v -> f v)) on_change
+           @ attrs)
+        options
     ; Icon.view
-        ~attrs:[ Attr.class_ "loon-native-select-chevron" ]
-        Chevrons_up_down
+        ~attrs:[ data "slot" "native-select-icon" ]
+        ~class_:
+          "pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 \
+           text-muted-foreground opacity-50 select-none"
+        Chevron_down
     ]
 ;;
 
-let component ?attrs ?disabled ?placeholder ?(default = "") items (local_ graph) =
-  Control.make
-    ~equal:String.equal
-    default
-    ~view:(fun value set ->
-      view ?attrs ?disabled ?placeholder ~value ~on_change:set items)
-    graph
+let component
+  ?attrs
+  ?class_
+  ?size
+  ?id
+  ?name
+  ?disabled
+  ?required
+  ?invalid
+  ?(default_value = "")
+  options
+  (local_ graph)
+  =
+  Control.make ~equal:String.equal default_value graph ~view:(fun value set ->
+    view
+      ?attrs
+      ?class_
+      ?size
+      ?id
+      ?name
+      ?disabled
+      ?required
+      ?invalid
+      ~value
+      ~on_change:set
+      options)
+;;
+
+let option ?(attrs = []) ?class_ ?(disabled = false) ~value children =
+  Node.option
+    ~attrs:
+      ([ data "slot" "native-select-option"
+       ; Attr.value value
+       ; Cn.with_class ?class_ [ "bg-[Canvas] text-[CanvasText]" ]
+       ]
+       @ (if disabled then [ Attr.disabled ] else [])
+       @ attrs)
+    children
+;;
+
+let opt_group ?(attrs = []) ?class_ ?(disabled = false) ~label children =
+  Node.create
+    "optgroup"
+    ~attrs:
+      ([ data "slot" "native-select-optgroup"
+       ; Attr.create "label" label
+       ; Cn.with_class ?class_ [ "bg-[Canvas] text-[CanvasText]" ]
+       ]
+       @ (if disabled then [ Attr.disabled ] else [])
+       @ attrs)
+    children
 ;;

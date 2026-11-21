@@ -1,71 +1,88 @@
-(** A row of toggles of which one ([Single], like a segmented control) or
-    any number ([Multiple]) are pressed. Tab reaches the group once; arrow
-    keys, Home and End move between its items. *)
+(** A set of two-state buttons that can be toggled on or off. Port of
+    shadcn/ui's [ToggleGroup] (Radix Toggle Group: one pressed at most
+    ([single]) or any number ([multiple]); arrow keys, Home and End move
+    between the items).
+
+    {[
+      Toggle_group.multiple_component ~variant:Outline
+        (return (fun group ->
+          [ Toggle_group.item group ~value:"bold"
+              ~attrs:[ Attr.create "aria-label" "Toggle bold" ]
+              [ Icon.view Bold ]
+          ; ...
+          ]))
+        graph
+    ]} *)
 
 open! Import
 
-module Item : sig
-  type t =
-    { value : string
-    ; content : Node.t list
-    ; label : string option (** [aria-label], for icon-only items *)
-    ; disabled : bool
-    }
+(** The group's state and styles, for its items. *)
+type t
 
-  val create
-    :  ?label:string
-    -> ?disabled:bool
-    -> value:string
-    -> Node.t list
-    -> t
-
-  val text : ?disabled:bool -> value:string -> string -> t
-  val icon : ?disabled:bool -> value:string -> label:string -> Icon.t -> t
-end
-
-(** One pressed at most: pressing it again unpresses it, unless
-    [required]. [name] scopes the items' ids. *)
+(** One pressed at most ([role="radio"] items): pressing it again unpresses
+    it. *)
 val single
   :  ?attrs:Attr.t list
+  -> ?class_:string
   -> ?variant:Toggle.Variant.t
   -> ?size:Toggle.Size.t
+  -> ?spacing:int
+  -> ?orientation:Roving.Orientation.t
   -> ?disabled:bool
-  -> ?required:bool
-  -> name:string
   -> value:string option
   -> on_change:(string option -> unit Effect.t)
-  -> Item.t list
+  -> (t -> Node.t list)
   -> Node.t
 
-(** Any number pressed. *)
+(** Any number pressed ([aria-pressed] items); [value] in the order they
+    were pressed. *)
 val multiple
   :  ?attrs:Attr.t list
+  -> ?class_:string
   -> ?variant:Toggle.Variant.t
   -> ?size:Toggle.Size.t
+  -> ?spacing:int
+  -> ?orientation:Roving.Orientation.t
   -> ?disabled:bool
-  -> name:string
-  -> value:String.Set.t
-  -> on_change:(String.Set.t -> unit Effect.t)
-  -> Item.t list
+  -> value:string list
+  -> on_change:(string list -> unit Effect.t)
+  -> (t -> Node.t list)
   -> Node.t
 
 val single_component
   :  ?attrs:Attr.t list
+  -> ?class_:string
   -> ?variant:Toggle.Variant.t
   -> ?size:Toggle.Size.t
+  -> ?spacing:int
+  -> ?orientation:Roving.Orientation.t
   -> ?disabled:bool
-  -> ?required:bool
-  -> ?default:string
-  -> Item.t list
+  -> ?default_value:string
+  -> (t -> Node.t list) Bonsai.t
   -> local_ Bonsai.graph
   -> string option Control.t Bonsai.t
 
 val multiple_component
   :  ?attrs:Attr.t list
+  -> ?class_:string
+  -> ?variant:Toggle.Variant.t
+  -> ?size:Toggle.Size.t
+  -> ?spacing:int
+  -> ?orientation:Roving.Orientation.t
+  -> ?disabled:bool
+  -> ?default_value:string list
+  -> (t -> Node.t list) Bonsai.t
+  -> local_ Bonsai.graph
+  -> string list Control.t Bonsai.t
+
+(** An item; the group's [variant] and [size] win over its own. *)
+val item
+  :  ?attrs:Attr.t list
+  -> ?class_:string
   -> ?variant:Toggle.Variant.t
   -> ?size:Toggle.Size.t
   -> ?disabled:bool
-  -> ?default:String.Set.t
-  -> Item.t list
-  -> local_ Bonsai.graph
-  -> String.Set.t Control.t Bonsai.t
+  -> t
+  -> value:string
+  -> Node.t list
+  -> Node.t

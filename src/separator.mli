@@ -1,5 +1,6 @@
-(** A thin line between groups of content, optionally with a label in it
-    ("or"). Decorative unless [semantic]. *)
+(** Visually or semantically separates content. Port of shadcn/ui's
+    [Separator] (Radix Separator: [role="none"] while [decorative], the
+    default; otherwise [role="separator"]). *)
 
 open! Import
 
@@ -8,12 +9,15 @@ module Orientation : sig
     | Horizontal
     | Vertical
   [@@deriving enumerate, sexp_of, compare, equal]
+
+  (** [horizontal], [vertical], as in [data-orientation]. *)
+  val name : t -> string
 end
 
 val view
   :  ?attrs:Attr.t list
+  -> ?class_:string
   -> ?orientation:Orientation.t
-  -> ?semantic:bool
-  -> ?label:string
+  -> ?decorative:bool
   -> unit
   -> Node.t

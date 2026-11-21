@@ -5,130 +5,79 @@ open! Bonsai.Let_syntax
 module Node = Vdom.Node
 module Attr = Vdom.Attr
 
-(* Examples sit in a column no wider than a form would be. *)
-let narrow nodes =
-  Node.div
-    ~attrs:
-      [ Attr.class_ "docs-stack"
-      ; Attr.style (Css_gen.create ~field:"width" ~value:"min(100%, 24rem)")
-      ]
-    nodes
-;;
-
 let page = "toggle"
 
-(*$ Default
-   Ghost toggles have no border until pressed, which suits a toolbar; use
-   Outline for one on its own. *)
-let default (local_ graph) =
-  let bold =
+(*$ Demo *)
+let demo (local_ graph) =
+  let%arr toggle =
     Toggle.component
-      ~attrs:[ Attr.create "aria-label" "Bold" ]
-      ~default:true
-      [ Node.strong [ Node.text "B" ] ]
+      ~attrs:[ Attr.create "aria-label" "Toggle bookmark" ]
+      ~size:Sm
+      ~variant:Outline
+      ~class_:
+        "data-[state=on]:bg-transparent data-[state=on]:*:[svg]:fill-blue-500 \
+         data-[state=on]:*:[svg]:stroke-blue-500"
+      [ Icon.view Bookmark; Node.text "Bookmark" ]
       graph
   in
-  let italic =
-    Toggle.component
-      ~attrs:[ Attr.create "aria-label" "Italic" ]
-      [ Node.em [ Node.text "I" ] ]
-      graph
-  in
-  let%arr bold and italic in
-  Node.div
-    ~attrs:[ Attr.class_ "docs-toolbar" ]
-    [ bold.view; italic.view ]
-;;
-
+  toggle.view
 (*$*)
 
-(*$ Outline, with text *)
+(*$ Outline *)
 let outline (local_ graph) =
-  let%arr starred =
+  let%arr toggle =
     Toggle.component
       ~variant:Outline
-      [ Icon.view Bell; Node.text "Watch" ]
+      ~attrs:[ Attr.create "aria-label" "Toggle italic" ]
+      [ Icon.view Italic ]
       graph
   in
-  starred.view
-;;
-
+  toggle.view
 (*$*)
 
-(*$ Toggle group: one at a time
-   With [Single], a group works like a segmented control. *)
-let single (local_ graph) =
-  let%arr view =
-    Toggle_group.single_component
-      ~variant:Outline
-      ~required:true
-      ~default:"week"
-      [ Toggle_group.Item.text ~value:"day" "Day"
-      ; Toggle_group.Item.text ~value:"week" "Week"
-      ; Toggle_group.Item.text ~value:"month" "Month"
-      ; Toggle_group.Item.text ~value:"year" "Year"
-      ]
+(*$ With Text *)
+let with_text (local_ graph) =
+  let%arr toggle =
+    Toggle.component
+      ~attrs:[ Attr.create "aria-label" "Toggle italic" ]
+      [ Icon.view Italic; Node.text "Italic" ]
       graph
   in
-  view.view
-;;
-
+  toggle.view
 (*$*)
 
-(*$ Toggle group: any number *)
-let multiple (local_ graph) =
-  let%arr format =
-    Toggle_group.multiple_component
-      ~default:(String.Set.singleton "bold")
-      [ Toggle_group.Item.create
-          ~label:"Bold"
-          ~value:"bold"
-          [ Node.strong [ Node.text "B" ] ]
-      ; Toggle_group.Item.create
-          ~label:"Italic"
-          ~value:"italic"
-          [ Node.em [ Node.text "I" ] ]
-      ; Toggle_group.Item.create
-          ~label:"Underline"
-          ~value:"underline"
-          [ Node.span
-              ~attrs:
-                [ Attr.style
-                    (Css_gen.create ~field:"text-decoration" ~value:"underline")
-                ]
-              [ Node.text "U" ]
-          ]
-      ]
+(*$ Small *)
+let small (local_ graph) =
+  let%arr toggle =
+    Toggle.component
+      ~size:Sm
+      ~attrs:[ Attr.create "aria-label" "Toggle italic" ]
+      [ Icon.view Italic ]
       graph
   in
-  Node.div
-    ~attrs:[ Attr.class_ "docs-row" ]
-    [ format.view
-    ; Node.span
-        ~attrs:[ Attr.class_ "loon-field-description" ]
-        [ Node.text
-            (match Set.to_list format.value with
-             | [] -> "Plain"
-             | styles -> String.concat ~sep:" + " styles)
-        ]
-    ]
-;;
-
+  toggle.view
 (*$*)
 
-(*$ Sizes *)
-let sizes =
-  Node.div
-    ~attrs:[ Attr.class_ "docs-row" ]
-    (List.map Toggle.Size.all ~f:(fun size ->
-       Toggle.view
-         ~variant:Outline
-         ~size
-         ~pressed:true
-         ~on_change:(fun _ -> Effect.Ignore)
-         [ Icon.view Sun; Node.text (Toggle.Size.name size) ]))
-;;
+(*$ Large *)
+let large (local_ graph) =
+  let%arr toggle =
+    Toggle.component
+      ~size:Lg
+      ~attrs:[ Attr.create "aria-label" "Toggle italic" ]
+      [ Icon.view Italic ]
+      graph
+  in
+  toggle.view
+(*$*)
 
+(*$ Disabled *)
+let disabled =
+  Toggle.view
+    ~attrs:[ Attr.create "aria-label" "Toggle italic" ]
+    ~disabled:true
+    ~pressed:false
+    ~on_change:(fun _ -> Effect.Ignore)
+    [ Icon.view ~class_:"h-4 w-4" Underline ]
 (*$*)
 
 let page =
@@ -136,29 +85,35 @@ let page =
     ~slug:page
     ~title:"Toggle"
     ~group:Forms
-    ~description:
-      "A button that stays pressed; and groups of them, one or many at a time."
-    ~usage:{|Toggle.view ~pressed ~on_change:set_pressed [ Icon.view Bell ]|}
+    ~description:"A two-state button that can be either on or off."
+    ~usage:
+      {|Toggle.view ~attrs:[ Attr.create "aria-label" "Toggle italic" ] ~pressed
+  ~on_change:set_pressed [ Icon.view Italic ]|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "pressed", "bool", "Whether it is pressed (aria-pressed)."
-          ; "on_change", "bool -> unit Effect.t", "Gets the new value."
-          ; "variant", "Toggle.Variant.t", "Ghost (default) or Outline."
-          ; "size", "Toggle.Size.t", "Sm, Md (default) or Lg."
+          [ "pressed", "bool", "Whether it is on ([aria-pressed], [data-state=on])."
+          ; "on_change", "bool -> unit Effect.t", "Gets the new state when clicked."
+          ; ( "default_pressed"
+            , "bool"
+            , "Whether [Toggle.component] starts on; [false] by default." )
+          ; "variant", "Toggle.Variant.t", "[Default] or [Outline]."
+          ; "size", "Toggle.Size.t", "[Default], [Sm] or [Lg]."
+          ; "disabled", "bool", "Greys it out and ignores clicks."
+          ; "class_", "string", "More Tailwind classes, merged last."
+          ; ( "attrs"
+            , "Vdom.Attr.t list"
+            , "Extra attributes: give an icon-only toggle an aria-label." )
           ]
-      ; Doc.h2 "Toggle groups"
       ; Doc.p
-          "Toggle_group.single has one item pressed at most (required: exactly \
-           one) and is announced as a radio group; Toggle_group.multiple any \
-           number. Tab reaches the group once; the arrow keys, Home and End \
-           move between its items, and Space or Enter presses one. Outline \
-           groups join into a single segmented control."
+          "[Toggle.classes ~variant ~size ()] gives the classes alone, for other \
+           elements that should look like a toggle."
       ]
-    [ Doc.example ~page "Default" default
-    ; Doc.example ~page "Outline, with text" outline
-    ; Doc.example ~page "Toggle group: one at a time" single
-    ; Doc.example ~page "Toggle group: any number" multiple
-    ; Doc.static ~page "Sizes" sizes
+    [ Doc.example ~page "Demo" demo
+    ; Doc.example ~page "Outline" outline
+    ; Doc.example ~page "With Text" with_text
+    ; Doc.example ~page "Small" small
+    ; Doc.example ~page "Large" large
+    ; Doc.static ~page "Disabled" disabled
     ]
 ;;

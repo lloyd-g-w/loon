@@ -1,36 +1,30 @@
 open! Import
 
-let symbol key =
-  match String.lowercase key with
-  | "cmd" | "command" | "meta" | "super" -> Some "⌘"
-  | "shift" -> Some "⇧"
-  | "alt" | "option" | "opt" -> Some "⌥"
-  | "ctrl" | "control" -> Some "⌃"
-  | "enter" | "return" -> Some "↵"
-  | "backspace" -> Some "⌫"
-  | "tab" -> Some "⇥"
-  | "esc" | "escape" -> Some "Esc"
-  | "up" | "arrowup" -> Some "↑"
-  | "down" | "arrowdown" -> Some "↓"
-  | "left" | "arrowleft" -> Some "←"
-  | "right" | "arrowright" -> Some "→"
-  | _ -> None
+let view ?(attrs = []) ?class_ children =
+  Node.create
+    "kbd"
+    ~attrs:
+      ([ data "slot" "kbd"
+       ; Cn.with_class
+           ?class_
+           [ "pointer-events-none inline-flex h-5 w-fit min-w-5 items-center \
+              justify-center gap-1 rounded-sm bg-muted px-1 font-sans text-xs \
+              font-medium text-muted-foreground select-none"
+           ; "[&_svg:not([class*='size-'])]:size-3"
+           ; "[[data-slot=tooltip-content]_&]:bg-background/20 \
+              [[data-slot=tooltip-content]_&]:text-background \
+              dark:[[data-slot=tooltip-content]_&]:bg-background/10"
+           ]
+       ]
+       @ attrs)
+    children
 ;;
 
-let view ?attrs:extra key =
-  Node.kbd ~attrs:(attrs ?attrs:extra [ "loon-kbd" ]) [ Node.text key ]
-;;
-
-let combo ?attrs:extra ?(symbols = true) keys =
-  let key name =
-    match symbol name with
-    | Some s when symbols && not (String.equal s name) ->
-      Node.kbd
-        ~attrs:[ Attr.class_ "loon-kbd"; Attr.title name; aria "label" name ]
-        [ Node.text s ]
-    | _ -> view name
-  in
-  Node.kbd
-    ~attrs:(attrs ?attrs:extra [ "loon-kbd-combo" ])
-    (List.map keys ~f:key)
+let group ?(attrs = []) ?class_ children =
+  Node.create
+    "kbd"
+    ~attrs:
+      ([ data "slot" "kbd-group"; Cn.with_class ?class_ [ "inline-flex items-center gap-1" ] ]
+       @ attrs)
+    children
 ;;

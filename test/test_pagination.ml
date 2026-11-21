@@ -1,6 +1,7 @@
 open! Core
 open Loon
 module Handle = Bonsai_web_test.Handle
+module Node = Virtual_dom.Vdom.Node
 
 let show ~page ~pages =
   Pagination.entries ~page ~pages ()
@@ -40,298 +41,142 @@ let%expect_test "entries" =
     |}]
 ;;
 
-let%expect_test "next, previous and page links" =
+let%expect_test "shadcn's classes" =
+  Render.html
+    (Pagination.root
+       [ Pagination.content
+           [ Pagination.item [ Pagination.previous ~href:"#" () ]
+           ; Pagination.item [ Pagination.link ~href:"#" [ Node.text "1" ] ]
+           ; Pagination.item [ Pagination.link ~href:"#" ~is_active:true [ Node.text "2" ] ]
+           ; Pagination.item [ Pagination.ellipsis () ]
+           ; Pagination.item [ Pagination.next ~href:"#" () ]
+           ]
+       ]);
+  [%expect {|
+    <nav role="navigation"
+         aria-label="pagination"
+         data-slot="pagination"
+         class="flex justify-center mx-auto w-full">
+      <ul data-slot="pagination-content" class="flex flex-row gap-1 items-center">
+        <li data-slot="pagination-item">
+          <a data-slot="pagination-link"
+             href="#"
+             aria-label="Go to previous page"
+             class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-1 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-2.5 py-2 rounded-md shrink-0 sm:pl-2.5 text-sm transition-all whitespace-nowrap">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"
+                 class="lucide lucide-chevron-left">
+              <path d="m15 18-6-6 6-6"> </path>
+            </svg>
+            <span class="hidden sm:block"> Previous </span>
+          </a>
+        </li>
+        <li data-slot="pagination-item">
+          <a data-slot="pagination-link"
+             href="#"
+             class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none rounded-md shrink-0 size-9 text-sm transition-all whitespace-nowrap"> 1 </a>
+        </li>
+        <li data-slot="pagination-item">
+          <a aria-current="page"
+             data-slot="pagination-link"
+             data-active="true"
+             href="#"
+             class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none rounded-md shadow-xs shrink-0 size-9 text-sm transition-all whitespace-nowrap"> 2 </a>
+        </li>
+        <li data-slot="pagination-item">
+          <span aria-hidden="true"
+                data-slot="pagination-ellipsis"
+                class="flex items-center justify-center size-9">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"
+                 class="lucide lucide-ellipsis size-4">
+              <circle cx="12" cy="12" r="1"> </circle>
+              <circle cx="19" cy="12" r="1"> </circle>
+              <circle cx="5" cy="12" r="1"> </circle>
+            </svg>
+            <span class="sr-only"> More pages </span>
+          </span>
+        </li>
+        <li data-slot="pagination-item">
+          <a data-slot="pagination-link"
+             href="#"
+             aria-label="Go to next page"
+             class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-1 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-2.5 py-2 rounded-md shrink-0 sm:pr-2.5 text-sm transition-all whitespace-nowrap">
+            <span class="hidden sm:block"> Next </span>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"
+                 class="lucide lucide-chevron-right">
+              <path d="m9 18 6-6-6-6"> </path>
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    |}]
+;;
+
+let%expect_test "on_click changes page without following the link" =
   let handle =
-    Bonsai_web_test.Handle.create
-      (Bonsai_web_test.Result_spec.vdom (fun (t : Pagination.t) -> t.view))
-      (Pagination.component ~pages:(Bonsai_web.Bonsai.return 10))
+    Render.handle ~classes:false (fun graph ->
+      let open Bonsai_web.Bonsai.Let_syntax in
+      let page, set_page = Bonsai_web.Bonsai.state 1 graph in
+      let%arr page and set_page in
+      Pagination.content
+        (List.map [ 1; 2 ] ~f:(fun p ->
+           Pagination.item
+             [ Pagination.link
+                 ~href:"#"
+                 ~is_active:(p = page)
+                 ~on_click:(set_page p)
+                 [ Node.text (Int.to_string p) ]
+             ])))
   in
   Handle.show handle;
-  [%expect
-    {|
-    <nav aria-label="Pagination" class="loon-pagination">
-      <ul class="loon-pagination-list">
-        <li>
-          <button type="button"
-                  aria-label="Previous page"
-                  disabled=""
-                  class="loon-pagination-link loon-pagination-step">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="24"
-                 height="24"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true"
-                 class="lucide lucide-chevron-left">
-              <path d="m15 18-6-6 6-6"> </path>
-            </svg>
-            <span class="loon-pagination-step-text"> Previous </span>
-          </button>
-        </li>
-        <li>
-          <button type="button"
-                  aria-label="Page 1"
-                  aria-current="page"
-                  data-state="active"
-                  class="loon-pagination-link"
-                  @on_click> 1 </button>
-        </li>
-        <li>
-          <button type="button" aria-label="Page 2" class="loon-pagination-link" @on_click> 2 </button>
-        </li>
-        <li>
-          <button type="button" aria-label="Page 3" class="loon-pagination-link" @on_click> 3 </button>
-        </li>
-        <li>
-          <button type="button" aria-label="Page 4" class="loon-pagination-link" @on_click> 4 </button>
-        </li>
-        <li>
-          <button type="button" aria-label="Page 5" class="loon-pagination-link" @on_click> 5 </button>
-        </li>
-        <li>
-          <span aria-hidden="true" class="loon-pagination-ellipsis">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="24"
-                 height="24"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true"
-                 class="lucide lucide-ellipsis">
-              <circle cx="12" cy="12" r="1"> </circle>
-              <circle cx="19" cy="12" r="1"> </circle>
-              <circle cx="5" cy="12" r="1"> </circle>
-            </svg>
-          </span>
-        </li>
-        <li>
-          <button type="button" aria-label="Page 10" class="loon-pagination-link" @on_click> 10 </button>
-        </li>
-        <li>
-          <button type="button"
-                  aria-label="Next page"
-                  class="loon-pagination-link loon-pagination-step"
-                  @on_click>
-            <span class="loon-pagination-step-text"> Next </span>
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="24"
-                 height="24"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true"
-                 class="lucide lucide-chevron-right">
-              <path d="m9 18 6-6-6-6"> </path>
-            </svg>
-          </button>
-        </li>
-      </ul>
-    </nav>
-    |}];
-  Handle.click_on
-    handle
-    ~get_vdom:(fun t -> t.view)
-    ~selector:"[aria-label='Next page']";
-  Handle.click_on
-    handle
-    ~get_vdom:(fun t -> t.view)
-    ~selector:"[aria-label='Page 5']";
+  Handle.click_on handle ~get_vdom:Fn.id ~selector:"li:nth-child(2) a";
   Handle.show_diff handle;
-  [%expect
-    {|
-      <nav aria-label="Pagination" class="loon-pagination">
-        <ul class="loon-pagination-list">
-          <li>
-            <button type="button"
-                    aria-label="Previous page"
-    -|              disabled=""
-    -|              class="loon-pagination-link loon-pagination-step">
-    +|              class="loon-pagination-link loon-pagination-step"
-    +|              @on_click>
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   width="24"
-                   height="24"
-                   viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="2"
-                   stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true"
-                   class="lucide lucide-chevron-left">
-                <path d="m15 18-6-6 6-6"> </path>
-              </svg>
-              <span class="loon-pagination-step-text"> Previous </span>
-            </button>
-          </li>
-    +|    <li>
-    +|      <button type="button" aria-label="Page 1" class="loon-pagination-link" @on_click> 1 </button>
-    +|    </li>
-    +|    <li>
-    +|      <span aria-hidden="true" class="loon-pagination-ellipsis">
-    +|        <svg xmlns="http://www.w3.org/2000/svg"
-    +|             width="24"
-    +|             height="24"
-    +|             viewBox="0 0 24 24"
-    +|             fill="none"
-    +|             stroke="currentColor"
-    +|             stroke-width="2"
-    +|             stroke-linecap="round"
-    +|             stroke-linejoin="round"
-    +|             aria-hidden="true"
-    +|             class="lucide lucide-ellipsis">
-    +|          <circle cx="12" cy="12" r="1"> </circle>
-    +|          <circle cx="19" cy="12" r="1"> </circle>
-    +|          <circle cx="5" cy="12" r="1"> </circle>
-    +|        </svg>
-    +|      </span>
-    +|    </li>
-    +|    <li>
-    +|      <button type="button" aria-label="Page 4" class="loon-pagination-link" @on_click> 4 </button>
-    +|    </li>
-          <li>
-            <button type="button"
-    -|              aria-label="Page 1"
-    +|              aria-label="Page 5"
-                    aria-current="page"
-                    data-state="active"
-                    class="loon-pagination-link"
-    -|              @on_click> 1 </button>
-    +|              @on_click> 5 </button>
-          </li>
-          <li>
-    -|      <button type="button" aria-label="Page 2" class="loon-pagination-link" @on_click> 2 </button>
-    -|    </li>
-    -|    <li>
-    -|      <button type="button" aria-label="Page 3" class="loon-pagination-link" @on_click> 3 </button>
-    -|    </li>
-    -|    <li>
-    -|      <button type="button" aria-label="Page 4" class="loon-pagination-link" @on_click> 4 </button>
-    -|    </li>
-    -|    <li>
-    -|      <button type="button" aria-label="Page 5" class="loon-pagination-link" @on_click> 5 </button>
-    +|      <button type="button" aria-label="Page 6" class="loon-pagination-link" @on_click> 6 </button>
-          </li>
-          <li>
-            <span aria-hidden="true" class="loon-pagination-ellipsis">
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   width="24"
-                   height="24"
-                   viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="2"
-                   stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true"
-                   class="lucide lucide-ellipsis">
-                <circle cx="12" cy="12" r="1"> </circle>
-                <circle cx="19" cy="12" r="1"> </circle>
-    |}];
-  Handle.click_on
-    handle
-    ~get_vdom:(fun t -> t.view)
-    ~selector:"[aria-label='Page 10']";
-  Handle.show handle;
-  [%expect
-    {|
-    <nav aria-label="Pagination" class="loon-pagination">
-      <ul class="loon-pagination-list">
-        <li>
-          <button type="button"
-                  aria-label="Previous page"
-                  class="loon-pagination-link loon-pagination-step"
-                  @on_click>
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="24"
-                 height="24"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true"
-                 class="lucide lucide-chevron-left">
-              <path d="m15 18-6-6 6-6"> </path>
-            </svg>
-            <span class="loon-pagination-step-text"> Previous </span>
-          </button>
+  [%expect {|
+    <ul data-slot="pagination-content">
+      <li data-slot="pagination-item">
+        <a aria-current="page" data-slot="pagination-link" data-active="true" href="#" @on_click> 1 </a>
+      </li>
+      <li data-slot="pagination-item">
+        <a data-slot="pagination-link" href="#" @on_click> 2 </a>
+      </li>
+    </ul>
+
+      <ul data-slot="pagination-content">
+        <li data-slot="pagination-item">
+    -|    <a aria-current="page" data-slot="pagination-link" data-active="true" href="#" @on_click> 1 </a>
+    +|    <a data-slot="pagination-link" href="#" @on_click> 1 </a>
         </li>
-        <li>
-          <button type="button" aria-label="Page 1" class="loon-pagination-link" @on_click> 1 </button>
-        </li>
-        <li>
-          <span aria-hidden="true" class="loon-pagination-ellipsis">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="24"
-                 height="24"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true"
-                 class="lucide lucide-ellipsis">
-              <circle cx="12" cy="12" r="1"> </circle>
-              <circle cx="19" cy="12" r="1"> </circle>
-              <circle cx="5" cy="12" r="1"> </circle>
-            </svg>
-          </span>
-        </li>
-        <li>
-          <button type="button" aria-label="Page 6" class="loon-pagination-link" @on_click> 6 </button>
-        </li>
-        <li>
-          <button type="button" aria-label="Page 7" class="loon-pagination-link" @on_click> 7 </button>
-        </li>
-        <li>
-          <button type="button" aria-label="Page 8" class="loon-pagination-link" @on_click> 8 </button>
-        </li>
-        <li>
-          <button type="button" aria-label="Page 9" class="loon-pagination-link" @on_click> 9 </button>
-        </li>
-        <li>
-          <button type="button"
-                  aria-label="Page 10"
-                  aria-current="page"
-                  data-state="active"
-                  class="loon-pagination-link"
-                  @on_click> 10 </button>
-        </li>
-        <li>
-          <button type="button"
-                  aria-label="Next page"
-                  disabled=""
-                  class="loon-pagination-link loon-pagination-step">
-            <span class="loon-pagination-step-text"> Next </span>
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="24"
-                 height="24"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true"
-                 class="lucide lucide-chevron-right">
-              <path d="m9 18 6-6-6-6"> </path>
-            </svg>
-          </button>
+        <li data-slot="pagination-item">
+    -|    <a data-slot="pagination-link" href="#" @on_click> 2 </a>
+    +|    <a aria-current="page" data-slot="pagination-link" data-active="true" href="#" @on_click> 2 </a>
         </li>
       </ul>
-    </nav>
     |}]
 ;;

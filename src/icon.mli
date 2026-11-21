@@ -54,6 +54,7 @@ type t =
   | Circle_x
   | Clipboard
   | Clock
+  | Cloud
   | Code
   | Code_xml
   | Command
@@ -70,8 +71,10 @@ type t =
   | Eye_off
   | Face_slightly_smiling
   | File
+  | File_code
   | File_text
   | Folder
+  | Folder_code
   | Footprints
   | Forward
   | Frame
@@ -129,6 +132,7 @@ type t =
   | Radar
   | Redo
   | Refresh_ccw
+  | Refresh_cw
   | Rotate_ccw
   | Rotate_cw
   | Search

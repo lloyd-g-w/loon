@@ -7,62 +7,92 @@ module Attr = Vdom.Attr
 
 let page = "avatar"
 
-(* A picture, inline so that the example works offline. *)
-let portrait =
-  "data:image/svg+xml;utf8,"
-  ^ String.concat
-      [ "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'>"
-      ; "<defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>"
-      ; "<stop offset='0' stop-color='%2338bdf8'/><stop offset='1' \
-         stop-color='%230f766e'/>"
-      ; "</linearGradient></defs><rect width='40' height='40' \
-         fill='url(%23g)'/>"
-      ; "<circle cx='20' cy='16' r='7' fill='%23ecfeff'/>"
-      ; "<path d='M6 40c2-9 8-13 14-13s12 4 14 13z' fill='%23ecfeff'/></svg>"
-      ]
-;;
-
-(*$ Pictures and initials
-   Initials show while the picture loads, and if it fails. *)
-let basic =
-  Node.div
-    ~attrs:[ Attr.class_ "docs-row" ]
-    [ Avatar.view ~src:portrait "Lloyd Williams"
-    ; Avatar.view "Ada Lovelace"
-    ; Avatar.view "Grace Hopper"
-    ; Avatar.view "Alan Turing"
-    ; Avatar.view ~shape:Square "Edsger Dijkstra"
+(*$ Demo *)
+let demo (local_ graph) =
+  let avatar ?class_ ~src ~alt initials =
+    Avatar.component
+      ?class_
+      (Bonsai.return (fun avatar ->
+         [ Avatar.image avatar ~src ~alt ()
+         ; Avatar.fallback avatar [ Node.text initials ]
+         ]))
+      graph
+  in
+  let shadcn = avatar ~src:"https://github.com/shadcn.png" ~alt:"@shadcn" "CN" in
+  let evilrabbit =
+    avatar
+      ~class_:"rounded-lg"
+      ~src:"https://github.com/evilrabbit.png"
+      ~alt:"@evilrabbit"
+      "ER"
+  in
+  let group =
+    [ avatar ~src:"https://github.com/shadcn.png" ~alt:"@shadcn" "CN"
+    ; avatar ~src:"https://github.com/maxleiter.png" ~alt:"@maxleiter" "LR"
+    ; avatar ~src:"https://github.com/evilrabbit.png" ~alt:"@evilrabbit" "ER"
     ]
-;;
-
-(*$*)
-
-(*$ Sizes and status *)
-let sizes =
+    |> Bonsai.all
+  in
+  let%arr shadcn and evilrabbit and group in
   Node.div
-    ~attrs:[ Attr.class_ "docs-row" ]
-    (List.map Avatar.Size.all ~f:(fun size ->
-       Avatar.view ~size ~status:`Online "Barbara Liskov"))
-;;
-
+    ~attrs:[ Attr.class_ "flex flex-row flex-wrap items-center gap-12" ]
+    [ shadcn
+    ; evilrabbit
+    ; Node.div
+        ~attrs:
+          [ Attr.class_
+              "flex -space-x-2 *:data-[slot=avatar]:ring-2 \
+               *:data-[slot=avatar]:ring-background *:data-[slot=avatar]:grayscale"
+          ]
+        group
+    ]
 (*$*)
 
-(*$ Group *)
-let group =
-  Avatar.group
-    ~max:4
-    (List.map
-       [ "Ada Lovelace"
-       ; "Alan Turing"
-       ; "Grace Hopper"
-       ; "Edsger Dijkstra"
-       ; "Barbara Liskov"
-       ; "Donald Knuth"
-       ; "Margaret Hamilton"
-       ]
-       ~f:(fun name -> Avatar.view name))
-;;
+(*$ Sizes
+   [~size] is [Default], [Sm] or [Lg]; [Avatar.badge] marks a status. *)
+let sizes (local_ graph) =
+  let avatar size =
+    Avatar.component
+      ~size
+      (Bonsai.return (fun avatar ->
+         [ Avatar.image avatar ~src:"https://github.com/shadcn.png" ~alt:"@shadcn" ()
+         ; Avatar.fallback avatar [ Node.text "CN" ]
+         ; Avatar.badge ~class_:"bg-green-600 dark:bg-green-800" []
+         ]))
+      graph
+  in
+  let%arr avatars = Bonsai.all (List.map [ Avatar.Size.Sm; Default; Lg ] ~f:avatar) in
+  Node.div ~attrs:[ Attr.class_ "flex flex-row flex-wrap items-center gap-6" ] avatars
+(*$*)
 
+(*$ Group
+   [Avatar.group] overlaps avatars; [Avatar.group_count] counts the rest. *)
+let group (local_ graph) =
+  let avatar ~src ~alt initials =
+    Avatar.component
+      (Bonsai.return (fun avatar ->
+         [ Avatar.image avatar ~src ~alt ~class_:"grayscale" ()
+         ; Avatar.fallback avatar [ Node.text initials ]
+         ]))
+      graph
+  in
+  let%arr avatars =
+    Bonsai.all
+      [ avatar ~src:"https://github.com/shadcn.png" ~alt:"@shadcn" "CN"
+      ; avatar ~src:"https://github.com/maxleiter.png" ~alt:"@maxleiter" "LR"
+      ; avatar ~src:"https://github.com/evilrabbit.png" ~alt:"@evilrabbit" "ER"
+      ]
+  in
+  Avatar.group (avatars @ [ Avatar.group_count [ Node.text "+3" ] ])
+(*$*)
+
+(*$ Fallback
+   Without an image (or while it loads, or if it fails), the fallback
+   shows. *)
+let fallback (local_ graph) =
+  Avatar.component
+    (Bonsai.return (fun avatar -> [ Avatar.fallback avatar [ Node.text "CN" ] ]))
+    graph
 (*$*)
 
 let page =
@@ -70,27 +100,30 @@ let page =
     ~slug:page
     ~title:"Avatar"
     ~group:Display
-    ~description:"A person's picture, or their initials."
-    ~usage:{|Avatar.view ~src:user.picture user.name|}
+    ~description:"An image element with a fallback for representing the user."
+    ~usage:
+      {|Avatar.component
+  (return (fun avatar ->
+     [ Avatar.image avatar ~src:"https://github.com/shadcn.png" ~alt:"@shadcn" ()
+     ; Avatar.fallback avatar [ Node.text "CN" ]
+     ]))
+  graph|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "src", "string", "The picture's URL."
-          ; "size", "Avatar.Size.t", "Xs, Sm, Md (default), Lg or Xl."
-          ; "shape", "Avatar.Shape.t", "Circle (default) or Square."
+          [ "size", "Avatar.Size.t", "[Default] (32px), [Sm] (24px) or [Lg] (40px)."
           ; ( "status"
-            , "[ `Online | `Busy | `Away | `Offline ]"
-            , "A dot in the corner." )
-          ; ( "name"
-            , "string"
-            , "The alt text, and where the initials and colour come from." )
+            , "Avatar.Status.t"
+            , "[Avatar.view]: the image's ([Loading], [Loaded] or [Error]), reported by \
+               [~on_status_change]. [Avatar.component] keeps it." )
+          ; "src, alt", "string", "[Avatar.image]: the picture and its text."
+          ; "class_", "string", "More Tailwind classes, merged last."
+          ; "attrs", "Vdom.Attr.t list", "Extra attributes."
           ]
-      ; Doc.p
-          "[Avatar.group] overlaps avatars; past [max], the rest are counted in a \
-           +N."
       ]
-    [ Doc.static ~page "Pictures and initials" basic
-    ; Doc.static ~page "Sizes and status" sizes
-    ; Doc.static ~page "Group" group
+    [ Doc.example ~page "Demo" demo
+    ; Doc.example ~page "Sizes" sizes
+    ; Doc.example ~page "Group" group
+    ; Doc.example ~page "Fallback" fallback
     ]
 ;;

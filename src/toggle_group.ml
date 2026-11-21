@@ -1,210 +1,216 @@
 open! Import
 
-module Item = struct
-  type t =
-    { value : string
-    ; content : Node.t list
-    ; label : string option
-    ; disabled : bool
-    }
+type kind =
+  | Single of
+      { value : string option
+      ; on_change : string option -> unit Effect.t
+      }
+  | Multiple of
+      { value : string list
+      ; on_change : string list -> unit Effect.t
+      }
 
-  let create ?label ?(disabled = false) ~value content =
-    { value; content; label; disabled }
-  ;;
+type t =
+  { kind : kind
+  ; variant : Toggle.Variant.t option
+  ; size : Toggle.Size.t option
+  ; spacing : int
+  ; disabled : bool
+  ; (* The items, in the order they are created (for tests, which have no
+       DOM; OCaml evaluates a list literal last first, so tests make them with
+       [List.map]). *)
+    mutable items : (string * bool) list
+  }
 
-  let text ?disabled ~value s = create ?disabled ~value [ Node.text s ]
+let pressed t value =
+  match t.kind with
+  | Single { value = v; _ } -> [%equal: string option] v (Some value)
+  | Multiple { value = vs; _ } -> List.mem vs value ~equal:String.equal
+;;
 
-  let icon ?disabled ~value ~label i =
-    create ~label ?disabled ~value [ Icon.view i ]
-  ;;
-end
+(* The tab stop: the pressed item (the first pressed, of several), else
+   every item. *)
+let tab_stop t value =
+  match t.kind with
+  | Single { value = None; _ } | Multiple { value = []; _ } -> true
+  | Single { value = Some v; _ } | Multiple { value = v :: _; _ } -> String.equal v value
+;;
 
-let item_id ~name value = sprintf "%s-toggle-%s" name value
-
-let group
-      ?attrs:extra
-      ?variant
-      ?size
-      ?(disabled = false)
-      ~role
-      ~name
-      ~is_pressed
-      ~press
-      (items : Item.t list)
+let root ?(attrs = []) ?class_ ?variant ?size ?(spacing = 0) ?orientation ?(disabled = false)
+  kind children
   =
-  let enabled =
-    List.map items ~f:(fun item -> (not disabled) && not item.disabled)
-  in
-  let tab_stop =
-    let pressed_enabled =
-      List.findi items ~f:(fun i item ->
-        List.nth_exn enabled i && is_pressed item.value)
-    in
-    match pressed_enabled with
-    | Some (i, _) -> Some i
-    | None -> List.findi enabled ~f:(fun _ e -> e) |> Option.map ~f:fst
-  in
-  let item i (it : Item.t) =
-    let pressed = is_pressed it.value in
-    let item_disabled = not (List.nth_exn enabled i) in
-    Node.button
-      ~attrs:
-        ([ Attr.classes
-             ("loon-toggle-group-item" :: Toggle.classes ?variant ?size ())
-         ; Attr.type_ "button"
-         ; Attr.id (item_id ~name it.value)
-         ; data "state" (if pressed then "on" else "off")
-         ; Attr.tabindex
-             (if Option.equal Int.equal tab_stop (Some i) then 0 else -1)
-         ]
-         @ (match role with
-            | `Radio -> [ Attr.role "radio"; aria_bool "checked" pressed ]
-            | `Toggle -> [ aria_bool "pressed" pressed ])
-         @ Option.value_map it.label ~default:[] ~f:(fun l ->
-           [ aria "label" l ])
-         @
-         if item_disabled
-         then [ Attr.disabled ]
-         else
-           [ Attr.on_click (fun _ -> press it.value (not pressed))
-           ; Attr.on_keydown (fun ev ->
-               match Roving.move ~enabled ~current:i (Dom_util.key ev) with
-               | None -> Effect.Ignore
-               | Some j ->
-                 Effect.Many
-                   [ Dom_util.prevent_default ev
-                   ; Dom_util.focus_selector
-                       ("#" ^ item_id ~name (List.nth_exn items j).value)
-                   ])
-           ])
-      it.content
-  in
+  let t = { kind; variant; size; spacing; disabled; items = [] } in
+  let children = children t in
   Node.div
     ~attrs:
-      (attrs ?attrs:extra [ "loon-toggle-group" ]
-       @ [ Attr.role
-             (match role with
-              | `Radio -> "radiogroup"
-              | `Toggle -> "group")
+      ([ Attr.role "group"
+       ; Attr.create "dir" "ltr"
+       ; data "slot" "toggle-group"
+       ]
+       @ Option.value_map variant ~default:[] ~f:(fun v ->
+         [ data "variant" (Toggle.Variant.name v) ])
+       @ Option.value_map size ~default:[] ~f:(fun s -> [ data "size" (Toggle.Size.name s) ])
+       @ [ data "spacing" (Int.to_string spacing)
+         ; Attr.style (Css_gen.create ~field:"--gap" ~value:(Int.to_string spacing))
+         ; Cn.with_class
+             ?class_
+             [ "group/toggle-group flex w-fit items-center gap-[--spacing(var(--gap))] \
+                rounded-md data-[spacing=default]:data-[variant=outline]:shadow-xs"
+             ]
          ]
-       @ if disabled then [ aria "disabled" "true" ] else [])
-    (List.mapi items ~f:item)
+       @ Option.value_map orientation ~default:[] ~f:(fun o ->
+         [ data "orientation" (Roving.Orientation.name o) ])
+       @ attrs)
+    children
 ;;
 
-let single
-      ?attrs
-      ?variant
-      ?size
-      ?disabled
-      ?(required = false)
-      ~name
-      ~value
-      ~on_change
-      items
+let single ?attrs ?class_ ?variant ?size ?spacing ?orientation ?disabled ~value ~on_change
+  children
   =
-  group
+  root
     ?attrs
+    ?class_
     ?variant
     ?size
+    ?spacing
+    ?orientation
     ?disabled
-    ~role:`Radio
-    ~name
-    ~is_pressed:(fun v -> Option.equal String.equal value (Some v))
-    ~press:(fun v pressed ->
-      if pressed
-      then on_change (Some v)
-      else if required
-      then Effect.Ignore
-      else on_change None)
-    items
+    (Single { value; on_change })
+    children
 ;;
 
-let multiple ?attrs ?variant ?size ?disabled ~name ~value ~on_change items =
-  group
-    ?attrs
-    ?variant
-    ?size
-    ?disabled
-    ~role:`Toggle
-    ~name
-    ~is_pressed:(Set.mem value)
-    ~press:(fun v pressed ->
-      on_change (if pressed then Set.add value v else Set.remove value v))
-    items
-;;
-
-(* The component updates its set by function, so that two clicks before a
-   render both count. *)
-let multiple_toggling ?attrs ?variant ?size ?disabled ~name ~value ~toggle items
+let multiple ?attrs ?class_ ?variant ?size ?spacing ?orientation ?disabled ~value
+  ~on_change children
   =
-  group
+  root
     ?attrs
+    ?class_
     ?variant
     ?size
+    ?spacing
+    ?orientation
     ?disabled
-    ~role:`Toggle
-    ~name
-    ~is_pressed:(Set.mem value)
-    ~press:(fun v _ -> toggle v)
-    items
+    (Multiple { value; on_change })
+    children
 ;;
 
 let single_component
-      ?attrs
-      ?variant
-      ?size
-      ?disabled
-      ?required
-      ?default
-      items
-      (local_ graph)
+  ?attrs
+  ?class_
+  ?variant
+  ?size
+  ?spacing
+  ?orientation
+  ?disabled
+  ?default_value
+  children
+  (local_ graph)
   =
-  Control.make_named
-    ~equal:[%equal: string option]
-    default
-    ~view:(fun ~name value set ->
+  let open Bonsai.Let_syntax in
+  let value, set = Bonsai.state default_value ~equal:[%equal: string option] graph in
+  let%arr value and set and children in
+  { Control.value
+  ; set
+  ; view =
       single
         ?attrs
+        ?class_
         ?variant
         ?size
+        ?spacing
+        ?orientation
         ?disabled
-        ?required
-        ~name
         ~value
         ~on_change:set
-        items)
-    graph
+        children
+  }
 ;;
 
 let multiple_component
-      ?attrs
-      ?variant
-      ?size
-      ?disabled
-      ?(default = String.Set.empty)
-      items
-      (local_ graph)
+  ?attrs
+  ?class_
+  ?variant
+  ?size
+  ?spacing
+  ?orientation
+  ?disabled
+  ?(default_value = [])
+  children
+  (local_ graph)
   =
-  let value, update = Bonsai.state' ~equal:String.Set.equal default graph in
-  let name = Bonsai.path_id graph in
   let open Bonsai.Let_syntax in
-  let%arr value
-  and update
-  and name in
-  let toggle v =
-    update (fun s -> if Set.mem s v then Set.remove s v else Set.add s v)
-  in
+  let value, set = Bonsai.state default_value ~equal:[%equal: string list] graph in
+  let%arr value and set and children in
   { Control.value
-  ; set = (fun s -> update (fun _ -> s))
+  ; set
   ; view =
-      multiple_toggling
+      multiple
         ?attrs
+        ?class_
         ?variant
         ?size
+        ?spacing
+        ?orientation
         ?disabled
-        ~name:("loon" ^ name)
         ~value
-        ~toggle
-        items
+        ~on_change:set
+        children
   }
+;;
+
+let item ?(attrs = []) ?class_ ?variant ?size ?(disabled = false) t ~value children =
+  let disabled = disabled || t.disabled in
+  t.items <- t.items @ [ value, not disabled ];
+  let on = pressed t value in
+  let variant = Option.first_some t.variant variant in
+  let size = Option.first_some t.size size in
+  let toggle () =
+    match t.kind with
+    | Single { on_change; _ } -> on_change (if on then None else Some value)
+    | Multiple { value = vs; on_change } ->
+      on_change
+        (if on
+         then List.filter vs ~f:(fun v -> not (String.equal v value))
+         else vs @ [ value ])
+  in
+  Node.button
+    ~attrs:
+      ([ Attr.type_ "button"; data "state" (if on then "on" else "off") ]
+       @ (match t.kind with
+          | Single _ -> [ Attr.role "radio"; aria_bool "checked" on ]
+          | Multiple _ -> [ aria_bool "pressed" on ])
+       @ [ Attr.value value
+         ; Attr.tabindex (if tab_stop t value then 0 else -1)
+         ; data "slot" "toggle-group-item"
+         ]
+       @ Option.value_map variant ~default:[] ~f:(fun v ->
+         [ data "variant" (Toggle.Variant.name v) ])
+       @ Option.value_map size ~default:[] ~f:(fun s -> [ data "size" (Toggle.Size.name s) ])
+       @ [ data "spacing" (Int.to_string t.spacing)
+         ; Cn.attr
+             ([ Toggle.classes ?variant ?size ()
+              ; "w-auto min-w-0 shrink-0 px-3 focus:z-10 focus-visible:z-10"
+              ; "data-[spacing=0]:rounded-none data-[spacing=0]:shadow-none \
+                 data-[spacing=0]:first:rounded-l-md data-[spacing=0]:last:rounded-r-md \
+                 data-[spacing=0]:data-[variant=outline]:border-l-0 \
+                 data-[spacing=0]:data-[variant=outline]:first:border-l"
+              ]
+              @ Option.to_list class_)
+         ; Attr.on_keydown (fun ev ->
+             match
+               Roving.next
+                 ev
+                 ~group:"[data-slot=toggle-group]"
+                 ~item:"[data-slot=toggle-group-item]"
+                 ~fallback:t.items
+                 ~current:value
+             with
+             | None -> Effect.Ignore
+             | Some (_, focus) -> Effect.Many [ Dom_util.prevent_default ev; focus ])
+         ]
+       @ (if disabled
+          then [ data "disabled" ""; Attr.disabled ]
+          else [ Attr.on_click (fun _ -> toggle ()) ])
+       @ attrs)
+    children
 ;;
