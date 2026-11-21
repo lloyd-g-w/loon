@@ -99,19 +99,21 @@ let nav_main_item (item : Nav_item.t) (local_ graph) =
     (Collapsible.root_attrs collapsible)
   @@ Sidebar.menu_item
     ~class_:"group/collapsible"
-    [ Sidebar.menu_button
-        ~tooltip:item.title
-        ~attrs:(Collapsible.trigger_attrs collapsible)
-        [ (match item.icon with
-           | Some icon -> Icon.view icon
-           | None -> Node.none)
-        ; Node.span [ Node.text item.title ]
-        ; Icon.view
-            ~class_:
-              "ml-auto transition-transform duration-200 \
-               group-data-[state=open]/collapsible:rotate-90"
-            Chevron_right
-        ]
+    [ Slot.merge
+        ~defaults:[ "data-slot", Attr.create "data-slot" "collapsible-trigger" ]
+        (Collapsible.trigger_attrs collapsible)
+        (Sidebar.menu_button
+           ~tooltip:item.title
+           [ (match item.icon with
+              | Some icon -> Icon.view icon
+              | None -> Node.none)
+           ; Node.span [ Node.text item.title ]
+           ; Icon.view
+               ~class_:
+                 "ml-auto transition-transform duration-200 \
+                  group-data-[state=open]/collapsible:rotate-90"
+               Chevron_right
+           ])
     ; Collapsible.content
         collapsible
         [ Sidebar.menu_sub

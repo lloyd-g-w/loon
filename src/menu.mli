@@ -97,7 +97,13 @@ val radio_item
   -> Node.t list
   -> Item.t
 
-val label : ?attrs:Attr.t list -> ?class_:string -> ?inset:bool -> Node.t list -> Item.t
+val label
+  :  ?attrs:Attr.t list
+  -> ?class_:string
+  -> ?inset:bool
+  -> Node.t list
+  -> Item.t
+
 val separator : ?attrs:Attr.t list -> ?class_:string -> unit -> Item.t
 val group : ?attrs:Attr.t list -> Item.t list -> Item.t
 
@@ -126,7 +132,12 @@ val sub_content
 val node : Node.t -> Item.t
 
 (** A keyboard shortcut at the end of an item. *)
-val shortcut : Classes.t -> ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
+val shortcut
+  :  Classes.t
+  -> ?attrs:Attr.t list
+  -> ?class_:string
+  -> Node.t list
+  -> Node.t
 
 (** {2 The menu} *)
 
