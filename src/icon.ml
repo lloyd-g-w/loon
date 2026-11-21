@@ -65,6 +65,7 @@ type t =
   | Eye_off
   | Face_slightly_smiling
   | File
+  | File_code
   | File_text
   | Folder
   | Footprints
@@ -124,6 +125,7 @@ type t =
   | Radar
   | Redo
   | Refresh_ccw
+  | Refresh_cw
   | Rotate_ccw
   | Rotate_cw
   | Search
@@ -230,6 +232,7 @@ let name = function
   | Eye_off -> "eye-off"
   | Face_slightly_smiling -> "face-slightly-smiling"
   | File -> "file"
+  | File_code -> "file-code"
   | File_text -> "file-text"
   | Folder -> "folder"
   | Footprints -> "footprints"
@@ -289,6 +292,7 @@ let name = function
   | Radar -> "radar"
   | Redo -> "redo"
   | Refresh_ccw -> "refresh-ccw"
+  | Refresh_cw -> "refresh-cw"
   | Rotate_ccw -> "rotate-ccw"
   | Rotate_cw -> "rotate-cw"
   | Search -> "search"
@@ -395,6 +399,7 @@ let of_name = function
   | "eye-off" -> Some Eye_off
   | "face-slightly-smiling" -> Some Face_slightly_smiling
   | "file" -> Some File
+  | "file-code" -> Some File_code
   | "file-text" -> Some File_text
   | "folder" -> Some Folder
   | "footprints" -> Some Footprints
@@ -454,6 +459,7 @@ let of_name = function
   | "radar" -> Some Radar
   | "redo" -> Some Redo
   | "refresh-ccw" -> Some Refresh_ccw
+  | "refresh-cw" -> Some Refresh_cw
   | "rotate-ccw" -> Some Rotate_ccw
   | "rotate-cw" -> Some Rotate_cw
   | "search" -> Some Search
@@ -561,6 +567,7 @@ let shapes = function
   | Eye_off -> [ ("path", [ "d", "M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" ]); ("path", [ "d", "M14.084 14.158a3 3 0 0 1-4.242-4.242" ]); ("path", [ "d", "M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" ]); ("path", [ "d", "m2 2 20 20" ]) ]
   | Face_slightly_smiling -> [ ("path", [ "d", "M15 10V9" ]); ("path", [ "d", "M16.472 15a6 6 0 01-8.943 0" ]); ("path", [ "d", "M9 10V9" ]); ("circle", [ "cx", "12"; "cy", "12"; "r", "10" ]) ]
   | File -> [ ("path", [ "d", "M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" ]); ("path", [ "d", "M14 2v5a1 1 0 0 0 1 1h5" ]) ]
+  | File_code -> [ ("path", [ "d", "M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" ]); ("path", [ "d", "M14 2v5a1 1 0 0 0 1 1h5" ]); ("path", [ "d", "M10 12.5 8 15l2 2.5" ]); ("path", [ "d", "m14 12.5 2 2.5-2 2.5" ]) ]
   | File_text -> [ ("path", [ "d", "M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" ]); ("path", [ "d", "M14 2v5a1 1 0 0 0 1 1h5" ]); ("path", [ "d", "M10 9H8" ]); ("path", [ "d", "M16 13H8" ]); ("path", [ "d", "M16 17H8" ]) ]
   | Folder -> [ ("path", [ "d", "M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" ]) ]
   | Footprints -> [ ("path", [ "d", "M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z" ]); ("path", [ "d", "M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z" ]); ("path", [ "d", "M16 17h4" ]); ("path", [ "d", "M4 13h4" ]) ]
@@ -620,6 +627,7 @@ let shapes = function
   | Radar -> [ ("path", [ "d", "M19.07 4.93A10 10 0 0 0 6.99 3.34" ]); ("path", [ "d", "M4 6h.01" ]); ("path", [ "d", "M2.29 9.62A10 10 0 1 0 21.31 8.35" ]); ("path", [ "d", "M16.24 7.76A6 6 0 1 0 8.23 16.67" ]); ("path", [ "d", "M12 18h.01" ]); ("path", [ "d", "M17.99 11.66A6 6 0 0 1 15.77 16.67" ]); ("circle", [ "cx", "12"; "cy", "12"; "r", "2" ]); ("path", [ "d", "m13.41 10.59 5.66-5.66" ]) ]
   | Redo -> [ ("path", [ "d", "M21 7v6h-6" ]); ("path", [ "d", "M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7" ]) ]
   | Refresh_ccw -> [ ("path", [ "d", "M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" ]); ("path", [ "d", "M3 3v5h5" ]); ("path", [ "d", "M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" ]); ("path", [ "d", "M16 16h5v5" ]) ]
+  | Refresh_cw -> [ ("path", [ "d", "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" ]); ("path", [ "d", "M21 3v5h-5" ]); ("path", [ "d", "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" ]); ("path", [ "d", "M8 16H3v5" ]) ]
   | Rotate_ccw -> [ ("path", [ "d", "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" ]); ("path", [ "d", "M3 3v5h5" ]) ]
   | Rotate_cw -> [ ("path", [ "d", "M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" ]); ("path", [ "d", "M21 3v5h-5" ]) ]
   | Search -> [ ("path", [ "d", "m21 21-4.34-4.34" ]); ("circle", [ "cx", "11"; "cy", "11"; "r", "8" ]) ]

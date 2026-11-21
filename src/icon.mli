@@ -70,6 +70,7 @@ type t =
   | Eye_off
   | Face_slightly_smiling
   | File
+  | File_code
   | File_text
   | Folder
   | Footprints
@@ -129,6 +130,7 @@ type t =
   | Radar
   | Redo
   | Refresh_ccw
+  | Refresh_cw
   | Rotate_ccw
   | Rotate_cw
   | Search

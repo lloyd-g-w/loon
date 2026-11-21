@@ -253,3 +253,5 @@ monitor
 laptop
 github
 git-branch
+RefreshCwIcon
+FileCodeIcon
