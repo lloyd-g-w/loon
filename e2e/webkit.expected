@@ -7,6 +7,7 @@ sidebar Overlays: Alert dialog, Command palette, Dialog, Dropdown menu, Popover,
 sidebar Display: Accordion, Avatar, Badge, Card, Collapsible, Data table, Kbd, Separator, Table
 sidebar Navigation: Breadcrumb, Pagination, Tabs
 sidebar Feedback: Alert, Empty, Progress, Skeleton, Spinner, Toast
+sidebar Charts: Chart, Area Charts, Bar Charts, Line Charts, Pie Charts, Radar Charts, Radial Charts, Tooltips
 guides: Introduction, Installation, Theming, CLI
 every page: ok (h1, current link, title, previews, outline, no overflow or errors)
 back: Theming
