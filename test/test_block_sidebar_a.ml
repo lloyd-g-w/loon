@@ -274,7 +274,6 @@ let%expect_test "sidebar-07" =
       sidebar-group-label x2
       collapsible x4
       collapsible-trigger x4
-      tooltip-content x4
       collapsible-content x4
       sidebar-menu-sub x4
       sidebar-menu-sub-item x14
@@ -295,12 +294,11 @@ let%expect_test "sidebar-07" =
       breadcrumb-separator
       breadcrumb-page
     text:
-      Acme Inc Enterprise Platform Playground Playground History Starred Settings
-      Models Models Genesis Explorer Quantum Documentation Documentation
-      Introduction Get Started Tutorials Changelog Settings Settings General Team
-      Billing Limits Projects Design Engineering More Sales & Marketing More
-      Travel More More CN shadcn m@example.com Toggle Sidebar Build Your
-      Application Data Fetching
+      Acme Inc Enterprise Platform Playground History Starred Settings Models
+      Genesis Explorer Quantum Documentation Introduction Get Started Tutorials
+      Changelog Settings General Team Billing Limits Projects Design Engineering
+      More Sales & Marketing More Travel More More CN shadcn m@example.com Toggle
+      Sidebar Build Your Application Data Fetching
     |}]
 ;;
 
@@ -322,7 +320,6 @@ let%expect_test "sidebar-08" =
       sidebar-group x3
       sidebar-group-label x2
       collapsible x4
-      tooltip-content x4
       collapsible-trigger x4
       collapsible-content x4
       sidebar-menu-sub x4
@@ -344,12 +341,12 @@ let%expect_test "sidebar-08" =
       breadcrumb-separator
       breadcrumb-page
     text:
-      Acme Inc Enterprise Platform Playground Playground Toggle History Starred
-      Settings Models Models Toggle Genesis Explorer Quantum Documentation
-      Documentation Toggle Introduction Get Started Tutorials Changelog Settings
-      Settings Toggle General Team Billing Limits Projects Design Engineering More
-      Sales & Marketing More Travel More More Support Feedback CN shadcn
-      m@example.com Toggle Sidebar Build Your Application Data Fetching
+      Acme Inc Enterprise Platform Playground Toggle History Starred Settings
+      Models Toggle Genesis Explorer Quantum Documentation Toggle Introduction Get
+      Started Tutorials Changelog Settings Toggle General Team Billing Limits
+      Projects Design Engineering More Sales & Marketing More Travel More More
+      Support Feedback CN shadcn m@example.com Toggle Sidebar Build Your
+      Application Data Fetching
     |}]
 ;;
 

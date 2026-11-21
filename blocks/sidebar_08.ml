@@ -93,10 +93,10 @@ let projects =
 (* Each section is a collapsible menu item, open at first if active:
    shadcn's [<Collapsible asChild>] over the [SidebarMenuItem], whose
    [data-slot] the Collapsible's replaces, as in shadcn. *)
-let nav_main_item (item : Nav_item.t) (local_ graph) =
+let nav_main_item ~sidebar (item : Nav_item.t) (local_ graph) =
   let open_, set_open = Bonsai.state item.is_active graph in
   let id = Bonsai.path_id graph in
-  let%arr open_ and set_open and id in
+  let%arr open_ and set_open and id and sidebar in
   let collapsible = Collapsible.create ~id ~open_ ~on_change:set_open () in
   Slot.merge
     ~defaults:[ "data-slot", Attr.create "data-slot" "collapsible" ]
@@ -104,7 +104,7 @@ let nav_main_item (item : Nav_item.t) (local_ graph) =
   @@ Sidebar.menu_item
     ([ Sidebar.menu_button
          ~href:item.url
-         ~tooltip:item.title
+         ~tooltip:(Sidebar.menu_tooltip sidebar item.title)
          [ Icon.view item.icon; Node.span [ Node.text item.title ] ]
      ]
      @
@@ -135,9 +135,9 @@ let nav_main_item (item : Nav_item.t) (local_ graph) =
        ])
 ;;
 
-let nav_main ~items (local_ graph) =
+let nav_main ~sidebar ~items (local_ graph) =
   let items =
-    Bonsai.all (List.map items ~f:(fun item -> nav_main_item item graph))
+    Bonsai.all (List.map items ~f:(fun item -> nav_main_item ~sidebar item graph))
   in
   let%arr items in
   Sidebar.group
@@ -308,7 +308,7 @@ let nav_user ~sidebar ~(user : User.t) (local_ graph) =
 ;;
 
 let app_sidebar ~sidebar (local_ graph) =
-  let nav_main = nav_main ~items:nav_main_data graph in
+  let nav_main = nav_main ~sidebar ~items:nav_main_data graph in
   let nav_projects = nav_projects ~sidebar ~projects graph in
   let nav_user = nav_user ~sidebar ~user graph in
   let%arr sidebar and nav_main and nav_projects and nav_user in

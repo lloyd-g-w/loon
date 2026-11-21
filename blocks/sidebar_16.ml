@@ -56,10 +56,10 @@ let projects : (string * Icon.t) list =
   [ "Design Engineering", Frame; "Sales & Marketing", Chart_pie; "Travel", Map ]
 ;;
 
-let nav_main (local_ graph) =
+let nav_main ~sidebar (local_ graph) =
   (* The items opened or closed from their default ([is_active]). *)
   let toggled, set_toggled = Bonsai.state String.Set.empty graph in
-  let%arr toggled and set_toggled in
+  let%arr toggled and set_toggled and sidebar in
   Sidebar.group
     [ Sidebar.group_label [ Node.text "Platform" ]
     ; Sidebar.menu
@@ -79,7 +79,7 @@ let nav_main (local_ graph) =
              ~attrs:(Collapsible.root_attrs collapsible)
              ([ Sidebar.menu_button
                   ~href:item.url
-                  ~tooltip:item.title
+                  ~tooltip:(Sidebar.menu_tooltip sidebar item.title)
                   [ Icon.view item.icon; Node.span [ Node.text item.title ] ]
               ]
               @
@@ -340,7 +340,7 @@ let site_header ~sidebar (local_ graph) =
 ;;
 
 let app_sidebar ~sidebar (local_ graph) =
-  let nav_main = nav_main graph in
+  let nav_main = nav_main ~sidebar graph in
   let nav_projects = nav_projects ~sidebar graph in
   let nav_user = nav_user ~sidebar ~user graph in
   let%arr sidebar and nav_main and nav_projects and nav_user in

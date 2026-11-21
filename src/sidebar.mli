@@ -53,7 +53,9 @@ end
 type t
 
 (** Controlled: [open_] on desktop, [open_mobile] for the sheet on phones,
-    [is_mobile] which of them shows. Setting [open_] also writes it to the
+    [is_mobile] which of them shows; [open_tooltip] the id of the menu
+    button tooltip shown (none, and never shown, unless the caller keeps it
+    with [on_open_tooltip_change]). Setting [open_] also writes it to the
     cookie [sidebar_state], as shadcn does, unless [persist] is [false]. *)
 val create
   :  ?persist:bool
@@ -62,12 +64,14 @@ val create
   -> open_mobile:bool
   -> on_open_mobile_change:(bool -> unit Effect.t)
   -> is_mobile:bool
+  -> ?open_tooltip:string
+  -> ?on_open_tooltip_change:(string option -> unit Effect.t)
   -> unit
   -> t
 
 (** Keeps the state: open at first as the cookie [sidebar_state] says,
     else [default_open] (default [true]); the sheet closed; [is_mobile]
-    from {!Use_mobile}. With [persist] ([true]) it reads and writes the
+    from {!Use_mobile}; the menu buttons' tooltips. With [persist] ([true]) it reads and writes the
     cookie. *)
 val component
   :  ?default_open:bool
@@ -96,8 +100,9 @@ val provider
   -> Node.t list
   -> Node.t
 
-(** [Sidebar]. [class_] goes on the fixed container (on desktop), as
-    shadcn's [className]; [side] defaults to [Left], [variant] to
+(** [Sidebar]. On phones a {!Sheet} on [side] ([attrs] go on its content);
+    elsewhere [class_] goes on the fixed container, as shadcn's
+    [className]; [side] defaults to [Left], [variant] to
     [Sidebar], [collapsible] to [Offcanvas]. *)
 val root
   :  ?attrs:Attr.t list
@@ -201,18 +206,27 @@ val menu_button_classes
   -> unit
   -> string
 
+(** A menu button's tooltip (shadcn's [tooltip] prop): a {!Tooltip} on
+    the button's right. *)
+module Menu_tooltip : sig
+  type t
+end
+
+(** [menu_tooltip sidebar text]: shown while the sidebar is collapsed to
+    its icons (on desktop), or as [hidden] says ([~hidden:false]: always,
+    shadcn's [tooltip={{ hidden: false }}]). [id] (unique on the page;
+    by default from [text]) prefixes the tooltip's ids. *)
+val menu_tooltip : ?id:string -> ?hidden:bool -> t -> string -> Menu_tooltip.t
+
 (** [SidebarMenuButton]: a [<button>], or an [<a>] with [href] (shadcn's
-    [asChild] over a link). [tooltip] shows beside it while the sidebar is
-    collapsed to its icons, or whenever it is hovered with
-    [~tooltip_hidden:false] (shadcn's [tooltip={{ hidden: false }}]). *)
+    [asChild] over a link), with its [tooltip] (from {!menu_tooltip}). *)
 val menu_button
   :  ?attrs:Attr.t list
   -> ?class_:string
   -> ?variant:Menu_button_variant.t
   -> ?size:Menu_button_size.t
   -> ?is_active:bool
-  -> ?tooltip:string
-  -> ?tooltip_hidden:bool
+  -> ?tooltip:Menu_tooltip.t
   -> ?href:string
   -> ?on_click:unit Effect.t
   -> Node.t list

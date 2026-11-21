@@ -22,7 +22,7 @@ let parts sidebar =
                             [ Sidebar.menu_button
                                 ~href:"#home"
                                 ~is_active:true
-                                ~tooltip:"Home"
+                                ~tooltip:(Sidebar.menu_tooltip sidebar "Home")
                                 [ Node.span [ Node.text "Home" ] ]
                             ; Sidebar.menu_badge [ Node.text "3" ]
                             ]
@@ -69,7 +69,8 @@ let controlled ?(open_ = true) ?(open_mobile = false) ~is_mobile () =
 
 let%expect_test "shadcn's classes" =
   Render.html (parts (controlled ~is_mobile:false ()));
-  [%expect {|
+  [%expect
+    {|
     <div data-slot="sidebar-wrapper"
          class="flex group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar min-h-svh w-full"
          custom-css-vars=((--sidebar-width 16rem)(--sidebar-width-icon 3rem))
@@ -115,18 +116,17 @@ let%expect_test "shadcn's classes" =
                          data-sidebar="menu-button"
                          data-size="default"
                          data-active="true"
+                         id="sidebar-tooltip-Home-trigger"
+                         data-state="closed"
                          class="[&>span:last-child]:truncate [&>svg]:shrink-0 [&>svg]:size-4 active:bg-sidebar-accent active:text-sidebar-accent-foreground aria-disabled:opacity-50 aria-disabled:pointer-events-none data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground disabled:opacity-50 disabled:pointer-events-none flex focus-visible:ring-2 gap-2 group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:size-8! group-has-data-[sidebar=menu-action]/menu-item:pr-8 h-8 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground items-center outline-hidden overflow-hidden p-2 peer/menu-button ring-sidebar-ring rounded-md text-left text-sm transition-[width,height,padding] w-full"
+                         @on_blur
                          @on_focus
-                         @on_pointerenter>
+                         @on_mouseleave
+                         @on_mousemove
+                         @on_pointerdown>
                         <span> Home </span>
                       </a>
-                      <div role="tooltip"
-                           data-slot="tooltip-content"
-                           data-side="right"
-                           class="-translate-y-1/2 animate-in bg-foreground data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 fade-in-0 fixed group-data-[collapsible=icon]:peer-focus-visible/menu-button:block group-data-[collapsible=icon]:peer-hover/menu-button:block hidden origin-(--radix-tooltip-content-transform-origin) pointer-events-none px-3 py-1.5 rounded-md text-background text-balance text-xs w-fit z-50 zoom-in-95">
-                        Home
-                        <div class="-translate-x-1/2 -translate-y-1/2 absolute bg-foreground fill-foreground left-0 rotate-45 rounded-[2px] size-2.5 top-1/2 z-50"> </div>
-                      </div>
+                      <Vdom.Node.none-widget> </Vdom.Node.none-widget>
                       <div data-slot="sidebar-menu-badge"
                            data-sidebar="menu-badge"
                            class="absolute flex font-medium group-data-[collapsible=icon]:hidden h-5 items-center justify-center min-w-5 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5 peer-data-[size=sm]/menu-button:top-1 peer-hover/menu-button:text-sidebar-accent-foreground pointer-events-none px-1 right-1 rounded-md select-none tabular-nums text-sidebar-foreground text-xs"> 3 </div>
@@ -229,7 +229,8 @@ let%expect_test "variants, sides and collapsible none" =
         ~selector:"[data-slot=sidebar] > *"
         (Sidebar.root ~variant ~side ~collapsible:Offcanvas sidebar []));
   Render.html (Sidebar.root ~collapsible:None sidebar []);
-  [%expect {|
+  [%expect
+    {|
     <div data-slot="sidebar-gap"
          class="bg-transparent duration-200 ease-linear group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))] group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 relative transition-[width] w-(--sidebar-width)"> </div>
     <div data-slot="sidebar-container"
@@ -260,7 +261,8 @@ let%expect_test "the trigger and the rail collapse and expand it" =
       parts sidebar)
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div data-slot="sidebar-wrapper"
          custom-css-vars=((--sidebar-width 16rem)(--sidebar-width-icon 3rem))
          @on_keydown_global>
@@ -285,14 +287,16 @@ let%expect_test "the trigger and the rail collapse and expand it" =
                          data-sidebar="menu-button"
                          data-size="default"
                          data-active="true"
+                         id="sidebar-tooltip-Home-trigger"
+                         data-state="closed"
+                         @on_blur
                          @on_focus
-                         @on_pointerenter>
+                         @on_mouseleave
+                         @on_mousemove
+                         @on_pointerdown>
                         <span> Home </span>
                       </a>
-                      <div role="tooltip" data-slot="tooltip-content" data-side="right">
-                        Home
-                        <div> </div>
-                      </div>
+                      <Vdom.Node.none-widget> </Vdom.Node.none-widget>
                       <div data-slot="sidebar-menu-badge" data-sidebar="menu-badge"> 3 </div>
                     </li>
                     <li data-slot="sidebar-menu-item" data-sidebar="menu-item">
@@ -362,7 +366,8 @@ let%expect_test "the trigger and the rail collapse and expand it" =
     |}];
   Drive.click handle "[data-slot=sidebar-trigger]";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div data-slot="sidebar-wrapper"
            custom-css-vars=((--sidebar-width 16rem)(--sidebar-width-icon 3rem))
            @on_keydown_global>
@@ -389,7 +394,8 @@ let%expect_test "the trigger and the rail collapse and expand it" =
     |}];
   Drive.click handle "[data-slot=sidebar-rail]";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div data-slot="sidebar-wrapper"
            custom-css-vars=((--sidebar-width 16rem)(--sidebar-width-icon 3rem))
            @on_keydown_global>
@@ -416,6 +422,255 @@ let%expect_test "the trigger and the rail collapse and expand it" =
     |}]
 ;;
 
+let%expect_test "collapsed to icons, a menu button's tooltip shows on hover" =
+  let handle =
+    Render.handle ~classes:false (fun graph ->
+      let open Bonsai.Let_syntax in
+      let sidebar = Sidebar.component ~persist:false graph in
+      let%arr sidebar in
+      parts sidebar)
+  in
+  let hover () =
+    Handle.mousemove
+      handle
+      ~get_vdom:Fn.id
+      ~selector:"#sidebar-tooltip-Home-trigger"
+  in
+  Handle.show handle;
+  [%expect
+    {|
+    <div data-slot="sidebar-wrapper"
+         custom-css-vars=((--sidebar-width 16rem)(--sidebar-width-icon 3rem))
+         @on_keydown_global>
+      <div data-state="expanded"
+           data-collapsible=""
+           data-variant="sidebar"
+           data-side="left"
+           data-slot="sidebar">
+        <div data-slot="sidebar-gap"> </div>
+        <div data-slot="sidebar-container">
+          <div data-sidebar="sidebar" data-slot="sidebar-inner">
+            <div data-slot="sidebar-header" data-sidebar="header"> Acme </div>
+            <div data-slot="sidebar-content" data-sidebar="content">
+              <div data-slot="sidebar-group" data-sidebar="group">
+                <div data-slot="sidebar-group-label" data-sidebar="group-label"> Application </div>
+                <button type="button" data-slot="sidebar-group-action" data-sidebar="group-action"> + </button>
+                <div data-slot="sidebar-group-content" data-sidebar="group-content">
+                  <ul data-slot="sidebar-menu" data-sidebar="menu">
+                    <li data-slot="sidebar-menu-item" data-sidebar="menu-item">
+                      <a href="#home"
+                         data-slot="sidebar-menu-button"
+                         data-sidebar="menu-button"
+                         data-size="default"
+                         data-active="true"
+                         id="sidebar-tooltip-Home-trigger"
+                         data-state="closed"
+                         @on_blur
+                         @on_focus
+                         @on_mouseleave
+                         @on_mousemove
+                         @on_pointerdown>
+                        <span> Home </span>
+                      </a>
+                      <Vdom.Node.none-widget> </Vdom.Node.none-widget>
+                      <div data-slot="sidebar-menu-badge" data-sidebar="menu-badge"> 3 </div>
+                    </li>
+                    <li data-slot="sidebar-menu-item" data-sidebar="menu-item">
+                      <button type="button"
+                              data-slot="sidebar-menu-button"
+                              data-sidebar="menu-button"
+                              data-size="lg"
+                              data-active="false"> Inbox </button>
+                      <button type="button" data-slot="sidebar-menu-action" data-sidebar="menu-action"> … </button>
+                      <ul data-slot="sidebar-menu-sub" data-sidebar="menu-sub">
+                        <li data-slot="sidebar-menu-sub-item" data-sidebar="menu-sub-item">
+                          <a data-slot="sidebar-menu-sub-button"
+                             data-sidebar="menu-sub-button"
+                             data-size="sm"
+                             data-active="false"
+                             href="#unread"> Unread </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li data-slot="sidebar-menu-item" data-sidebar="menu-item">
+                      <div data-slot="sidebar-menu-skeleton" data-sidebar="menu-skeleton">
+                        <div data-slot="skeleton" data-sidebar="menu-skeleton-icon"> </div>
+                        <div data-slot="skeleton"
+                             data-sidebar="menu-skeleton-text"
+                             custom-css-vars=((--skeleton-width 70%))> </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div data-slot="sidebar-footer" data-sidebar="footer"> Me </div>
+            <button type="button"
+                    data-sidebar="rail"
+                    data-slot="sidebar-rail"
+                    aria-label="Toggle Sidebar"
+                    tabindex="-1"
+                    title="Toggle Sidebar"
+                    @on_click> </button>
+          </div>
+        </div>
+      </div>
+      <main data-slot="sidebar-inset">
+        <button type="button"
+                data-variant="ghost"
+                data-size="icon"
+                data-sidebar="trigger"
+                data-slot="sidebar-trigger"
+                @on_click>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true">
+            <rect width="18" height="18" x="3" y="3" rx="2"> </rect>
+            <path d="M9 3v18"> </path>
+          </svg>
+          <span> Toggle Sidebar </span>
+        </button>
+      </main>
+    </div>
+    |}];
+  (* Expanded: hidden, as shadcn's [hidden={state !== "collapsed"}]. *)
+  hover ();
+  Handle.show_diff handle;
+  [%expect {| |}];
+  Drive.click handle "[data-slot=sidebar-trigger]";
+  Handle.show_diff handle;
+  [%expect
+    {|
+      <div data-slot="sidebar-wrapper"
+           custom-css-vars=((--sidebar-width 16rem)(--sidebar-width-icon 3rem))
+           @on_keydown_global>
+    -|  <div data-state="expanded"
+    +|  <div data-state="collapsed"
+    -|       data-collapsible=""
+    +|       data-collapsible="icon"
+             data-variant="sidebar"
+             data-side="left"
+             data-slot="sidebar">
+          <div data-slot="sidebar-gap"> </div>
+          <div data-slot="sidebar-container">
+            <div data-sidebar="sidebar" data-slot="sidebar-inner">
+              <div data-slot="sidebar-header" data-sidebar="header"> Acme </div>
+              <div data-slot="sidebar-content" data-sidebar="content">
+                <div data-slot="sidebar-group" data-sidebar="group">
+                  <div data-slot="sidebar-group-label" data-sidebar="group-label"> Application </div>
+                  <button type="button" data-slot="sidebar-group-action" data-sidebar="group-action"> + </button>
+                  <div data-slot="sidebar-group-content" data-sidebar="group-content">
+                    <ul data-slot="sidebar-menu" data-sidebar="menu">
+                      <li data-slot="sidebar-menu-item" data-sidebar="menu-item">
+                        <a href="#home"
+                           data-slot="sidebar-menu-button"
+    |}];
+  hover ();
+  Handle.show_diff handle;
+  [%expect
+    {|
+          <div data-slot="sidebar-container">
+            <div data-sidebar="sidebar" data-slot="sidebar-inner">
+              <div data-slot="sidebar-header" data-sidebar="header"> Acme </div>
+              <div data-slot="sidebar-content" data-sidebar="content">
+                <div data-slot="sidebar-group" data-sidebar="group">
+                  <div data-slot="sidebar-group-label" data-sidebar="group-label"> Application </div>
+                  <button type="button" data-slot="sidebar-group-action" data-sidebar="group-action"> + </button>
+                  <div data-slot="sidebar-group-content" data-sidebar="group-content">
+                    <ul data-slot="sidebar-menu" data-sidebar="menu">
+                      <li data-slot="sidebar-menu-item" data-sidebar="menu-item">
+                        <a href="#home"
+                           data-slot="sidebar-menu-button"
+                           data-sidebar="menu-button"
+                           data-size="default"
+                           data-active="true"
+                           id="sidebar-tooltip-Home-trigger"
+    -|                     data-state="closed"
+    +|                     data-state="delayed-open"
+    +|                     aria-describedby="sidebar-tooltip-Home-tooltip"
+                           @on_blur
+                           @on_focus
+                           @on_mouseleave
+                           @on_mousemove
+                           @on_pointerdown>
+                          <span> Home </span>
+                        </a>
+    -|                  <Vdom.Node.none-widget> </Vdom.Node.none-widget>
+    +|                  <div loon-dismiss=((sidebar-tooltip-Home-trigger)false false)
+    +|                       loon-presence=()
+    +|                       style={
+    +|                         display: contents;
+    +|                       }>
+    +|                    <div data-radix-popper-content-wrapper=""
+    +|                         popover="manual"
+    +|                         loon-popper=(Popper((side Right)(side_offset 0)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element sidebar-tooltip-Home-trigger))(name tooltip)))
+    +|                         style={
+    +|                           inset: auto;
+    +|                           margin: 0;
+    +|                           border: 0;
+    +|                           padding: 0;
+    +|                           background: transparent;
+    +|                           color: inherit;
+    +|                           overflow: visible;
+    +|                           max-width: none;
+    +|                           max-height: none;
+    +|                           white-space: normal;
+    +|                           text-align: start;
+    +|                           font-weight: normal;
+    +|                           font-style: normal;
+    +|                           letter-spacing: normal;
+    +|                           text-transform: none;
+    +|                         }>
+    +|                      <div data-slot="tooltip-content"
+    +|                           id="sidebar-tooltip-Home-content"
+    +|                           data-state="delayed-open"
+    +|                           data-side="right"
+    +|                           data-align="center"
+    +|                           @on_mouseleave>
+    +|                        Home
+    +|                        <span id="sidebar-tooltip-Home-tooltip"
+    +|                              role="tooltip"
+    +|                              style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"> Home </span>
+    +|                        <span data-popper-arrow="" style={ position: absolute; }>
+    +|                          <svg width="10"
+    +|                               height="5"
+    +|                               viewBox="0 0 30 10"
+    +|                               preserveAspectRatio="none"
+    +|                               style={
+    +|                                 display: block;
+    +|                               }>
+    +|                            <polygon points="0,0 30,0 15,10"> </polygon>
+    +|                          </svg>
+    +|                        </span>
+    +|                      </div>
+    +|                    </div>
+    +|                  </div>
+                        <div data-slot="sidebar-menu-badge" data-sidebar="menu-badge"> 3 </div>
+                      </li>
+                      <li data-slot="sidebar-menu-item" data-sidebar="menu-item">
+                        <button type="button"
+                                data-slot="sidebar-menu-button"
+                                data-sidebar="menu-button"
+                                data-size="lg"
+                                data-active="false"> Inbox </button>
+                        <button type="button" data-slot="sidebar-menu-action" data-sidebar="menu-action"> … </button>
+                        <ul data-slot="sidebar-menu-sub" data-sidebar="menu-sub">
+                          <li data-slot="sidebar-menu-sub-item" data-sidebar="menu-sub-item">
+                            <a data-slot="sidebar-menu-sub-button"
+                               data-sidebar="menu-sub-button"
+                               data-size="sm"
+                               data-active="false"
+                               href="#unread"> Unread </a>
+    |}]
+;;
+
 let%expect_test "on phones it is a sheet, which Esc closes" =
   let handle =
     Render.handle ~classes:false (fun graph ->
@@ -434,7 +689,8 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
            ()))
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div data-slot="sidebar-wrapper"
          custom-css-vars=((--sidebar-width 16rem)(--sidebar-width-icon 3rem))
          @on_keydown_global>
@@ -466,13 +722,38 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     |}];
   Drive.click handle "[data-slot=sidebar-trigger]";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div data-slot="sidebar-wrapper"
            custom-css-vars=((--sidebar-width 16rem)(--sidebar-width-icon 3rem))
            @on_keydown_global>
     -|  <Vdom.Node.none-widget> </Vdom.Node.none-widget>
-    +|  <div>
-    +|    <div data-state="open" data-slot="sheet-overlay" @on_click> </div>
+    +|  <div popover="manual"
+    +|       loon-portal=()
+    +|       loon-presence=()
+    +|       style={
+    +|         inset: 0;
+    +|         margin: 0;
+    +|         border: 0;
+    +|         padding: 0;
+    +|         background: transparent;
+    +|         color: inherit;
+    +|         overflow: visible;
+    +|         max-width: none;
+    +|         max-height: none;
+    +|         white-space: normal;
+    +|         text-align: start;
+    +|         font-weight: normal;
+    +|         font-style: normal;
+    +|         letter-spacing: normal;
+    +|         text-transform: none;
+    +|         position: fixed;
+    +|         width: 100%;
+    +|         height: 100%;
+    +|         pointer-events: none;
+    +|         z-index: 50;
+    +|       }>
+    +|    <div data-slot="sheet-overlay" data-state="open" @on_click style={ pointer-events: auto; }> </div>
     +|    <div data-focus-guard=""
     +|         tabindex="0"
     +|         aria-hidden="true"
@@ -483,22 +764,26 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     +|           outline: none;
     +|           pointer-events: none;
     +|         }> </div>
-    +|    <div id="sidebar-mobile"
-    +|         role="dialog"
-    +|         aria-modal="true"
-    +|         aria-labelledby="sidebar-mobile-title"
+    +|    <div role="dialog"
+    +|         id="sidebar-mobile-content"
     +|         aria-describedby="sidebar-mobile-description"
+    +|         aria-labelledby="sidebar-mobile-title"
     +|         data-state="open"
     +|         tabindex="-1"
-    +|         data-sidebar="sidebar"
     +|         data-slot="sidebar"
+    +|         data-sidebar="sidebar"
     +|         data-mobile="true"
     +|         custom-css-vars=((--sidebar-width 18rem))
-    +|         loon-after-render-sidebar-mobile-focus=<opaque>
-    +|         @on_keydown>
+    +|         loon-dismiss=(()false true)
+    +|         loon-focus-on-mount=First_tabbable
+    +|         loon-scroll-lock=()
+    +|         @on_keydown
+    +|         style={
+    +|           pointer-events: auto;
+    +|         }>
     +|      <div data-slot="sheet-header">
-    +|        <h2 id="sidebar-mobile-title" data-slot="sheet-title"> Sidebar </h2>
-    +|        <p id="sidebar-mobile-description" data-slot="sheet-description"> Displays the mobile sidebar. </p>
+    +|        <h2 data-slot="sheet-title" id="sidebar-mobile-title"> Sidebar </h2>
+    +|        <p data-slot="sheet-description" id="sidebar-mobile-description"> Displays the mobile sidebar. </p>
     +|      </div>
     +|      <div>
     +|        <div data-slot="sidebar-header" data-sidebar="header"> Acme </div>
@@ -514,14 +799,16 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     +|                     data-sidebar="menu-button"
     +|                     data-size="default"
     +|                     data-active="true"
+    +|                     id="sidebar-tooltip-Home-trigger"
+    +|                     data-state="closed"
+    +|                     @on_blur
     +|                     @on_focus
-    +|                     @on_pointerenter>
+    +|                     @on_mouseleave
+    +|                     @on_mousemove
+    +|                     @on_pointerdown>
     +|                    <span> Home </span>
     +|                  </a>
-    +|                  <div role="tooltip" data-slot="tooltip-content" data-side="right">
-    +|                    Home
-    +|                    <div> </div>
-    +|                  </div>
+    +|                  <Vdom.Node.none-widget> </Vdom.Node.none-widget>
     +|                  <div data-slot="sidebar-menu-badge" data-sidebar="menu-badge"> 3 </div>
     +|                </li>
     +|                <li data-slot="sidebar-menu-item" data-sidebar="menu-item">
@@ -562,6 +849,22 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     +|                title="Toggle Sidebar"
     +|                @on_click> </button>
     +|      </div>
+    +|      <button type="button" @on_click>
+    +|        <svg xmlns="http://www.w3.org/2000/svg"
+    +|             width="24"
+    +|             height="24"
+    +|             viewBox="0 0 24 24"
+    +|             fill="none"
+    +|             stroke="currentColor"
+    +|             stroke-width="2"
+    +|             stroke-linecap="round"
+    +|             stroke-linejoin="round"
+    +|             aria-hidden="true">
+    +|          <path d="M18 6 6 18"> </path>
+    +|          <path d="m6 6 12 12"> </path>
+    +|        </svg>
+    +|        <span> Close </span>
+    +|      </button>
     +|    </div>
     +|    <div data-focus-guard=""
     +|         tabindex="0"
@@ -593,14 +896,39 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     |}];
   Drive.key handle "[data-mobile=true]" Escape;
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key Escape))
 
       <div data-slot="sidebar-wrapper"
            custom-css-vars=((--sidebar-width 16rem)(--sidebar-width-icon 3rem))
            @on_keydown_global>
-    -|  <div>
-    -|    <div data-state="open" data-slot="sheet-overlay" @on_click> </div>
+    -|  <div popover="manual"
+    -|       loon-portal=()
+    -|       loon-presence=()
+    -|       style={
+    -|         inset: 0;
+    -|         margin: 0;
+    -|         border: 0;
+    -|         padding: 0;
+    -|         background: transparent;
+    -|         color: inherit;
+    -|         overflow: visible;
+    -|         max-width: none;
+    -|         max-height: none;
+    -|         white-space: normal;
+    -|         text-align: start;
+    -|         font-weight: normal;
+    -|         font-style: normal;
+    -|         letter-spacing: normal;
+    -|         text-transform: none;
+    -|         position: fixed;
+    -|         width: 100%;
+    -|         height: 100%;
+    -|         pointer-events: none;
+    -|         z-index: 50;
+    -|       }>
+    -|    <div data-slot="sheet-overlay" data-state="open" @on_click style={ pointer-events: auto; }> </div>
     -|    <div data-focus-guard=""
     -|         tabindex="0"
     -|         aria-hidden="true"
@@ -611,22 +939,26 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     -|           outline: none;
     -|           pointer-events: none;
     -|         }> </div>
-    -|    <div id="sidebar-mobile"
-    -|         role="dialog"
-    -|         aria-modal="true"
-    -|         aria-labelledby="sidebar-mobile-title"
+    -|    <div role="dialog"
+    -|         id="sidebar-mobile-content"
     -|         aria-describedby="sidebar-mobile-description"
+    -|         aria-labelledby="sidebar-mobile-title"
     -|         data-state="open"
     -|         tabindex="-1"
-    -|         data-sidebar="sidebar"
     -|         data-slot="sidebar"
+    -|         data-sidebar="sidebar"
     -|         data-mobile="true"
     -|         custom-css-vars=((--sidebar-width 18rem))
-    -|         loon-after-render-sidebar-mobile-focus=<opaque>
-    -|         @on_keydown>
+    -|         loon-dismiss=(()false true)
+    -|         loon-focus-on-mount=First_tabbable
+    -|         loon-scroll-lock=()
+    -|         @on_keydown
+    -|         style={
+    -|           pointer-events: auto;
+    -|         }>
     -|      <div data-slot="sheet-header">
-    -|        <h2 id="sidebar-mobile-title" data-slot="sheet-title"> Sidebar </h2>
-    -|        <p id="sidebar-mobile-description" data-slot="sheet-description"> Displays the mobile sidebar. </p>
+    -|        <h2 data-slot="sheet-title" id="sidebar-mobile-title"> Sidebar </h2>
+    -|        <p data-slot="sheet-description" id="sidebar-mobile-description"> Displays the mobile sidebar. </p>
     -|      </div>
     -|      <div>
     -|        <div data-slot="sidebar-header" data-sidebar="header"> Acme </div>
@@ -642,14 +974,16 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     -|                     data-sidebar="menu-button"
     -|                     data-size="default"
     -|                     data-active="true"
+    -|                     id="sidebar-tooltip-Home-trigger"
+    -|                     data-state="closed"
+    -|                     @on_blur
     -|                     @on_focus
-    -|                     @on_pointerenter>
+    -|                     @on_mouseleave
+    -|                     @on_mousemove
+    -|                     @on_pointerdown>
     -|                    <span> Home </span>
     -|                  </a>
-    -|                  <div role="tooltip" data-slot="tooltip-content" data-side="right">
-    -|                    Home
-    -|                    <div> </div>
-    -|                  </div>
+    -|                  <Vdom.Node.none-widget> </Vdom.Node.none-widget>
     -|                  <div data-slot="sidebar-menu-badge" data-sidebar="menu-badge"> 3 </div>
     -|                </li>
     -|                <li data-slot="sidebar-menu-item" data-sidebar="menu-item">
@@ -690,6 +1024,22 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     -|                title="Toggle Sidebar"
     -|                @on_click> </button>
     -|      </div>
+    -|      <button type="button" @on_click>
+    -|        <svg xmlns="http://www.w3.org/2000/svg"
+    -|             width="24"
+    -|             height="24"
+    -|             viewBox="0 0 24 24"
+    -|             fill="none"
+    -|             stroke="currentColor"
+    -|             stroke-width="2"
+    -|             stroke-linecap="round"
+    -|             stroke-linejoin="round"
+    -|             aria-hidden="true">
+    -|          <path d="M18 6 6 18"> </path>
+    -|          <path d="m6 6 12 12"> </path>
+    -|        </svg>
+    -|        <span> Close </span>
+    -|      </button>
     -|    </div>
     -|    <div data-focus-guard=""
     -|         tabindex="0"
