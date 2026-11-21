@@ -15,3 +15,11 @@ let type_ h selector text =
   Handle.input_text h ~get_vdom:Fn.id ~selector ~text;
   Handle.recompute_view h
 ;;
+
+let event h selector event_name =
+  Virtual_dom_test_helpers.Node_helpers.(
+    unsafe_convert_exn (Handle.last_result h)
+    |> select_first_exn ~selector
+    |> trigger ~event_name);
+  Handle.recompute_view h
+;;

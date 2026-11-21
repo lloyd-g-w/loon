@@ -177,12 +177,14 @@ module Scroll_buttons = Vdom.Attr.Hooks.Make (struct
     end
 
     module Input = struct
-      type t = unit [@@deriving sexp_of]
+      (* [true]: the popper position, which leaves the buttons to this hook;
+         the item-aligned one shows them as it places the content. *)
+      type t = bool [@@deriving sexp_of]
 
-      let combine () () = ()
+      let combine _ second = second
     end
 
-    let init () _ = { State.listeners = []; timer = None }
+    let init _ _ = { State.listeners = []; timer = None }
 
     let query (el : Dom_html.element Js.t) s =
       Js.Opt.to_option (el##querySelector (Js.string s))
@@ -197,7 +199,7 @@ module Scroll_buttons = Vdom.Attr.Hooks.Make (struct
 
     let on_mount =
       `Schedule_immediately_after_this_dom_patch_completes
-        (fun () (state : State.t) (content : Dom_html.element Js.t) ->
+        (fun is_popper (state : State.t) (content : Dom_html.element Js.t) ->
           match query content "[data-radix-select-viewport]" with
           | None -> ()
           | Some vp ->
@@ -238,23 +240,23 @@ module Scroll_buttons = Vdom.Attr.Hooks.Make (struct
                 ; listen b Dom_html.Event.pointerleave stop
                 ]
             in
-            update ();
             state.listeners
             <- (listen vp Dom_html.Event.scroll update :: scroll_by up (-32.))
                @ scroll_by down 32.;
-            (* The item-aligned position scrolls the viewport after this. *)
-            ignore
-              (Dom_html.window##requestAnimationFrame
-                 (Js.wrap_callback (fun (_ : Js.number_t) ->
-                    ignore
-                      (Dom_html.window##requestAnimationFrame
-                         (Js.wrap_callback (fun (_ : Js.number_t) -> update ())))))
-               : Dom_html.animation_frame_request_id))
+            if is_popper
+            then
+              ignore
+                (Dom_html.window##requestAnimationFrame
+                   (Js.wrap_callback (fun (_ : Js.number_t) ->
+                      ignore
+                        (Dom_html.window##requestAnimationFrame
+                           (Js.wrap_callback (fun (_ : Js.number_t) -> update ())))))
+                 : Dom_html.animation_frame_request_id))
     ;;
 
-    let update ~old_input:() ~new_input:() _ _ = ()
+    let update ~old_input:_ ~new_input:_ _ _ = ()
 
-    let destroy () (state : State.t) _ =
+    let destroy _ (state : State.t) _ =
       Option.iter state.timer ~f:(fun t -> Dom_html.window##clearInterval t);
       List.iter state.listeners ~f:Dom_html.removeEventListener
     ;;
@@ -366,6 +368,16 @@ let view
     else (
       let c = content in
       let highlight v = on_state_change { state with highlighted = Some v } in
+      (* Radix's onItemLeave: no item highlighted, the content focused. *)
+      let leave =
+        if Option.is_none state.highlighted
+        then Effect.Ignore
+        else
+          Effect.Many
+            [ on_state_change { state with highlighted = None }
+            ; Dom_util.focus_selector_now (sprintf "[id=%S]" content_id)
+            ]
+      in
       let rec render parts =
         List.map parts ~f:(function
           | Group { attrs; class_; parts } ->
@@ -413,10 +425,12 @@ let view
                    ; Focus.when_ highlighted
                    ]
                  @ (if disabled
-                    then []
+                    then [ Attr.on_pointermove (fun _ -> leave) ]
                     else
                       [ Attr.on_pointermove (fun _ ->
                           if highlighted then Effect.Ignore else highlight v)
+                      ; Attr.on_pointerleave (fun _ ->
+                          if highlighted then leave else Effect.Ignore)
                       ; Attr.on_click (fun _ -> choose v)
                       ])
                  @ attrs)
@@ -479,7 +493,7 @@ let view
                       ])
                ; Focus.on_mount `Self
                ; Attr.on_keydown on_keydown
-               ; Vdom.Attr.create_hook "loon-select-scroll" (Scroll_buttons.create ())
+               ; Vdom.Attr.create_hook "loon-select-scroll" (Scroll_buttons.create is_popper)
                ]
              @ c.attrs)
           [ Node.div
@@ -488,8 +502,17 @@ let view
                 ; aria "hidden" "true"
                 ; Attr.hidden
                 ; Attr.class_ scroll_button_class
+                ; Attr.style (Css_gen.create ~field:"flex-shrink" ~value:"0")
+                ; Attr.on_pointermove (fun _ -> leave)
                 ]
               [ Icon.view ~class_:"size-4" Chevron_up ]
+          ; (* Radix's: the viewport scrolls with no scrollbar, by the
+               buttons, the wheel or touch. *)
+            Node.create
+              "style"
+              [ Node.text
+                  "[data-radix-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-select-viewport]::-webkit-scrollbar{display:none}"
+              ]
           ; Node.div
               ~attrs:
                 [ Attr.create "data-radix-select-viewport" ""
@@ -509,6 +532,8 @@ let view
                 ; aria "hidden" "true"
                 ; Attr.hidden
                 ; Attr.class_ scroll_button_class
+                ; Attr.style (Css_gen.create ~field:"flex-shrink" ~value:"0")
+                ; Attr.on_pointermove (fun _ -> leave)
                 ]
               [ Icon.view ~class_:"size-4" Chevron_down ]
           ]

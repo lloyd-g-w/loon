@@ -415,6 +415,31 @@ let position_item_aligned (st : item_aligned) ~anchor (wrapper : Dom_html.elemen
      | _ -> set_style wrapper "top" (px (t.top -. oy)))
 ;;
 
+(* Shows the select's scroll buttons while the viewport can scroll their way
+   (Radix renders them only then); [true] when that changed one. *)
+let sync_scroll_buttons (content : Dom_html.element Js.t) =
+  match query content "[data-radix-select-viewport]" with
+  | None -> false
+  | Some vp ->
+    let top = Js.to_float vp##.scrollTop in
+    let max_top = Float.of_int (vp##.scrollHeight - vp##.clientHeight) in
+    let set selector hidden =
+      match query content selector with
+      | None -> false
+      | Some b ->
+        let was = Js.to_bool (b##hasAttribute (Js.string "hidden")) in
+        if hidden
+        then b##setAttribute (Js.string "hidden") (Js.string "")
+        else b##removeAttribute (Js.string "hidden");
+        Bool.( <> ) was hidden
+    in
+    let up = set "[data-slot=select-scroll-up-button]" Float.(top <= 0.) in
+    let down =
+      set "[data-slot=select-scroll-down-button]" Float.(round_up top >= max_top)
+    in
+    up || down
+;;
+
 (* Radix's [SelectViewport] onScroll: while the wrapper is shorter than the
    window allows, scrolling grows it instead (upwards when it is anchored at
    the bottom). *)
@@ -482,7 +507,15 @@ module Hook = Vdom.Attr.Hooks.Make (struct
        | Popper p -> position p el
        | Item_aligned anchor ->
          if state.frames <= 2
-         then position_item_aligned state.item_aligned ~anchor el
+         then (
+           (* As Radix: placed, then placed again once the scroll buttons
+              that placement calls for are shown, so they cover no item. *)
+           position_item_aligned state.item_aligned ~anchor el;
+           Option.iter (first_child el) ~f:(fun content ->
+             if sync_scroll_buttons content
+             then (
+               position_item_aligned state.item_aligned ~anchor el;
+               ignore (sync_scroll_buttons content : bool))))
          else if state.frames = 3
          then (
            state.item_aligned.expand <- true;
@@ -500,6 +533,10 @@ module Hook = Vdom.Attr.Hooks.Make (struct
                      Dom_html.Event.scroll
                      (Dom_html.handler (fun _ ->
                         expand_on_scroll state.item_aligned el vp;
+                        (* After the select's own listener: this may have
+                           scrolled the viewport again. *)
+                        Option.iter (first_child el) ~f:(fun c ->
+                          ignore (sync_scroll_buttons c : bool));
                         Js._true))
                      Js._false)));
       state.frame

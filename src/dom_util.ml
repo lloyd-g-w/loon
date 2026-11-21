@@ -33,3 +33,7 @@ let stop (ev : #Dom_html.event Js.t) =
     ev##preventDefault;
     ev##stopPropagation)
 ;;
+
+let focus_selector_now selector =
+  Effect.of_sync_fun (fun () -> if in_browser () then focus_now selector) ()
+;;

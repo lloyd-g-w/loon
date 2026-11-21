@@ -143,7 +143,7 @@ let%expect_test "shadcn's classes" =
                tabindex="-1"
                class="bg-popover border data-[side=bottom]:slide-in-from-top-2 data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto relative rounded-md shadow-md text-popover-foreground z-50"
                loon-focus-on-mount=Self
-               loon-select-scroll=()
+               loon-select-scroll=true
                @on_keydown
                style={
                  box-sizing: border-box;
@@ -154,7 +154,11 @@ let%expect_test "shadcn's classes" =
             <div data-slot="select-scroll-up-button"
                  aria-hidden="true"
                  hidden=""
-                 class="cursor-default flex items-center justify-center py-1">
+                 class="cursor-default flex items-center justify-center py-1"
+                 @on_pointermove
+                 style={
+                   flex-shrink: 0;
+                 }>
               <svg xmlns="http://www.w3.org/2000/svg"
                    width="24"
                    height="24"
@@ -169,6 +173,9 @@ let%expect_test "shadcn's classes" =
                 <path d="m18 15-6-6-6 6"> </path>
               </svg>
             </div>
+            <style>
+              [data-radix-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-select-viewport]::-webkit-scrollbar{display:none}
+            </style>
             <div data-radix-select-viewport=""
                  role="presentation"
                  class="h-[var(--radix-select-trigger-height)] min-w-[var(--radix-select-trigger-width)] p-1 scroll-my-1 w-full"
@@ -190,6 +197,7 @@ let%expect_test "shadcn's classes" =
                      class="*:[span]:last:flex *:[span]:last:gap-2 *:[span]:last:items-center [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-default data-[disabled]:opacity-50 data-[disabled]:pointer-events-none flex focus:bg-accent focus:text-accent-foreground gap-2 items-center outline-hidden pl-2 pr-8 py-1.5 relative rounded-sm select-none text-sm w-full"
                      loon-focus-when=true
                      @on_click
+                     @on_pointerleave
                      @on_pointermove>
                   <span data-slot="select-item-indicator"
                         class="absolute flex items-center justify-center right-2 size-3.5">
@@ -217,7 +225,11 @@ let%expect_test "shadcn's classes" =
             <div data-slot="select-scroll-down-button"
                  aria-hidden="true"
                  hidden=""
-                 class="cursor-default flex items-center justify-center py-1">
+                 class="cursor-default flex items-center justify-center py-1"
+                 @on_pointermove
+                 style={
+                   flex-shrink: 0;
+                 }>
               <svg xmlns="http://www.w3.org/2000/svg"
                    width="24"
                    height="24"
@@ -352,7 +364,7 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                dir="ltr"
                tabindex="-1"
                loon-focus-on-mount=Self
-               loon-select-scroll=()
+               loon-select-scroll=false
                @on_keydown
                style={
                  box-sizing: border-box;
@@ -360,7 +372,13 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                  flex-direction: column;
                  outline: none;
                }>
-            <div data-slot="select-scroll-up-button" aria-hidden="true" hidden="">
+            <div data-slot="select-scroll-up-button"
+                 aria-hidden="true"
+                 hidden=""
+                 @on_pointermove
+                 style={
+                   flex-shrink: 0;
+                 }>
               <svg xmlns="http://www.w3.org/2000/svg"
                    width="24"
                    height="24"
@@ -374,6 +392,9 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                 <path d="m18 15-6-6-6 6"> </path>
               </svg>
             </div>
+            <style>
+              [data-radix-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-select-viewport]::-webkit-scrollbar{display:none}
+            </style>
             <div data-radix-select-viewport=""
                  role="presentation"
                  style={
@@ -393,6 +414,7 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                      data-test="apple"
                      loon-focus-when=false
                      @on_click
+                     @on_pointerleave
                      @on_pointermove>
                   <span data-slot="select-item-indicator"> </span>
                   <span id="bonsai_path_replaced_in_test-item-0-text"> Apple </span>
@@ -407,7 +429,8 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                      id="bonsai_path_replaced_in_test-item-1"
                      data-slot="select-item"
                      data-test="banana"
-                     loon-focus-when=false>
+                     loon-focus-when=false
+                     @on_pointermove>
                   <span data-slot="select-item-indicator"> </span>
                   <span id="bonsai_path_replaced_in_test-item-1-text"> Banana </span>
                 </div>
@@ -422,6 +445,7 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                      data-test="blueberry"
                      loon-focus-when=true
                      @on_click
+                     @on_pointerleave
                      @on_pointermove>
                   <span data-slot="select-item-indicator">
                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -453,13 +477,20 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                      data-test="carrot"
                      loon-focus-when=false
                      @on_click
+                     @on_pointerleave
                      @on_pointermove>
                   <span data-slot="select-item-indicator"> </span>
                   <span id="bonsai_path_replaced_in_test-item-3-text"> Carrot </span>
                 </div>
               </div>
             </div>
-            <div data-slot="select-scroll-down-button" aria-hidden="true" hidden="">
+            <div data-slot="select-scroll-down-button"
+                 aria-hidden="true"
+                 hidden=""
+                 @on_pointermove
+                 style={
+                   flex-shrink: 0;
+                 }>
               <svg xmlns="http://www.w3.org/2000/svg"
                    width="24"
                    height="24"
@@ -498,6 +529,45 @@ let%expect_test "a click opens it on the first item; clicking an item picks it" 
     value: blueberry; trigger shows: Blueberry; open, highlighted: Blueberry
     value: blueberry; trigger shows: Blueberry; closed
     |}]
+;;
+
+let%expect_test
+    "the pointer highlights items; leaving one, or moving onto a scroll button, \
+     highlights none (Radix's onItemLeave)"
+  =
+  let handle = Render.handle ~classes:false (with_value ()) in
+  Drive.click handle trigger;
+  status handle;
+  Drive.event handle (on "carrot") "onpointermove";
+  status handle;
+  Drive.event handle (on "carrot") "onpointerleave";
+  status handle;
+  Drive.event handle (on "apple") "onpointermove";
+  status handle;
+  Drive.event handle "[data-slot=select-scroll-down-button]" "onpointermove";
+  status handle;
+  Drive.event handle (on "apple") "onpointermove";
+  Drive.event handle (on "banana") "onpointermove";
+  status handle;
+  [%expect
+    {|
+    value: (none); trigger shows: Select a fruit; open, highlighted: Apple
+    value: (none); trigger shows: Select a fruit; open, highlighted: Carrot
+    value: (none); trigger shows: Select a fruit; open, highlighted: none
+    value: (none); trigger shows: Select a fruit; open, highlighted: Apple
+    value: (none); trigger shows: Select a fruit; open, highlighted: none
+    value: (none); trigger shows: Select a fruit; open, highlighted: none
+    |}]
+;;
+
+let%expect_test "the viewport hides its scrollbar, as Radix's does" =
+  let handle = Render.handle ~classes:false (with_value ()) in
+  Drive.click handle trigger;
+  let module H = Virtual_dom_test_helpers.Node_helpers in
+  let node = H.unsafe_convert_exn (Handle.last_result handle) in
+  List.iter (H.select node ~selector:"[data-slot=select-content] > style") ~f:(fun n ->
+    print_endline (H.inner_text n));
+  [%expect {| [data-radix-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-select-viewport]::-webkit-scrollbar{display:none} |}]
 ;;
 
 let%expect_test
