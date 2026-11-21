@@ -104,6 +104,7 @@ type t =
   | Loader
   | Loader_circle
   | Lock
+  | Lock_open
   | Log_out
   | Mail
   | Mail_check
@@ -273,6 +274,7 @@ let name = function
   | Loader -> "loader"
   | Loader_circle -> "loader-circle"
   | Lock -> "lock"
+  | Lock_open -> "lock-open"
   | Log_out -> "log-out"
   | Mail -> "mail"
   | Mail_check -> "mail-check"
@@ -442,6 +444,7 @@ let of_name = function
   | "loader" -> Some Loader
   | "loader-circle" -> Some Loader_circle
   | "lock" -> Some Lock
+  | "lock-open" -> Some Lock_open
   | "log-out" -> Some Log_out
   | "mail" -> Some Mail
   | "mail-check" -> Some Mail_check
@@ -612,6 +615,7 @@ let shapes = function
   | Loader -> [ ("path", [ "d", "M12 2v4" ]); ("path", [ "d", "m16.2 7.8 2.9-2.9" ]); ("path", [ "d", "M18 12h4" ]); ("path", [ "d", "m16.2 16.2 2.9 2.9" ]); ("path", [ "d", "M12 18v4" ]); ("path", [ "d", "m4.9 19.1 2.9-2.9" ]); ("path", [ "d", "M2 12h4" ]); ("path", [ "d", "m4.9 4.9 2.9 2.9" ]) ]
   | Loader_circle -> [ ("path", [ "d", "M21 12a9 9 0 1 1-6.219-8.56" ]) ]
   | Lock -> [ ("rect", [ "width", "18"; "height", "11"; "x", "3"; "y", "11"; "rx", "2"; "ry", "2" ]); ("path", [ "d", "M7 11V7a5 5 0 0 1 10 0v4" ]) ]
+  | Lock_open -> [ ("rect", [ "width", "18"; "height", "11"; "x", "3"; "y", "11"; "rx", "2"; "ry", "2" ]); ("path", [ "d", "M7 11V7a5 5 0 0 1 9.9-1" ]) ]
   | Log_out -> [ ("path", [ "d", "m16 17 5-5-5-5" ]); ("path", [ "d", "M21 12H9" ]); ("path", [ "d", "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" ]) ]
   | Mail -> [ ("path", [ "d", "m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" ]); ("rect", [ "x", "2"; "y", "4"; "width", "20"; "height", "16"; "rx", "2" ]) ]
   | Mail_check -> [ ("path", [ "d", "M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8" ]); ("path", [ "d", "m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" ]); ("path", [ "d", "m16 19 2 2 4-4" ]) ]

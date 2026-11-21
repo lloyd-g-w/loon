@@ -109,6 +109,7 @@ type t =
   | Loader
   | Loader_circle
   | Lock
+  | Lock_open
   | Log_out
   | Mail
   | Mail_check

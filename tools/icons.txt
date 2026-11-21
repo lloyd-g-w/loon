@@ -259,3 +259,4 @@ FileCodeIcon
 FolderCode
 Cloud
 octagon-x
+lock-open
