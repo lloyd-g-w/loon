@@ -1,26 +1,62 @@
-(** A section that shows or hides its content when its trigger is pressed. *)
+(** An interactive component which expands/collapses a panel. Port of
+    shadcn/ui's [Collapsible] (Radix Collapsible: the trigger's
+    [aria-expanded] and [aria-controls], [data-state] on every part, the
+    content [hidden] while closed).
+
+    {[
+      Collapsible.component
+        (return (fun c ->
+          [ Collapsible.trigger c [ Node.text "Can I use this in my project?" ]
+          ; Collapsible.content c [ Node.text "Yes. Free to use." ]
+          ]))
+        graph
+    ]} *)
 
 open! Import
 
-(** Controlled. The trigger is a button holding [trigger] and a chevron;
-    the content is kept in the page when closed (hidden, so its state
-    survives) and its height animates. [name] scopes the ids. *)
+(** The collapsible's state, for its parts. *)
+type t
+
+val is_open : t -> bool
+
+(** Controlled: [open_] and [on_change] (Radix's [open] and [onOpenChange]);
+    [id] (unique on the page, ["collapsible"] by default) names the
+    content for the trigger's [aria-controls]. *)
 val view
   :  ?attrs:Attr.t list
+  -> ?class_:string
   -> ?disabled:bool
-  -> name:string
+  -> ?id:string
   -> open_:bool
   -> on_change:(bool -> unit Effect.t)
-  -> trigger:Node.t list
-  -> Node.t list
+  -> (t -> Node.t list)
   -> Node.t
 
-(** Keeps whether it is open; closed at first unless [default_open]. *)
+(** Keeps whether it is open: closed at first unless [default_open]. *)
 val component
   :  ?attrs:Attr.t list
+  -> ?class_:string
   -> ?disabled:bool
   -> ?default_open:bool
-  -> trigger:Node.t list Bonsai.t
-  -> Node.t list Bonsai.t
+  -> (t -> Node.t list) Bonsai.t
   -> local_ Bonsai.graph
   -> Node.t Bonsai.t
+
+(** A [<button>] that opens and closes it. *)
+val trigger : ?attrs:Attr.t list -> ?class_:string -> t -> Node.t list -> Node.t
+
+(** The trigger's attributes, for another element to be the trigger:
+    shadcn's [<CollapsibleTrigger asChild>], as in
+    [Button.view ~attrs:(Collapsible.trigger_attrs c) ...]. *)
+val trigger_attrs : t -> Attr.t list
+
+(** The panel: [hidden] while closed (its children kept, so their state
+    survives). Its open size is measured into
+    [--radix-collapsible-content-height] and [-width], for
+    [animate-collapsible-down]/[-up] classes, and it stays visible until
+    such a closing animation ends. *)
+val content : ?attrs:Attr.t list -> ?class_:string -> t -> Node.t list -> Node.t
+
+(** The measuring and the delayed hiding of {!content}, for an element whose
+    [hidden] attribute follows [open_] (Accordion's content uses it). *)
+val presence : open_:bool -> Attr.t
