@@ -88,6 +88,7 @@
               "_build"
               "result"
               "e2e"
+              "examples"
               ".github"
             ]);
         };
