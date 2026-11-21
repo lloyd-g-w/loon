@@ -50,3 +50,10 @@ let%expect_test "arbitrary properties conflict by property" =
   show [ "[--cell-size:--spacing(8)]"; "md:[--cell-size:--spacing(12)]" ];
   [%expect {| [--cell-size:--spacing(8)] md:[--cell-size:--spacing(12)] |}]
 ;;
+
+let%expect_test "translations, by axis" =
+  show [ "top-[50%] translate-x-[-50%] translate-y-[-50%]"; "top-[64px] translate-y-0" ];
+  [%expect {| translate-x-[-50%] top-[64px] translate-y-0 |}];
+  show [ "-translate-y-1/2"; "translate-y-0" ];
+  [%expect {| translate-y-0 |}]
+;;

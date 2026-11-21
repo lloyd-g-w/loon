@@ -1009,7 +1009,21 @@ let preview_switcher ~item ~set_item =
 
 let preview graph ~(env : Env.t Bonsai.t) ~(shown : Create_preset.t Bonsai.t) =
   let item = Bonsai.map env ~f:(fun env -> env.params.item) in
-  let block = Create_preview.component item graph in
+  let info =
+    let%map shown in
+    let style =
+      List.find Create_config.styles ~f:(fun s -> String.equal s.name shown.style)
+      |> Option.value_map ~default:shown.style ~f:(fun (s : Create_style.t) -> s.title)
+    in
+    let font name =
+      Option.value_map (Create_config.font name) ~default:name ~f:(fun f -> f.title)
+    in
+    let heading =
+      if String.equal shown.font_heading "inherit" then shown.font else shown.font_heading
+    in
+    { Create_preview.Info.style; font = font shown.font; font_heading = font heading }
+  in
+  let block = Create_preview.component ~info item graph in
   let%arr block and env and shown in
   Node.div
     ~attrs:
