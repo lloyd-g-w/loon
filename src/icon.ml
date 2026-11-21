@@ -10,6 +10,7 @@ type t =
   | Arrow_down
   | Arrow_down_from_line
   | Arrow_left
+  | Arrow_left_right
   | Arrow_right
   | Arrow_up
   | Arrow_up_down
@@ -24,9 +25,12 @@ type t =
   | Bookmark
   | Bot
   | Brain
+  | Building_complex
   | Calculator
   | Calendar
   | Calendar_plus
+  | Camera
+  | Car
   | Chart_area
   | Chart_column_big
   | Chart_line
@@ -51,9 +55,12 @@ type t =
   | Clipboard
   | Clock
   | Cloud
+  | Cloud_upload
   | Code
   | Code_xml
+  | Coffee
   | Command
+  | Container
   | Copy
   | Corner_down_left
   | Corner_up_left
@@ -67,6 +74,7 @@ type t =
   | Eye_off
   | Face_slightly_smiling
   | File
+  | File_chart_column_increasing
   | File_code
   | File_text
   | Folder
@@ -78,6 +86,7 @@ type t =
   | Funnel
   | Gallery_horizontal
   | Gallery_vertical_end
+  | Gauge
   | Git_branch
   | Git_commit_vertical
   | Github
@@ -95,6 +104,7 @@ type t =
   | Italic
   | Keyboard
   | Laptop
+  | Layout_dashboard
   | Letter_b
   | Life_buoy
   | Link
@@ -105,6 +115,7 @@ type t =
   | Loader
   | Loader_circle
   | Lock
+  | Lock_keyhole
   | Lock_open
   | Log_out
   | Mail
@@ -113,6 +124,7 @@ type t =
   | Menu
   | Message_circle
   | Message_circle_question_mark
+  | Message_square
   | Minus
   | Monitor
   | Moon
@@ -132,14 +144,19 @@ type t =
   | Redo
   | Refresh_ccw
   | Refresh_cw
+  | Repeat
   | Rotate_ccw
   | Rotate_cw
   | Search
   | Send
+  | Server
   | Settings
   | Settings_2
   | Share
+  | Shield
   | Shield_exclamation_point
+  | Shopping_bag
+  | Shopping_cart
   | Slash
   | Sliders_horizontal
   | Smartphone
@@ -153,15 +170,18 @@ type t =
   | Sun
   | Tablet
   | Tag
+  | Target
   | Terminal
   | Text_align_center
   | Text_align_end
   | Text_align_start
+  | Thermometer
   | Timer
   | Trash
   | Trending_down
   | Trending_up
   | Triangle_exclamation_point
+  | Tv
   | Type
   | Underline
   | Undo
@@ -169,9 +189,12 @@ type t =
   | User
   | User_round_x
   | Video
+  | Volume_2
   | Volume_off
+  | Wallet
   | Waves_horizontal
   | X
+  | Zap
 [@@deriving enumerate, sexp_of, compare, equal]
 
 let name = function
@@ -183,6 +206,7 @@ let name = function
   | Arrow_down -> "arrow-down"
   | Arrow_down_from_line -> "arrow-down-from-line"
   | Arrow_left -> "arrow-left"
+  | Arrow_left_right -> "arrow-left-right"
   | Arrow_right -> "arrow-right"
   | Arrow_up -> "arrow-up"
   | Arrow_up_down -> "arrow-up-down"
@@ -197,9 +221,12 @@ let name = function
   | Bookmark -> "bookmark"
   | Bot -> "bot"
   | Brain -> "brain"
+  | Building_complex -> "building-complex"
   | Calculator -> "calculator"
   | Calendar -> "calendar"
   | Calendar_plus -> "calendar-plus"
+  | Camera -> "camera"
+  | Car -> "car"
   | Chart_area -> "chart-area"
   | Chart_column_big -> "chart-column-big"
   | Chart_line -> "chart-line"
@@ -224,9 +251,12 @@ let name = function
   | Clipboard -> "clipboard"
   | Clock -> "clock"
   | Cloud -> "cloud"
+  | Cloud_upload -> "cloud-upload"
   | Code -> "code"
   | Code_xml -> "code-xml"
+  | Coffee -> "coffee"
   | Command -> "command"
+  | Container -> "container"
   | Copy -> "copy"
   | Corner_down_left -> "corner-down-left"
   | Corner_up_left -> "corner-up-left"
@@ -240,6 +270,7 @@ let name = function
   | Eye_off -> "eye-off"
   | Face_slightly_smiling -> "face-slightly-smiling"
   | File -> "file"
+  | File_chart_column_increasing -> "file-chart-column-increasing"
   | File_code -> "file-code"
   | File_text -> "file-text"
   | Folder -> "folder"
@@ -251,6 +282,7 @@ let name = function
   | Funnel -> "funnel"
   | Gallery_horizontal -> "gallery-horizontal"
   | Gallery_vertical_end -> "gallery-vertical-end"
+  | Gauge -> "gauge"
   | Git_branch -> "git-branch"
   | Git_commit_vertical -> "git-commit-vertical"
   | Github -> "github"
@@ -268,6 +300,7 @@ let name = function
   | Italic -> "italic"
   | Keyboard -> "keyboard"
   | Laptop -> "laptop"
+  | Layout_dashboard -> "layout-dashboard"
   | Letter_b -> "letter-b"
   | Life_buoy -> "life-buoy"
   | Link -> "link"
@@ -278,6 +311,7 @@ let name = function
   | Loader -> "loader"
   | Loader_circle -> "loader-circle"
   | Lock -> "lock"
+  | Lock_keyhole -> "lock-keyhole"
   | Lock_open -> "lock-open"
   | Log_out -> "log-out"
   | Mail -> "mail"
@@ -286,6 +320,7 @@ let name = function
   | Menu -> "menu"
   | Message_circle -> "message-circle"
   | Message_circle_question_mark -> "message-circle-question-mark"
+  | Message_square -> "message-square"
   | Minus -> "minus"
   | Monitor -> "monitor"
   | Moon -> "moon"
@@ -305,14 +340,19 @@ let name = function
   | Redo -> "redo"
   | Refresh_ccw -> "refresh-ccw"
   | Refresh_cw -> "refresh-cw"
+  | Repeat -> "repeat"
   | Rotate_ccw -> "rotate-ccw"
   | Rotate_cw -> "rotate-cw"
   | Search -> "search"
   | Send -> "send"
+  | Server -> "server"
   | Settings -> "settings"
   | Settings_2 -> "settings-2"
   | Share -> "share"
+  | Shield -> "shield"
   | Shield_exclamation_point -> "shield-exclamation-point"
+  | Shopping_bag -> "shopping-bag"
+  | Shopping_cart -> "shopping-cart"
   | Slash -> "slash"
   | Sliders_horizontal -> "sliders-horizontal"
   | Smartphone -> "smartphone"
@@ -326,15 +366,18 @@ let name = function
   | Sun -> "sun"
   | Tablet -> "tablet"
   | Tag -> "tag"
+  | Target -> "target"
   | Terminal -> "terminal"
   | Text_align_center -> "text-align-center"
   | Text_align_end -> "text-align-end"
   | Text_align_start -> "text-align-start"
+  | Thermometer -> "thermometer"
   | Timer -> "timer"
   | Trash -> "trash"
   | Trending_down -> "trending-down"
   | Trending_up -> "trending-up"
   | Triangle_exclamation_point -> "triangle-exclamation-point"
+  | Tv -> "tv"
   | Type -> "type"
   | Underline -> "underline"
   | Undo -> "undo"
@@ -342,9 +385,12 @@ let name = function
   | User -> "user"
   | User_round_x -> "user-round-x"
   | Video -> "video"
+  | Volume_2 -> "volume-2"
   | Volume_off -> "volume-off"
+  | Wallet -> "wallet"
   | Waves_horizontal -> "waves-horizontal"
   | X -> "x"
+  | Zap -> "zap"
 ;;
 
 let of_name = function
@@ -356,6 +402,7 @@ let of_name = function
   | "arrow-down" -> Some Arrow_down
   | "arrow-down-from-line" -> Some Arrow_down_from_line
   | "arrow-left" -> Some Arrow_left
+  | "arrow-left-right" -> Some Arrow_left_right
   | "arrow-right" -> Some Arrow_right
   | "arrow-up" -> Some Arrow_up
   | "arrow-up-down" -> Some Arrow_up_down
@@ -370,9 +417,12 @@ let of_name = function
   | "bookmark" -> Some Bookmark
   | "bot" -> Some Bot
   | "brain" -> Some Brain
+  | "building-complex" -> Some Building_complex
   | "calculator" -> Some Calculator
   | "calendar" -> Some Calendar
   | "calendar-plus" -> Some Calendar_plus
+  | "camera" -> Some Camera
+  | "car" -> Some Car
   | "chart-area" -> Some Chart_area
   | "chart-column-big" -> Some Chart_column_big
   | "chart-line" -> Some Chart_line
@@ -397,9 +447,12 @@ let of_name = function
   | "clipboard" -> Some Clipboard
   | "clock" -> Some Clock
   | "cloud" -> Some Cloud
+  | "cloud-upload" -> Some Cloud_upload
   | "code" -> Some Code
   | "code-xml" -> Some Code_xml
+  | "coffee" -> Some Coffee
   | "command" -> Some Command
+  | "container" -> Some Container
   | "copy" -> Some Copy
   | "corner-down-left" -> Some Corner_down_left
   | "corner-up-left" -> Some Corner_up_left
@@ -413,6 +466,7 @@ let of_name = function
   | "eye-off" -> Some Eye_off
   | "face-slightly-smiling" -> Some Face_slightly_smiling
   | "file" -> Some File
+  | "file-chart-column-increasing" -> Some File_chart_column_increasing
   | "file-code" -> Some File_code
   | "file-text" -> Some File_text
   | "folder" -> Some Folder
@@ -424,6 +478,7 @@ let of_name = function
   | "funnel" -> Some Funnel
   | "gallery-horizontal" -> Some Gallery_horizontal
   | "gallery-vertical-end" -> Some Gallery_vertical_end
+  | "gauge" -> Some Gauge
   | "git-branch" -> Some Git_branch
   | "git-commit-vertical" -> Some Git_commit_vertical
   | "github" -> Some Github
@@ -441,6 +496,7 @@ let of_name = function
   | "italic" -> Some Italic
   | "keyboard" -> Some Keyboard
   | "laptop" -> Some Laptop
+  | "layout-dashboard" -> Some Layout_dashboard
   | "letter-b" -> Some Letter_b
   | "life-buoy" -> Some Life_buoy
   | "link" -> Some Link
@@ -451,6 +507,7 @@ let of_name = function
   | "loader" -> Some Loader
   | "loader-circle" -> Some Loader_circle
   | "lock" -> Some Lock
+  | "lock-keyhole" -> Some Lock_keyhole
   | "lock-open" -> Some Lock_open
   | "log-out" -> Some Log_out
   | "mail" -> Some Mail
@@ -459,6 +516,7 @@ let of_name = function
   | "menu" -> Some Menu
   | "message-circle" -> Some Message_circle
   | "message-circle-question-mark" -> Some Message_circle_question_mark
+  | "message-square" -> Some Message_square
   | "minus" -> Some Minus
   | "monitor" -> Some Monitor
   | "moon" -> Some Moon
@@ -478,14 +536,19 @@ let of_name = function
   | "redo" -> Some Redo
   | "refresh-ccw" -> Some Refresh_ccw
   | "refresh-cw" -> Some Refresh_cw
+  | "repeat" -> Some Repeat
   | "rotate-ccw" -> Some Rotate_ccw
   | "rotate-cw" -> Some Rotate_cw
   | "search" -> Some Search
   | "send" -> Some Send
+  | "server" -> Some Server
   | "settings" -> Some Settings
   | "settings-2" -> Some Settings_2
   | "share" -> Some Share
+  | "shield" -> Some Shield
   | "shield-exclamation-point" -> Some Shield_exclamation_point
+  | "shopping-bag" -> Some Shopping_bag
+  | "shopping-cart" -> Some Shopping_cart
   | "slash" -> Some Slash
   | "sliders-horizontal" -> Some Sliders_horizontal
   | "smartphone" -> Some Smartphone
@@ -499,15 +562,18 @@ let of_name = function
   | "sun" -> Some Sun
   | "tablet" -> Some Tablet
   | "tag" -> Some Tag
+  | "target" -> Some Target
   | "terminal" -> Some Terminal
   | "text-align-center" -> Some Text_align_center
   | "text-align-end" -> Some Text_align_end
   | "text-align-start" -> Some Text_align_start
+  | "thermometer" -> Some Thermometer
   | "timer" -> Some Timer
   | "trash" -> Some Trash
   | "trending-down" -> Some Trending_down
   | "trending-up" -> Some Trending_up
   | "triangle-exclamation-point" -> Some Triangle_exclamation_point
+  | "tv" -> Some Tv
   | "type" -> Some Type
   | "underline" -> Some Underline
   | "undo" -> Some Undo
@@ -515,9 +581,12 @@ let of_name = function
   | "user" -> Some User
   | "user-round-x" -> Some User_round_x
   | "video" -> Some Video
+  | "volume-2" -> Some Volume_2
   | "volume-off" -> Some Volume_off
+  | "wallet" -> Some Wallet
   | "waves-horizontal" -> Some Waves_horizontal
   | "x" -> Some X
+  | "zap" -> Some Zap
   | _ -> None
 ;;
 
@@ -530,6 +599,7 @@ let shapes = function
   | Arrow_down -> [ ("path", [ "d", "M12 5v14" ]); ("path", [ "d", "m19 12-7 7-7-7" ]) ]
   | Arrow_down_from_line -> [ ("path", [ "d", "M19 3H5" ]); ("path", [ "d", "M12 21V7" ]); ("path", [ "d", "m6 15 6 6 6-6" ]) ]
   | Arrow_left -> [ ("path", [ "d", "m12 19-7-7 7-7" ]); ("path", [ "d", "M19 12H5" ]) ]
+  | Arrow_left_right -> [ ("path", [ "d", "M8 3 4 7l4 4" ]); ("path", [ "d", "M4 7h16" ]); ("path", [ "d", "m16 21 4-4-4-4" ]); ("path", [ "d", "M20 17H4" ]) ]
   | Arrow_right -> [ ("path", [ "d", "M5 12h14" ]); ("path", [ "d", "m12 5 7 7-7 7" ]) ]
   | Arrow_up -> [ ("path", [ "d", "m5 12 7-7 7 7" ]); ("path", [ "d", "M12 19V5" ]) ]
   | Arrow_up_down -> [ ("path", [ "d", "m21 16-4 4-4-4" ]); ("path", [ "d", "M17 20V4" ]); ("path", [ "d", "m3 8 4-4 4 4" ]); ("path", [ "d", "M7 4v16" ]) ]
@@ -544,9 +614,12 @@ let shapes = function
   | Bookmark -> [ ("path", [ "d", "M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z" ]) ]
   | Bot -> [ ("path", [ "d", "M12 8V4H8" ]); ("rect", [ "width", "16"; "height", "12"; "x", "4"; "y", "8"; "rx", "2" ]); ("path", [ "d", "M2 14h2" ]); ("path", [ "d", "M20 14h2" ]); ("path", [ "d", "M15 13v2" ]); ("path", [ "d", "M9 13v2" ]) ]
   | Brain -> [ ("path", [ "d", "M12 18V5" ]); ("path", [ "d", "M15 13a4.17 4.17 0 01-3-4 4.17 4.17 0 01-3 4" ]); ("path", [ "d", "M17.707 6.294A3 3 0 1012 5a3 3 0 10-5.707 1.294" ]); ("path", [ "d", "M17.996 5.125a4 4 0 012.526 5.77" ]); ("path", [ "d", "M18 18a4 4 0 002-7.465" ]); ("path", [ "d", "M19.967 17.482a4 4 0 11-7.967.517 4 4 0 11-7.967-.517" ]); ("path", [ "d", "M6 18a4 4 0 01-2-7.465" ]); ("path", [ "d", "M6.004 5.125a4 4 0 00-2.526 5.77" ]) ]
+  | Building_complex -> [ ("path", [ "d", "M10 12h4" ]); ("path", [ "d", "M10 8h4" ]); ("path", [ "d", "M14 21v-3a2 2 0 0 0-4 0v3" ]); ("path", [ "d", "M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" ]); ("path", [ "d", "M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" ]) ]
   | Calculator -> [ ("rect", [ "width", "16"; "height", "20"; "x", "4"; "y", "2"; "rx", "2" ]); ("line", [ "x1", "8"; "x2", "16"; "y1", "6"; "y2", "6" ]); ("line", [ "x1", "16"; "x2", "16"; "y1", "14"; "y2", "18" ]); ("path", [ "d", "M16 10h.01" ]); ("path", [ "d", "M12 10h.01" ]); ("path", [ "d", "M8 10h.01" ]); ("path", [ "d", "M12 14h.01" ]); ("path", [ "d", "M8 14h.01" ]); ("path", [ "d", "M12 18h.01" ]); ("path", [ "d", "M8 18h.01" ]) ]
   | Calendar -> [ ("path", [ "d", "M8 2v3" ]); ("path", [ "d", "M16 2v3" ]); ("rect", [ "x", "3"; "y", "3"; "width", "18"; "height", "18"; "rx", "2" ]); ("path", [ "d", "M3 9h18" ]) ]
   | Calendar_plus -> [ ("path", [ "d", "M16 18h6" ]); ("path", [ "d", "M16 2v3" ]); ("path", [ "d", "M19 15v6" ]); ("path", [ "d", "M21 11.5V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h8.3" ]); ("path", [ "d", "M3 9h18" ]); ("path", [ "d", "M8 2v3" ]) ]
+  | Camera -> [ ("path", [ "d", "M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" ]); ("circle", [ "cx", "12"; "cy", "13"; "r", "3" ]) ]
+  | Car -> [ ("path", [ "d", "M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" ]); ("circle", [ "cx", "7"; "cy", "17"; "r", "2" ]); ("path", [ "d", "M9 17h6" ]); ("circle", [ "cx", "17"; "cy", "17"; "r", "2" ]) ]
   | Chart_area -> [ ("path", [ "d", "M3 3v16a2 2 0 0 0 2 2h16" ]); ("path", [ "d", "M7 11.207a.5.5 0 0 1 .146-.353l2-2a.5.5 0 0 1 .708 0l3.292 3.292a.5.5 0 0 0 .708 0l4.292-4.292a.5.5 0 0 1 .854.353V16a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1z" ]) ]
   | Chart_column_big -> [ ("path", [ "d", "M3 3v16a2 2 0 0 0 2 2h16" ]); ("rect", [ "x", "15"; "y", "5"; "width", "4"; "height", "12"; "rx", "1" ]); ("rect", [ "x", "7"; "y", "8"; "width", "4"; "height", "9"; "rx", "1" ]) ]
   | Chart_line -> [ ("path", [ "d", "M3 3v16a2 2 0 0 0 2 2h16" ]); ("path", [ "d", "m19 9-5 5-4-4-3 3" ]) ]
@@ -571,9 +644,12 @@ let shapes = function
   | Clipboard -> [ ("rect", [ "width", "8"; "height", "4"; "x", "8"; "y", "2"; "rx", "1"; "ry", "1" ]); ("path", [ "d", "M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" ]) ]
   | Clock -> [ ("circle", [ "cx", "12"; "cy", "12"; "r", "10" ]); ("path", [ "d", "M12 6v6l4 2" ]) ]
   | Cloud -> [ ("path", [ "d", "M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" ]) ]
+  | Cloud_upload -> [ ("path", [ "d", "M12 13v8" ]); ("path", [ "d", "M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" ]); ("path", [ "d", "m8 17 4-4 4 4" ]) ]
   | Code -> [ ("path", [ "d", "m16 18 6-6-6-6" ]); ("path", [ "d", "m8 6-6 6 6 6" ]) ]
   | Code_xml -> [ ("path", [ "d", "m18 16 4-4-4-4" ]); ("path", [ "d", "m6 8-4 4 4 4" ]); ("path", [ "d", "m14.5 4-5 16" ]) ]
+  | Coffee -> [ ("path", [ "d", "M10 2v2" ]); ("path", [ "d", "M14 2v2" ]); ("path", [ "d", "M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1" ]); ("path", [ "d", "M6 2v2" ]) ]
   | Command -> [ ("path", [ "d", "M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" ]) ]
+  | Container -> [ ("path", [ "d", "M22 7.7c0-.6-.4-1.2-.8-1.5l-6.3-3.9a1.72 1.72 0 0 0-1.7 0l-10.3 6c-.5.2-.9.8-.9 1.4v6.6c0 .5.4 1.2.8 1.5l6.3 3.9a1.72 1.72 0 0 0 1.7 0l10.3-6c.5-.3.9-1 .9-1.5Z" ]); ("path", [ "d", "M10 21.9V14L2.1 9.1" ]); ("path", [ "d", "m10 14 11.9-6.9" ]); ("path", [ "d", "M14 19.8v-8.1" ]); ("path", [ "d", "M18 17.5V9.4" ]) ]
   | Copy -> [ ("rect", [ "width", "14"; "height", "14"; "x", "8"; "y", "8"; "rx", "2"; "ry", "2" ]); ("path", [ "d", "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" ]) ]
   | Corner_down_left -> [ ("path", [ "d", "M20 4v7a4 4 0 0 1-4 4H4" ]); ("path", [ "d", "m9 10-5 5 5 5" ]) ]
   | Corner_up_left -> [ ("path", [ "d", "M20 20v-7a4 4 0 0 0-4-4H4" ]); ("path", [ "d", "M9 14 4 9l5-5" ]) ]
@@ -587,6 +663,7 @@ let shapes = function
   | Eye_off -> [ ("path", [ "d", "M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" ]); ("path", [ "d", "M14.084 14.158a3 3 0 0 1-4.242-4.242" ]); ("path", [ "d", "M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" ]); ("path", [ "d", "m2 2 20 20" ]) ]
   | Face_slightly_smiling -> [ ("path", [ "d", "M15 10V9" ]); ("path", [ "d", "M16.472 15a6 6 0 01-8.943 0" ]); ("path", [ "d", "M9 10V9" ]); ("circle", [ "cx", "12"; "cy", "12"; "r", "10" ]) ]
   | File -> [ ("path", [ "d", "M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" ]); ("path", [ "d", "M14 2v5a1 1 0 0 0 1 1h5" ]) ]
+  | File_chart_column_increasing -> [ ("path", [ "d", "M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" ]); ("path", [ "d", "M14 2v5a1 1 0 0 0 1 1h5" ]); ("path", [ "d", "M8 18v-2" ]); ("path", [ "d", "M12 18v-4" ]); ("path", [ "d", "M16 18v-6" ]) ]
   | File_code -> [ ("path", [ "d", "M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" ]); ("path", [ "d", "M14 2v5a1 1 0 0 0 1 1h5" ]); ("path", [ "d", "M10 12.5 8 15l2 2.5" ]); ("path", [ "d", "m14 12.5 2 2.5-2 2.5" ]) ]
   | File_text -> [ ("path", [ "d", "M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" ]); ("path", [ "d", "M14 2v5a1 1 0 0 0 1 1h5" ]); ("path", [ "d", "M10 9H8" ]); ("path", [ "d", "M16 13H8" ]); ("path", [ "d", "M16 17H8" ]) ]
   | Folder -> [ ("path", [ "d", "M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" ]) ]
@@ -598,6 +675,7 @@ let shapes = function
   | Funnel -> [ ("path", [ "d", "M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z" ]) ]
   | Gallery_horizontal -> [ ("path", [ "d", "M2 3v18" ]); ("rect", [ "width", "12"; "height", "18"; "x", "6"; "y", "3"; "rx", "2" ]); ("path", [ "d", "M22 3v18" ]) ]
   | Gallery_vertical_end -> [ ("path", [ "d", "M7 2h10" ]); ("path", [ "d", "M5 6h14" ]); ("rect", [ "width", "18"; "height", "12"; "x", "3"; "y", "10"; "rx", "2" ]) ]
+  | Gauge -> [ ("path", [ "d", "m12 14 4-4" ]); ("path", [ "d", "M3.34 19a10 10 0 1 1 17.32 0" ]) ]
   | Git_branch -> [ ("path", [ "d", "M15 6a9 9 0 0 0-9 9V3" ]); ("circle", [ "cx", "18"; "cy", "6"; "r", "3" ]); ("circle", [ "cx", "6"; "cy", "18"; "r", "3" ]) ]
   | Git_commit_vertical -> [ ("path", [ "d", "M12 3v6" ]); ("circle", [ "cx", "12"; "cy", "12"; "r", "3" ]); ("path", [ "d", "M12 15v6" ]) ]
   | Github -> [ ("path", [ "d", "M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.1-1.3-.3-2.5-1-3.5.3-1.1.3-2.3 0-3.5 0 0-1 0-3 1.5-2.6-.5-5.4-.5-8 0C6 2 5 2 5 2c-.3 1.2-.3 2.4 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.4.5-.7 1-.8 1.6-.2.6-.3 1.3-.2 1.9v4" ]); ("path", [ "d", "M9 18c-4.5 2-5-2-7-2" ]) ]
@@ -615,6 +693,7 @@ let shapes = function
   | Italic -> [ ("line", [ "x1", "19"; "x2", "10"; "y1", "4"; "y2", "4" ]); ("line", [ "x1", "14"; "x2", "5"; "y1", "20"; "y2", "20" ]); ("line", [ "x1", "15"; "x2", "9"; "y1", "4"; "y2", "20" ]) ]
   | Keyboard -> [ ("path", [ "d", "M10 8h.01" ]); ("path", [ "d", "M12 12h.01" ]); ("path", [ "d", "M14 8h.01" ]); ("path", [ "d", "M16 12h.01" ]); ("path", [ "d", "M18 8h.01" ]); ("path", [ "d", "M6 8h.01" ]); ("path", [ "d", "M7 16h10" ]); ("path", [ "d", "M8 12h.01" ]); ("rect", [ "width", "20"; "height", "16"; "x", "2"; "y", "4"; "rx", "2" ]) ]
   | Laptop -> [ ("path", [ "d", "M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z" ]); ("path", [ "d", "M20.054 15.987H3.946" ]) ]
+  | Layout_dashboard -> [ ("rect", [ "width", "7"; "height", "9"; "x", "3"; "y", "3"; "rx", "1" ]); ("rect", [ "width", "7"; "height", "5"; "x", "14"; "y", "3"; "rx", "1" ]); ("rect", [ "width", "7"; "height", "9"; "x", "14"; "y", "12"; "rx", "1" ]); ("rect", [ "width", "7"; "height", "5"; "x", "3"; "y", "16"; "rx", "1" ]) ]
   | Letter_b -> [ ("path", [ "d", "M6 12h9a4 4 0 010 8H7a1 1 0 01-1-1V5a1 1 0 011-1h7a4 4 0 010 8" ]) ]
   | Life_buoy -> [ ("circle", [ "cx", "12"; "cy", "12"; "r", "10" ]); ("path", [ "d", "m4.93 4.93 4.24 4.24" ]); ("path", [ "d", "m14.83 9.17 4.24-4.24" ]); ("path", [ "d", "m14.83 14.83 4.24 4.24" ]); ("path", [ "d", "m9.17 14.83-4.24 4.24" ]); ("circle", [ "cx", "12"; "cy", "12"; "r", "4" ]) ]
   | Link -> [ ("path", [ "d", "M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" ]); ("path", [ "d", "M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" ]) ]
@@ -625,6 +704,7 @@ let shapes = function
   | Loader -> [ ("path", [ "d", "M12 2v4" ]); ("path", [ "d", "m16.2 7.8 2.9-2.9" ]); ("path", [ "d", "M18 12h4" ]); ("path", [ "d", "m16.2 16.2 2.9 2.9" ]); ("path", [ "d", "M12 18v4" ]); ("path", [ "d", "m4.9 19.1 2.9-2.9" ]); ("path", [ "d", "M2 12h4" ]); ("path", [ "d", "m4.9 4.9 2.9 2.9" ]) ]
   | Loader_circle -> [ ("path", [ "d", "M21 12a9 9 0 1 1-6.219-8.56" ]) ]
   | Lock -> [ ("rect", [ "width", "18"; "height", "11"; "x", "3"; "y", "11"; "rx", "2"; "ry", "2" ]); ("path", [ "d", "M7 11V7a5 5 0 0 1 10 0v4" ]) ]
+  | Lock_keyhole -> [ ("circle", [ "cx", "12"; "cy", "16"; "r", "1" ]); ("rect", [ "x", "3"; "y", "10"; "width", "18"; "height", "12"; "rx", "2" ]); ("path", [ "d", "M7 10V7a5 5 0 0 1 10 0v3" ]) ]
   | Lock_open -> [ ("rect", [ "width", "18"; "height", "11"; "x", "3"; "y", "11"; "rx", "2"; "ry", "2" ]); ("path", [ "d", "M7 11V7a5 5 0 0 1 9.9-1" ]) ]
   | Log_out -> [ ("path", [ "d", "m16 17 5-5-5-5" ]); ("path", [ "d", "M21 12H9" ]); ("path", [ "d", "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" ]) ]
   | Mail -> [ ("path", [ "d", "m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" ]); ("rect", [ "x", "2"; "y", "4"; "width", "20"; "height", "16"; "rx", "2" ]) ]
@@ -633,6 +713,7 @@ let shapes = function
   | Menu -> [ ("path", [ "d", "M4 5h16" ]); ("path", [ "d", "M4 12h16" ]); ("path", [ "d", "M4 19h16" ]) ]
   | Message_circle -> [ ("path", [ "d", "M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" ]) ]
   | Message_circle_question_mark -> [ ("path", [ "d", "M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" ]); ("path", [ "d", "M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" ]); ("path", [ "d", "M12 17h.01" ]) ]
+  | Message_square -> [ ("path", [ "d", "M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z" ]) ]
   | Minus -> [ ("path", [ "d", "M5 12h14" ]) ]
   | Monitor -> [ ("rect", [ "width", "20"; "height", "14"; "x", "2"; "y", "3"; "rx", "2" ]); ("line", [ "x1", "8"; "x2", "16"; "y1", "21"; "y2", "21" ]); ("line", [ "x1", "12"; "x2", "12"; "y1", "17"; "y2", "21" ]) ]
   | Moon -> [ ("path", [ "d", "M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" ]) ]
@@ -652,14 +733,19 @@ let shapes = function
   | Redo -> [ ("path", [ "d", "M21 7v6h-6" ]); ("path", [ "d", "M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7" ]) ]
   | Refresh_ccw -> [ ("path", [ "d", "M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" ]); ("path", [ "d", "M3 3v5h5" ]); ("path", [ "d", "M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" ]); ("path", [ "d", "M16 16h5v5" ]) ]
   | Refresh_cw -> [ ("path", [ "d", "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" ]); ("path", [ "d", "M21 3v5h-5" ]); ("path", [ "d", "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" ]); ("path", [ "d", "M8 16H3v5" ]) ]
+  | Repeat -> [ ("path", [ "d", "m17 2 4 4-4 4" ]); ("path", [ "d", "M3 11v-1a4 4 0 0 1 4-4h14" ]); ("path", [ "d", "m7 22-4-4 4-4" ]); ("path", [ "d", "M21 13v1a4 4 0 0 1-4 4H3" ]) ]
   | Rotate_ccw -> [ ("path", [ "d", "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" ]); ("path", [ "d", "M3 3v5h5" ]) ]
   | Rotate_cw -> [ ("path", [ "d", "M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" ]); ("path", [ "d", "M21 3v5h-5" ]) ]
   | Search -> [ ("path", [ "d", "m21 21-4.34-4.34" ]); ("circle", [ "cx", "11"; "cy", "11"; "r", "8" ]) ]
   | Send -> [ ("path", [ "d", "M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" ]); ("path", [ "d", "m21.854 2.147-10.94 10.939" ]) ]
+  | Server -> [ ("rect", [ "width", "20"; "height", "8"; "x", "2"; "y", "2"; "rx", "2"; "ry", "2" ]); ("rect", [ "width", "20"; "height", "8"; "x", "2"; "y", "14"; "rx", "2"; "ry", "2" ]); ("line", [ "x1", "6"; "x2", "6.01"; "y1", "6"; "y2", "6" ]); ("line", [ "x1", "6"; "x2", "6.01"; "y1", "18"; "y2", "18" ]) ]
   | Settings -> [ ("path", [ "d", "M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" ]); ("circle", [ "cx", "12"; "cy", "12"; "r", "3" ]) ]
   | Settings_2 -> [ ("path", [ "d", "M14 17H5" ]); ("path", [ "d", "M19 7h-9" ]); ("circle", [ "cx", "17"; "cy", "17"; "r", "3" ]); ("circle", [ "cx", "7"; "cy", "7"; "r", "3" ]) ]
   | Share -> [ ("path", [ "d", "M12 2v13" ]); ("path", [ "d", "m16 6-4-4-4 4" ]); ("path", [ "d", "M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" ]) ]
+  | Shield -> [ ("path", [ "d", "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" ]) ]
   | Shield_exclamation_point -> [ ("path", [ "d", "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" ]); ("path", [ "d", "M12 8v4" ]); ("path", [ "d", "M12 16h.01" ]) ]
+  | Shopping_bag -> [ ("path", [ "d", "M16 10a4 4 0 0 1-8 0" ]); ("path", [ "d", "M3.103 6.034h17.794" ]); ("path", [ "d", "M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z" ]) ]
+  | Shopping_cart -> [ ("path", [ "d", "m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18" ]); ("path", [ "d", "M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25" ]); ("circle", [ "cx", "18"; "cy", "20"; "r", "2" ]); ("circle", [ "cx", "8"; "cy", "20"; "r", "2" ]) ]
   | Slash -> [ ("path", [ "d", "M22 2 2 22" ]) ]
   | Sliders_horizontal -> [ ("path", [ "d", "M10 5H3" ]); ("path", [ "d", "M12 19H3" ]); ("path", [ "d", "M14 3v4" ]); ("path", [ "d", "M16 17v4" ]); ("path", [ "d", "M21 12h-9" ]); ("path", [ "d", "M21 19h-5" ]); ("path", [ "d", "M21 5h-7" ]); ("path", [ "d", "M8 10v4" ]); ("path", [ "d", "M8 12H3" ]) ]
   | Smartphone -> [ ("rect", [ "width", "14"; "height", "20"; "x", "5"; "y", "2"; "rx", "2"; "ry", "2" ]); ("path", [ "d", "M12 18h.01" ]) ]
@@ -673,15 +759,18 @@ let shapes = function
   | Sun -> [ ("circle", [ "cx", "12"; "cy", "12"; "r", "4" ]); ("path", [ "d", "M12 2v2" ]); ("path", [ "d", "M12 20v2" ]); ("path", [ "d", "m4.93 4.93 1.41 1.41" ]); ("path", [ "d", "m17.66 17.66 1.41 1.41" ]); ("path", [ "d", "M2 12h2" ]); ("path", [ "d", "M20 12h2" ]); ("path", [ "d", "m6.34 17.66-1.41 1.41" ]); ("path", [ "d", "m19.07 4.93-1.41 1.41" ]) ]
   | Tablet -> [ ("rect", [ "width", "16"; "height", "20"; "x", "4"; "y", "2"; "rx", "2"; "ry", "2" ]); ("line", [ "x1", "12"; "x2", "12.01"; "y1", "18"; "y2", "18" ]) ]
   | Tag -> [ ("path", [ "d", "M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" ]); ("circle", [ "cx", "7.5"; "cy", "7.5"; "r", ".5"; "fill", "currentColor" ]) ]
+  | Target -> [ ("circle", [ "cx", "12"; "cy", "12"; "r", "10" ]); ("circle", [ "cx", "12"; "cy", "12"; "r", "6" ]); ("circle", [ "cx", "12"; "cy", "12"; "r", "2" ]) ]
   | Terminal -> [ ("path", [ "d", "M12 19h8" ]); ("path", [ "d", "m4 17 6-6-6-6" ]) ]
   | Text_align_center -> [ ("path", [ "d", "M21 5H3" ]); ("path", [ "d", "M17 12H7" ]); ("path", [ "d", "M19 19H5" ]) ]
   | Text_align_end -> [ ("path", [ "d", "M21 5H3" ]); ("path", [ "d", "M21 12H9" ]); ("path", [ "d", "M21 19H7" ]) ]
   | Text_align_start -> [ ("path", [ "d", "M21 5H3" ]); ("path", [ "d", "M15 12H3" ]); ("path", [ "d", "M17 19H3" ]) ]
+  | Thermometer -> [ ("path", [ "d", "M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z" ]) ]
   | Timer -> [ ("line", [ "x1", "10"; "x2", "14"; "y1", "2"; "y2", "2" ]); ("line", [ "x1", "12"; "x2", "15"; "y1", "14"; "y2", "11" ]); ("circle", [ "cx", "12"; "cy", "14"; "r", "8" ]) ]
   | Trash -> [ ("path", [ "d", "M10 11v6" ]); ("path", [ "d", "M14 11v6" ]); ("path", [ "d", "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" ]); ("path", [ "d", "M3 6h18" ]); ("path", [ "d", "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" ]) ]
   | Trending_down -> [ ("path", [ "d", "M16 17h6v-6" ]); ("path", [ "d", "m22 17-8.5-8.5-5 5L2 7" ]) ]
   | Trending_up -> [ ("path", [ "d", "M16 7h6v6" ]); ("path", [ "d", "m22 7-8.5 8.5-5-5L2 17" ]) ]
   | Triangle_exclamation_point -> [ ("path", [ "d", "m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" ]); ("path", [ "d", "M12 9v4" ]); ("path", [ "d", "M12 17h.01" ]) ]
+  | Tv -> [ ("path", [ "d", "m17 2-5 5-5-5" ]); ("rect", [ "width", "20"; "height", "15"; "x", "2"; "y", "7"; "rx", "2" ]) ]
   | Type -> [ ("path", [ "d", "M12 4v16" ]); ("path", [ "d", "M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2" ]); ("path", [ "d", "M9 20h6" ]) ]
   | Underline -> [ ("path", [ "d", "M6 4v6a6 6 0 0 0 12 0V4" ]); ("line", [ "x1", "4"; "x2", "20"; "y1", "20"; "y2", "20" ]) ]
   | Undo -> [ ("path", [ "d", "M3 7v6h6" ]); ("path", [ "d", "M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" ]) ]
@@ -689,9 +778,12 @@ let shapes = function
   | User -> [ ("path", [ "d", "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" ]); ("circle", [ "cx", "12"; "cy", "7"; "r", "4" ]) ]
   | User_round_x -> [ ("path", [ "d", "m16.5 16.5 5 5" ]); ("path", [ "d", "M2 21a8 8 0 0 1 11.531-7.18" ]); ("path", [ "d", "m21.5 16.5-5 5" ]); ("circle", [ "cx", "10"; "cy", "8"; "r", "5" ]) ]
   | Video -> [ ("path", [ "d", "m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5" ]); ("rect", [ "x", "2"; "y", "6"; "width", "14"; "height", "12"; "rx", "2" ]) ]
+  | Volume_2 -> [ ("path", [ "d", "M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" ]); ("path", [ "d", "M16 9a5 5 0 0 1 0 6" ]); ("path", [ "d", "M19.364 18.364a9 9 0 0 0 0-12.728" ]) ]
   | Volume_off -> [ ("path", [ "d", "M16 9a5 5 0 0 1 .95 2.293" ]); ("path", [ "d", "M19.364 5.636a9 9 0 0 1 1.889 9.96" ]); ("path", [ "d", "m2 2 20 20" ]); ("path", [ "d", "m7 7-.587.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298V11" ]); ("path", [ "d", "M9.828 4.172A.686.686 0 0 1 11 4.657v.686" ]) ]
+  | Wallet -> [ ("path", [ "d", "M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" ]); ("path", [ "d", "M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" ]) ]
   | Waves_horizontal -> [ ("path", [ "d", "M2 12q2.5 2 5 0t5 0 5 0 5 0" ]); ("path", [ "d", "M2 19q2.5 2 5 0t5 0 5 0 5 0" ]); ("path", [ "d", "M2 5q2.5 2 5 0t5 0 5 0 5 0" ]) ]
   | X -> [ ("path", [ "d", "M18 6 6 18" ]); ("path", [ "d", "m6 6 12 12" ]) ]
+  | Zap -> [ ("path", [ "d", "M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z" ]) ]
 ;;
 
 let view ?(attrs = []) ?class_ ?(stroke_width = "2") t =
