@@ -68,12 +68,14 @@ val component
   -> local_ Bonsai.graph
   -> Node.t Bonsai.t
 
-(** The search box, with its icon. *)
+(** The search box, with its icon. [auto_focus]: focus it when it appears
+    (React's [autoFocus]). *)
 val input
   :  ?attrs:Attr.t list
   -> ?class_:string
   -> ?placeholder:string
   -> ?disabled:bool
+  -> ?auto_focus:bool
   -> unit
   -> part
 
