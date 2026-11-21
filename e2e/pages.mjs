@@ -106,8 +106,8 @@ await run(async (engine, url) => {
 
   // Opened at a page far down the sidebar, the sidebar shows its link.
   await page.setViewportSize({ width: 1280, height: 600 });
-  await page.goto(`${url}#/toast`);
-  await ready(page, "toast");
+  await page.goto(`${url}#/sonner`);
+  await ready(page, "sonner");
   await page.waitForFunction(() => document.querySelector(".docs-sidebar").scrollTop > 0);
   const shown = await page.evaluate(() => {
     const nav = document.querySelector(".docs-sidebar").getBoundingClientRect();

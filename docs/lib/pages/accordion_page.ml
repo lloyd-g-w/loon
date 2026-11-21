@@ -7,37 +7,60 @@ module Attr = Vdom.Attr
 
 let page = "accordion"
 
-let faq =
-  [ Accordion.Item.create
-      ~id:"what"
-      ~title:"What is loon?"
-      (Node.text
-         "A set of components for Bonsai_web, styled with CSS variables, that you can use as a library or copy into your project.")
-  ; Accordion.Item.create
-      ~id:"accessible"
-      ~title:"Is it accessible?"
-      (Node.text
-         "Yes. Components follow the WAI-ARIA patterns: roles, states and the keyboard.")
-  ; Accordion.Item.create
-      ~id:"animated"
-      ~title:"Is it animated?"
-      (Node.text
-         "Yes, gently, and not at all if you have asked your system to reduce motion.")
-  ]
+(*$ Demo *)
+let demo (local_ graph) =
+  let item acc ~value ~title paragraphs =
+    Accordion.item
+      acc
+      ~value
+      [ Accordion.trigger [ Node.text title ]
+      ; Accordion.content
+          ~class_:"flex flex-col gap-4 text-balance"
+          (List.map paragraphs ~f:(fun p -> Node.p [ Node.text p ]))
+      ]
+  in
+  Accordion.component
+    ~type_:Single
+    ~collapsible:true
+    ~class_:"w-full"
+    ~default_value:[ "item-1" ]
+    (Bonsai.return (fun acc ->
+       [ item
+           acc
+           ~value:"item-1"
+           ~title:"Product Information"
+           [ "Our flagship product combines cutting-edge technology with sleek \
+              design. Built with premium materials, it offers unparalleled \
+              performance and reliability."
+           ; "Key features include advanced processing capabilities, and an \
+              intuitive user interface designed for both beginners and \
+              experts."
+           ]
+       ; item
+           acc
+           ~value:"item-2"
+           ~title:"Shipping Details"
+           [ "We offer worldwide shipping through trusted courier partners. \
+              Standard delivery takes 3-5 business days, while express \
+              shipping ensures delivery within 1-2 business days."
+           ; "All orders are carefully packaged and fully insured. Track your \
+              shipment in real-time through our dedicated tracking portal."
+           ]
+       ; item
+           acc
+           ~value:"item-3"
+           ~title:"Return Policy"
+           [ "We stand behind our products with a comprehensive 30-day return \
+              policy. If you're not completely satisfied, simply return the \
+              item in its original condition."
+           ; "Our hassle-free return process includes free return shipping and \
+              full refunds processed within 48 hours of receiving the returned \
+              item."
+           ]
+       ]))
+    graph
 ;;
 
-(*$ One at a time *)
-let single (local_ graph) =
-  Accordion.component ~default:[ "what" ] (Bonsai.return faq) graph
-(*$*)
-
-(*$ Several open *)
-let multiple (local_ graph) =
-  Accordion.component
-    ~kind:Multiple
-    ~default:[ "what"; "accessible" ]
-    (Bonsai.return faq)
-    graph
 (*$*)
 
 let page =
@@ -45,17 +68,51 @@ let page =
     ~slug:page
     ~title:"Accordion"
     ~group:Display
-    ~description:"Headings that each reveal a section of content."
-    ~usage:{|Accordion.component ~kind:Multiple (Bonsai.return items) graph|}
+    ~description:
+      "A vertically stacked set of interactive headings that each reveal a \
+       section of content."
+    ~usage:
+      {|Accordion.component ~type_:Single ~collapsible:true
+  (return (fun acc ->
+     [ Accordion.item acc ~value:"item-1"
+         [ Accordion.trigger [ Node.text "Is it accessible?" ]
+         ; Accordion.content
+             [ Node.text "Yes. It adheres to the WAI-ARIA design pattern." ]
+         ]
+     ]))
+  graph|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "kind", "Accordion.Kind.t", "[Single { collapsible }] (the default: one open at a time) or [Multiple]."
-          ; "default", "string list", "The ids open at first."
-          ; "items", "Accordion.Item.t list", "Each with an id, a title and content."
+          [ ( "type_"
+            , "Accordion.Type.t"
+            , "[Single]: one item open at a time; [Multiple]: any number." )
+          ; ( "collapsible"
+            , "bool"
+            , "[Single]: pressing the open item closes it (default [false])." )
+          ; ( "default_value"
+            , "string list"
+            , "[Accordion.component]: the items open at first. \
+               [Accordion.view] takes [~value] and [~on_change] instead." )
+          ; ( "disabled"
+            , "bool"
+            , "[Accordion.item], or every item: cannot be opened." )
+          ; ( "orientation"
+            , "Accordion.Orientation.t"
+            , "[Vertical] (default): Up and Down move between triggers; \
+               [Horizontal]: Left and Right." )
           ]
       ; Doc.h2 "Keyboard"
-      ; Doc.p "Up and Down move between headings, Home and End to the first and last; Enter or Space opens and closes."
+      ; Doc.table
+          [ "Key"; "Does" ]
+          [ [ Doc.text "Space / Enter"
+            ; Doc.text "Open or close the focused item."
+            ]
+          ; [ Doc.text "Arrow Down / Up"
+            ; Doc.text "The next or previous trigger."
+            ]
+          ; [ Doc.text "Home / End"; Doc.text "The first or last trigger." ]
+          ]
       ]
-    [ Doc.example ~page "One at a time" single; Doc.example ~page "Several open" multiple ]
+    [ Doc.example ~page "Demo" demo ]
 ;;
