@@ -27,9 +27,8 @@ end
 
 let attrs ?mode () =
   match (mode : Mode.t option) with
-  (* [loon]: the base styles of the components not yet ported. *)
-  | Some Dark -> [ Attr.classes [ "loon"; "dark" ] ]
-  | Some Light | None -> [ Attr.class_ "loon" ]
+  | Some Dark -> [ Attr.class_ "dark" ]
+  | Some Light | None -> []
 ;;
 
 let root ?attrs:(extra = []) ?mode children =

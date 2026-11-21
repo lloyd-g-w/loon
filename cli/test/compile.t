@@ -40,9 +40,10 @@ need nothing from loon but the libraries the dune file names.
 
 The stylesheet is Tailwind's output, with shadcn's classes the components use.
 
-  $ grep -c 'slot=card-action' _build/default/src/ui/ui.css
-  0
-  [1]
+  $ grep -o 'has-data-\\\[slot\\=card-action\\\]' _build/default/src/ui/ui.css | sort -u
+  has-data-\[slot\=card-action\]
+  $ grep -c -- '--tw-animation\|@keyframes enter' _build/default/src/ui/ui.css | sed 's/^[1-9][0-9]*$/some/'
+  some
 
 Every component builds this way, not only those: none may use something
 `loon add` does not copy.
@@ -52,3 +53,10 @@ Every component builds this way, not only those: none may use something
   dune exited 0
   $ grep -v 'missing-effects\|^Entering\|^Leaving' build.log
   [1]
+
+Sonner's own stylesheet comes with it, after the theme.
+
+  $ grep -c '^\[data-sonner-toaster\] {' _build/default/src/ui/ui.css
+  1
+  $ loon info sonner | grep uses
+  uses: cn dom_util icon import theme
