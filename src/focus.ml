@@ -109,12 +109,19 @@ module Mount_hook = Vdom.Attr.Hooks.Make (struct
     (* Radix's FocusScope: focus goes back where it was before, unless it
        has gone somewhere else meanwhile (a click on another element). *)
     let destroy _ (state : State.t) (el : Dom_html.element Js.t) =
+      let contains (outer : Dom_html.element Js.t) inner =
+        Js.to_bool ((Js.Unsafe.coerce outer)##contains inner)
+      in
+      (* Bonsai moves the focus of a removed element to the app's root: an
+         ancestor of [previous], so not a choice to go elsewhere. *)
       let lost =
-        match active () with
-        | None -> true
-        | Some a ->
+        match active (), state.previous with
+        | None, _ -> true
+        | Some a, previous ->
           phys_equal a Dom_html.document##.body
-          || Js.to_bool ((Js.Unsafe.coerce el)##contains a)
+          || contains el a
+          || Option.value_map previous ~default:false ~f:(fun p ->
+            (not (phys_equal a p)) && contains a p)
       in
       match state.previous with
       | Some prev when lost && Js.to_bool (Js.Unsafe.coerce prev)##.isConnected ->
