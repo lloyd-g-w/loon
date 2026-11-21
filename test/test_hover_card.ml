@@ -53,6 +53,12 @@ let%expect_test "shadcn's classes" =
                overflow: visible;
                max-width: none;
                max-height: none;
+               white-space: normal;
+               text-align: start;
+               font-weight: normal;
+               font-style: normal;
+               letter-spacing: normal;
+               text-transform: none;
              }>
           <div data-slot="hover-card-content"
                data-state="open"
@@ -131,6 +137,12 @@ let%expect_test "the pointer on the trigger or focus opens it; blur closes it" =
                overflow: visible;
                max-width: none;
                max-height: none;
+               white-space: normal;
+               text-align: start;
+               font-weight: normal;
+               font-style: normal;
+               letter-spacing: normal;
+               text-transform: none;
              }>
           <div data-slot="hover-card-content"
                data-state="open"
@@ -181,6 +193,12 @@ let%expect_test "the pointer on the trigger or focus opens it; blur closes it" =
                overflow: visible;
                max-width: none;
                max-height: none;
+               white-space: normal;
+               text-align: start;
+               font-weight: normal;
+               font-style: normal;
+               letter-spacing: normal;
+               text-transform: none;
              }>
           <div data-slot="hover-card-content"
                data-state="open"
@@ -246,6 +264,12 @@ let%expect_test "the pointer on the trigger or focus opens it; blur closes it" =
                overflow: visible;
                max-width: none;
                max-height: none;
+               white-space: normal;
+               text-align: start;
+               font-weight: normal;
+               font-style: normal;
+               letter-spacing: normal;
+               text-transform: none;
              }>
           <div data-slot="hover-card-content"
                data-state="open"

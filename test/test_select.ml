@@ -132,6 +132,12 @@ let%expect_test "shadcn's classes" =
                overflow: visible;
                max-width: none;
                max-height: none;
+               white-space: normal;
+               text-align: start;
+               font-weight: normal;
+               font-style: normal;
+               letter-spacing: normal;
+               text-transform: none;
              }>
           <div data-slot="select-content"
                role="listbox"
@@ -356,6 +362,12 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                overflow: visible;
                max-width: none;
                max-height: none;
+               white-space: normal;
+               text-align: start;
+               font-weight: normal;
+               font-style: normal;
+               letter-spacing: normal;
+               text-transform: none;
              }>
           <div data-slot="select-content"
                role="listbox"

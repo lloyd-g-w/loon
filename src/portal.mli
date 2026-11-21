@@ -11,7 +11,9 @@ open Js_of_ocaml
 
 (** For an element positioned by its own code ({!Popper}): [popover="manual"]
     and styles undoing the browser's for popovers (inset, margin, border,
-    padding, background, overflow). Call {!show} on it once mounted. *)
+    padding, background, overflow) and the text styles inherited from where
+    it is in the DOM (white space, alignment, weight), as React's portals to
+    the body would not inherit them. Call {!show} on it once mounted. *)
 val positioned : Attr.t list
 
 (** A layer covering the viewport, for a modal's overlay and content (which

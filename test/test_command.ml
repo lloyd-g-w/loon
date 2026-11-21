@@ -456,6 +456,12 @@ let%expect_test "the dialog: opened and closed by its state, the search cleared"
              overflow: visible;
              max-width: none;
              max-height: none;
+             white-space: normal;
+             text-align: start;
+             font-weight: normal;
+             font-style: normal;
+             letter-spacing: normal;
+             text-transform: none;
              position: fixed;
              width: 100%;
              height: 100%;

@@ -114,6 +114,12 @@ let%expect_test "shadcn's classes" =
                overflow: visible;
                max-width: none;
                max-height: none;
+               white-space: normal;
+               text-align: start;
+               font-weight: normal;
+               font-style: normal;
+               letter-spacing: normal;
+               text-transform: none;
              }>
           <div data-slot="dropdown-menu-content"
                id="bonsai_path_replaced_in_test-content"
@@ -292,6 +298,12 @@ let%expect_test "a click opens it, without a highlight; Esc closes it" =
                overflow: visible;
                max-width: none;
                max-height: none;
+               white-space: normal;
+               text-align: start;
+               font-weight: normal;
+               font-style: normal;
+               letter-spacing: normal;
+               text-transform: none;
              }>
           <div data-slot="dropdown-menu-content"
                id="bonsai_path_replaced_in_test-content"
@@ -695,6 +707,12 @@ let%expect_test "sub-menus: ArrowRight opens, ArrowLeft closes, the pointer open
                overflow: visible;
                max-width: none;
                max-height: none;
+               white-space: normal;
+               text-align: start;
+               font-weight: normal;
+               font-style: normal;
+               letter-spacing: normal;
+               text-transform: none;
              }>
           <div data-slot="dropdown-menu-content"
                id="bonsai_path_replaced_in_test-content"
@@ -875,6 +893,12 @@ let%expect_test "sub-menus: ArrowRight opens, ArrowLeft closes, the pointer open
                overflow: visible;
                max-width: none;
                max-height: none;
+               white-space: normal;
+               text-align: start;
+               font-weight: normal;
+               font-style: normal;
+               letter-spacing: normal;
+               text-transform: none;
              }>
           <div data-slot="dropdown-menu-sub-content"
                id="bonsai_path_replaced_in_test-sub-3"

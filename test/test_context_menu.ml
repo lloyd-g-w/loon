@@ -96,6 +96,12 @@ let%expect_test "shadcn's classes" =
                overflow: visible;
                max-width: none;
                max-height: none;
+               white-space: normal;
+               text-align: start;
+               font-weight: normal;
+               font-style: normal;
+               letter-spacing: normal;
+               text-transform: none;
              }>
           <div data-slot="context-menu-content"
                id="context-menu-content"
@@ -193,6 +199,12 @@ let%expect_test "a right click opens it at the pointer; Esc closes it" =
                overflow: visible;
                max-width: none;
                max-height: none;
+               white-space: normal;
+               text-align: start;
+               font-weight: normal;
+               font-style: normal;
+               letter-spacing: normal;
+               text-transform: none;
              }>
           <div data-slot="context-menu-content"
                id="bonsai_path_replaced_in_test-content"

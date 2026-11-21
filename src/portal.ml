@@ -9,9 +9,10 @@ let matches (el : Dom_html.element Js.t) selector =
 let is_shown el = matches el ":popover-open"
 
 let show_one (el : Dom_html.element Js.t) =
-  if Js.Optdef.test (Js.Unsafe.coerce el)##.showPopover
-     && Js.to_bool (Js.Unsafe.coerce el)##.isConnected
-     && not (is_shown el)
+  if
+    Js.Optdef.test (Js.Unsafe.coerce el)##.showPopover
+    && Js.to_bool (Js.Unsafe.coerce el)##.isConnected
+    && not (is_shown el)
   then (
     try (Js.Unsafe.coerce el)##showPopover with
     | _ -> ())
@@ -26,7 +27,8 @@ let show (el : Dom_html.element Js.t) =
 
 let style fields =
   Attr.style
-    (Css_gen.concat (List.map fields ~f:(fun (field, value) -> Css_gen.create ~field ~value)))
+    (Css_gen.concat
+       (List.map fields ~f:(fun (field, value) -> Css_gen.create ~field ~value)))
 ;;
 
 let reset =
@@ -39,6 +41,15 @@ let reset =
   ; "overflow", "visible"
   ; "max-width", "none"
   ; "max-height", "none"
+    (* What the content would inherit from where it is in the DOM (a table
+       cell's [whitespace-nowrap], a header's weight), not from the body
+       as React's portals do. *)
+  ; "white-space", "normal"
+  ; "text-align", "start"
+  ; "font-weight", "normal"
+  ; "font-style", "normal"
+  ; "letter-spacing", "normal"
+  ; "text-transform", "none"
   ]
 ;;
 
@@ -56,7 +67,8 @@ module Show_hook = Vdom.Attr.Hooks.Make (struct
     let init () _ = ()
 
     let on_mount =
-      `Schedule_immediately_after_this_dom_patch_completes (fun () () el -> show el)
+      `Schedule_immediately_after_this_dom_patch_completes
+        (fun () () el -> show el)
     ;;
 
     let update ~old_input:() ~new_input:() () _ = ()
