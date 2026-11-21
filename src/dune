@@ -40,7 +40,7 @@
   (glob_files *.ml))
  (action
   (system
-   "tailwindcss --input loon.input.css --output loon.css 2>tailwind.log || { cat tailwind.log >&2; exit 1; }")))
+   "tailwindcss --silent --input loon.input.css --output loon.css")))
 
 (install
  (section share)

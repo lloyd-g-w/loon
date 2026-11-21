@@ -2,41 +2,41 @@
 diff (which `patch -R` or `git apply -R` would undo), and exits 1 if they
 differ.
 
-  $ loon add tabs > /dev/null
-  $ loon diff tabs
-  tabs: the same as loon's.
-  $ sed -i 's/^(\*\* Tabs: a row of triggers/(** My tabs: a row of triggers/' src/ui/tabs.mli
-  $ echo '.loon-tabs { gap: 0 }' >> src/ui/loon.css
+  $ loon add tabs alert > /dev/null
+  $ loon diff tabs alert
+  tabs, alert: the same as loon's.
+  $ sed -i 's/^(\*\* A set of layered sections/(** My set of layered sections/' src/ui/tabs.mli
+  $ echo '.loon-alert { gap: 0 }' >> src/ui/loon.css
   $ rm src/ui/dom_util.mli
-  $ loon diff tabs dom_util | sed 's/^@@ -[0-9,]* +[0-9,]* @@$/@@ (lines) @@/'
+  $ loon diff tabs alert dom_util | sed 's/^@@ -[0-9,]* +[0-9,]* @@$/@@ (lines) @@/'
   --- loon/tabs.mli
   +++ src/ui/tabs.mli
   @@ (lines) @@
-  -(** Tabs: a row of triggers, one panel shown at a time. Arrow keys, Home and
-  +(** My tabs: a row of triggers, one panel shown at a time. Arrow keys, Home and
-       End move between the triggers (WAI-ARIA tabs). *)
-   
-   open! Import
-  --- loon/tabs in loon.css
+  -(** A set of layered sections of content, known as tab panels, that are
+  +(** My set of layered sections of content, known as tab panels, that are
+       displayed one at a time. Port of shadcn/ui's [Tabs] (Radix Tabs'
+       behaviour: arrow keys move between the triggers and select them, Home
+       and End go to the first and last, disabled triggers are skipped).
+  --- loon/alert in loon.css
   +++ src/ui/loon.css
   @@ (lines) @@
-     color: var(--loon-foreground);
-     border-bottom-color: var(--loon-accent);
+     border-color: color-mix(in oklab, var(--loon-danger) 25%, var(--loon-border));
    }
-  +.loon-tabs { gap: 0 }
+   }
+  +.loon-alert { gap: 0 }
   dom_util.mli: not in src/ui/dom_util.mli
 
 The diff undoes with patch.
 
-  $ loon diff tabs | sed -n '1,/^--- loon\/tabs in/p' | sed '$d' | patch -s -R src/ui/tabs.mli
-  $ loon diff tabs 2>&1 | head -1
-  --- loon/tabs in loon.css
+  $ loon diff tabs | patch -s -R src/ui/tabs.mli
+  $ loon diff tabs
+  tabs: the same as loon's.
 
 With no names, it compares everything the project has.
 
   $ loon diff | grep -E '^(---|[a-z_.]+:)'
+  --- loon/alert in loon.css
   dom_util.mli: not in src/ui/dom_util.mli
-  --- loon/tabs in loon.css
   $ loon diff -dir nowhere
   nowhere has no loon components.
 

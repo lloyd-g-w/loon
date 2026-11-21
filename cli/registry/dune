@@ -20,6 +20,7 @@
  (target data.ml)
  (deps
   ../../src/dune
+  ../../src/embedded/dune
   (glob_files ../../src/*.ml)
   (glob_files ../../src/*.mli)
   (glob_files ../../src/css/*.css))

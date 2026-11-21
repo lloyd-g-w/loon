@@ -2,27 +2,29 @@
    components' styles are loon.css. */
 
 @font-face {
-  font-family: "Recursive Sans";
-  src: url("recursive-sans.woff2") format("woff2");
-  font-weight: 300 800;
-  font-style: oblique 0deg 15deg;
+  font-family: "Geist";
+  src: url("geist-sans.woff2") format("woff2");
+  font-weight: 100 900;
   font-display: swap;
 }
 @font-face {
-  font-family: "Recursive Mono";
-  src: url("recursive-mono.woff2") format("woff2");
-  font-weight: 300 800;
+  font-family: "Geist Mono";
+  src: url("geist-mono.woff2") format("woff2");
+  font-weight: 100 900;
   font-display: swap;
 }
 
-/* The theme's classes set the fonts too: these win over them. */
-:root,
-.loon-light.loon-light,
-.loon-dark.loon-dark {
-  --loon-font: "Recursive Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, sans-serif;
-  --loon-font-mono: "Recursive Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+/* Geist, as on ui.shadcn.com: Tailwind's font-sans and font-mono, and the
+   old --loon-font of the components not yet ported. */
+:root {
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --loon-font: var(--font-sans);
+  --loon-font-mono: var(--font-mono);
 }
+
+/* Below Tailwind's utilities, so that examples' classes win. */
+@layer components {
 :root {
   --docs-header: 3.5rem;
   --docs-sidebar: 15.5rem;
@@ -1260,4 +1262,5 @@ a.docs-chip:hover {
   padding: 1rem;
   border-radius: var(--loon-radius-lg);
   border: 1px solid var(--loon-border);
+}
 }

@@ -74,8 +74,8 @@ export async function ready(page, slug) {
   await page.waitForSelector(slug === undefined ? ".docs-article" : `.docs-article[data-page="${slug}"]`);
   await page.evaluate(() =>
     Promise.all([
-      document.fonts.load('1em "Recursive Sans"'),
-      document.fonts.load('1em "Recursive Mono"'),
+      document.fonts.load('1em "Geist"'),
+      document.fonts.load('1em "Geist Mono"'),
     ]).then(() => document.fonts.ready),
   );
 }

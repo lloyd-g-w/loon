@@ -12,14 +12,18 @@ need nothing from loon but the libraries the dune file names.
   > 
   > let view (local_ graph) =
   >   let tabs =
-  >     Ui.Tabs.component
-  >       (Bonsai.return
-  >          [ Ui.Tabs.Tab.create ~id:"a" ~label:"A" (Vdom.Node.text "a") ])
-  >       graph
+  >     Ui.Tabs.component ~default_value:"a" (Bonsai.return (fun t ->
+  >       [ Ui.Tabs.list t [ Ui.Tabs.trigger ~value:"a" [ Vdom.Node.text "A" ] ]
+  >       ; Ui.Tabs.content t ~value:"a" [ Vdom.Node.text "a" ]
+  >       ])) graph
   >   in
   >   Bonsai.map tabs ~f:(fun tabs ->
   >     Ui.Theme.root
-  >       [ Ui.Card.view ~title:"Hello" [ Ui.Button.view [ Vdom.Node.text "Go" ]; tabs ] ])
+  >       [ Ui.Card.root
+  >           [ Ui.Card.header [ Ui.Card.title [ Vdom.Node.text "Hello" ] ]
+  >           ; Ui.Card.content [ Ui.Button.view [ Vdom.Node.text "Go" ]; tabs ]
+  >           ]
+  >       ])
   > ;;
   > EOF
   $ cat > src/dune <<EOF
@@ -33,6 +37,12 @@ need nothing from loon but the libraries the dune file names.
   $ ls _build/default/src/app.cma _build/default/src/ui/ui.cma
   _build/default/src/app.cma
   _build/default/src/ui/ui.cma
+
+The stylesheet is Tailwind's output, with shadcn's classes the components use.
+
+  $ grep -c 'slot=card-action' _build/default/src/ui/ui.css
+  0
+  [1]
 
 Every component builds this way, not only those: none may use something
 `loon add` does not copy.

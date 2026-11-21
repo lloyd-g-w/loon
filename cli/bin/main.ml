@@ -17,15 +17,6 @@ let overwrite_flag =
       ~doc:" replace files (and loon.css sections) that exist")
 ;;
 
-let css_flag =
-  Command.Param.(
-    flag
-      "css-files"
-      no_arg
-      ~doc:" one stylesheet per component in DIR/css/, rather than DIR/loon.css"
-    |> map ~f:(fun files -> if files then Project.Css_mode.Files else Assembled))
-;;
-
 let ok_or_exit = function
   | Ok () -> ()
   | Error e ->
@@ -74,13 +65,12 @@ let add =
     ~summary:"copy components (and what they need) into your project"
     ~readme:(fun () ->
       "Copies each COMPONENT's .ml and .mli, and those of the components it \
-       uses, into DIR, and their styles into DIR/loon.css (a section per \
-       component). Files that exist are kept, so your changes are safe: \
+       uses, into DIR, and their styles (the theme, and any a component has beyond \
+       its Tailwind classes) into DIR/loon.css, Tailwind's input. Files that exist are kept, so your changes are safe: \
        -overwrite replaces them. `loon diff` shows how your copies differ from \
        loon's.")
     (let%map_open.Command dir = dir_flag
      and overwrite = overwrite_flag
-     and css = css_flag
      and dry_run =
        flag "dry-run" no_arg ~doc:" print what it would do, and do nothing"
      and all = flag "all" no_arg ~doc:" every component"
@@ -95,7 +85,7 @@ let add =
        then
          ok_or_exit
            (Or_error.error_string "which components? (`loon list` shows them)")
-       else ok_or_exit (Project.add ~dir ~overwrite ~css ~dry_run names))
+       else ok_or_exit (Project.add ~dir ~overwrite ~dry_run names))
 ;;
 
 let init =
@@ -103,14 +93,13 @@ let init =
     ~summary:"make a directory a dune library of components, with the theme"
     (let%map_open.Command dir = dir_flag
      and overwrite = overwrite_flag
-     and css = css_flag
      and library =
        flag
          "library"
          (optional_with_default "ui" string)
          ~doc:"NAME the library's name (default: ui)"
      in
-     fun () -> ok_or_exit (Project.init ~dir ~library ~overwrite ~css))
+     fun () -> ok_or_exit (Project.init ~dir ~library ~overwrite))
 ;;
 
 let diff =
@@ -133,7 +122,7 @@ let diff =
 
 let css =
   Command.basic
-    ~summary:"print loon.css: the theme and every component's styles"
+    ~summary:"print loon.css: Tailwind's input (the theme, and the styles of components not yet ported)"
     (let%map_open.Command () = return () in
      fun () -> print_string (Registry.Css.full ()))
 ;;

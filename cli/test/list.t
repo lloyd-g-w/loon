@@ -2,11 +2,11 @@
 comment (the list grows with loon, so only some are checked here).
 
   $ loon list | grep -E '^(button|tabs|theme|import|dom_util) '
-  button           Buttons, and links that look like them.
+  button           Displays a button or a component that looks like a button.
   dom_util         Small DOM effects the components share: moving focus and reading keys.
   import           What every component opens: Core, Vdom, Bonsai and small helpers.
-  tabs             Tabs: a row of triggers, one panel shown at a time.
-  theme            The theme a subtree uses: light or dark, and an accent colour.
+  tabs             A set of layered sections of content, known as tab panels, that are displayed one at a time.
+  theme            Light and dark mode.
 
 Every line has a name and a description.
 
@@ -15,10 +15,10 @@ Every line has a name and a description.
 `loon info` says what a component is made of and what adding it brings.
 
   $ loon info Tabs
-  tabs: Tabs: a row of triggers, one panel shown at a time.
-  files: tabs.ml tabs.mli tabs.css
-  uses: dom_util import theme
-  `loon add tabs` adds: import theme dom_util tabs
+  tabs: A set of layered sections of content, known as tab panels, that are displayed one at a time.
+  files: tabs.ml tabs.mli
+  uses: cn dom_util import theme
+  `loon add tabs` adds: import theme cn dom_util tabs
 
 `loon css` is the whole stylesheet: the theme first, then a section per
 component.

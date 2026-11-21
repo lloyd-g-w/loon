@@ -322,7 +322,10 @@ module%test _ = struct
   let%expect_test "the real registry" =
     let theme = Option.value_exn (find "theme") in
     print_s [%sexp (List.map theme.css ~f:(fun f -> f.name) : string list)];
-    [%expect {| (00-tokens.css 01-base.css) |}];
+    [%expect {|
+      (00-tailwind.css 01-tw-animate.css 02-shadcn.css 03-theme.css
+       10-loon-tokens.css 11-loon-base.css)
+      |}];
     (* Every dependency is an entry. *)
     List.iter all ~f:(fun e ->
       List.iter e.deps ~f:(fun d ->

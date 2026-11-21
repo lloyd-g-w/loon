@@ -1,11 +1,6 @@
 open! Core
 module Entry = Registry.Entry
 
-module Css_mode = struct
-  type t =
-    | Assembled
-    | Files
-end
 
 let exists path = Sys_unix.file_exists_exn path
 
@@ -41,7 +36,30 @@ let dune_file ~library =
  (libraries core bonsai bonsai_web virtual_dom virtual_dom.svg js_of_ocaml)
  (preprocess
   (pps ppx_jane js_of_ocaml-ppx bonsai.ppx_bonsai)))
+
+; The stylesheet: Tailwind v4 (`tailwindcss`, e.g. nixpkgs' tailwindcss_4)
+; compiles loon.css, scanning these components' sources for the classes
+; they use. Add @source lines to loon.css for your own sources' classes.
+
+(rule
+ (targets %s.css %s.input.css)
+ (deps
+  loon.css
+  (glob_files *.ml))
+ (action
+  (progn
+   (with-stdout-to
+    %s.input.css
+    (progn
+     (cat loon.css)
+     (echo "\n@source \"./*.ml\";\n")))
+   (run tailwindcss --silent --input %s.input.css --output %s.css))))
 |}
+    library
+    library
+    library
+    library
+    library
     library
 ;;
 
@@ -83,16 +101,8 @@ let write ~dry_run ~overwrite path contents =
 
 let css_path dir = dir ^/ "loon.css"
 
-let write_css ~dir ~dry_run ~overwrite ~(css : Css_mode.t) entries =
-  match css with
-  | Files ->
-    List.iter entries ~f:(fun (e : Entry.t) ->
-      List.iter e.css ~f:(fun f ->
-        ignore
-          (write ~dry_run ~overwrite (dir ^/ "css" ^/ f.name) f.contents
-           : outcome)))
-  | Assembled ->
-    let path = css_path dir in
+let write_css ~dir ~dry_run ~overwrite entries =
+  (    let path = css_path dir in
     let existed = exists path in
     let current =
       Registry.Css.parse (if existed then In_channel.read_all path else "")
@@ -126,10 +136,10 @@ let write_css ~dir ~dry_run ~overwrite ~(css : Css_mode.t) entries =
        printf
          "  kept     %s's %s styles (they differ; -overwrite replaces them)\n"
          path
-         (String.concat ~sep:", " skipped))
+         (String.concat ~sep:", " skipped)))
 ;;
 
-let copy ~dir ~overwrite ~css ~dry_run entries =
+let copy ~dir ~overwrite ~dry_run entries =
   let same =
     List.sum
       (module Int)
@@ -147,28 +157,21 @@ let copy ~dir ~overwrite ~css ~dry_run entries =
       same
       (if same = 1 then "" else "s")
       (if same = 1 then "it" else "them");
-  write_css ~dir ~dry_run ~overwrite ~css entries
+  write_css ~dir ~dry_run ~overwrite entries
 ;;
 
-let css_note ~dir ~(css : Css_mode.t) entries =
-  match css with
-  | Assembled ->
-    printf
-      "\n\
-       Link %s from your page (or embed it), and wrap the app in Theme.root.\n"
-      (css_path dir)
-  | Files ->
-    let files =
-      List.concat_map entries ~f:(fun (e : Entry.t) ->
-        List.map e.css ~f:(fun f -> dir ^/ "css" ^/ f.name))
-    in
-    if not (List.is_empty files)
-    then (
-      printf "\nLink these stylesheets from your page, in this order:\n";
-      List.iter files ~f:(printf "  %s\n"))
+let css_note ~dir =
+  printf
+    "
+\
+     %s is Tailwind's input: the dune file compiles it, with the classes the
+\
+     components use. Link the result from your page.
+"
+    (css_path dir)
 ;;
 
-let add ~dir ~overwrite ~css ~dry_run names =
+let add ~dir ~overwrite ~dry_run names =
   let open Or_error.Let_syntax in
   let%map entries = resolve names in
   let requested = List.map names ~f:Registry.canonical in
@@ -185,17 +188,17 @@ let add ~dir ~overwrite ~css ~dry_run names =
     (if List.is_empty extra
      then ""
      else sprintf " (and what it needs: %s)" (String.concat ~sep:", " extra));
-  copy ~dir ~overwrite ~css ~dry_run entries;
+  copy ~dir ~overwrite ~dry_run entries;
   if not (exists (dir ^/ "dune"))
   then
     printf
       "\n%s has no dune file: `loon init -dir %s` makes it a library.\n"
       dir
       dir;
-  css_note ~dir ~css entries
+  css_note ~dir
 ;;
 
-let init ~dir ~library ~overwrite ~css =
+let init ~dir ~library ~overwrite =
   let open Or_error.Let_syntax in
   let%map entries = resolve [ Entry.theme ] in
   let dune = dir ^/ "dune" in
@@ -208,9 +211,9 @@ let init ~dir ~library ~overwrite ~css =
     ignore
       (write ~dry_run:false ~overwrite:false dune (dune_file ~library)
        : outcome));
-  copy ~dir ~overwrite ~css ~dry_run:false entries;
+  copy ~dir ~overwrite ~dry_run:false entries;
   printf "\nNow `loon add button` (`loon list` shows the components).\n";
-  css_note ~dir ~css entries
+  css_note ~dir
 ;;
 
 let installed ~dir =

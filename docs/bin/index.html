@@ -1,26 +1,24 @@
 <!doctype html>
-<html lang="en" class="loon-light">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>loon — components for Bonsai</title>
   <meta name="description" content="Accessible, themeable components for Bonsai_web on OxCaml, in the spirit of shadcn/ui.">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="preload" href="recursive-sans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="geist-sans.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="loon.css">
   <link rel="stylesheet" href="docs.css">
   <script>
     // The theme before the app loads, so a dark page does not flash light.
     (function () {
-      var mode, accent;
+      var mode;
       try {
         mode = localStorage.getItem("loon-docs-mode");
-        accent = localStorage.getItem("loon-docs-accent");
       } catch (e) {}
       if (mode !== "dark" && mode !== "light")
         mode = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-      document.documentElement.className = "loon-" + mode;
-      document.documentElement.setAttribute("data-loon-accent", accent || "teal");
+      if (mode === "dark") document.documentElement.className = "dark";
     })();
   </script>
 </head>

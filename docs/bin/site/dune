@@ -14,11 +14,11 @@
   (glob_files_rec ../../lib/**.ml))
  (action
   (system
-   "{ cat ../../../src/css/*.css; printf '\\n@source \"../../../src/*.ml\";\\n@source \"../../lib/**/*.ml\";\\n'; } > docs.input.css && tailwindcss --input docs.input.css --output loon.css 2>tailwind.log || { cat tailwind.log >&2; exit 1; }")))
+   "{ cat ../../../src/css/*.css; printf '\\n@source \"../../../src/*.ml\";\\n@source \"../../lib/**/*.ml\";\\n'; } > docs.input.css && tailwindcss --silent --input docs.input.css --output loon.css")))
 
 (copy_files
  (files
-  ../{index.html,docs.css,icon.svg,temporal-polyfill.js,LICENSE-temporal-polyfill,recursive-sans.woff2,recursive-mono.woff2,recursive-OFL.txt}))
+  ../{index.html,docs.css,icon.svg,temporal-polyfill.js,LICENSE-temporal-polyfill,geist-sans.woff2,geist-mono.woff2,geist-OFL.txt}))
 
 (install
  (section share)
@@ -31,6 +31,6 @@
   (icon.svg as docs/icon.svg)
   (temporal-polyfill.js as docs/temporal-polyfill.js)
   (LICENSE-temporal-polyfill as docs/LICENSE-temporal-polyfill)
-  (recursive-sans.woff2 as docs/recursive-sans.woff2)
-  (recursive-mono.woff2 as docs/recursive-mono.woff2)
-  (recursive-OFL.txt as docs/recursive-OFL.txt)))
+  (geist-sans.woff2 as docs/geist-sans.woff2)
+  (geist-mono.woff2 as docs/geist-mono.woff2)
+  (geist-OFL.txt as docs/geist-OFL.txt)))

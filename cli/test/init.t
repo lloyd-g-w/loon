@@ -10,7 +10,8 @@
   
   Now `loon add button` (`loon list` shows the components).
   
-  Link lib/ui/loon.css from your page (or embed it), and wrap the app in Theme.root.
+  lib/ui/loon.css is Tailwind's input: the dune file compiles it, with the classes the
+  components use. Link the result from your page.
   $ cat lib/ui/dune
   ; Components copied from loon (https://github.com/lloyd-g-w/loon) with
   ; `loon add`: they are yours to change. `loon diff` shows how they differ
@@ -21,6 +22,24 @@
    (libraries core bonsai bonsai_web virtual_dom virtual_dom.svg js_of_ocaml)
    (preprocess
     (pps ppx_jane js_of_ocaml-ppx bonsai.ppx_bonsai)))
+  
+  ; The stylesheet: Tailwind v4 (`tailwindcss`, e.g. nixpkgs' tailwindcss_4)
+  ; compiles loon.css, scanning these components' sources for the classes
+  ; they use. Add @source lines to loon.css for your own sources' classes.
+  
+  (rule
+   (targets my_ui.css my_ui.input.css)
+   (deps
+    loon.css
+    (glob_files *.ml))
+   (action
+    (progn
+     (with-stdout-to
+      my_ui.input.css
+      (progn
+       (cat loon.css)
+       (echo "\n@source \"./*.ml\";\n")))
+     (run tailwindcss --silent --input my_ui.input.css --output my_ui.css))))
 
 Running it again changes nothing, and keeps a dune file that is there.
 
