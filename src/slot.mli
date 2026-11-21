@@ -9,6 +9,8 @@ open! Import
     already: as Radix's Slot, the child's own [type] wins. A [data-slot]
     among [defaults] replaces the child's (shadcn's components spread the
     part's [data-slot] over their own: a [Button.view] in a popover trigger
-    is [data-slot="popover-trigger"]). A
-    node that is not an element (text, a fragment) is wrapped in a [<span>]. *)
+    is [data-slot="popover-trigger"]). A fragment starting with an element
+    (a sidebar's menu button with its tooltip) has its first element
+    merged; any other node that is not an element (text) is wrapped in a
+    [<span>]. *)
 val merge : ?defaults:(string * Attr.t) list -> Attr.t list -> Node.t -> Node.t

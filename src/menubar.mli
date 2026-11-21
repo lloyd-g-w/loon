@@ -90,7 +90,13 @@ val component
 (** {2 The items} (see {!Menu} for [text_value] and [close_on_select]) *)
 
 val group : ?attrs:Attr.t list -> Menu.Item.t list -> Menu.Item.t
-val label : ?attrs:Attr.t list -> ?class_:string -> ?inset:bool -> Node.t list -> Menu.Item.t
+
+val label
+  :  ?attrs:Attr.t list
+  -> ?class_:string
+  -> ?inset:bool
+  -> Node.t list
+  -> Menu.Item.t
 
 (** [variant] [Destructive] colours it red. *)
 val item
@@ -102,6 +108,7 @@ val item
   -> ?text_value:string
   -> ?close_on_select:bool
   -> ?on_select:unit Effect.t
+  -> ?href:string
   -> Node.t list
   -> Menu.Item.t
 

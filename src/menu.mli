@@ -53,7 +53,8 @@ end
 
     [text_value] is the text typeahead matches (by default the item's text
     nodes). [close_on_select] (default [true]): choosing the item closes the
-    menu, as Radix does unless [onSelect] prevents it. *)
+    menu, as Radix does unless [onSelect] prevents it. [href] makes an item
+    an [<a>] (Radix's [asChild] over a link). *)
 
 val item
   :  ?attrs:Attr.t list
@@ -64,6 +65,7 @@ val item
   -> ?text_value:string
   -> ?close_on_select:bool
   -> ?on_select:unit Effect.t
+  -> ?href:string
   -> Node.t list
   -> Item.t
 
@@ -95,7 +97,13 @@ val radio_item
   -> Node.t list
   -> Item.t
 
-val label : ?attrs:Attr.t list -> ?class_:string -> ?inset:bool -> Node.t list -> Item.t
+val label
+  :  ?attrs:Attr.t list
+  -> ?class_:string
+  -> ?inset:bool
+  -> Node.t list
+  -> Item.t
+
 val separator : ?attrs:Attr.t list -> ?class_:string -> unit -> Item.t
 val group : ?attrs:Attr.t list -> Item.t list -> Item.t
 
@@ -124,7 +132,12 @@ val sub_content
 val node : Node.t -> Item.t
 
 (** A keyboard shortcut at the end of an item. *)
-val shortcut : Classes.t -> ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
+val shortcut
+  :  Classes.t
+  -> ?attrs:Attr.t list
+  -> ?class_:string
+  -> Node.t list
+  -> Node.t
 
 (** {2 The menu} *)
 

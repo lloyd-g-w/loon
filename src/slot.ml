@@ -15,6 +15,8 @@ let rec merge ?(defaults = []) attrs (node : Node.t) : Node.t =
          in
          Attr.many ((a :: attrs) @ defaults)))
   | Lazy { t; _ } -> merge ~defaults attrs (Lazy.force t)
+  | Fragment (((Element _ | Lazy _) as first) :: rest) ->
+    Node.fragment (merge ~defaults attrs first :: rest)
   | Text _ | Fragment _ | None | Widget _ ->
     Node.span ~attrs:(List.map defaults ~f:snd @ attrs) [ node ]
 ;;

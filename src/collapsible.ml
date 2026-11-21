@@ -140,25 +140,16 @@ let create ?(disabled = false) ?(id = "collapsible") ~open_ ~on_change () =
 ;;
 
 let root_attrs t =
-  [ data "state" (state t.open_) ]
-  @ if t.disabled then [ data "disabled" "" ] else []
+  data "state" (state t.open_) :: (if t.disabled then [ data "disabled" "" ] else [])
 ;;
 
-let view
-      ?(attrs = [])
-      ?class_
-      ?(disabled = false)
-      ?(id = "collapsible")
-      ~open_
-      ~on_change
-      children
-  =
-  let t = { open_; on_change; id; disabled } in
+let view ?(attrs = []) ?class_ ?disabled ?id ~open_ ~on_change children =
+  let t = create ?disabled ?id ~open_ ~on_change () in
   Node.div
     ~attrs:
       ([ data "state" (state open_); data "slot" "collapsible" ]
        @ class_attr class_
-       @ (if disabled then [ data "disabled" "" ] else [])
+       @ (if t.disabled then [ data "disabled" "" ] else [])
        @ attrs)
     (children t)
 ;;
