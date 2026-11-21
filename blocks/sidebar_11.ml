@@ -72,12 +72,13 @@ let rec tree_view ~toggled ~set_toggled ~path (item : Tree_item.t) =
                then Set.remove toggled key
                else Set.add toggled key))
           (fun collapsible ->
-             [ Sidebar.menu_button
-                 ~attrs:(Collapsible.trigger_attrs collapsible)
-                 [ Icon.view ~class_:"transition-transform" Chevron_right
-                 ; Icon.view Folder
-                 ; Node.text name
-                 ]
+             [ Collapsible.trigger_child
+                 collapsible
+                 (Sidebar.menu_button
+                    [ Icon.view ~class_:"transition-transform" Chevron_right
+                    ; Icon.view Folder
+                    ; Node.text name
+                    ])
              ; Collapsible.content
                  collapsible
                  [ Sidebar.menu_sub

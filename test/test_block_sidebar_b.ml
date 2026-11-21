@@ -89,7 +89,8 @@ let%expect_test "sidebar-10" =
       sidebar-group-label x2
       sidebar-group-content x6
       collapsible x5
-      sidebar-menu-action x10
+      collapsible-trigger x5
+      sidebar-menu-action x5
       collapsible-content x5
       sidebar-menu-sub x5
       sidebar-menu-sub-item x15
@@ -145,9 +146,10 @@ let%expect_test "sidebar-11" =
       sidebar-group-content x2
       sidebar-menu x2
       sidebar-menu-item x11
-      sidebar-menu-button x28
+      sidebar-menu-button x20
       sidebar-menu-badge x3
       collapsible x8
+      collapsible-trigger x8
       collapsible-content x8
       sidebar-menu-sub x8
       sidebar-rail
@@ -305,7 +307,8 @@ let%expect_test "sidebar-15" =
       sidebar-group-label x2
       sidebar-group-content x6
       collapsible x8
-      sidebar-menu-action x10
+      collapsible-trigger x8
+      sidebar-menu-action x5
       collapsible-content x8
       sidebar-menu-sub x5
       sidebar-menu-sub-item x15
@@ -323,7 +326,6 @@ let%expect_test "sidebar-15" =
       avatar-fallback
       calendar
       button x35
-      collapsible-trigger x3
       sidebar-footer
     text:
       Acme Inc Search Ask AI Home Inbox Favorites 📊 Project Management & Task
@@ -378,7 +380,7 @@ let%expect_test "sidebar-16" =
       sidebar-group x3
       sidebar-group-label x2
       tooltip-content x4
-      sidebar-menu-action x4
+      collapsible-trigger x4
       collapsible-content x4
       sidebar-menu-sub x4
       sidebar-menu-sub-item x14

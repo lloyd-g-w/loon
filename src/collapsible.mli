@@ -60,10 +60,15 @@ val component
 (** A [<button>] that opens and closes it. *)
 val trigger : ?attrs:Attr.t list -> ?class_:string -> t -> Node.t list -> Node.t
 
-(** The trigger's attributes, for another element to be the trigger:
-    shadcn's [<CollapsibleTrigger asChild>], as in
-    [Button.view ~attrs:(Collapsible.trigger_attrs c) ...] (without
-    [data-slot]: the element keeps its own, as with Radix's [Slot]). *)
+(** Makes [node] the trigger: shadcn's [<CollapsibleTrigger asChild>], as
+    in [Collapsible.trigger_child c (Button.view ...)]. Its attributes merge
+    as Radix's [Slot] (see {!Slot.merge}): [data-slot="collapsible-trigger"]
+    replaces the element's own. *)
+val trigger_child : ?attrs:Attr.t list -> t -> Node.t -> Node.t
+
+(** The trigger's attributes without [data-slot], for an element that keeps
+    its own: a part over [<CollapsibleTrigger>] with [asChild] (shadcn's
+    [<SidebarGroupLabel asChild><CollapsibleTrigger>]). *)
 val trigger_attrs : t -> Attr.t list
 
 (** The panel: [hidden] while closed (its children kept, so their state

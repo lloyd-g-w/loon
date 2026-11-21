@@ -111,10 +111,8 @@ let nav_main_item (item : Nav_item.t) (local_ graph) =
      if List.is_empty item.items
      then []
      else
-       [ Slot.merge
-           ~defaults:
-             [ "data-slot", Attr.create "data-slot" "collapsible-trigger" ]
-           (Collapsible.trigger_attrs collapsible)
+       [ Collapsible.trigger_child
+           collapsible
            (Sidebar.menu_action
               ~class_:"data-[state=open]:rotate-90"
               [ Icon.view Chevron_right

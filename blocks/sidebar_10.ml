@@ -339,14 +339,15 @@ let nav_workspaces (local_ graph) =
                             [ Node.span [ Node.text workspace.emoji ]
                             ; Node.span [ Node.text workspace.name ]
                             ]
-                        ; Sidebar.menu_action
-                            ~attrs:(Collapsible.trigger_attrs collapsible)
-                            ~class_:
-                              "left-2 bg-sidebar-accent \
-                               text-sidebar-accent-foreground \
-                               data-[state=open]:rotate-90"
-                            ~show_on_hover:true
-                            [ Icon.view Chevron_right ]
+                        ; Collapsible.trigger_child
+                            collapsible
+                            (Sidebar.menu_action
+                               ~class_:
+                                 "left-2 bg-sidebar-accent \
+                                  text-sidebar-accent-foreground \
+                                  data-[state=open]:rotate-90"
+                               ~show_on_hover:true
+                               [ Icon.view Chevron_right ])
                         ; Sidebar.menu_action
                             ~show_on_hover:true
                             [ Icon.view Plus ]

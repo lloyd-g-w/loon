@@ -27,16 +27,17 @@ let demo (local_ graph) =
            [ Node.h4
                ~attrs:[ Attr.class_ "text-sm font-semibold" ]
                [ Node.text "@peduarte starred 3 repositories" ]
-           ; Button.view
-               ~attrs:(Collapsible.trigger_attrs c)
-               ~variant:Ghost
-               ~size:Icon
-               ~class_:"size-8"
-               [ Icon.view Chevrons_up_down
-               ; Node.span
-                   ~attrs:[ Attr.class_ "sr-only" ]
-                   [ Node.text "Toggle" ]
-               ]
+           ; Collapsible.trigger_child
+               c
+               (Button.view
+                  ~variant:Ghost
+                  ~size:Icon
+                  ~class_:"size-8"
+                  [ Icon.view Chevrons_up_down
+                  ; Node.span
+                      ~attrs:[ Attr.class_ "sr-only" ]
+                      [ Node.text "Toggle" ]
+                  ])
            ]
        ; repository "@radix-ui/primitives"
        ; Collapsible.content
@@ -69,8 +70,8 @@ let page =
             , "[Collapsible.component]: open at first. [Collapsible.view] \
                takes [~open_] and [~on_change] instead." )
           ; "disabled", "bool", "The trigger does nothing."
-          ; ( "trigger_attrs"
-            , "Collapsible.t -> Attr.t list"
+          ; ( "trigger_child"
+            , "Collapsible.t -> Node.t -> Node.t"
             , "Makes any element the trigger (shadcn's [asChild]), e.g. a \
                [Button.view]." )
           ]

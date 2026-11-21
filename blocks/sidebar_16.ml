@@ -86,14 +86,15 @@ let nav_main (local_ graph) =
               if List.is_empty item.items
               then []
               else
-                [ Sidebar.menu_action
-                    ~attrs:(Collapsible.trigger_attrs collapsible)
-                    ~class_:"data-[state=open]:rotate-90"
-                    [ Icon.view Chevron_right
-                    ; Node.span
-                        ~attrs:[ Attr.class_ "sr-only" ]
-                        [ Node.text "Toggle" ]
-                    ]
+                [ Collapsible.trigger_child
+                    collapsible
+                    (Sidebar.menu_action
+                       ~class_:"data-[state=open]:rotate-90"
+                       [ Icon.view Chevron_right
+                       ; Node.span
+                           ~attrs:[ Attr.class_ "sr-only" ]
+                           [ Node.text "Toggle" ]
+                       ])
                 ; Collapsible.content
                     collapsible
                     [ Sidebar.menu_sub
