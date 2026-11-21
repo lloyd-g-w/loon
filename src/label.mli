@@ -1,18 +1,12 @@
-(** A label for a form control. [required] marks it with an asterisk. *)
+(** Renders an accessible label associated with controls. Port of shadcn/ui's
+    [Label] (Radix Label: a [<label>]; a double click on it does not select
+    its text).
+
+    {[
+      Label.view ~for_:"terms" [ Node.text "Accept terms and conditions" ]
+    ]} *)
 
 open! Import
 
-val view
-  :  ?attrs:Attr.t list
-  -> ?for_:string
-  -> ?required:bool
-  -> Node.t list
-  -> Node.t
-
-(** A label with just text. *)
-val text
-  :  ?attrs:Attr.t list
-  -> ?for_:string
-  -> ?required:bool
-  -> string
-  -> Node.t
+(** A [<label>]; [for_] is the id of the control it labels. *)
+val view : ?attrs:Attr.t list -> ?class_:string -> ?for_:string -> Node.t list -> Node.t

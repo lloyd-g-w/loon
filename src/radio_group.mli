@@ -1,41 +1,58 @@
-(** A set of options of which one is chosen ([role="radiogroup"]). Tab
-    reaches the chosen option; arrow keys, Home and End choose another. *)
+(** A set of checkable buttons, known as radio buttons, where no more than
+    one of the buttons can be checked at a time. Port of shadcn/ui's
+    [RadioGroup] (Radix Radio Group: Tab reaches the checked item; arrow
+    keys, Home and End move to another and check it; disabled items are
+    skipped).
+
+    {[
+      Radio_group.component ~default_value:"comfortable"
+        (return (fun group ->
+          [ Node.div ~attrs:[ Attr.class_ "flex items-center gap-3" ]
+              [ Radio_group.item group ~value:"default" ~id:"r1"
+              ; Label.view ~for_:"r1" [ Node.text "Default" ]
+              ]
+          ; ...
+          ]))
+        graph
+    ]} *)
 
 open! Import
 
-module Item : sig
-  type t =
-    { value : string
-    ; label : string
-    ; description : string option
-    ; disabled : bool
-    }
+(** The group's state, for its items. *)
+type t
 
-  val create
-    :  ?description:string
-    -> ?disabled:bool
-    -> value:string
-    -> string
-    -> t
-end
-
-(** Controlled; [value] is the chosen item's, [None] before any is chosen.
-    [name] scopes the elements' ids (one per group on a page). *)
+(** Controlled; [value] is the checked item's, [None] before one is. *)
 val view
   :  ?attrs:Attr.t list
+  -> ?class_:string
   -> ?orientation:Roving.Orientation.t
   -> ?disabled:bool
-  -> name:string
+  -> ?required:bool
   -> value:string option
   -> on_change:(string -> unit Effect.t)
-  -> Item.t list
+  -> (t -> Node.t list)
   -> Node.t
 
+(** Keeps the checked value, [default_value] at first. *)
 val component
   :  ?attrs:Attr.t list
+  -> ?class_:string
   -> ?orientation:Roving.Orientation.t
   -> ?disabled:bool
-  -> ?default:string
-  -> Item.t list
+  -> ?required:bool
+  -> ?default_value:string
+  -> (t -> Node.t list) Bonsai.t
   -> local_ Bonsai.graph
   -> string option Control.t Bonsai.t
+
+(** A radio button ([role="radio"]); give it an [id] for a {!Label}'s
+    [for_]. *)
+val item
+  :  ?attrs:Attr.t list
+  -> ?class_:string
+  -> ?id:string
+  -> ?disabled:bool
+  -> ?invalid:bool
+  -> t
+  -> value:string
+  -> Node.t

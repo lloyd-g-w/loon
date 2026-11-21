@@ -9,95 +9,88 @@ module Type = struct
     | Number
     | Url
     | Tel
+    | File
+    | Date
+    | Time
   [@@deriving enumerate, sexp_of, compare, equal]
 
   let name t = String.lowercase (Sexp.to_string (sexp_of_t t))
 end
 
+let class_list ?class_ () =
+  [ "h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base \
+     shadow-xs transition-[color,box-shadow] outline-none selection:bg-primary \
+     selection:text-primary-foreground file:inline-flex file:h-7 file:border-0 \
+     file:bg-transparent file:text-sm file:font-medium file:text-foreground \
+     placeholder:text-muted-foreground disabled:pointer-events-none \
+     disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30"
+  ; "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+  ; "aria-invalid:border-destructive aria-invalid:ring-destructive/20 \
+     dark:aria-invalid:ring-destructive/40"
+  ]
+  @ Option.to_list class_
+;;
+
+let classes ?class_ () = Cn.cn (class_list ?class_ ())
+
 let view
-      ?attrs:extra
-      ?(type_ = Type.Text)
-      ?placeholder
-      ?(disabled = false)
-      ?(invalid = false)
-      ?leading
-      ?trailing
-      ?on_enter
-      ~value
-      ~on_input
-      ()
+  ?(attrs = [])
+  ?class_
+  ?(type_ = Type.Text)
+  ?id
+  ?name
+  ?placeholder
+  ?(disabled = false)
+  ?(required = false)
+  ?(invalid = false)
+  ?value
+  ?on_input
+  ()
   =
-  let input =
-    Node.input
-      ~attrs:
-        (attrs ?attrs:extra [ "loon-input" ]
-         @ [ Attr.type_ (Type.name type_)
-           ; Attr.value value
-           ; Attr.on_input (fun _ s -> on_input s)
-           ]
-         @ Option.value_map placeholder ~default:[] ~f:(fun p ->
-           [ Attr.placeholder p ])
-         @ (if disabled then [ Attr.disabled ] else [])
-         @ (if invalid then [ aria "invalid" "true" ] else [])
-         @
-         match on_enter with
-         | None -> []
-         | Some enter ->
-           [ Attr.on_keydown (fun ev ->
-               match Dom_util.key ev with
-               | Enter -> enter
-               | _ -> Effect.Ignore)
-           ])
-      ()
-  in
-  match leading, trailing with
-  | None, None -> input
-  | _ ->
-    Node.div
-      ~attrs:
-        [ Attr.classes
-            ([ "loon-input-group" ]
-             @ (if Option.is_some leading
-                then [ "loon-input-group-leading" ]
-                else [])
-             @
-             if Option.is_some trailing
-             then [ "loon-input-group-trailing" ]
-             else [])
-        ; data "disabled" (Bool.to_string disabled)
-        ]
-      (List.filter_opt
-         [ Option.map leading ~f:(fun icon ->
-             Icon.view ~attrs:[ Attr.class_ "loon-input-icon" ] icon)
-         ; Some input
-         ; Option.map trailing ~f:(fun addon ->
-             Node.div ~attrs:[ Attr.class_ "loon-input-addon" ] [ addon ])
-         ])
+  let opt f = Option.value_map ~default:[] ~f:(fun x -> [ f x ]) in
+  Node.input
+    ~attrs:
+      ([ Attr.type_ (Type.name type_)
+       ; data "slot" "input"
+       ; Cn.attr (class_list ?class_ ())
+       ]
+       @ opt Attr.id id
+       @ opt Attr.name name
+       @ opt Attr.placeholder placeholder
+       @ (if disabled then [ Attr.disabled ] else [])
+       @ (if required then [ Attr.create "required" "" ] else [])
+       @ (if invalid then [ aria "invalid" "true" ] else [])
+       @ opt Attr.value value
+       @ opt (fun f -> Attr.on_input (fun _ s -> f s)) on_input
+       @ attrs)
+    ()
 ;;
 
 let component
+  ?attrs
+  ?class_
+  ?type_
+  ?id
+  ?name
+  ?placeholder
+  ?disabled
+  ?required
+  ?invalid
+  ?(default_value = "")
+  (local_ graph)
+  =
+  Control.make ~equal:String.equal default_value graph ~view:(fun value set ->
+    view
       ?attrs
+      ?class_
       ?type_
+      ?id
+      ?name
       ?placeholder
       ?disabled
-      ?leading
-      ?trailing
-      ?(default = "")
-      (local_ graph)
-  =
-  Control.make
-    ~equal:String.equal
-    default
-    ~view:(fun value set ->
-      view
-        ?attrs
-        ?type_
-        ?placeholder
-        ?disabled
-        ?leading
-        ?trailing
-        ~value
-        ~on_input:set
-        ())
-    graph
+      ?required
+      ?invalid
+      ~value
+      ~on_input:set
+      ())
 ;;

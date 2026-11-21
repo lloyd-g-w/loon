@@ -9,16 +9,16 @@ let page = "card"
 
 (*$ Demo *)
 let demo (local_ graph) =
-  let email = Input.component ~type_:Email ~placeholder:"m@example.com" graph in
-  let password = Input.component ~type_:Password graph in
-  let%arr email and password in
-  let input ~id (control : string Control.t) =
-    Input.view
-      ~attrs:[ Attr.id id; Attr.create "required" "" ]
-      ~value:control.value
-      ~on_input:control.set
-      ()
+  let email =
+    Input.component
+      ~id:"email"
+      ~type_:Email
+      ~placeholder:"m@example.com"
+      ~required:true
+      graph
   in
+  let password = Input.component ~id:"password" ~type_:Password ~required:true graph in
+  let%arr email and password in
   Card.root
     ~class_:"w-full max-w-sm"
     [ Card.header
@@ -32,12 +32,12 @@ let demo (local_ graph) =
                 ~attrs:[ Attr.class_ "flex flex-col gap-6" ]
                 [ Node.div
                     ~attrs:[ Attr.class_ "grid gap-2" ]
-                    [ Label.text ~for_:"email" "Email"; input ~id:"email" email ]
+                    [ Label.view ~for_:"email" [ Node.text "Email" ]; email.view ]
                 ; Node.div
                     ~attrs:[ Attr.class_ "grid gap-2" ]
                     [ Node.div
                         ~attrs:[ Attr.class_ "flex items-center" ]
-                        [ Label.text ~for_:"password" "Password"
+                        [ Label.view ~for_:"password" [ Node.text "Password" ]
                         ; Node.a
                             ~attrs:
                               [ Attr.href "#/card"
@@ -47,7 +47,7 @@ let demo (local_ graph) =
                               ]
                             [ Node.text "Forgot your password?" ]
                         ]
-                    ; input ~id:"password" password
+                    ; password.view
                     ]
                 ]
             ]

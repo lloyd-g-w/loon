@@ -1,19 +1,21 @@
 open! Import
 
-let view ?attrs:extra ?for_ ?(required = false) children =
+let view ?(attrs = []) ?class_ ?for_ children =
   Node.label
     ~attrs:
-      (attrs ?attrs:extra [ "loon-label" ]
-       @ Option.value_map for_ ~default:[] ~f:(fun id -> [ Attr.for_ id ]))
-    (children
-     @
-     if required
-     then
-       [ Node.span
-           ~attrs:[ Attr.class_ "loon-label-required"; aria "hidden" "true" ]
-           [ Node.text "*" ]
+      ([ data "slot" "label"
+       ; Cn.with_class
+           ?class_
+           [ "flex items-center gap-2 text-sm leading-none font-medium select-none \
+              group-data-[disabled=true]:pointer-events-none \
+              group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed \
+              peer-disabled:opacity-50"
+           ]
+       ; Attr.on_mousedown (fun ev ->
+           (* Radix: a double click does not select the label's text. *)
+           if (Js_of_ocaml.Js.Unsafe.get ev "detail" : int) > 1 then Dom_util.prevent_default ev else Effect.Ignore)
        ]
-     else [])
+       @ Option.value_map for_ ~default:[] ~f:(fun id -> [ Attr.for_ id ])
+       @ attrs)
+    children
 ;;
-
-let text ?attrs ?for_ ?required s = view ?attrs ?for_ ?required [ Node.text s ]
