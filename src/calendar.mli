@@ -201,3 +201,9 @@ val component
   -> default:Selection.t
   -> local_ Bonsai.graph
   -> t Bonsai.t
+
+module For_testing : sig
+  (** Makes {!today} return this day (or the real one again, with [None]),
+      for tests of what starts from today. *)
+  val set_today : Date.t option -> unit
+end

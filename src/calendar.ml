@@ -328,12 +328,17 @@ module Locale = struct
   let caption t d = sprintf "%s %d" (month_name t (Date.month d)) (Date.year d)
 end
 
+let fixed_today = ref None
+
 let today () =
-  let now = new%js Js.date_now in
-  Date.create_exn
-    ~y:now##getFullYear
-    ~m:(Month.of_int_exn (now##getMonth + 1))
-    ~d:now##getDate
+  match !fixed_today with
+  | Some today -> today
+  | None ->
+    let now = new%js Js.date_now in
+    Date.create_exn
+      ~y:now##getFullYear
+      ~m:(Month.of_int_exn (now##getMonth + 1))
+      ~d:now##getDate
 ;;
 
 let visually_hidden =
@@ -971,3 +976,7 @@ let component
   ; set_month
   }
 ;;
+
+module For_testing = struct
+  let set_today today = fixed_today := today
+end
