@@ -5,97 +5,134 @@ open! Bonsai.Let_syntax
 module Node = Vdom.Node
 module Attr = Vdom.Attr
 
-(* Examples sit in a column no wider than a form would be. *)
-let narrow nodes =
-  Node.div
-    ~attrs:
-      [ Attr.class_ "docs-stack"
-      ; Attr.style (Css_gen.create ~field:"width" ~value:"min(100%, 24rem)")
-      ]
-    nodes
-;;
-
 let page = "native_select"
 
-(*$ Default *)
-let timezones =
-  [ Native_select.Item.create ~value:"Australia/Sydney" "Sydney (AEST)"
-  ; Native_select.Item.create ~value:"Australia/Perth" "Perth (AWST)"
-  ; Native_select.Item.create ~value:"Pacific/Auckland" "Auckland (NZST)"
-  ; Native_select.Item.create ~value:"Europe/London" "London (GMT)"
-  ; Native_select.Item.create ~value:"America/New_York" "New York (EST)"
-  ]
-;;
-
-let default (local_ graph) =
-  let timezone, set_timezone = Bonsai.state "" graph in
-  let%arr timezone
-  and set_timezone in
-  narrow
-    [ Field.view
-        ~id:"select-tz"
-        ~label:"Time zone"
-        ~description:"Used for reminders and the calendar."
-        (fun attrs ->
-           Native_select.view
-             ~attrs
-             ~placeholder:"Select a time zone"
-             ~value:timezone
-             ~on_change:set_timezone
-             timezones)
+(*$ Demo *)
+let demo =
+  Native_select.view
+    [ Native_select.option ~value:"" [ Node.text "Select status" ]
+    ; Native_select.option ~value:"todo" [ Node.text "Todo" ]
+    ; Native_select.option ~value:"in-progress" [ Node.text "In Progress" ]
+    ; Native_select.option ~value:"done" [ Node.text "Done" ]
+    ; Native_select.option ~value:"cancelled" [ Node.text "Cancelled" ]
     ]
-;;
-
 (*$*)
 
-(*$ Invalid and disabled *)
-let states =
-  let items = [ Native_select.Item.create ~value:"a" "Option A" ] in
-  narrow
-    [ Native_select.view
-        ~invalid:true
-        ~placeholder:"Required"
-        ~value:""
-        ~on_change:(fun _ -> Effect.Ignore)
-        items
-    ; Native_select.view
-        ~disabled:true
-        ~value:"a"
-        ~on_change:(fun _ -> Effect.Ignore)
-        items
+(*$ Groups
+   [opt_group] puts options under a heading. *)
+let groups =
+  Native_select.view
+    [ Native_select.option ~value:"" [ Node.text "Select department" ]
+    ; Native_select.opt_group
+        ~label:"Engineering"
+        [ Native_select.option ~value:"frontend" [ Node.text "Frontend" ]
+        ; Native_select.option ~value:"backend" [ Node.text "Backend" ]
+        ; Native_select.option ~value:"devops" [ Node.text "DevOps" ]
+        ]
+    ; Native_select.opt_group
+        ~label:"Sales"
+        [ Native_select.option ~value:"sales-rep" [ Node.text "Sales Rep" ]
+        ; Native_select.option ~value:"account-manager" [ Node.text "Account Manager" ]
+        ; Native_select.option ~value:"sales-director" [ Node.text "Sales Director" ]
+        ]
+    ; Native_select.opt_group
+        ~label:"Operations"
+        [ Native_select.option ~value:"support" [ Node.text "Customer Support" ]
+        ; Native_select.option ~value:"product-manager" [ Node.text "Product Manager" ]
+        ; Native_select.option ~value:"ops-manager" [ Node.text "Operations Manager" ]
+        ]
     ]
-;;
+(*$*)
 
+(*$ Disabled *)
+let disabled =
+  Native_select.view
+    ~disabled:true
+    [ Native_select.option ~value:"" [ Node.text "Select priority" ]
+    ; Native_select.option ~value:"low" [ Node.text "Low" ]
+    ; Native_select.option ~value:"medium" [ Node.text "Medium" ]
+    ; Native_select.option ~value:"high" [ Node.text "High" ]
+    ; Native_select.option ~value:"critical" [ Node.text "Critical" ]
+    ]
+(*$*)
+
+(*$ Invalid
+   [invalid] sets [aria-invalid], which shadcn's classes colour. *)
+let invalid =
+  Native_select.view
+    ~invalid:true
+    [ Native_select.option ~value:"" [ Node.text "Select role" ]
+    ; Native_select.option ~value:"admin" [ Node.text "Admin" ]
+    ; Native_select.option ~value:"editor" [ Node.text "Editor" ]
+    ; Native_select.option ~value:"viewer" [ Node.text "Viewer" ]
+    ; Native_select.option ~value:"guest" [ Node.text "Guest" ]
+    ]
+(*$*)
+
+(*$ Controlled
+   [component] keeps the choice in Bonsai state; [value] is the chosen
+   option's value. *)
+let controlled (local_ graph) =
+  let%arr status =
+    Native_select.component
+      ~default_value:"in-progress"
+      [ Native_select.option ~value:"todo" [ Node.text "Todo" ]
+      ; Native_select.option ~value:"in-progress" [ Node.text "In Progress" ]
+      ; Native_select.option ~value:"done" [ Node.text "Done" ]
+      ]
+      graph
+  in
+  Node.div
+    ~attrs:[ Attr.class_ "flex flex-col items-start gap-3" ]
+    [ status.view
+    ; Node.p
+        ~attrs:[ Attr.class_ "text-sm text-muted-foreground" ]
+        [ Node.textf "Status: %s" status.value ]
+    ]
 (*$*)
 
 let page =
   Doc.page
     ~slug:page
-    ~title:"Native select"
+    ~title:"Native Select"
     ~group:Forms
     ~description:
-      "The browser's own <select>, styled to match. On phones it opens the \
-       system picker."
+      "A styled native HTML select element with consistent design system integration."
     ~usage:
-      {|Native_select.view ~value ~on_change:set_value
-  [ Native_select.Item.create ~value:"au" "Australia"
-  ; Native_select.Item.create ~value:"nz" "New Zealand"
+      {|Native_select.view ~value ~on_change:set_status
+  [ Native_select.option ~value:"" [ Node.text "Select status" ]
+  ; Native_select.option ~value:"todo" [ Node.text "Todo" ]
   ]|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "value", "string", "The chosen item's value."
-          ; ( "on_change"
-            , "string -> unit Effect.t"
-            , "Gets the newly chosen value." )
-          ; ( "placeholder"
+          [ ( "value"
             , "string"
-            , "Shown, and not choosable, while value matches no item." )
-          ; "invalid", "bool", "Sets aria-invalid and the danger colour."
+            , "The chosen option's value (controlled); without it the browser keeps the \
+               choice." )
+          ; "on_change", "string -> unit Effect.t", "Gets the newly chosen value."
+          ; "size", "Native_select.Size.t", "[Default] or [Sm]."
+          ; "invalid", "bool", "Sets aria-invalid, which colours it as an error."
           ; "disabled", "bool", "Greys it out."
+          ; "id, name, required", "", "As on a <select>."
+          ; "class_", "string", "More Tailwind classes, merged last."
+          ; "attrs", "Vdom.Attr.t list", "Extra attributes for the <select>."
+          ]
+      ; Doc.p
+          "[Native_select.option] and [Native_select.opt_group] are the <option> and \
+           <optgroup>; [Native_select.component ~default_value] keeps the value in \
+           Bonsai."
+      ; Doc.note
+          ~title:"Native Select or Select?"
+          [ Doc.text
+              "Native Select is the browser's own control: best on phones and inside \
+               forms. Select draws its own listbox, for custom content and styling."
           ]
       ]
-    [ Doc.example ~page "Default" default
-    ; Doc.static ~page "Invalid and disabled" states
+    [ Doc.static ~page "Demo" demo
+    ; Doc.static ~page "Groups" groups
+    ; Doc.static ~page "Disabled" disabled
+    ; Doc.static ~page "Invalid" invalid
+    ; Doc.example ~page "Controlled" controlled
     ]
 ;;

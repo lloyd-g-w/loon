@@ -5,127 +5,245 @@ open! Bonsai.Let_syntax
 module Node = Vdom.Node
 module Attr = Vdom.Attr
 
-(* Examples sit in a column no wider than a form would be. *)
-let narrow nodes =
-  Node.div
-    ~attrs:
-      [ Attr.class_ "docs-stack"
-      ; Attr.style (Css_gen.create ~field:"width" ~value:"min(100%, 24rem)")
-      ]
-    nodes
-;;
-
 let page = "input"
 
-(*$ Default *)
-let default (local_ graph) =
-  let%arr email =
-    Input.component ~type_:Email ~placeholder:"you@example.com" graph
-  in
-  narrow [ email.view ]
-;;
-
-(*$*)
-
-(*$ With a label
-   Field gives the input its label, a description and the ids that tie them
-   together for screen readers. *)
-let with_label (local_ graph) =
-  let%arr name = Input.component ~placeholder:"Ada Lovelace" graph in
-  narrow
-    [ Field.view
-        ~id:"input-name"
-        ~label:"Name"
-        ~description:"As it should appear on your profile."
-        (fun attrs -> Input.view ~attrs ~value:name.value ~on_input:name.set ())
+(*$ Demo *)
+let demo =
+  Field.root
+    [ Field.label ~for_:"input-demo-api-key" [ Node.text "API Key" ]
+    ; Input.view ~id:"input-demo-api-key" ~type_:Password ~placeholder:"sk-..." ()
+    ; Field.description [ Node.text "Your API key is encrypted and stored securely." ]
     ]
-;;
-
 (*$*)
 
-(*$ Icons and addons *)
-let addons (local_ graph) =
-  let search =
-    Input.component
-      ~type_:Search
-      ~leading:Search
-      ~trailing:(Node.kbd [ Node.text "⌘K" ])
-      ~placeholder:"Search documentation…"
-      graph
-  in
-  let site =
-    Input.component
-      ~leading:External_link
-      ~trailing:(Node.span [ Node.text ".loon.dev" ])
-      ~placeholder:"your-site"
-      graph
-  in
-  let%arr search
-  and site in
-  narrow [ search.view; site.view ]
-;;
-
+(*$ Basic *)
+let basic = Input.view ~placeholder:"Enter text" ()
 (*$*)
 
-(*$ Password with a show button *)
-let password (local_ graph) =
-  let shown, set_shown = Bonsai.state false graph in
-  let value, set_value = Bonsai.state "hunter2" graph in
-  let%arr shown
-  and set_shown
-  and value
-  and set_value in
-  narrow
-    [ Input.view
-        ~attrs:[ Attr.create "aria-label" "Password" ]
-        ~type_:(if shown then Text else Password)
-        ~leading:Settings
-        ~trailing:
-          (Button.view
-             ~variant:Ghost
-             ~size:Sm
-             ~on_click:(set_shown (not shown))
-             [ Node.text (if shown then "Hide" else "Show") ])
-        ~value
-        ~on_input:set_value
-        ()
-    ]
-;;
-
-(*$*)
-
-(*$ Invalid and disabled *)
-let states =
-  narrow
-    [ Input.view
-        ~invalid:true
-        ~value:"not-an-email"
-        ~on_input:(fun _ -> Effect.Ignore)
-        ()
+(*$ Field
+   Use [Field], [Field.label] and [Field.description] to create an input
+   with a label and description. *)
+let field =
+  Field.root
+    [ Field.label ~for_:"input-field-username" [ Node.text "Username" ]
     ; Input.view
-        ~disabled:true
-        ~placeholder:"Disabled"
-        ~value:""
-        ~on_input:(fun _ -> Effect.Ignore)
+        ~id:"input-field-username"
+        ~type_:Text
+        ~placeholder:"Enter your username"
         ()
+    ; Field.description [ Node.text "Choose a unique username for your account." ]
     ]
-;;
-
 (*$*)
 
-(*$ Textarea *)
-let textarea (local_ graph) =
-  let%arr bio =
-    Textarea.component ~placeholder:"Tell us a little about yourself" graph
-  in
-  narrow
-    [ bio.view
-    ; Node.p
-        ~attrs:[ Attr.class_ "loon-field-description" ]
-        [ Node.textf "%d / 280 characters" (String.length bio.value) ]
+(*$ Field Group
+   Use [Field.group] to show multiple [Field] blocks and to build forms. *)
+let field_group =
+  Field.group
+    [ Field.root
+        [ Field.label ~for_:"fieldgroup-name" [ Node.text "Name" ]
+        ; Input.view ~id:"fieldgroup-name" ~placeholder:"Jordan Lee" ()
+        ]
+    ; Field.root
+        [ Field.label ~for_:"fieldgroup-email" [ Node.text "Email" ]
+        ; Input.view
+            ~id:"fieldgroup-email"
+            ~type_:Email
+            ~placeholder:"name@example.com"
+            ()
+        ; Field.description [ Node.text "We'll send updates to this address." ]
+        ]
+    ; Field.root
+        ~orientation:Horizontal
+        [ Button.view ~type_:`Reset ~variant:Outline [ Node.text "Reset" ]
+        ; Button.view ~type_:`Submit [ Node.text "Submit" ]
+        ]
     ]
-;;
+(*$*)
 
+(*$ Disabled
+   Use [~disabled:true] on the input; [~disabled:true] on the [Field] styles
+   its label and description too. *)
+let disabled =
+  Field.root
+    ~disabled:true
+    [ Field.label ~for_:"input-demo-disabled" [ Node.text "Email" ]
+    ; Input.view
+        ~id:"input-demo-disabled"
+        ~type_:Email
+        ~placeholder:"Email"
+        ~disabled:true
+        ()
+    ; Field.description [ Node.text "This field is currently disabled." ]
+    ]
+(*$*)
+
+(*$ Invalid
+   [~invalid:true] on the input sets [aria-invalid]; on the [Field] it turns
+   the label destructive too. *)
+let invalid =
+  Field.root
+    ~invalid:true
+    [ Field.label ~for_:"input-invalid" [ Node.text "Invalid Input" ]
+    ; Input.view ~id:"input-invalid" ~placeholder:"Error" ~invalid:true ()
+    ; Field.description [ Node.text "This field contains validation errors." ]
+    ]
+(*$*)
+
+(*$ File *)
+let file =
+  Field.root
+    [ Field.label ~for_:"picture" [ Node.text "Picture" ]
+    ; Input.view ~id:"picture" ~type_:File ()
+    ; Field.description [ Node.text "Select a picture to upload." ]
+    ]
+(*$*)
+
+(*$ Inline
+   A horizontal [Field] puts the input and a button side by side. *)
+let inline =
+  Field.root
+    ~orientation:Horizontal
+    [ Input.view ~type_:Search ~placeholder:"Search..." ()
+    ; Button.view [ Node.text "Search" ]
+    ]
+(*$*)
+
+(*$ Grid *)
+let grid =
+  Field.group
+    ~class_:"grid max-w-sm grid-cols-2"
+    [ Field.root
+        [ Field.label ~for_:"first-name" [ Node.text "First Name" ]
+        ; Input.view ~id:"first-name" ~placeholder:"Jordan" ()
+        ]
+    ; Field.root
+        [ Field.label ~for_:"last-name" [ Node.text "Last Name" ]
+        ; Input.view ~id:"last-name" ~placeholder:"Lee" ()
+        ]
+    ]
+(*$*)
+
+(*$ Required *)
+let required =
+  Field.root
+    [ Field.label
+        ~for_:"input-required"
+        [ Node.text "Required Field "
+        ; Node.span ~attrs:[ Attr.class_ "text-destructive" ] [ Node.text "*" ]
+        ]
+    ; Input.view
+        ~id:"input-required"
+        ~placeholder:"This field is required"
+        ~required:true
+        ()
+    ; Field.description [ Node.text "This field must be filled out." ]
+    ]
+(*$*)
+
+(*$ Badge *)
+let badge =
+  Field.root
+    [ Field.label
+        ~for_:"input-badge"
+        [ Node.text "Webhook URL "
+        ; Badge.view ~variant:Secondary ~class_:"ml-auto" [ Node.text "Beta" ]
+        ]
+    ; Input.view
+        ~id:"input-badge"
+        ~type_:Url
+        ~placeholder:"https://api.example.com/webhook"
+        ()
+    ]
+(*$*)
+
+(*$ Input Group
+   [Input_group] adds icons, text or buttons inside the input. *)
+let input_group =
+  Field.root
+    [ Field.label ~for_:"input-group-url" [ Node.text "Website URL" ]
+    ; Input_group.root
+        [ Input_group.input ~id:"input-group-url" ~placeholder:"example.com" ()
+        ; Input_group.addon [ Input_group.text [ Node.text "https://" ] ]
+        ; Input_group.addon ~align:Inline_end [ Icon.view Info ]
+        ]
+    ]
+(*$*)
+
+(*$ Button Group
+   [Button_group] joins an input and buttons. *)
+let button_group =
+  Field.root
+    [ Field.label ~for_:"input-button-group" [ Node.text "Search" ]
+    ; Button_group.root
+        [ Input.view ~id:"input-button-group" ~placeholder:"Type to search..." ()
+        ; Button.view ~variant:Outline [ Node.text "Search" ]
+        ]
+    ]
+(*$*)
+
+(*$ Form
+   A form of several inputs, with [Native_select] for the country. *)
+let form =
+  Node.form
+    ~attrs:[ Attr.class_ "w-full max-w-sm"; Attr.on_submit Dom_util.prevent_default ]
+    [ Field.group
+        [ Field.root
+            [ Field.label ~for_:"form-name" [ Node.text "Name" ]
+            ; Input.view
+                ~id:"form-name"
+                ~type_:Text
+                ~placeholder:"Evil Rabbit"
+                ~required:true
+                ()
+            ]
+        ; Field.root
+            [ Field.label ~for_:"form-email" [ Node.text "Email" ]
+            ; Input.view ~id:"form-email" ~type_:Email ~placeholder:"john@example.com" ()
+            ; Field.description [ Node.text "We'll never share your email with anyone." ]
+            ]
+        ; Node.div
+            ~attrs:[ Attr.class_ "grid grid-cols-2 gap-4" ]
+            [ Field.root
+                [ Field.label ~for_:"form-phone" [ Node.text "Phone" ]
+                ; Input.view ~id:"form-phone" ~type_:Tel ~placeholder:"+1 (555) 123-4567" ()
+                ]
+            ; Field.root
+                [ Field.label ~for_:"form-country" [ Node.text "Country" ]
+                ; Native_select.view
+                    ~id:"form-country"
+                    [ Native_select.option ~value:"us" [ Node.text "United States" ]
+                    ; Native_select.option ~value:"uk" [ Node.text "United Kingdom" ]
+                    ; Native_select.option ~value:"ca" [ Node.text "Canada" ]
+                    ]
+                ]
+            ]
+        ; Field.root
+            [ Field.label ~for_:"form-address" [ Node.text "Address" ]
+            ; Input.view ~id:"form-address" ~type_:Text ~placeholder:"123 Main St" ()
+            ]
+        ; Field.root
+            ~orientation:Horizontal
+            [ Button.view ~type_:`Button ~variant:Outline [ Node.text "Cancel" ]
+            ; Button.view ~type_:`Submit [ Node.text "Submit" ]
+            ]
+        ]
+    ]
+(*$*)
+
+(*$ Controlled
+   [Input.component] keeps the text in Bonsai state; its [value] follows
+   each keystroke. *)
+let controlled (local_ graph) =
+  let name = Input.component ~id:"input-controlled" ~placeholder:"Your name" graph in
+  let%arr name in
+  Field.root
+    [ Field.label ~for_:"input-controlled" [ Node.text "Name" ]
+    ; name.view
+    ; Field.description
+        [ Node.text
+            (if String.is_empty name.value then "Hello!" else "Hello, " ^ name.value ^ "!")
+        ]
+    ]
 (*$*)
 
 let page =
@@ -134,41 +252,48 @@ let page =
     ~title:"Input"
     ~group:Forms
     ~description:
-      "A text field, with optional icons and addons; and Textarea, its \
-       multi-line sibling."
-    ~usage:{|Input.view ~type_:Email ~value ~on_input:set_value ()|}
+      "A text input component for forms and user data entry with built-in styling and \
+       accessibility features."
+    ~usage:{|Input.view ~type_:Email ~placeholder:"Email" ~value ~on_input:set ()|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
           [ ( "type_"
             , "Input.Type.t"
-            , "Text (default), Email, Password, Search, Number, Url or Tel." )
-          ; "value", "string", "The text shown."
-          ; "on_input", "string -> unit Effect.t", "Gets every edit."
-          ; "on_enter", "unit Effect.t", "Runs when Enter is pressed."
-          ; "leading", "Icon.t", "An icon inside the field, before the text."
-          ; ( "trailing"
-            , "Vdom.Node.t"
-            , "An addon inside the field, after the text: a hint, a unit, a \
-               small button." )
-          ; ( "invalid"
-            , "bool"
-            , "Sets aria-invalid and draws it in the danger colour (Field does \
-               this for you)." )
+            , "Text (default), Email, Password, Search, Number, Url, Tel, File, Date or \
+               Time." )
+          ; ( "value"
+            , "string"
+            , "Makes it controlled: the text shown. Without it the browser keeps what is \
+               typed." )
+          ; "on_input", "string -> unit Effect.t", "Gets the text after each edit."
+          ; "placeholder", "string", "Shown while it is empty."
+          ; "id", "string", "For a label's [for_]."
+          ; "name", "string", "The form field's name."
           ; "disabled", "bool", "Greys it out."
-          ; ( "attrs"
-            , "Vdom.Attr.t list"
-            , "Extra attributes for the <input>: id, name, autocomplete…" )
+          ; "required", "bool", "Must be filled in."
+          ; "invalid", "bool", "Sets [aria-invalid], drawing it in the destructive colour."
+          ; "class_", "string", "More Tailwind classes, merged last (they win conflicts)."
+          ; "attrs", "Vdom.Attr.t list", "Extra attributes (autocomplete, inputmode...)."
           ]
       ; Doc.p
-          "[Input.component] keeps the text in Bonsai state and returns a \
-           [Control.t]: its value, a set effect and its view."
+          "[Input.component ~default_value graph] keeps the text in Bonsai state and \
+           returns a [Control.t]: its [value], a [set] effect and its [view]."
       ]
-    [ Doc.example ~page "Default" default
-    ; Doc.example ~page "With a label" with_label
-    ; Doc.example ~page "Icons and addons" addons
-    ; Doc.example ~page "Password with a show button" password
-    ; Doc.static ~page "Invalid and disabled" states
-    ; Doc.example ~page "Textarea" textarea
+    [ Doc.static ~page "Demo" demo
+    ; Doc.static ~page "Basic" basic
+    ; Doc.static ~page "Field" field
+    ; Doc.static ~page "Field Group" field_group
+    ; Doc.static ~page "Disabled" disabled
+    ; Doc.static ~page "Invalid" invalid
+    ; Doc.static ~page "File" file
+    ; Doc.static ~page "Inline" inline
+    ; Doc.static ~page "Grid" grid
+    ; Doc.static ~page "Required" required
+    ; Doc.static ~page "Badge" badge
+    ; Doc.static ~page "Input Group" input_group
+    ; Doc.static ~page "Button Group" button_group
+    ; Doc.static ~page "Form" form
+    ; Doc.example ~page "Controlled" controlled
     ]
 ;;
