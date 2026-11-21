@@ -14,6 +14,7 @@ type t =
   | Arrow_down
   | Arrow_down_from_line
   | Arrow_left
+  | Arrow_left_right
   | Arrow_right
   | Arrow_up
   | Arrow_up_down
@@ -28,9 +29,12 @@ type t =
   | Bookmark
   | Bot
   | Brain
+  | Building_complex
   | Calculator
   | Calendar
   | Calendar_plus
+  | Camera
+  | Car
   | Chart_area
   | Chart_column_big
   | Chart_line
@@ -55,9 +59,12 @@ type t =
   | Clipboard
   | Clock
   | Cloud
+  | Cloud_upload
   | Code
   | Code_xml
+  | Coffee
   | Command
+  | Container
   | Copy
   | Corner_down_left
   | Corner_up_left
@@ -71,6 +78,7 @@ type t =
   | Eye_off
   | Face_slightly_smiling
   | File
+  | File_chart_column_increasing
   | File_code
   | File_text
   | Folder
@@ -82,6 +90,7 @@ type t =
   | Funnel
   | Gallery_horizontal
   | Gallery_vertical_end
+  | Gauge
   | Git_branch
   | Git_commit_vertical
   | Github
@@ -99,6 +108,7 @@ type t =
   | Italic
   | Keyboard
   | Laptop
+  | Layout_dashboard
   | Letter_b
   | Life_buoy
   | Link
@@ -109,6 +119,7 @@ type t =
   | Loader
   | Loader_circle
   | Lock
+  | Lock_keyhole
   | Log_out
   | Mail
   | Mail_check
@@ -116,6 +127,7 @@ type t =
   | Menu
   | Message_circle
   | Message_circle_question_mark
+  | Message_square
   | Minus
   | Monitor
   | Moon
@@ -133,14 +145,19 @@ type t =
   | Redo
   | Refresh_ccw
   | Refresh_cw
+  | Repeat
   | Rotate_ccw
   | Rotate_cw
   | Search
   | Send
+  | Server
   | Settings
   | Settings_2
   | Share
+  | Shield
   | Shield_exclamation_point
+  | Shopping_bag
+  | Shopping_cart
   | Slash
   | Sliders_horizontal
   | Smartphone
@@ -154,15 +171,18 @@ type t =
   | Sun
   | Tablet
   | Tag
+  | Target
   | Terminal
   | Text_align_center
   | Text_align_end
   | Text_align_start
+  | Thermometer
   | Timer
   | Trash
   | Trending_down
   | Trending_up
   | Triangle_exclamation_point
+  | Tv
   | Type
   | Underline
   | Undo
@@ -170,9 +190,12 @@ type t =
   | User
   | User_round_x
   | Video
+  | Volume_2
   | Volume_off
+  | Wallet
   | Waves_horizontal
   | X
+  | Zap
 [@@deriving enumerate, sexp_of, compare, equal]
 
 (** Lucide's name for it: [circle-check]. *)

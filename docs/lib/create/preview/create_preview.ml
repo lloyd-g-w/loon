@@ -4,9 +4,8 @@ open Bonsai.Let_syntax
 
 let items = [ "preview-02", "01"; "preview", "02" ]
 
-let component item (local_ _graph) =
-  let%arr item in
-  Vdom.Node.div
-    ~attrs:[ Vdom.Attr.class_ "p-6 text-sm text-muted-foreground" ]
-    [ Vdom.Node.text ("Preview: " ^ item) ]
+let component item (local_ graph) =
+  match%sub item with
+  | "preview" -> Create_preview_01.component graph
+  | _ -> Create_preview_02.component graph
 ;;
