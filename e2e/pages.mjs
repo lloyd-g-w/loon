@@ -3,7 +3,7 @@
 // on a desktop.
 import { checkErrors, open, overflow, pages, ready, run, screenshot, settle, sidebarLink, text, waitForHash } from "./lib.mjs";
 
-const h1 = (page, slug) => page.$eval(`[data-page="${slug}"] h1`, (h) => h.textContent.trim()).catch(() => "");
+const h1 = (page, slug) => page.$eval(`[data-page="${slug}"] h1, [data-tool="${slug}"] h1`, (h) => h.textContent.trim()).catch(() => "");
 
 await run(async (engine, url) => {
   const { browser, page, errors } = await open(engine);
@@ -57,7 +57,7 @@ await run(async (engine, url) => {
   for (const label of ["Blocks", "Charts", "Create", "Typeset"]) {
     await page.click(`[data-slot=main-nav] a:text-is("${label}")`);
     await page.waitForFunction((l) => document.querySelector("[data-slot=main-nav] a[data-active=true]")?.textContent.trim() === l, label);
-    const slug = await page.$eval("[data-page]", (el) => el.dataset.page);
+    const slug = await page.$eval("[data-page], [data-tool]", (el) => el.dataset.page ?? el.dataset.tool);
     console.log(`${label}: #/${slug} | ${await h1(page, slug)} | ${await page.title()}`);
     await check(slug);
   }

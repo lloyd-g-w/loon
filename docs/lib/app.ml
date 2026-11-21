@@ -37,6 +37,8 @@ let section_href (s : Doc.Section.t) =
   match s, in_section s with
   | Components, _ -> href components_slug
   | Get_started, _ -> href "introduction"
+  | Create, _ -> href "create"
+  | Typeset, _ -> href "typeset"
   | _, p :: _ -> href p.slug
   | _, [] -> "#/"
 ;;

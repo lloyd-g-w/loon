@@ -50,7 +50,7 @@ await run(async (engine, url) => {
   const wide = [];
   for (const slug of slugs) {
     await page.evaluate((s) => { location.hash = `#/${s}`; }, slug);
-    await page.waitForSelector(`[data-page="${slug || "home"}"]`);
+    await page.waitForSelector(`[data-page="${slug || "home"}"], [data-tool="${slug}"]`);
     for (const o of await overflow(page)) wide.push(`${slug}: ${o}`);
     for (const e of errors.splice(0)) console.log(`ERROR on ${slug}: ${e}`);
   }

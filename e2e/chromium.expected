@@ -7,10 +7,10 @@ sidebar Get Started: Installation, Theming, CLI
 sidebar Components: Accordion, Alert, Alert dialog, Aspect ratio, Avatar, Badge, Breadcrumb, Button, Button Group, Calendar, Card, Carousel, Chart, Checkbox, Collapsible, Combobox, Command, Context menu, Data table, Dialog, Drawer, Dropdown menu, Empty, Field, Hover card, Input, Input Group, Input OTP, Item, Kbd, Label, Menubar, Native Select, Navigation Menu, Pagination, Popover, Progress, Radio Group, Resizable, Scroll area, Select, Separator, Sheet, Sidebar, Skeleton, Slider, Sonner, Spinner, Switch, Table, Tabs, Textarea, Toggle, Toggle Group, Tooltip
 sidebar Forms: Forms
 every page: ok (h1, current link, title, previews, outline, no overflow or errors)
-Blocks: #/blocks | Building Blocks for the Web | Building Blocks for the Web - loon
+Blocks: #/blocks | Featured | Featured - loon
 Charts: #/chart-area | Beautiful Charts & Graphs | Area Charts - loon
-Create: #/create | Create | Create - loon
-Typeset: #/typeset | Typeset | Typeset - loon
+Create: #/create |  | Create - loon
+Typeset: #/typeset | Building a Streaming Chatbot | Typeset - loon
 charts: 7 kinds, 9 charts on the last; installation snippet false
 back: Theming
 back: Installation
@@ -58,7 +58,7 @@ dialog: top layer true, hit-tested on top true
 sheet: top layer true, hit-tested on top true, over the header
 == search
 opened by the button, input focused; first results: >Docs, Components, Blocks, Charts
-groups: Pages, Get Started, Components, Forms, Blocks, Charts, Create, Typeset
+groups: Pages, Get Started, Components, Forms, Blocks, Charts
 "intal": >Installation, Line Chart - Interactive, Area Chart - Interactive
 Escape closes it
 Ctrl+K opens it, empty: true
