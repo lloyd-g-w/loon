@@ -4,17 +4,19 @@
   (copy ../main.bc.js main.bc.js)))
 
 ; The docs' stylesheet: loon's Tailwind input, scanning the docs' sources
-; (examples use Tailwind classes too) as well as loon's.
+; (examples use Tailwind classes too) as well as loon's; then Typeset's
+; typeset.css (docs/lib/typeset).
 
 (rule
  (target loon.css)
  (deps
   (glob_files ../../../src/css/*.css)
   (glob_files ../../../src/*.ml)
-  (glob_files_rec ../../lib/**.ml))
+  (glob_files_rec ../../lib/**.ml)
+  ../../lib/typeset/typeset.css)
  (action
   (system
-   "{ cat ../../../src/css/*.css; printf '\\n@source \"../../../src/*.ml\";\\n@source \"../../lib/**/*.ml\";\\n'; } > docs.input.css && tailwindcss --silent --input docs.input.css --output loon.css")))
+   "{ cat ../../../src/css/*.css; printf '\\n@source \"../../../src/*.ml\";\\n@source \"../../lib/**/*.ml\";\\n'; cat ../../lib/typeset/typeset.css; } > docs.input.css && tailwindcss --silent --input docs.input.css --output loon.css")))
 
 (copy_files
  (files

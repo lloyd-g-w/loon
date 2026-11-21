@@ -85,9 +85,11 @@ val radio_group
   -> Item.t list
   -> Item.t
 
+(** [indicator]: the checked item's mark (by default a small filled circle). *)
 val radio_item
   :  ?attrs:Attr.t list
   -> ?class_:string
+  -> ?indicator:Node.t
   -> ?disabled:bool
   -> ?text_value:string
   -> ?close_on_select:bool
