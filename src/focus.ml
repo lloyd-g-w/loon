@@ -107,14 +107,21 @@ module Mount_hook = Vdom.Attr.Hooks.Make (struct
     let update ~old_input:_ ~new_input:_ _ _ = ()
 
     (* Radix's FocusScope: focus goes back where it was before, unless it
-       has gone somewhere else meanwhile (a click on another element). *)
+       has gone somewhere else meanwhile (a click on another element). Focus
+       on an ancestor of where it was is lost too: when the focused element
+       is removed, Incr_dom's focus stealer moves focus to the app's root. *)
     let destroy _ (state : State.t) (el : Dom_html.element Js.t) =
+      let contains (a : Dom_html.element Js.t) b =
+        Js.to_bool ((Js.Unsafe.coerce a)##contains b)
+      in
       let lost =
         match active () with
         | None -> true
         | Some a ->
           phys_equal a Dom_html.document##.body
-          || Js.to_bool ((Js.Unsafe.coerce el)##contains a)
+          || contains el a
+          || Option.value_map state.previous ~default:false ~f:(fun prev ->
+            (not (phys_equal a prev)) && contains a prev)
       in
       match state.previous with
       | Some prev when lost && Js.to_bool (Js.Unsafe.coerce prev)##.isConnected ->
