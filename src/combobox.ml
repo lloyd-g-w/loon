@@ -35,7 +35,7 @@ let view
         popover
         (Button.view
            ~variant:Outline
-           ~attrs:[ Attr.role "combobox"; aria_bool "expanded" open_ ]
+           ~attrs:[ Attr.role "combobox" ]
            ~class_
            [ Node.text
                (match
