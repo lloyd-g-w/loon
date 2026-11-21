@@ -1,4 +1,5 @@
 open! Import
+open Js_of_ocaml
 
 module Variant = struct
   type t =
@@ -405,7 +406,17 @@ let level_keydown t ~prefix items ev =
   Option.value result ~default:Effect.Ignore
 ;;
 
-let focus_content id = Dom_util.focus_selector ("#" ^ id)
+(* At once, not after the next frame (as [Dom_util.focus_selector]): the
+   pointer leaving one item for another blurs the first, then the hook of the
+   one it enters focuses that. *)
+let focus_content id =
+  Effect.of_thunk (fun () ->
+    if Js.Optdef.test (Js.Unsafe.global##.document : _ Js.Optdef.t)
+    then
+      Option.iter
+        (Js.Opt.to_option (Dom_html.document##getElementById (Js.string id)))
+        ~f:(fun el -> el##focus))
+;;
 
 let rec render_level t ~prefix ~level_id ~subs (items : Item.t list) =
   let state = t.state in
