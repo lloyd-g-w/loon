@@ -2,18 +2,20 @@ open! Import
 
 type t =
   { id : string
+  ; trigger_id : string
   ; open_ : bool
   ; on_open_change : bool -> unit Effect.t
   }
 
-let trigger_id t = t.id ^ "-trigger"
+let trigger_id t = t.trigger_id
 let content_id t = t.id ^ "-content"
 let title_id t = t.id ^ "-title"
 let description_id t = t.id ^ "-description"
 let state_attr t = data "state" (if t.open_ then "open" else "closed")
 
-let view ?(id = "dialog") ~open_ ~on_open_change f =
-  Node.fragment (f { id; open_; on_open_change })
+let view ?(id = "dialog") ?trigger_id ~open_ ~on_open_change f =
+  let trigger_id = Option.value trigger_id ~default:(id ^ "-trigger") in
+  Node.fragment (f { id; trigger_id; open_; on_open_change })
 ;;
 
 let component ?(default_open = false) f (local_ graph) =

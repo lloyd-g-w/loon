@@ -33,7 +33,7 @@ module Side = struct
   ;;
 end
 
-let view ?id = Modal.view ?id
+let view ?id ~open_ ~on_open_change f = Modal.view ?id ~open_ ~on_open_change f
 let component = Modal.component
 let trigger ?attrs t node = Modal.trigger ~slot:"sheet-trigger" ?attrs t node
 let close ?attrs t node = Modal.close ~slot:"sheet-close" ?attrs t node
