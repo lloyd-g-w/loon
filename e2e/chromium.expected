@@ -7,7 +7,7 @@ sidebar Get Started: Installation, Theming, CLI
 sidebar Components: Accordion, Alert, Alert dialog, Aspect ratio, Avatar, Badge, Breadcrumb, Button, Button Group, Calendar, Card, Carousel, Chart, Checkbox, Collapsible, Combobox, Command, Context menu, Data table, Dialog, Drawer, Dropdown menu, Empty, Field, Hover card, Input, Input Group, Input OTP, Item, Kbd, Label, Menubar, Native Select, Navigation Menu, Pagination, Popover, Progress, Radio Group, Resizable, Scroll area, Select, Separator, Sheet, Sidebar, Skeleton, Slider, Sonner, Spinner, Switch, Table, Tabs, Textarea, Toggle, Toggle Group, Tooltip
 sidebar Forms: Forms
 every page: ok (h1, current link, title, previews, outline, no overflow or errors)
-Blocks: #/blocks | Featured | Featured - loon
+Blocks: #/blocks | Building Blocks for the Web | Featured - loon
 Charts: #/chart-area | Beautiful Charts & Graphs | Area Charts - loon
 Create: #/create | Create | Create - loon
 Typeset: #/typeset | Building a Streaming Chatbot | Typeset - loon
