@@ -105,7 +105,7 @@ let view (local_ graph) =
   let sidebar = Sidebar.component graph in
   let%arr sidebar in
   Sidebar.provider
-    ~attrs:[ Attr.style (Css_gen.create ~field:"--sidebar-width" ~value:"19rem") ]
+    ~attrs:[ Attr.__css_vars_no_kebabs [ "--sidebar-width", "19rem" ] ]
     sidebar
     [ app_sidebar sidebar
     ; Sidebar.inset

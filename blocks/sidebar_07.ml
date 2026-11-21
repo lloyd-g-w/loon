@@ -87,15 +87,18 @@ let projects =
 ;;
 
 (* Each section is a collapsible menu item, open at first if active:
-   shadcn's [<Collapsible asChild>] over the [SidebarMenuItem]. *)
+   shadcn's [<Collapsible asChild>] over the [SidebarMenuItem], whose
+   [data-slot] the Collapsible's replaces, as in shadcn. *)
 let nav_main_item (item : Nav_item.t) (local_ graph) =
   let open_, set_open = Bonsai.state item.is_active graph in
   let id = Bonsai.path_id graph in
   let%arr open_ and set_open and id in
   let collapsible = Collapsible.create ~id ~open_ ~on_change:set_open () in
-  Sidebar.menu_item
+  Slot.merge
+    ~defaults:[ "data-slot", Attr.create "data-slot" "collapsible" ]
+    (Collapsible.root_attrs collapsible)
+  @@ Sidebar.menu_item
     ~class_:"group/collapsible"
-    ~attrs:(Collapsible.root_attrs collapsible)
     [ Sidebar.menu_button
         ~tooltip:item.title
         ~attrs:(Collapsible.trigger_attrs collapsible)

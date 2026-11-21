@@ -101,16 +101,21 @@ let nav_item ~index (title, items) (local_ graph) =
     ~class_:"group/collapsible"
     (Bonsai.return (fun collapsible ->
        [ Sidebar.menu_item
-           [ Sidebar.menu_button
-               ~attrs:(Collapsible.trigger_attrs collapsible)
-               [ Node.text (title ^ " ")
-               ; Icon.view
-                   ~class_:"ml-auto group-data-[state=open]/collapsible:hidden"
-                   Plus
-               ; Icon.view
-                   ~class_:"ml-auto group-data-[state=closed]/collapsible:hidden"
-                   Minus
-               ]
+           [ (* [CollapsibleTrigger asChild]: its [data-slot] wins, as in
+                shadcn. *)
+             Slot.merge
+               ~defaults:[ "data-slot", Attr.create "data-slot" "collapsible-trigger" ]
+               (Collapsible.trigger_attrs collapsible)
+               (Sidebar.menu_button
+                  [ Node.text (title ^ " ")
+                  ; Icon.view
+                      ~class_:"ml-auto group-data-[state=open]/collapsible:hidden"
+                      Plus
+                  ; Icon.view
+                      ~class_:
+                        "ml-auto group-data-[state=closed]/collapsible:hidden"
+                      Minus
+                  ])
            ; (if List.is_empty items
               then Node.none
               else

@@ -91,14 +91,17 @@ let projects =
 ;;
 
 (* Each section is a collapsible menu item, open at first if active:
-   shadcn's [<Collapsible asChild>] over the [SidebarMenuItem]. *)
+   shadcn's [<Collapsible asChild>] over the [SidebarMenuItem], whose
+   [data-slot] the Collapsible's replaces, as in shadcn. *)
 let nav_main_item (item : Nav_item.t) (local_ graph) =
   let open_, set_open = Bonsai.state item.is_active graph in
   let id = Bonsai.path_id graph in
   let%arr open_ and set_open and id in
   let collapsible = Collapsible.create ~id ~open_ ~on_change:set_open () in
-  Sidebar.menu_item
-    ~attrs:(Collapsible.root_attrs collapsible)
+  Slot.merge
+    ~defaults:[ "data-slot", Attr.create "data-slot" "collapsible" ]
+    (Collapsible.root_attrs collapsible)
+  @@ Sidebar.menu_item
     ([ Sidebar.menu_button
          ~href:item.url
          ~tooltip:item.title
@@ -108,12 +111,17 @@ let nav_main_item (item : Nav_item.t) (local_ graph) =
      if List.is_empty item.items
      then []
      else
-       [ Sidebar.menu_action
-           ~class_:"data-[state=open]:rotate-90"
-           ~attrs:(Collapsible.trigger_attrs collapsible)
-           [ Icon.view Chevron_right
-           ; Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "Toggle" ]
-           ]
+       [ Slot.merge
+           ~defaults:
+             [ "data-slot", Attr.create "data-slot" "collapsible-trigger" ]
+           (Collapsible.trigger_attrs collapsible)
+           (Sidebar.menu_action
+              ~class_:"data-[state=open]:rotate-90"
+              [ Icon.view Chevron_right
+              ; Node.span
+                  ~attrs:[ Attr.class_ "sr-only" ]
+                  [ Node.text "Toggle" ]
+              ])
        ; Collapsible.content
            collapsible
            [ Sidebar.menu_sub
