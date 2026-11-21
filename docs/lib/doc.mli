@@ -44,6 +44,8 @@ module Page : sig
     ; body : Vdom.Node.t list (** prose and tables after the examples *)
     ; examples : Example.t list
     ; order : int (** within its section (then by title); 100 by default *)
+    ; view : (local_ Bonsai.graph -> Vdom.Node.t Bonsai.t) option
+      (** shown instead of the examples (the blocks' gallery) *)
     }
 end
 
@@ -65,6 +67,7 @@ val page
   -> ?section:Section.t
   -> ?usage:string
   -> ?body:Vdom.Node.t list
+  -> ?view:(local_ Bonsai.graph -> Vdom.Node.t Bonsai.t)
   -> slug:string
   -> title:string
   -> description:string

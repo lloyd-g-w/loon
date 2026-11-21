@@ -1,0 +1,10 @@
+; The blocks' avatar (shadcn/ui's public/avatars).
+
+(copy_files
+ (files ../../avatars/shadcn.jpg))
+
+(install
+ (section share)
+ (package loon)
+ (files
+  (shadcn.jpg as docs/avatars/shadcn.jpg)))

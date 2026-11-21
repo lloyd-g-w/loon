@@ -20,4 +20,5 @@
   virtual_dom.vdom_test_helpers
   expect_test_helpers_core
   js_of_ocaml
-  loon))
+  loon
+  loon_blocks))

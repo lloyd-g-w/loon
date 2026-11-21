@@ -31,7 +31,9 @@ type t =
   | Calculator
   | Calendar
   | Calendar_plus
+  | Camera
   | Chart_area
+  | Chart_column
   | Chart_column_big
   | Chart_line
   | Chart_pie
@@ -51,18 +53,24 @@ type t =
   | Circle_off
   | Circle_plus
   | Circle_question_mark
+  | Circle_user
   | Circle_x
   | Clipboard
+  | Clipboard_list
   | Clock
+  | Clock_2
   | Cloud
   | Code
   | Code_xml
+  | Columns_2
   | Command
+  | Contrast
   | Copy
   | Corner_down_left
   | Corner_up_left
   | Corner_up_right
   | Credit_card
+  | Database
   | Dot
   | Download
   | Ellipsis
@@ -73,6 +81,7 @@ type t =
   | File
   | File_code
   | File_text
+  | File_type
   | Folder
   | Folder_code
   | Footprints
@@ -82,6 +91,7 @@ type t =
   | Funnel
   | Gallery_horizontal
   | Gallery_vertical_end
+  | Gauge
   | Git_branch
   | Git_commit_vertical
   | Github
@@ -99,6 +109,7 @@ type t =
   | Italic
   | Keyboard
   | Laptop
+  | Layout_list
   | Letter_b
   | Life_buoy
   | Link
@@ -169,6 +180,7 @@ type t =
   | Upload
   | User
   | User_round_x
+  | Users
   | Video
   | Volume_off
   | Waves_horizontal

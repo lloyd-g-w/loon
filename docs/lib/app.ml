@@ -906,8 +906,11 @@ let section_nav ~id (page : Doc.Page.t) =
    page's examples and body. *)
 let section_page (page : Doc.Page.t) (local_ graph) =
   let examples =
-    List.map page.examples ~f:(fun e -> component_preview ~level:`H2 e graph)
-    |> Bonsai.all
+    match page.view with
+    | Some view -> Bonsai.map (view graph) ~f:List.return
+    | None ->
+      List.map page.examples ~f:(fun e -> component_preview ~level:`H2 e graph)
+      |> Bonsai.all
   in
   let%arr examples in
   let siblings = in_section page.section in
@@ -1399,11 +1402,8 @@ let main_view (shown : Shown.t) ~outline (local_ graph) =
             content))
 ;;
 
-let component (local_ graph) =
-  let hash_var = Bonsai.Expert.Var.create (Browser.hash ()) in
-  Browser.on_hash_change (fun h -> Bonsai.Expert.Var.set hash_var h);
+let docs ~hash (local_ graph) =
   Browser.install_scroll_spy ();
-  let hash = Bonsai.Expert.Var.value hash_var in
   let shown = Bonsai.map hash ~f:Shown.of_hash in
   let initial_mode =
     match Browser.get_item "loon-docs-mode" with
@@ -1548,4 +1548,32 @@ let component (local_ graph) =
         ~on_change:set_search
         ~go
     ]
+;;
+
+(* A block alone ([#/blocks/<name>], as in the gallery's frames), or the
+   docs. *)
+module Block_name = struct
+  type t = string [@@deriving compare, equal, sexp_of]
+
+  let all = List.map Loon_blocks.Block.all ~f:(fun b -> b.name)
+end
+
+let component (local_ graph) =
+  let hash_var = Bonsai.Expert.Var.create (Browser.hash ()) in
+  Browser.on_hash_change (fun h -> Bonsai.Expert.Var.set hash_var h);
+  let hash = Bonsai.Expert.Var.value hash_var in
+  let block =
+    Bonsai.map hash ~f:(fun h ->
+      Option.map (Block_viewer.block_of_hash h) ~f:(fun (b : Loon_blocks.Block.t) ->
+        b.name))
+  in
+  match%sub block with
+  | Some name ->
+    Bonsai.enum
+      (module Block_name)
+      ~match_:name
+      ~with_:(fun name (local_ graph) ->
+        Block_viewer.full_page (Option.value_exn (Loon_blocks.Block.find name)) graph)
+      graph
+  | None -> docs ~hash graph
 ;;

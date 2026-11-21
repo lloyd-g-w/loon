@@ -13,15 +13,16 @@
   (glob_files ../../../src/css/*.css)
   (glob_files ../../../src/*.ml)
   (glob_files_rec ../../lib/**.ml)
+  (glob_files ../../../blocks/*.ml)
   ../site.css
   index.html)
  (action
   (system
-   "{ cat ../../../src/css/*.css ../site.css; printf '\\n@source \"../../../src/*.ml\";\\n@source \"../../lib/**/*.ml\";\\n'; } > docs.input.css && tailwindcss --silent --input docs.input.css --output loon.css")))
+   "{ cat ../../../src/css/*.css ../site.css; printf '\\n@source \"../../../src/*.ml\";\\n@source \"../../lib/**/*.ml\";\\n@source \"../../../blocks/*.ml\";\\n'; } > docs.input.css && tailwindcss --silent --input docs.input.css --output loon.css")))
 
 (copy_files
  (files
-  ../{index.html,icon.svg,temporal-polyfill.js,LICENSE-temporal-polyfill,geist-sans.woff2,geist-mono.woff2,geist-OFL.txt}))
+  ../{index.html,icon.svg,temporal-polyfill.js,LICENSE-temporal-polyfill,geist-sans.woff2,geist-mono.woff2,geist-OFL.txt,placeholder.svg}))
 
 (install
  (section share)
@@ -35,4 +36,5 @@
   (LICENSE-temporal-polyfill as docs/LICENSE-temporal-polyfill)
   (geist-sans.woff2 as docs/geist-sans.woff2)
   (geist-mono.woff2 as docs/geist-mono.woff2)
-  (geist-OFL.txt as docs/geist-OFL.txt)))
+  (geist-OFL.txt as docs/geist-OFL.txt)
+  (placeholder.svg as docs/placeholder.svg)))

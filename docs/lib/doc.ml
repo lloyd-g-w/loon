@@ -49,6 +49,7 @@ module Page = struct
     ; body : Vdom.Node.t list
     ; examples : Example.t list
     ; order : int
+    ; view : (local_ Bonsai.graph -> Vdom.Node.t Bonsai.t) option
     }
 end
 
@@ -72,12 +73,13 @@ let page
       ?(section = Section.Components)
       ?usage
       ?(body = [])
+      ?view
       ~slug
       ~title
       ~description
       examples
   =
-  { Page.slug; title; section; description; usage; body; examples; order }
+  { Page.slug; title; section; description; usage; body; examples; order; view }
 ;;
 
 let anchor text =
