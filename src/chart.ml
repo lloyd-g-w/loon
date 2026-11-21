@@ -954,6 +954,7 @@ type radial_bar =
   ; rb_corner_radius : float
   ; rb_stack_id : string option
   ; rb_fill : string option
+  ; rb_class : string option
   ; rb_children : child list
   }
 
@@ -1372,12 +1373,14 @@ let radial_bar
       ?(corner_radius = 0.)
       ?stack_id
       ?fill
+      ?class_
       ?(children = [])
       ~data_key
       ()
   =
   Radial_bar
     { rb_data_key = data_key
+    ; rb_class = class_
     ; rb_background = background
     ; rb_corner_radius = corner_radius
     ; rb_stack_id = stack_id
@@ -3398,11 +3401,20 @@ let render_radial_bar (ctx : render_ctx) : rendered =
     | None -> Array.map rows ~f:(fun r -> 0., Option.value (Row.num r b.rb_data_key) ~default:0.)
   in
   let all = List.map bars ~f:(fun b -> b, values_of b) in
+  (* Recharts 3 takes the angle axis's domain from the bars' own values, not
+     their stacked totals, and clips a stack at the end angle. *)
   let data_max =
-    List.fold all ~init:0. ~f:(fun acc (_, v) -> Array.fold v ~init:acc ~f:(fun acc (_, t) -> Float.max acc t))
+    List.fold bars ~init:0. ~f:(fun acc b ->
+      Array.fold rows ~init:acc ~f:(fun acc r ->
+        Float.max acc (Option.value (Row.num r b.rb_data_key) ~default:0.)))
   in
   let ascale : Chart_scale.Linear.t = { domain = 0., data_max; range = start_angle, end_angle } in
-  let ang v = Chart_scale.Linear.apply ascale v in
+  let ang v =
+    let a = Chart_scale.Linear.apply ascale v in
+    if Float.(end_angle >= start_angle)
+    then Float.clamp_exn a ~min:start_angle ~max:end_angle
+    else Float.clamp_exn a ~min:end_angle ~max:start_angle
+  in
   let band = Chart_scale.Band.create ~n ~range:(inner, outer) () in
   let bandwidth = Chart_scale.Band.bandwidth band in
   let group_index (b : radial_bar) =
@@ -3467,7 +3479,7 @@ let render_radial_bar (ctx : render_ctx) : rendered =
     List.mapi all ~f:(fun bi (b, vals) ->
       let sectors = sectors_of b vals in
       layer
-        [ "recharts-radial-bar" ]
+        ("recharts-area" :: Option.to_list b.rb_class)
         ([ (if b.rb_background
             then
               layer

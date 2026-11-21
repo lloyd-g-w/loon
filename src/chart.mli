@@ -570,6 +570,7 @@ val radial_bar
   -> ?corner_radius:float
   -> ?stack_id:string
   -> ?fill:string
+  -> ?class_:string
   -> ?children:child list
   -> data_key:string
   -> unit
