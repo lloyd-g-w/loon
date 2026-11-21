@@ -20,11 +20,15 @@ let demo (local_ graph) =
       (return
          [ Resizable.panel
              ~default_size:25.
-             [ cell ~class_:"flex h-full items-center justify-center p-6" "Two" ]
+             [ cell ~class_:"flex h-full items-center justify-center p-6" "Two"
+             ]
          ; Resizable.handle ()
          ; Resizable.panel
              ~default_size:75.
-             [ cell ~class_:"flex h-full items-center justify-center p-6" "Three" ]
+             [ cell
+                 ~class_:"flex h-full items-center justify-center p-6"
+                 "Three"
+             ]
          ])
       graph
   in
@@ -56,11 +60,15 @@ let demo_with_handle (local_ graph) =
       (return
          [ Resizable.panel
              ~default_size:25.
-             [ cell ~class_:"flex h-full items-center justify-center p-6" "Two" ]
+             [ cell ~class_:"flex h-full items-center justify-center p-6" "Two"
+             ]
          ; Resizable.handle ~with_handle:true ()
          ; Resizable.panel
              ~default_size:75.
-             [ cell ~class_:"flex h-full items-center justify-center p-6" "Three" ]
+             [ cell
+                 ~class_:"flex h-full items-center justify-center p-6"
+                 "Three"
+             ]
          ])
       graph
   in
@@ -88,15 +96,23 @@ let vertical (local_ graph) =
        [ Resizable.panel
            ~default_size:25.
            [ Node.div
-               ~attrs:[ Attr.class_ "flex h-full items-center justify-center p-6" ]
-               [ Node.span ~attrs:[ Attr.class_ "font-semibold" ] [ Node.text "Header" ] ]
+               ~attrs:
+                 [ Attr.class_ "flex h-full items-center justify-center p-6" ]
+               [ Node.span
+                   ~attrs:[ Attr.class_ "font-semibold" ]
+                   [ Node.text "Header" ]
+               ]
            ]
        ; Resizable.handle ()
        ; Resizable.panel
            ~default_size:75.
            [ Node.div
-               ~attrs:[ Attr.class_ "flex h-full items-center justify-center p-6" ]
-               [ Node.span ~attrs:[ Attr.class_ "font-semibold" ] [ Node.text "Content" ] ]
+               ~attrs:
+                 [ Attr.class_ "flex h-full items-center justify-center p-6" ]
+               [ Node.span
+                   ~attrs:[ Attr.class_ "font-semibold" ]
+                   [ Node.text "Content" ]
+               ]
            ]
        ])
     graph
@@ -113,15 +129,23 @@ let handle (local_ graph) =
        [ Resizable.panel
            ~default_size:25.
            [ Node.div
-               ~attrs:[ Attr.class_ "flex h-full items-center justify-center p-6" ]
-               [ Node.span ~attrs:[ Attr.class_ "font-semibold" ] [ Node.text "Sidebar" ] ]
+               ~attrs:
+                 [ Attr.class_ "flex h-full items-center justify-center p-6" ]
+               [ Node.span
+                   ~attrs:[ Attr.class_ "font-semibold" ]
+                   [ Node.text "Sidebar" ]
+               ]
            ]
        ; Resizable.handle ~with_handle:true ()
        ; Resizable.panel
            ~default_size:75.
            [ Node.div
-               ~attrs:[ Attr.class_ "flex h-full items-center justify-center p-6" ]
-               [ Node.span ~attrs:[ Attr.class_ "font-semibold" ] [ Node.text "Content" ] ]
+               ~attrs:
+                 [ Attr.class_ "flex h-full items-center justify-center p-6" ]
+               [ Node.span
+                   ~attrs:[ Attr.class_ "font-semibold" ]
+                   [ Node.text "Content" ]
+               ]
            ]
        ])
     graph
@@ -134,7 +158,8 @@ let page =
     ~slug:page
     ~title:"Resizable"
     ~group:Display
-    ~description:"Accessible resizable panel groups and layouts with keyboard support."
+    ~description:
+      "Accessible resizable panel groups and layouts with keyboard support."
     ~usage:
       {|Resizable.component ~orientation:Horizontal
   (return
@@ -151,9 +176,11 @@ let page =
             , "[Horizontal] (side by side) or [Vertical] (stacked)." )
           ; ( "default_size"
             , "float"
-            , "[panel]: its size at first, a percentage of the group (by default, an \
-               equal share of what the others leave)." )
-          ; "min_size / max_size", "float", "[panel]: its limits (0 and 100 by default)."
+            , "[panel]: its size at first, a percentage of the group (by \
+               default, an equal share of what the others leave)." )
+          ; ( "min_size / max_size"
+            , "float"
+            , "[panel]: its limits (0 and 100 by default)." )
           ; "with_handle", "bool", "[handle]: show a grip."
           ; "disabled", "bool", "[handle]: cannot be moved."
           ; ( "layout"
@@ -166,9 +193,12 @@ let page =
           [ "Key"; "Does" ]
           [ [ Doc.text "Arrow keys"; Doc.text "Move the focused handle by 5%." ]
           ; [ Doc.text "Home / End"
-            ; Doc.text "Shrink or grow the panel before the handle as far as it goes."
+            ; Doc.text
+                "Shrink or grow the panel before the handle as far as it goes."
             ]
-          ; [ Doc.text "F6"; Doc.text "Focus the group's next handle (Shift: previous)." ]
+          ; [ Doc.text "F6"
+            ; Doc.text "Focus the group's next handle (Shift: previous)."
+            ]
           ]
       ]
     [ Doc.example ~page "Demo" demo

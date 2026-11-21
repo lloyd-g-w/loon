@@ -7,7 +7,9 @@ module Entry = struct
   [@@deriving sexp_of, compare, equal]
 end
 
-let range a b = List.range a b ~stop:`inclusive |> List.map ~f:(fun p -> Entry.Page p)
+let range a b =
+  List.range a b ~stop:`inclusive |> List.map ~f:(fun p -> Entry.Page p)
+;;
 
 let entries ?(siblings = 1) ~page ~pages () : Entry.t list =
   let page = Int.clamp_exn page ~min:1 ~max:(Int.max 1 pages) in
@@ -21,9 +23,13 @@ let entries ?(siblings = 1) ~page ~pages () : Entry.t list =
     let show_left = left > 3 in
     let show_right = right < pages - 2 in
     match show_left, show_right with
-    | false, true -> range 1 (3 + (2 * siblings)) @ [ Entry.Ellipsis; Page pages ]
-    | true, false -> (Entry.Page 1 :: [ Entry.Ellipsis ]) @ range (pages - (2 + (2 * siblings))) pages
-    | _ -> (Entry.Page 1 :: Ellipsis :: range left right) @ [ Ellipsis; Page pages ])
+    | false, true ->
+      range 1 (3 + (2 * siblings)) @ [ Entry.Ellipsis; Page pages ]
+    | true, false ->
+      (Entry.Page 1 :: [ Entry.Ellipsis ])
+      @ range (pages - (2 + (2 * siblings))) pages
+    | _ ->
+      (Entry.Page 1 :: Ellipsis :: range left right) @ [ Ellipsis; Page pages ])
 ;;
 
 let root ?(attrs = []) ?class_ children =
@@ -58,8 +64,14 @@ let item ?(attrs = []) ?class_ children =
     children
 ;;
 
-let link ?(attrs = []) ?class_ ?(is_active = false) ?(size = Button.Size.Icon) ?href
-  ?on_click children
+let link
+      ?(attrs = [])
+      ?class_
+      ?(is_active = false)
+      ?(size = Button.Size.Icon)
+      ?href
+      ?on_click
+      children
   =
   Node.a
     ~attrs:
@@ -74,8 +86,10 @@ let link ?(attrs = []) ?class_ ?(is_active = false) ?(size = Button.Size.Icon) ?
                 ())
          ]
        @ Option.value_map href ~default:[] ~f:(fun h -> [ Attr.href h ])
-       @ Option.value_map on_click ~default:[] ~f:(fun effect ->
-         [ Attr.on_click (fun ev -> Effect.Many [ Dom_util.prevent_default ev; effect ]) ])
+       @ Option.value_map on_click ~default:[] ~f:(fun eff ->
+         [ Attr.on_click (fun ev ->
+             Effect.Many [ Dom_util.prevent_default ev; eff ])
+         ])
        @ attrs)
     children
 ;;
@@ -88,7 +102,9 @@ let previous ?(attrs = []) ?class_ ?href ?on_click () =
     ?href
     ?on_click
     [ Icon.view Chevron_left
-    ; Node.span ~attrs:[ Attr.class_ "hidden sm:block" ] [ Node.text "Previous" ]
+    ; Node.span
+        ~attrs:[ Attr.class_ "hidden sm:block" ]
+        [ Node.text "Previous" ]
     ]
 ;;
 

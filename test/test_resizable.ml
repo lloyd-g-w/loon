@@ -18,7 +18,8 @@ let%expect_test "shadcn's classes" =
        ~layout:[]
        ~on_layout_change:(fun _ -> Bonsai_web.Effect.Ignore)
        (children ~with_handle:true ()));
-  [%expect {|
+  [%expect
+    {|
     <div data-slot="resizable-panel-group"
          data-group=""
          aria-orientation="horizontal"
@@ -121,12 +122,22 @@ let%expect_test "shadcn's classes" =
 ;;
 
 let%expect_test "default layouts" =
-  let show children = print_s [%sexp (Resizable.default_layout children : float list)] in
+  let show children =
+    print_s [%sexp (Resizable.default_layout children : float list)]
+  in
   show (children ());
-  show [ Resizable.panel [] ; Resizable.handle (); Resizable.panel []; Resizable.handle (); Resizable.panel [] ];
-  show [ Resizable.panel ~default_size:1. []; Resizable.panel ~default_size:3. [] ];
+  show
+    [ Resizable.panel []
+    ; Resizable.handle ()
+    ; Resizable.panel []
+    ; Resizable.handle ()
+    ; Resizable.panel []
+    ];
+  show
+    [ Resizable.panel ~default_size:1. []; Resizable.panel ~default_size:3. [] ];
   show [ Resizable.panel ~max_size:20. []; Resizable.panel [] ];
-  [%expect {|
+  [%expect
+    {|
     (25 75)
     (33.333333333333336 33.333333333333336 33.333333333333336)
     (25 75)
@@ -134,7 +145,9 @@ let%expect_test "default layouts" =
     |}]
 ;;
 
-let%expect_test "adjusting stops at the limits, cascading through the shrinking panels" =
+let%expect_test
+    "adjusting stops at the limits, cascading through the shrinking panels"
+  =
   let children =
     [ Resizable.panel ~min_size:10. []
     ; Resizable.handle ()
@@ -147,9 +160,13 @@ let%expect_test "adjusting stops at the limits, cascading through the shrinking 
   List.iter [ -5.; -100.; 5.; 100. ] ~f:(fun delta ->
     print_s
       [%sexp
-        (delta : float), (Resizable.adjust children ~layout ~pivot:0 ~delta : float list)]);
-  print_s [%sexp (Resizable.adjust children ~layout ~pivot:1 ~delta:(-100.) : float list)];
-  [%expect {|
+        (delta : float)
+      , (Resizable.adjust children ~layout ~pivot:0 ~delta : float list)]);
+  print_s
+    [%sexp
+      (Resizable.adjust children ~layout ~pivot:1 ~delta:(-100.) : float list)];
+  [%expect
+    {|
     (-5 (25 35 40))
     (-100 (10 50 40))
     (5 (35 25 40))
@@ -167,7 +184,8 @@ let%expect_test "arrow keys, Home and End move the handle" =
          (Bonsai_web.Bonsai.return (children ())))
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div data-slot="resizable-panel-group"
          data-group=""
          aria-orientation="horizontal"
@@ -246,7 +264,8 @@ let%expect_test "arrow keys, Home and End move the handle" =
     |}];
   Drive.key handle "[role=separator]" ArrowRight;
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key ArrowRight))
 
              height: 100%;
@@ -329,7 +348,8 @@ let%expect_test "arrow keys, Home and End move the handle" =
   [%expect {| ("default prevented" (key ArrowDown)) |}];
   Drive.key handle "[role=separator]" End;
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key End))
 
              height: 100%;
@@ -408,7 +428,8 @@ let%expect_test "arrow keys, Home and End move the handle" =
     |}];
   Drive.key handle "[role=separator]" Home;
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key Home))
 
              height: 100%;
@@ -503,7 +524,8 @@ let%expect_test "vertical groups use up and down" =
   in
   Drive.key handle "[role=separator]" ArrowUp;
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key ArrowUp))
     <div data-slot="resizable-panel-group"
          data-group=""

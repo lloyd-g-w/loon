@@ -32,7 +32,8 @@ let controlled ?orientation ?loop selected =
 
 let%expect_test "shadcn's classes" =
   Render.html (view (controlled 0));
-  [%expect {|
+  [%expect
+    {|
     <div role="region"
          aria-roledescription="carousel"
          data-slot="carousel"
@@ -115,7 +116,8 @@ let%expect_test "vertical" =
   let node = view (controlled ~orientation:Vertical 1) in
   Render.html ~selector:"[data-slot=carousel-content]" node;
   Render.html ~selector:"[data-slot=carousel-next]" node;
-  [%expect {|
+  [%expect
+    {|
     <div data-slot="carousel-content"
          class="overflow-hidden"
          @on_click_global
@@ -173,7 +175,8 @@ let%expect_test "buttons and arrow keys move one slide, not past the ends" =
   Drive.click handle "[data-slot=carousel-next]";
   Drive.key handle "[data-slot=carousel]" ArrowRight;
   Drive.key handle "[data-slot=carousel]" ArrowLeft;
-  [%expect {|
+  [%expect
+    {|
     ((selected 1) (count 3))
     ("default prevented" (key ArrowRight))
     ((selected 1) (count 3))
@@ -184,12 +187,14 @@ let%expect_test "buttons and arrow keys move one slide, not past the ends" =
   in
   Drive.click handle "[data-slot=carousel-previous]";
   Drive.key handle "[data-slot=carousel]" ArrowRight;
-  [%expect {|
+  [%expect
+    {|
     ((selected 1) (count 3))
     ("default prevented" (key ArrowRight))
     |}];
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div role="region" aria-roledescription="carousel" data-slot="carousel" @on_keydown>
       <div data-slot="carousel-content"
            @on_click_global
@@ -252,11 +257,13 @@ let%expect_test "buttons and arrow keys move one slide, not past the ends" =
 
 let%expect_test "loop goes round" =
   let handle =
-    Render.handle ~classes:false (fun _ -> Bonsai.return (view (controlled ~loop:true 2)))
+    Render.handle ~classes:false (fun _ ->
+      Bonsai.return (view (controlled ~loop:true 2)))
   in
   Drive.key handle "[data-slot=carousel]" ArrowRight;
   Drive.click handle "[data-slot=carousel-next]";
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key ArrowRight))
     ((selected 0) (count 3))
     ((selected 0) (count 3))
@@ -283,7 +290,8 @@ let%expect_test "component: the api and the buttons follow the state" =
   in
   (* Nothing measured outside a browser: no slides to move to. *)
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div>
       <div role="region" aria-roledescription="carousel" data-slot="carousel" @on_keydown>
         <div data-slot="carousel-content"

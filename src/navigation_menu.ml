@@ -21,30 +21,37 @@ let is_open t value = Option.equal String.equal t.value (Some value)
    closes after a moment, unless the pointer comes back. *)
 let open_delay = 200
 let close_delay = 150
-
 let set t value = Effect.Many [ After_render.cancel t.id; t.on_change value ]
 
 let close_and_refocus t =
   match t.value with
   | None -> Effect.Ignore
   | Some value ->
-    Effect.Many [ set t None; Dom_util.focus_selector (sprintf "[id=%S]" (trigger_id t value)) ]
+    Effect.Many
+      [ set t None
+      ; Dom_util.focus_selector (sprintf "[id=%S]" (trigger_id t value))
+      ]
 ;;
 
 (* DOM helpers for keyboard focus: the focusable elements in [container],
    leaving out those inside contents when [skip_content]. *)
 let focusable_selector =
-  "a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex='-1'])"
+  "a[href], button:not([disabled]), input:not([disabled]), \
+   [tabindex]:not([tabindex='-1'])"
 ;;
 
-let closest (el : Dom_html.element Js.t) selector : Dom_html.element Js.t option =
+let closest (el : Dom_html.element Js.t) selector : Dom_html.element Js.t option
+  =
   Js.Opt.to_option ((Js.Unsafe.coerce el)##closest (Js.string selector))
 ;;
 
-let in_content el = Option.is_some (closest el "[data-slot=navigation-menu-content]")
+let in_content el =
+  Option.is_some (closest el "[data-slot=navigation-menu-content]")
+;;
 
 let focusables (container : Dom_html.element Js.t) ~skip_content =
-  Dom.list_of_nodeList (container##querySelectorAll (Js.string focusable_selector))
+  Dom.list_of_nodeList
+    (container##querySelectorAll (Js.string focusable_selector))
   |> List.filter ~f:(fun el -> (not skip_content) || not (in_content el))
 ;;
 
@@ -56,13 +63,20 @@ let index_of_active els =
   match active_element () with
   | None -> None
   | Some active ->
-    List.findi els ~f:(fun _ el -> phys_equal (el :> Dom_html.element Js.t) active)
+    List.findi els ~f:(fun _ el ->
+      phys_equal (el :> Dom_html.element Js.t) active)
     |> Option.map ~f:fst
 ;;
 
 (* Moves focus within [container] for an arrow key (forward or back), Home
    or End; [true] if it did. *)
-let move_focus container ~skip_content ~(key : Dom_html.Keyboard_code.t) ~forward ~back =
+let move_focus
+      container
+      ~skip_content
+      ~(key : Dom_html.Keyboard_code.t)
+      ~forward
+      ~back
+  =
   let els = focusables container ~skip_content in
   let n = List.length els in
   if n = 0
@@ -101,7 +115,8 @@ let current_target (ev : #Dom_html.event Js.t) : Dom_html.element Js.t option =
 
 let event_target (ev : #Dom_html.event Js.t) : Dom_html.element Js.t option =
   Js.Opt.to_option ev##.target
-  |> Option.bind ~f:(fun target -> Js.Opt.to_option (Dom_html.CoerceTo.element target))
+  |> Option.bind ~f:(fun target ->
+    Js.Opt.to_option (Dom_html.CoerceTo.element target))
 ;;
 
 let is_mouse (ev : Dom_html.pointerEvent Js.t) =
@@ -132,7 +147,9 @@ let on_pointer_enter_content t ev =
 ;;
 
 let hover_attrs t =
-  [ Attr.on_pointerenter (on_pointer_enter_content t); Attr.on_pointerleave (on_pointer_leave t) ]
+  [ Attr.on_pointerenter (on_pointer_enter_content t)
+  ; Attr.on_pointerleave (on_pointer_leave t)
+  ]
 ;;
 
 let viewport_view t =
@@ -145,13 +162,17 @@ let viewport_view t =
         Js.Opt.iter (Dom_html.CoerceTo.element child) (fun child ->
           let style = (Js.Unsafe.coerce el)##.style in
           let set name px =
-            (style##setProperty (Js.string name) (Js.string (sprintf "%dpx" px)) : unit)
+            (style##setProperty (Js.string name) (Js.string (sprintf "%dpx" px))
+             : unit)
           in
           set "--radix-navigation-menu-viewport-width" child##.offsetWidth;
           set "--radix-navigation-menu-viewport-height" child##.offsetHeight))
     in
     Node.div
-      ~attrs:[ Attr.class_ "absolute top-full left-0 isolate z-50 flex justify-center" ]
+      ~attrs:
+        [ Attr.class_
+            "absolute top-full left-0 isolate z-50 flex justify-center"
+        ]
       [ Node.div
           ~attrs:
             ([ data "state" "open"
@@ -159,10 +180,12 @@ let viewport_view t =
              ; data "slot" "navigation-menu-viewport"
              ; Attr.class_
                  "origin-top-center relative mt-1.5 \
-                  h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden \
-                  rounded-md border bg-popover text-popover-foreground shadow \
-                  data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 \
-                  data-[state=open]:animate-in data-[state=open]:zoom-in-90 \
+                  h-[var(--radix-navigation-menu-viewport-height)] w-full \
+                  overflow-hidden rounded-md border bg-popover \
+                  text-popover-foreground shadow \
+                  data-[state=closed]:animate-out \
+                  data-[state=closed]:zoom-out-95 data-[state=open]:animate-in \
+                  data-[state=open]:zoom-in-90 \
                   md:w-[var(--radix-navigation-menu-viewport-width)]"
              ; After_render.attr ~name:"navigation-menu-viewport" measure
              ]
@@ -173,14 +196,14 @@ let viewport_view t =
 ;;
 
 let view
-  ?(attrs = [])
-  ?class_
-  ?(viewport = true)
-  ?(id = "navigation-menu")
-  ?previous
-  ~value
-  ~on_change
-  children
+      ?(attrs = [])
+      ?class_
+      ?(viewport = true)
+      ?(id = "navigation-menu")
+      ?previous
+      ~value
+      ~on_change
+      children
   =
   let t =
     { id
@@ -201,7 +224,8 @@ let view
   let on_click ev =
     (* Choosing a link closes the menu. *)
     match event_target ev with
-    | Some target when Option.is_some (closest target "[data-slot=navigation-menu-link]") ->
+    | Some target
+      when Option.is_some (closest target "[data-slot=navigation-menu-link]") ->
       set t None
     | _ -> Effect.Ignore
   in
@@ -232,8 +256,8 @@ let view
        ; data "viewport" (Bool.to_string viewport)
        ; Cn.with_class
            ?class_
-           [ "group/navigation-menu relative flex max-w-max flex-1 items-center \
-              justify-center"
+           [ "group/navigation-menu relative flex max-w-max flex-1 \
+              items-center justify-center"
            ]
        ; Attr.on_click on_click
        ; Attr.on_keydown on_keydown
@@ -243,10 +267,20 @@ let view
     (children @ if viewport then [ viewport_view t ] else [])
 ;;
 
-let component ?attrs ?class_ ?viewport ?default_value children (local_ graph) =
+let component
+      ?attrs
+      ?class_
+      ?viewport
+      ?default_value
+      children
+      (local_ graph)
+  =
   let open Bonsai.Let_syntax in
   let state, set_state =
-    Bonsai.state (default_value, None) graph ~equal:[%equal: string option * string option]
+    Bonsai.state
+      (default_value, None)
+      graph
+      ~equal:[%equal: string option * string option]
   in
   let id = Bonsai.path_id graph in
   let%arr value, previous = state
@@ -270,12 +304,13 @@ let list ?(attrs = []) ?class_ t children =
   let on_keydown ev =
     match event_target ev, current_target ev with
     | Some target, Some list when not (in_content target) ->
-      if move_focus
-           list
-           ~skip_content:true
-           ~key:(Dom_util.key ev)
-           ~forward:[ ArrowRight ]
-           ~back:[ ArrowLeft ]
+      if
+        move_focus
+          list
+          ~skip_content:true
+          ~key:(Dom_util.key ev)
+          ~forward:[ ArrowRight ]
+          ~back:[ ArrowLeft ]
       then Dom_util.prevent_default ev
       else Effect.Ignore
     | _ -> Effect.Ignore
@@ -304,18 +339,22 @@ let list ?(attrs = []) ?class_ t children =
 let item ?(attrs = []) ?class_ children =
   Node.li
     ~attrs:
-      ([ data "slot" "navigation-menu-item"; Cn.with_class ?class_ [ "relative" ] ] @ attrs)
+      ([ data "slot" "navigation-menu-item"
+       ; Cn.with_class ?class_ [ "relative" ]
+       ]
+       @ attrs)
     children
 ;;
 
 let trigger_base =
-  "group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 \
-   py-2 text-sm font-medium transition-[color,box-shadow] outline-none hover:bg-accent \
-   hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground \
-   focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 \
-   disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-accent/50 \
-   data-[state=open]:text-accent-foreground data-[state=open]:hover:bg-accent \
-   data-[state=open]:focus:bg-accent"
+  "group inline-flex h-9 w-max items-center justify-center rounded-md \
+   bg-background px-4 py-2 text-sm font-medium transition-[color,box-shadow] \
+   outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent \
+   focus:text-accent-foreground focus-visible:ring-[3px] \
+   focus-visible:ring-ring/50 focus-visible:outline-1 \
+   disabled:pointer-events-none disabled:opacity-50 \
+   data-[state=open]:bg-accent/50 data-[state=open]:text-accent-foreground \
+   data-[state=open]:hover:bg-accent data-[state=open]:focus:bg-accent"
 ;;
 
 let trigger_style ?class_ () = Cn.cn (trigger_base :: Option.to_list class_)
@@ -327,10 +366,12 @@ let trigger ?(attrs = []) ?class_ ?(disabled = false) t ~value children =
       Effect.Many
         [ Dom_util.prevent_default ev
         ; Effect.of_thunk (fun () ->
-            Option.iter (After_render.by_id (content_id t value)) ~f:(fun content ->
-              match focusables content ~skip_content:false with
-              | first :: _ -> first##focus
-              | [] -> ()))
+            Option.iter
+              (After_render.by_id (content_id t value))
+              ~f:(fun content ->
+                match focusables content ~skip_content:false with
+                | first :: _ -> first##focus
+                | [] -> ()))
         ]
     in
     match Dom_util.key ev with
@@ -353,7 +394,10 @@ let trigger ?(attrs = []) ?class_ ?(disabled = false) t ~value children =
        ]
        @ (if disabled
           then [ Attr.disabled; data "disabled" "" ]
-          else [ Attr.on_click (fun _ -> set t (if open_ then None else Some value)) ])
+          else
+            [ Attr.on_click (fun _ ->
+                set t (if open_ then None else Some value))
+            ])
        @ attrs)
     (children
      @ [ Node.text " "
@@ -378,10 +422,13 @@ let content ?(attrs = []) ?class_ t ~value children =
           (* Which trigger comes first in the page (the children's order of
              evaluation is not the page's). *)
           (match
-             After_render.by_id (trigger_id t value), After_render.by_id (trigger_id t previous)
+             ( After_render.by_id (trigger_id t value)
+             , After_render.by_id (trigger_id t previous) )
            with
            | Some el, Some prev ->
-             let following = (Js.Unsafe.coerce prev)##compareDocumentPosition el land 4 <> 0 in
+             let following =
+               (Js.Unsafe.coerce prev)##compareDocumentPosition el land 4 <> 0
+             in
              Some (if following then "from-end" else "from-start")
            | _ -> None)
       in
@@ -397,16 +444,22 @@ let content ?(attrs = []) ?class_ t ~value children =
            | Tab when shift && Poly.equal current (Some 0) ->
              Effect.Many
                [ Dom_util.stop ev
-               ; Dom_util.focus_selector (sprintf "[id=%S]" (trigger_id t value))
+               ; Dom_util.focus_selector
+                   (sprintf "[id=%S]" (trigger_id t value))
                ]
-           | Tab when (not shift) && Poly.equal current (Some (List.length els - 1)) ->
+           | Tab
+             when (not shift) && Poly.equal current (Some (List.length els - 1))
+             ->
              (* Out of the content, to whatever follows its trigger in the
                 list. *)
              Effect.Many
                [ Dom_util.stop ev
                ; set t None
                ; Effect.of_thunk (fun () ->
-                   match After_render.by_id t.id, After_render.by_id (trigger_id t value) with
+                   match
+                     ( After_render.by_id t.id
+                     , After_render.by_id (trigger_id t value) )
+                   with
                    | Some nav, Some trigger ->
                      let all = focusables nav ~skip_content:true in
                      (match
@@ -414,17 +467,20 @@ let content ?(attrs = []) ?class_ t ~value children =
                           phys_equal (el :> Dom_html.element Js.t) trigger)
                       with
                       | Some (i, _) ->
-                        Option.iter (List.nth all (i + 1)) ~f:(fun el -> el##focus)
+                        Option.iter
+                          (List.nth all (i + 1))
+                          ~f:(fun el -> el##focus)
                       | None -> ())
                    | _ -> ())
                ]
            | _ ->
-             if move_focus
-                  content
-                  ~skip_content:false
-                  ~key
-                  ~forward:[ ArrowDown; ArrowRight ]
-                  ~back:[ ArrowUp; ArrowLeft ]
+             if
+               move_focus
+                 content
+                 ~skip_content:false
+                 ~key
+                 ~forward:[ ArrowDown; ArrowRight ]
+                 ~back:[ ArrowUp; ArrowLeft ]
              then Effect.Many [ Dom_util.stop ev ]
              else Effect.Ignore)
       in
@@ -435,7 +491,8 @@ let content ?(attrs = []) ?class_ t ~value children =
            ; data "orientation" "horizontal"
            ; data "state" "open"
            ]
-           @ Option.value_map motion ~default:[] ~f:(fun m -> [ data "motion" m ])
+           @ Option.value_map motion ~default:[] ~f:(fun m ->
+             [ data "motion" m ])
            @ [ data "slot" "navigation-menu-content"
              ; Cn.with_class
                  ?class_
@@ -444,9 +501,10 @@ let content ?(attrs = []) ?class_ t ~value children =
                     data-[motion=from-start]:slide-in-from-left-52 \
                     data-[motion=to-end]:slide-out-to-right-52 \
                     data-[motion=to-start]:slide-out-to-left-52 \
-                    data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in \
-                    data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out md:absolute \
-                    md:w-auto"
+                    data-[motion^=from-]:animate-in \
+                    data-[motion^=from-]:fade-in \
+                    data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out \
+                    md:absolute md:w-auto"
                  ; "group-data-[viewport=false]/navigation-menu:top-full \
                     group-data-[viewport=false]/navigation-menu:mt-1.5 \
                     group-data-[viewport=false]/navigation-menu:overflow-hidden \
@@ -486,12 +544,14 @@ let link ?(attrs = []) ?class_ ?(active = false) ~href children =
          ; Attr.href href
          ; Cn.with_class
              ?class_
-             [ "flex flex-col gap-1 rounded-sm p-2 text-sm transition-all outline-none \
-                hover:bg-accent hover:text-accent-foreground focus:bg-accent \
-                focus:text-accent-foreground focus-visible:ring-[3px] \
-                focus-visible:ring-ring/50 focus-visible:outline-1 \
-                data-[active=true]:bg-accent/50 data-[active=true]:text-accent-foreground \
-                data-[active=true]:hover:bg-accent data-[active=true]:focus:bg-accent \
+             [ "flex flex-col gap-1 rounded-sm p-2 text-sm transition-all \
+                outline-none hover:bg-accent hover:text-accent-foreground \
+                focus:bg-accent focus:text-accent-foreground \
+                focus-visible:ring-[3px] focus-visible:ring-ring/50 \
+                focus-visible:outline-1 data-[active=true]:bg-accent/50 \
+                data-[active=true]:text-accent-foreground \
+                data-[active=true]:hover:bg-accent \
+                data-[active=true]:focus:bg-accent \
                 [&_svg:not([class*='size-'])]:size-4 \
                 [&_svg:not([class*='text-'])]:text-muted-foreground"
              ]
@@ -506,14 +566,20 @@ let indicator ?(attrs = []) ?class_ t =
    | Some value ->
      (* Under the open trigger, as Radix's: its left and width, measured. *)
      let place (el : Dom_html.element Js.t) =
-       match After_render.by_id (trigger_id t value), Js.Opt.to_option el##.offsetParent with
+       match
+         ( After_render.by_id (trigger_id t value)
+         , Js.Opt.to_option el##.offsetParent )
+       with
        | Some trigger, Some track ->
          let r = trigger##getBoundingClientRect in
          let p = track##getBoundingClientRect in
-         el##.style##.width := Js.string (sprintf "%.0fpx" (Js.to_float r##.width));
+         el##.style##.width
+         := Js.string (sprintf "%.0fpx" (Js.to_float r##.width));
          el##.style##.transform
          := Js.string
-              (sprintf "translateX(%.0fpx)" (Js.to_float r##.left -. Js.to_float p##.left))
+              (sprintf
+                 "translateX(%.0fpx)"
+                 (Js.to_float r##.left -. Js.to_float p##.left))
        | _ -> ()
      in
      t.indicator
@@ -529,9 +595,11 @@ let indicator ?(attrs = []) ?class_ t =
                        [ Css_gen.position `Absolute; Css_gen.left (`Px 0) ])
                 ; Cn.with_class
                     ?class_
-                    [ "top-full z-[1] flex h-1.5 items-end justify-center overflow-hidden \
-                       data-[state=hidden]:animate-out data-[state=hidden]:fade-out \
-                       data-[state=visible]:animate-in data-[state=visible]:fade-in"
+                    [ "top-full z-[1] flex h-1.5 items-end justify-center \
+                       overflow-hidden data-[state=hidden]:animate-out \
+                       data-[state=hidden]:fade-out \
+                       data-[state=visible]:animate-in \
+                       data-[state=visible]:fade-in"
                     ]
                 ; After_render.attr ~name:"navigation-menu-indicator" place
                 ]
@@ -539,8 +607,8 @@ let indicator ?(attrs = []) ?class_ t =
              [ Node.div
                  ~attrs:
                    [ Attr.class_
-                       "relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm bg-border \
-                        shadow-md"
+                       "relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm \
+                        bg-border shadow-md"
                    ]
                  []
              ]));

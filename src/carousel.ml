@@ -46,14 +46,14 @@ type t =
   }
 
 let create
-  ?(orientation = Orientation.Horizontal)
-  ?(align = Align.Center)
-  ?(loop = false)
-  ?autoplay
-  ~id
-  ~state
-  ~on_change
-  ()
+      ?(orientation = Orientation.Horizontal)
+      ?(align = Align.Center)
+      ?(loop = false)
+      ?autoplay
+      ~id
+      ~state
+      ~on_change
+      ()
   =
   { id; orientation; align; loop; autoplay; state; on_change }
 ;;
@@ -61,10 +61,15 @@ let create
 let component ?orientation ?align ?loop ?autoplay (local_ graph) =
   let open Bonsai.Let_syntax in
   let state, set_state =
-    Bonsai.state { State.selected = 0; count = 0 } graph ~equal:[%equal: State.t]
+    Bonsai.state
+      { State.selected = 0; count = 0 }
+      graph
+      ~equal:[%equal: State.t]
   in
   let id = Bonsai.path_id graph in
-  let%arr state and set_state and id in
+  let%arr state
+  and set_state
+  and id in
   create ?orientation ?align ?loop ?autoplay ~id ~state ~on_change:set_state ()
 ;;
 
@@ -72,7 +77,10 @@ let selected t = t.state.selected
 let count t = t.state.count
 let horizontal t = Orientation.equal t.orientation Horizontal
 let can_scroll_prev t = t.state.count > 1 && (t.loop || t.state.selected > 0)
-let can_scroll_next t = t.state.count > 1 && (t.loop || t.state.selected < t.state.count - 1)
+
+let can_scroll_next t =
+  t.state.count > 1 && (t.loop || t.state.selected < t.state.count - 1)
+;;
 
 let scroll_to t i =
   let n = t.state.count in
@@ -80,11 +88,22 @@ let scroll_to t i =
   then Effect.Ignore
   else (
     let i = if t.loop then i % n else Int.clamp_exn i ~min:0 ~max:(n - 1) in
-    if i = t.state.selected then Effect.Ignore else t.on_change { t.state with selected = i })
+    if i = t.state.selected
+    then Effect.Ignore
+    else t.on_change { t.state with selected = i })
 ;;
 
-let scroll_prev t = if can_scroll_prev t then scroll_to t (t.state.selected - 1) else Effect.Ignore
-let scroll_next t = if can_scroll_next t then scroll_to t (t.state.selected + 1) else Effect.Ignore
+let scroll_prev t =
+  if can_scroll_prev t
+  then scroll_to t (t.state.selected - 1)
+  else Effect.Ignore
+;;
+
+let scroll_next t =
+  if can_scroll_next t
+  then scroll_to t (t.state.selected + 1)
+  else Effect.Ignore
+;;
 
 (* What a carousel keeps in the page, by id: the measured snap points (the
    track's offsets, positive), the slide it shows, a drag in progress and
@@ -146,33 +165,43 @@ let measure t (viewport : Dom_html.element Js.t) =
     let slides : Dom_html.element Js.t list =
       Dom.list_of_nodeList (Js.Unsafe.coerce track##.children)
     in
-    let offset (el : Dom_html.element Js.t) = if h then el##.offsetLeft else el##.offsetTop in
+    let offset (el : Dom_html.element Js.t) =
+      if h then el##.offsetLeft else el##.offsetTop
+    in
     let start (el : Dom_html.element Js.t) =
       let r = el##getBoundingClientRect in
       Js.to_float (if h then r##.left else r##.top)
     in
     let track_start = start track in
-    let size (el : Dom_html.element Js.t) = if h then el##.offsetWidth else el##.offsetHeight in
+    let size (el : Dom_html.element Js.t) =
+      if h then el##.offsetWidth else el##.offsetHeight
+    in
     let padding (el : Dom_html.element Js.t) =
       let style = Dom_html.window##getComputedStyle el in
       Float.of_string_opt
         (String.chop_suffix_if_exists
            ~suffix:"px"
-           (Js.to_string (if h then style##.paddingLeft else style##.paddingTop)))
+           (Js.to_string
+              (if h then style##.paddingLeft else style##.paddingTop)))
       |> Option.value ~default:0.
     in
     let origin = Float.of_int (offset track - offset viewport) in
-    let view = Float.of_int (if h then viewport##.clientWidth else viewport##.clientHeight) in
+    let view =
+      Float.of_int
+        (if h then viewport##.clientWidth else viewport##.clientHeight)
+    in
     let spans =
       List.map slides ~f:(fun slide ->
         let pad = padding slide in
-        origin +. (start slide -. track_start) +. pad, Float.of_int (size slide) -. pad)
+        ( origin +. (start slide -. track_start) +. pad
+        , Float.of_int (size slide) -. pad ))
     in
     (match spans with
      | [] -> [||]
      | (first, _) :: _ ->
        let last_end =
-         List.fold spans ~init:first ~f:(fun acc (s, size) -> Float.max acc (s +. size))
+         List.fold spans ~init:first ~f:(fun acc (s, size) ->
+           Float.max acc (s +. size))
        in
        let raw =
          List.map spans ~f:(fun (s, size) ->
@@ -191,7 +220,9 @@ let measure t (viewport : Dom_html.element Js.t) =
        else (
          let lo = Float.min first 0.
          and hi = last_end -. view in
-         let clamped = List.map raw ~f:(fun s -> Float.clamp_exn s ~min:lo ~max:hi) in
+         let clamped =
+           List.map raw ~f:(fun s -> Float.clamp_exn s ~min:lo ~max:hi)
+         in
          List.fold clamped ~init:[] ~f:(fun acc s ->
            match acc with
            | prev :: _ when Float.(abs (s -. prev) < 1.) -> acc
@@ -209,7 +240,9 @@ let set_transform t (viewport : Dom_html.element Js.t) ~translate ~animate =
     in
     set
       "transition"
-      (if animate then "transform 450ms cubic-bezier(0.25, 1, 0.5, 1)" else "none");
+      (if animate
+       then "transform 450ms cubic-bezier(0.25, 1, 0.5, 1)"
+       else "none");
     set
       "transform"
       (if horizontal t
@@ -217,7 +250,7 @@ let set_transform t (viewport : Dom_html.element Js.t) ~translate ~animate =
        else sprintf "translate3d(0px, %s, 0px)" px))
 ;;
 
-let fire effect = Effect.Expert.handle_non_dom_event_exn effect
+let fire eff = Effect.Expert.handle_non_dom_event_exn eff
 
 let rec schedule_autoplay t =
   let st = dom t in
@@ -252,7 +285,9 @@ and update t (viewport : Dom_html.element Js.t) =
   let snaps = measure t viewport in
   st.snaps <- snaps;
   let count = Array.length snaps in
-  let selected = Int.clamp_exn t.state.selected ~min:0 ~max:(Int.max 0 (count - 1)) in
+  let selected =
+    Int.clamp_exn t.state.selected ~min:0 ~max:(Int.max 0 (count - 1))
+  in
   if count <> t.state.count || selected <> t.state.selected
   then fire (t.on_change { selected; count });
   if count > 0 && Option.is_none st.drag
@@ -301,7 +336,9 @@ let root ?(attrs = []) ?class_ t children =
           st.hovered <- hovered;
           schedule_autoplay t)
       in
-      [ Attr.on_mouseenter (fun _ -> set true); Attr.on_mouseleave (fun _ -> set false) ]
+      [ Attr.on_mouseenter (fun _ -> set true)
+      ; Attr.on_mouseleave (fun _ -> set false)
+      ]
   in
   Node.div
     ~attrs:
@@ -320,7 +357,7 @@ let current_target (ev : #Dom_html.event Js.t) : Dom_html.element Js.t option =
   Js.Opt.to_option (Js.Unsafe.coerce ev)##.currentTarget
 ;;
 
-let now () = Js.to_float (Js.Unsafe.global##.performance##now)
+let now () = Js.to_float Js.Unsafe.global##.performance##now
 
 let on_pointerdown t (ev : Dom_html.pointerEvent Js.t) =
   Effect.of_thunk (fun () ->
@@ -357,9 +394,10 @@ let on_pointermove t (ev : Dom_html.pointerEvent Js.t) =
       and y = Js.to_float ev##.clientY in
       let along, across = if horizontal t then x, y else y, x in
       let delta = along -. drag.start in
-      if (not drag.dragging)
-         && Float.(abs delta > 4.)
-         && Float.(abs delta > abs (across -. drag.cross_start))
+      if
+        (not drag.dragging)
+        && Float.(abs delta > 4.)
+        && Float.(abs delta > abs (across -. drag.cross_start))
       then (
         drag.dragging <- true;
         st.stopped <- true;
@@ -406,9 +444,12 @@ let on_pointerup t (ev : Dom_html.pointerEvent Js.t) =
         in
         let projected = st.translate +. (velocity *. 150.) in
         let nearest =
-          Array.foldi st.snaps ~init:(0, Float.infinity) ~f:(fun i (best, dist) snap ->
-            let d = Float.abs (-.snap -. projected) in
-            if Float.(d < dist) then i, d else best, dist)
+          Array.foldi
+            st.snaps
+            ~init:(0, Float.infinity)
+            ~f:(fun i (best, dist) snap ->
+              let d = Float.abs (-.snap -. projected) in
+              if Float.(d < dist) then i, d else best, dist)
           |> fst
         in
         let current = Option.value st.applied ~default:0 in
@@ -419,7 +460,9 @@ let on_pointerup t (ev : Dom_html.pointerEvent Js.t) =
           else nearest
         in
         let n = Array.length st.snaps in
-        let target = if t.loop then target % n else Int.clamp_exn target ~min:0 ~max:(n - 1) in
+        let target =
+          if t.loop then target % n else Int.clamp_exn target ~min:0 ~max:(n - 1)
+        in
         match st.latest with
         | Some t when target <> t.state.selected -> fire (scroll_to t target)
         | _ ->
@@ -446,7 +489,8 @@ let content ?(attrs = []) ?class_ t children =
       ; Attr.style
           (Css_gen.create
              ~field:"touch-action"
-             ~value:(if horizontal t then "pan-y pinch-zoom" else "pan-x pinch-zoom"))
+             ~value:
+               (if horizontal t then "pan-y pinch-zoom" else "pan-x pinch-zoom"))
       ; After_render.attr ~name:"carousel" (update t)
       ; Attr.on_pointerdown (on_pointerdown t)
       ; Attr.on_pointermove (on_pointermove t)
@@ -472,7 +516,9 @@ let item ?(attrs = []) ?class_ t children =
        ; data "slot" "carousel-item"
        ; Cn.with_class
            ?class_
-           [ "min-w-0 shrink-0 grow-0 basis-full"; (if horizontal t then "pl-4" else "pt-4") ]
+           [ "min-w-0 shrink-0 grow-0 basis-full"
+           ; (if horizontal t then "pl-4" else "pt-4")
+           ]
        ]
        @ attrs)
     children
@@ -488,12 +534,19 @@ let button ~attrs ~slot ~variant ~size ~class_ ~disabled ~on_click children =
        ; data "size" (Button.Size.name size)
        ; Attr.class_ (Button.classes ~variant ~size ~class_ ())
        ]
-       @ (if disabled then [ Attr.disabled ] else [ Attr.on_click (fun _ -> on_click) ])
+       @ (if disabled
+          then [ Attr.disabled ]
+          else [ Attr.on_click (fun _ -> on_click) ])
        @ attrs)
     children
 ;;
 
-let previous ?(attrs = []) ?class_ ?(variant = Button.Variant.Outline) ?(size = Button.Size.Icon) t
+let previous
+      ?(attrs = [])
+      ?class_
+      ?(variant = Button.Variant.Outline)
+      ?(size = Button.Size.Icon)
+      t
   =
   button
     ~attrs
@@ -515,7 +568,13 @@ let previous ?(attrs = []) ?class_ ?(variant = Button.Variant.Outline) ?(size = 
     ]
 ;;
 
-let next ?(attrs = []) ?class_ ?(variant = Button.Variant.Outline) ?(size = Button.Size.Icon) t =
+let next
+      ?(attrs = [])
+      ?class_
+      ?(variant = Button.Variant.Outline)
+      ?(size = Button.Size.Icon)
+      t
+  =
   button
     ~attrs
     ~slot:"carousel-next"

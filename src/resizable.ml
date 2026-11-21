@@ -35,13 +35,13 @@ type child =
   | Handle of handle
 
 let panel
-  ?(attrs = [])
-  ?class_
-  ?id
-  ?default_size
-  ?(min_size = 0.)
-  ?(max_size = 100.)
-  children
+      ?(attrs = [])
+      ?class_
+      ?id
+      ?default_size
+      ?(min_size = 0.)
+      ?(max_size = 100.)
+      children
   =
   Panel { attrs; class_; id; default_size; min_size; max_size; children }
 ;;
@@ -56,16 +56,27 @@ let panels children =
     | Handle _ -> None)
 ;;
 
-let clamp (p : panel) size = Float.clamp_exn size ~min:p.min_size ~max:p.max_size
+let clamp (p : panel) size =
+  Float.clamp_exn size ~min:p.min_size ~max:p.max_size
+;;
 
 let default_layout children =
   let panels = panels children in
   let given =
-    List.sum (module Float) panels ~f:(fun p -> Option.value p.default_size ~default:0.)
+    List.sum
+      (module Float)
+      panels
+      ~f:(fun p -> Option.value p.default_size ~default:0.)
   in
   let unsized = List.count panels ~f:(fun p -> Option.is_none p.default_size) in
-  let share = if unsized = 0 then 0. else Float.max 0. (100. -. given) /. Float.of_int unsized in
-  let sizes = List.map panels ~f:(fun p -> Option.value p.default_size ~default:share) in
+  let share =
+    if unsized = 0
+    then 0.
+    else Float.max 0. (100. -. given) /. Float.of_int unsized
+  in
+  let sizes =
+    List.map panels ~f:(fun p -> Option.value p.default_size ~default:share)
+  in
   let total = List.sum (module Float) sizes ~f:Fn.id in
   let sizes =
     if unsized = 0 && Float.(total > 0.)
@@ -77,10 +88,13 @@ let default_layout children =
   let sizes = Array.of_list (List.map2_exn panels sizes ~f:clamp) in
   let panels = Array.of_list panels in
   let (_ : float) =
-    Array.foldi sizes ~init:(100. -. Array.sum (module Float) sizes ~f:Fn.id) ~f:(fun i left size ->
-      let next = clamp panels.(i) (size +. left) in
-      sizes.(i) <- next;
-      left -. (next -. size))
+    Array.foldi
+      sizes
+      ~init:(100. -. Array.sum (module Float) sizes ~f:Fn.id)
+      ~f:(fun i left size ->
+        let next = clamp panels.(i) (size +. left) in
+        sizes.(i) <- next;
+        left -. (next -. size))
   in
   Array.to_list sizes
 ;;
@@ -105,8 +119,15 @@ let adjust children ~layout ~pivot ~delta =
       else pivot + 1, List.range ~stride:(-1) pivot (-1) ~stop:`exclusive
     in
     let room = panels.(grow).max_size -. sizes.(grow) in
-    let give = List.sum (module Float) shrink ~f:(fun i -> sizes.(i) -. panels.(i).min_size) in
-    let amount = Float.max 0. (Float.min (Float.abs delta) (Float.min room give)) in
+    let give =
+      List.sum
+        (module Float)
+        shrink
+        ~f:(fun i -> sizes.(i) -. panels.(i).min_size)
+    in
+    let amount =
+      Float.max 0. (Float.min (Float.abs delta) (Float.min room give))
+    in
     sizes.(grow) <- sizes.(grow) +. amount;
     let (_ : float) =
       List.fold shrink ~init:amount ~f:(fun left i ->
@@ -140,7 +161,11 @@ let set_state (el : Dom_html.element Js.t) state =
 (* What [data-separator] shows when no drag is on: hover or focus. *)
 let rest_state (el : Dom_html.element Js.t) =
   let matches s = Js.to_bool ((Js.Unsafe.coerce el)##matches (Js.string s)) in
-  if matches ":hover" then "hover" else if matches ":focus" then "focus" else "inactive"
+  if matches ":hover"
+  then "hover"
+  else if matches ":focus"
+  then "focus"
+  else "inactive"
 ;;
 
 let current_target (ev : #Dom_html.event Js.t) : Dom_html.element Js.t option =
@@ -154,7 +179,15 @@ let body_style field value =
 
 let in_browser () = Js.Optdef.test (Js.Unsafe.global##.document : _ Js.Optdef.t)
 
-let view ?(attrs = []) ?class_ ?(id = "resizable") ~orientation ~layout ~on_layout_change children =
+let view
+      ?(attrs = [])
+      ?class_
+      ?(id = "resizable")
+      ~orientation
+      ~layout
+      ~on_layout_change
+      children
+  =
   let layout = layout_for children layout in
   let horizontal = Orientation.equal orientation Horizontal in
   let panel_list = Array.of_list (panels children) in
@@ -174,7 +207,9 @@ let view ?(attrs = []) ?class_ ?(id = "resizable") ~orientation ~layout ~on_layo
       | Some now ->
         let p = panel_list.(pivot) in
         let at target =
-          List.nth_exn (adjust children ~layout ~pivot ~delta:(target -. now)) pivot
+          List.nth_exn
+            (adjust children ~layout ~pivot ~delta:(target -. now))
+            pivot
         in
         [ aria "controls" (panel_id pivot)
         ; aria "valuemax" (number (at p.max_size))
@@ -202,7 +237,8 @@ let view ?(attrs = []) ?class_ ?(id = "resizable") ~orientation ~layout ~on_layo
       | ArrowLeft when horizontal -> step (-5.)
       | ArrowDown when not horizontal -> step 5.
       | ArrowUp when not horizontal -> step (-5.)
-      | ArrowLeft | ArrowRight | ArrowUp | ArrowDown -> Dom_util.prevent_default ev
+      | ArrowLeft | ArrowRight | ArrowUp | ArrowDown ->
+        Dom_util.prevent_default ev
       | Home -> step (-100.)
       | End -> step 100.
       | F6 ->
@@ -245,17 +281,27 @@ let view ?(attrs = []) ?class_ ?(id = "resizable") ~orientation ~layout ~on_layo
                 Js.Opt.iter el##.parentNode (fun group ->
                   let rect = (Js.Unsafe.coerce group)##getBoundingClientRect in
                   let size =
-                    Js.to_float (if horizontal then rect##.width else rect##.height)
+                    Js.to_float
+                      (if horizontal then rect##.width else rect##.height)
                   in
                   Hashtbl.set
                     drags
                     ~key:id
-                    ~data:{ pivot; start = pointer_pos ev; start_layout = layout; size });
-                (try (Js.Unsafe.coerce el)##setPointerCapture ev##.pointerId with
+                    ~data:
+                      { pivot
+                      ; start = pointer_pos ev
+                      ; start_layout = layout
+                      ; size
+                      });
+                (try
+                   (Js.Unsafe.coerce el)##setPointerCapture ev##.pointerId
+                 with
                  | _ -> ());
                 el##focus;
                 set_state el "active";
-                body_style "cursor" (if horizontal then "ew-resize" else "ns-resize");
+                body_style
+                  "cursor"
+                  (if horizontal then "ew-resize" else "ns-resize");
                 body_style "user-select" "none")
             ])
     in
@@ -274,13 +320,15 @@ let view ?(attrs = []) ?class_ ?(id = "resizable") ~orientation ~layout ~on_layo
           Hashtbl.remove drags id;
           body_style "cursor" "";
           body_style "user-select" "";
-          Option.iter (current_target ev) ~f:(fun el -> set_state el (rest_state el))))
+          Option.iter (current_target ev) ~f:(fun el ->
+            set_state el (rest_state el))))
     in
     let dom_state state =
       fun (ev : #Dom_html.event Js.t) ->
       Effect.of_thunk (fun () ->
         if not (Hashtbl.mem drags id)
-        then Option.iter (current_target ev) ~f:(fun el -> set_state el (state el)))
+        then
+          Option.iter (current_target ev) ~f:(fun el -> set_state el (state el)))
     in
     Node.div
       ~attrs:
@@ -291,11 +339,13 @@ let view ?(attrs = []) ?class_ ?(id = "resizable") ~orientation ~layout ~on_layo
          ; data "separator" (if h.disabled then "disabled" else "inactive")
          ; Cn.with_class
              ?class_:h.class_
-             [ "relative flex w-px items-center justify-center bg-border after:absolute \
-                after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 \
-                focus-visible:ring-1 focus-visible:ring-ring \
-                focus-visible:ring-offset-1 focus-visible:outline-hidden \
-                aria-[orientation=horizontal]:h-px aria-[orientation=horizontal]:w-full \
+             [ "relative flex w-px items-center justify-center bg-border \
+                after:absolute after:inset-y-0 after:left-1/2 after:w-1 \
+                after:-translate-x-1/2 focus-visible:ring-1 \
+                focus-visible:ring-ring focus-visible:ring-offset-1 \
+                focus-visible:outline-hidden \
+                aria-[orientation=horizontal]:h-px \
+                aria-[orientation=horizontal]:w-full \
                 aria-[orientation=horizontal]:after:left-0 \
                 aria-[orientation=horizontal]:after:h-1 \
                 aria-[orientation=horizontal]:after:w-full \
@@ -329,11 +379,15 @@ let view ?(attrs = []) ?class_ ?(id = "resizable") ~orientation ~layout ~on_layo
               ; Attr.on_pointermove on_pointermove
               ; Attr.on_pointerup on_pointerup
               ; Attr.on_pointerenter (dom_state (fun _ -> "hover"))
-              ; Attr.on_pointerleave (dom_state (fun el ->
-                  if in_browser ()
-                     && Js.to_bool ((Js.Unsafe.coerce el)##matches (Js.string ":focus"))
-                  then "focus"
-                  else "inactive"))
+              ; Attr.on_pointerleave
+                  (dom_state (fun el ->
+                     if
+                       in_browser ()
+                       && Js.to_bool
+                            ((Js.Unsafe.coerce el)##matches
+                               (Js.string ":focus"))
+                     then "focus"
+                     else "inactive"))
               ; Attr.on_focus (dom_state (fun _ -> "focus"))
               ; Attr.on_blur (dom_state (fun _ -> "inactive"))
               ])
@@ -343,8 +397,8 @@ let view ?(attrs = []) ?class_ ?(id = "resizable") ~orientation ~layout ~on_layo
          [ Node.div
              ~attrs:
                [ Attr.class_
-                   "z-10 flex h-4 w-3 items-center justify-center rounded-xs border \
-                    bg-border"
+                   "z-10 flex h-4 w-3 items-center justify-center rounded-xs \
+                    border bg-border"
                ]
              [ Icon.view ~class_:"size-2.5" Grip_vertical ]
          ]
@@ -422,6 +476,16 @@ let component ?attrs ?class_ ~orientation children (local_ graph) =
   let open Bonsai.Let_syntax in
   let layout, set_layout = Bonsai.state [] graph ~equal:[%equal: float list] in
   let id = Bonsai.path_id graph in
-  let%arr layout and set_layout and id and children in
-  view ?attrs ?class_ ~id ~orientation ~layout ~on_layout_change:set_layout children
+  let%arr layout
+  and set_layout
+  and id
+  and children in
+  view
+    ?attrs
+    ?class_
+    ~id
+    ~orientation
+    ~layout
+    ~on_layout_change:set_layout
+    children
 ;;

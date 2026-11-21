@@ -23,7 +23,8 @@ let demo (local_ graph) =
                  ~attrs:[ Attr.class_ "p-1" ]
                  [ Card.root
                      [ Card.content
-                         ~class_:"flex aspect-square items-center justify-center p-6"
+                         ~class_:
+                           "flex aspect-square items-center justify-center p-6"
                          [ Node.span
                              ~attrs:[ Attr.class_ "text-4xl font-semibold" ]
                              [ Node.text (Int.to_string (index + 1)) ]
@@ -57,7 +58,8 @@ let size (local_ graph) =
                  ~attrs:[ Attr.class_ "p-1" ]
                  [ Card.root
                      [ Card.content
-                         ~class_:"flex aspect-square items-center justify-center p-6"
+                         ~class_:
+                           "flex aspect-square items-center justify-center p-6"
                          [ Node.span
                              ~attrs:[ Attr.class_ "text-3xl font-semibold" ]
                              [ Node.text (Int.to_string (index + 1)) ]
@@ -92,7 +94,8 @@ let spacing (local_ graph) =
                  ~attrs:[ Attr.class_ "p-1" ]
                  [ Card.root
                      [ Card.content
-                         ~class_:"flex aspect-square items-center justify-center p-6"
+                         ~class_:
+                           "flex aspect-square items-center justify-center p-6"
                          [ Node.span
                              ~attrs:[ Attr.class_ "text-2xl font-semibold" ]
                              [ Node.text (Int.to_string (index + 1)) ]
@@ -158,7 +161,8 @@ let api (local_ graph) =
                  carousel
                  [ Card.root
                      [ Card.content
-                         ~class_:"flex aspect-square items-center justify-center p-6"
+                         ~class_:
+                           "flex aspect-square items-center justify-center p-6"
                          [ Node.span
                              ~attrs:[ Attr.class_ "text-4xl font-semibold" ]
                              [ Node.text (Int.to_string (index + 1)) ]
@@ -172,7 +176,9 @@ let api (local_ graph) =
         ~attrs:[ Attr.class_ "py-2 text-center text-sm text-muted-foreground" ]
         [ Node.textf
             "Slide %d of %d"
-            (if Carousel.count carousel = 0 then 0 else Carousel.selected carousel + 1)
+            (if Carousel.count carousel = 0
+             then 0
+             else Carousel.selected carousel + 1)
             (Carousel.count carousel)
         ]
     ]
@@ -199,7 +205,8 @@ let autoplay (local_ graph) =
                  ~attrs:[ Attr.class_ "p-1" ]
                  [ Card.root
                      [ Card.content
-                         ~class_:"flex aspect-square items-center justify-center p-6"
+                         ~class_:
+                           "flex aspect-square items-center justify-center p-6"
                          [ Node.span
                              ~attrs:[ Attr.class_ "text-4xl font-semibold" ]
                              [ Node.text (Int.to_string (index + 1)) ]
@@ -240,20 +247,28 @@ Carousel.root carousel
             , "[Horizontal] (default) or [Vertical]." )
           ; ( "align"
             , "Carousel.Align.t"
-            , "Where the selected slide sits: [Start], [Center] (default) or [End]." )
-          ; "loop", "bool", "Go round from the last slide to the first and back."
+            , "Where the selected slide sits: [Start], [Center] (default) or \
+               [End]." )
+          ; ( "loop"
+            , "bool"
+            , "Go round from the last slide to the first and back." )
           ; ( "autoplay"
             , "int"
-            , "Move on every so many milliseconds, until the slides are dragged." )
+            , "Move on every so many milliseconds, until the slides are \
+               dragged." )
           ]
       ; Doc.p
-          "[Carousel.component] keeps the state; [Carousel.create] takes it with \
-           [~state] and [~on_change]. [Carousel.selected], [count], \
-           [can_scroll_prev]/[next], [scroll_prev]/[next] and [scroll_to] are its API."
+          "[Carousel.component] keeps the state; [Carousel.create] takes it \
+           with [~state] and [~on_change]. [Carousel.selected], [count], \
+           [can_scroll_prev]/[next], [scroll_prev]/[next] and [scroll_to] are \
+           its API."
       ; Doc.h2 "Keyboard"
       ; Doc.table
           [ "Key"; "Does" ]
-          [ [ Doc.text "Arrow Left / Right"; Doc.text "The previous or next slide." ] ]
+          [ [ Doc.text "Arrow Left / Right"
+            ; Doc.text "The previous or next slide."
+            ]
+          ]
       ]
     [ Doc.example ~page "Demo" demo
     ; Doc.example ~page "Sizes" size

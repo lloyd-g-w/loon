@@ -2,7 +2,6 @@ open! Import
 open Js_of_ocaml
 
 let breakpoint = 768
-
 let in_browser () = Js.Optdef.test (Js.Unsafe.global##.window : _ Js.Optdef.t)
 let is_mobile () = in_browser () && Dom_html.window##.innerWidth < breakpoint
 
@@ -17,7 +16,8 @@ let component (local_ graph) =
   (* The listener added on activation, to remove on deactivation. *)
   let listener = Bonsai.Expert.thunk ~f:(fun () -> ref None) graph in
   let on_activate =
-    let%arr set_mobile and listener in
+    let%arr set_mobile
+    and listener in
     let register () =
       if in_browser () && Option.is_none !listener
       then (
@@ -29,7 +29,10 @@ let component (local_ graph) =
         (mql##addEventListener (Js.string "change") f : unit);
         listener := Some (mql, f))
     in
-    Effect.Many [ Effect.of_thunk register; Effect.lazy_ (lazy (set_mobile (is_mobile ()))) ]
+    Effect.Many
+      [ Effect.of_thunk register
+      ; Effect.lazy_ (lazy (set_mobile (is_mobile ())))
+      ]
   in
   let on_deactivate =
     let%arr listener in

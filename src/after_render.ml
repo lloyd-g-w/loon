@@ -14,13 +14,18 @@ struct
         type t = Dom_html.element Js.t -> unit
 
         let sexp_of_t = sexp_of_opaque
-        let combine f g el = f el; g el
+
+        let combine f g el =
+          f el;
+          g el
+        ;;
       end
 
       let init _ _ = ()
 
       let on_mount =
-        `Schedule_immediately_after_this_dom_patch_completes (fun f () el -> f el)
+        `Schedule_immediately_after_this_dom_patch_completes
+          (fun f () el -> f el)
       ;;
 
       let update ~old_input:_ ~new_input () el =
@@ -41,8 +46,7 @@ let hooks = String.Table.create ()
 let attr ~name f =
   let make =
     Hashtbl.find_or_add hooks name ~default:(fun () ->
-      let module M =
-        Make (struct
+      let module M = Make (struct
           let name = "loon-after-render-" ^ name
         end)
       in
@@ -61,7 +65,7 @@ let cancel_now key =
 
 let cancel key = Effect.of_thunk (fun () -> cancel_now key)
 
-let schedule key ms effect =
+let schedule key ms eff =
   Effect.of_thunk (fun () ->
     cancel_now key;
     if in_browser ()
@@ -70,7 +74,7 @@ let schedule key ms effect =
         Js.Unsafe.global##setTimeout
           (Js.wrap_callback (fun () ->
              Hashtbl.remove timers key;
-             Effect.Expert.handle_non_dom_event_exn effect))
+             Effect.Expert.handle_non_dom_event_exn eff))
           ms
       in
       Hashtbl.set timers ~key ~data:id))

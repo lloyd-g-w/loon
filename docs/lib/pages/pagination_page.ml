@@ -12,10 +12,16 @@ let demo =
   Pagination.root
     [ Pagination.content
         [ Pagination.item [ Pagination.previous ~href:"#/pagination" () ]
-        ; Pagination.item [ Pagination.link ~href:"#/pagination" [ Node.text "1" ] ]
         ; Pagination.item
-            [ Pagination.link ~href:"#/pagination" ~is_active:true [ Node.text "2" ] ]
-        ; Pagination.item [ Pagination.link ~href:"#/pagination" [ Node.text "3" ] ]
+            [ Pagination.link ~href:"#/pagination" [ Node.text "1" ] ]
+        ; Pagination.item
+            [ Pagination.link
+                ~href:"#/pagination"
+                ~is_active:true
+                [ Node.text "2" ]
+            ]
+        ; Pagination.item
+            [ Pagination.link ~href:"#/pagination" [ Node.text "3" ] ]
         ; Pagination.item [ Pagination.ellipsis () ]
         ; Pagination.item [ Pagination.next ~href:"#/pagination" () ]
         ]
@@ -29,12 +35,15 @@ let demo =
    one; [on_click] changes page without following the link. *)
 let with_state (local_ graph) =
   let current, set_current = Bonsai.state 5 graph in
-  let%arr current and set_current in
+  let%arr current
+  and set_current in
   let pages = 20 in
   let go p = set_current (Int.clamp_exn p ~min:1 ~max:pages) in
   Pagination.root
     [ Pagination.content
-        ([ Pagination.item [ Pagination.previous ~href:"#" ~on_click:(go (current - 1)) () ] ]
+        ([ Pagination.item
+             [ Pagination.previous ~href:"#" ~on_click:(go (current - 1)) () ]
+         ]
          @ List.map (Pagination.entries ~page:current ~pages ()) ~f:(function
            | Ellipsis -> Pagination.item [ Pagination.ellipsis () ]
            | Page p ->
@@ -45,9 +54,12 @@ let with_state (local_ graph) =
                    ~on_click:(go p)
                    [ Node.text (Int.to_string p) ]
                ])
-         @ [ Pagination.item [ Pagination.next ~href:"#" ~on_click:(go (current + 1)) () ] ]
-        )
+         @ [ Pagination.item
+               [ Pagination.next ~href:"#" ~on_click:(go (current + 1)) () ]
+           ])
     ]
+;;
+
 (*$*)
 
 let page =
@@ -70,7 +82,8 @@ let page =
       ; Doc.props
           [ ( "is_active"
             , "bool"
-            , "[Pagination.link]: the current page (outlined, [aria-current=\"page\"])." )
+            , "[Pagination.link]: the current page (outlined, \
+               [aria-current=\"page\"])." )
           ; "size", "Button.Size.t", "[Pagination.link]: [Icon] by default."
           ; "href", "string", "Where the link goes."
           ; ( "on_click"

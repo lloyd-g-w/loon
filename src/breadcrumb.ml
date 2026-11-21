@@ -40,7 +40,10 @@ let link_classes ?class_ () = Cn.cn (link_base :: Option.to_list class_)
 let link ?(attrs = []) ?class_ ~href children =
   Node.a
     ~attrs:
-      ([ data "slot" "breadcrumb-link"; Attr.href href; Cn.with_class ?class_ [ link_base ] ]
+      ([ data "slot" "breadcrumb-link"
+       ; Attr.href href
+       ; Cn.with_class ?class_ [ link_base ]
+       ]
        @ attrs)
     children
 ;;

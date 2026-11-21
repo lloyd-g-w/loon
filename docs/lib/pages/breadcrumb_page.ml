@@ -14,9 +14,13 @@ let demo (local_ graph) =
       ~align:Start
       ~trigger:(fun attrs ->
         Node.button
-          ~attrs:([ Attr.type_ "button"; Attr.class_ "flex items-center gap-1" ] @ attrs)
+          ~attrs:
+            ([ Attr.type_ "button"; Attr.class_ "flex items-center gap-1" ]
+             @ attrs)
           [ Breadcrumb.ellipsis ~class_:"size-4" ()
-          ; Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "Toggle menu" ]
+          ; Node.span
+              ~attrs:[ Attr.class_ "sr-only" ]
+              [ Node.text "Toggle menu" ]
           ])
       (Bonsai.return
          Dropdown_menu.Item.
@@ -34,11 +38,14 @@ let demo (local_ graph) =
         ; Breadcrumb.item [ menu ]
         ; Breadcrumb.separator ()
         ; Breadcrumb.item
-            [ Breadcrumb.link ~href:"#/introduction" [ Node.text "Components" ] ]
+            [ Breadcrumb.link ~href:"#/introduction" [ Node.text "Components" ]
+            ]
         ; Breadcrumb.separator ()
         ; Breadcrumb.item [ Breadcrumb.page [ Node.text "Breadcrumb" ] ]
         ]
     ]
+;;
+
 (*$*)
 
 (*$ Custom separator
@@ -49,7 +56,8 @@ let custom_separator =
         [ Breadcrumb.item [ Breadcrumb.link ~href:"#/" [ Node.text "Home" ] ]
         ; Breadcrumb.separator ~children:[ Icon.view Slash ] ()
         ; Breadcrumb.item
-            [ Breadcrumb.link ~href:"#/introduction" [ Node.text "Components" ] ]
+            [ Breadcrumb.link ~href:"#/introduction" [ Node.text "Components" ]
+            ]
         ; Breadcrumb.separator ~children:[ Icon.view Slash ] ()
         ; Breadcrumb.item [ Breadcrumb.page [ Node.text "Breadcrumb" ] ]
         ]
@@ -69,8 +77,8 @@ let dropdown (local_ graph) =
           ~attrs:
             ([ Attr.type_ "button"
              ; Attr.class_
-                 "flex items-center gap-1 [&_svg]:pointer-events-none [&_svg]:shrink-0 \
-                  [&_svg:not([class*='size-'])]:size-3.5"
+                 "flex items-center gap-1 [&_svg]:pointer-events-none \
+                  [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-3.5"
              ]
              @ attrs)
           [ Node.text "Components"; Icon.view Chevron_down ])
@@ -92,6 +100,8 @@ let dropdown (local_ graph) =
         ; Breadcrumb.item [ Breadcrumb.page [ Node.text "Breadcrumb" ] ]
         ]
     ]
+;;
+
 (*$*)
 
 (*$ Collapsed
@@ -104,7 +114,8 @@ let collapsed =
         ; Breadcrumb.item [ Breadcrumb.ellipsis () ]
         ; Breadcrumb.separator ()
         ; Breadcrumb.item
-            [ Breadcrumb.link ~href:"#/introduction" [ Node.text "Components" ] ]
+            [ Breadcrumb.link ~href:"#/introduction" [ Node.text "Components" ]
+            ]
         ; Breadcrumb.separator ()
         ; Breadcrumb.item [ Breadcrumb.page [ Node.text "Breadcrumb" ] ]
         ]
@@ -129,7 +140,8 @@ let link_component =
             ]
         ; Breadcrumb.separator ()
         ; Breadcrumb.item
-            [ Breadcrumb.link ~href:"#/introduction" [ Node.text "Components" ] ]
+            [ Breadcrumb.link ~href:"#/introduction" [ Node.text "Components" ]
+            ]
         ; Breadcrumb.separator ()
         ; Breadcrumb.item [ Breadcrumb.page [ Node.text "Breadcrumb" ] ]
         ]
@@ -201,6 +213,8 @@ let responsive (local_ graph) =
                         [ Node.text label ]
                     ])))
     ]
+;;
+
 (*$*)
 
 let page =
@@ -208,7 +222,8 @@ let page =
     ~slug:page
     ~title:"Breadcrumb"
     ~group:Navigation
-    ~description:"Displays the path to the current resource using a hierarchy of links."
+    ~description:
+      "Displays the path to the current resource using a hierarchy of links."
     ~usage:
       {|Breadcrumb.root
   [ Breadcrumb.list
@@ -224,8 +239,12 @@ let page =
       ; Doc.props
           [ "root", "Node.t list", "The [<nav aria-label=\"breadcrumb\">]."
           ; "list", "Node.t list", "The [<ol>] of items and separators."
-          ; "item", "Node.t list", "An [<li>] holding a link, the page or a menu."
-          ; "link", "~href", "A link to an ancestor ([link_classes] for other elements)."
+          ; ( "item"
+            , "Node.t list"
+            , "An [<li>] holding a link, the page or a menu." )
+          ; ( "link"
+            , "~href"
+            , "A link to an ancestor ([link_classes] for other elements)." )
           ; "page", "Node.t list", "The current page ([aria-current=\"page\"])."
           ; "separator", "?children", "A chevron, or [children] (e.g. a slash)."
           ; "ellipsis", "unit", "Stands for collapsed items."

@@ -24,7 +24,12 @@ val list : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
 val item : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
 
 (** An [<a>] to an ancestor page. *)
-val link : ?attrs:Attr.t list -> ?class_:string -> href:string -> Node.t list -> Node.t
+val link
+  :  ?attrs:Attr.t list
+  -> ?class_:string
+  -> href:string
+  -> Node.t list
+  -> Node.t
 
 (** shadcn's [BreadcrumbLink]'s classes, for another element acting as a
     link ([<BreadcrumbLink asChild>]). *)
@@ -34,7 +39,12 @@ val link_classes : ?class_:string -> unit -> string
 val page : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
 
 (** Between items: a chevron, or [children]. *)
-val separator : ?attrs:Attr.t list -> ?class_:string -> ?children:Node.t list -> unit -> Node.t
+val separator
+  :  ?attrs:Attr.t list
+  -> ?class_:string
+  -> ?children:Node.t list
+  -> unit
+  -> Node.t
 
 (** "…" standing for collapsed items. *)
 val ellipsis : ?attrs:Attr.t list -> ?class_:string -> unit -> Node.t

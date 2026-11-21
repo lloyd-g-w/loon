@@ -11,10 +11,14 @@ let parts nav =
           ; Navigation_menu.content
               nav
               ~value:"home"
-              [ Navigation_menu.link ~href:"/intro" [ Node.text "Introduction" ] ]
+              [ Navigation_menu.link ~href:"/intro" [ Node.text "Introduction" ]
+              ]
           ]
       ; Navigation_menu.item
-          [ Navigation_menu.trigger nav ~value:"components" [ Node.text "Components" ]
+          [ Navigation_menu.trigger
+              nav
+              ~value:"components"
+              [ Node.text "Components" ]
           ; Navigation_menu.content
               nav
               ~value:"components"
@@ -38,7 +42,8 @@ let%expect_test "shadcn's classes" =
        ~value:(Some "home")
        ~on_change:(fun _ -> Bonsai_web.Effect.Ignore)
        parts);
-  [%expect {|
+  [%expect
+    {|
     <nav id="navigation-menu"
          aria-label="Main"
          data-orientation="horizontal"
@@ -165,10 +170,13 @@ let%expect_test "shadcn's classes" =
 
 let%expect_test "triggers open their content in the viewport; Esc closes it" =
   let handle =
-    Render.handle ~classes:false (Navigation_menu.component (Bonsai_web.Bonsai.return parts))
+    Render.handle
+      ~classes:false
+      (Navigation_menu.component (Bonsai_web.Bonsai.return parts))
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <nav id="bonsai_path_replaced_in_test"
          aria-label="Main"
          data-orientation="horizontal"
@@ -246,7 +254,8 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
     |}];
   Drive.click handle "[id$=trigger-home]";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <nav id="bonsai_path_replaced_in_test"
            aria-label="Main"
            data-orientation="horizontal"
@@ -335,7 +344,8 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
   (* Another trigger: its content slides in from the end. *)
   Drive.click handle "[id$=trigger-components]";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <nav id="bonsai_path_replaced_in_test"
            aria-label="Main"
            data-orientation="horizontal"
@@ -435,7 +445,8 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
     |}];
   Drive.key handle "nav" Escape;
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
     ("default prevented" (key Escape))
 
       <nav id="bonsai_path_replaced_in_test"
@@ -561,7 +572,8 @@ let%expect_test "without a viewport, the content drops down in its item" =
          (Bonsai_web.Bonsai.return parts))
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <nav id="bonsai_path_replaced_in_test"
          aria-label="Main"
          data-orientation="horizontal"
