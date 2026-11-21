@@ -813,14 +813,11 @@ let keys ctx =
       | _ -> Effect.Ignore))
 ;;
 
-(* typeset/page.tsx's, with section-soft's colours and the height below the
-   docs' header. *)
+(* typeset/page.tsx's. *)
 let page_class =
-  "relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden bg-linear-to-b \
-   from-background to-[oklch(0.98_0_0)]/40 dark:bg-background \
-   dark:to-[oklch(0.2_0_0)]/40 \
+  "relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden section-soft \
    [--customizer-width:--spacing(48)] [--gap:--spacing(4)] md:[--gap:--spacing(6)] \
-   2xl:[--customizer-width:--spacing(56)] h-[calc(100svh-var(--docs-header))]"
+   2xl:[--customizer-width:--spacing(56)]"
 ;;
 
 let component ~mode ~set_mode ~query ~set_query (local_ graph) =
@@ -914,7 +911,7 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
       ~attrs:
         [ data "tool" "typeset"
         ; Loon.Cn.attr
-            [ "h-[calc(100svh-var(--docs-header))]"; Customize_fonts.root_class ]
+            [ "h-full"; Customize_fonts.root_class ]
         ]
       [ Customize_fonts.style; preview_root params ]
   else

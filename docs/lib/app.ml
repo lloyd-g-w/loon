@@ -313,15 +313,27 @@ let search_trigger ~open_search =
     ]
 ;;
 
-let site_header ~section ~mobile_open ~set_mobile_open ~open_search ~toggle_mode =
+let site_header
+  ~section
+  ~mobile_open
+  ~set_mobile_open
+  ~open_search
+  ~toggle_mode
+  ~designer_actions
+  =
   Node.header
     ~attrs:[ Attr.class_ "sticky top-0 z-50 w-full bg-background" ]
     [ Node.div
-        ~attrs:[ Attr.class_ "container-wrapper px-6 3xl:fixed:px-0" ]
+        ~attrs:
+          [ Attr.class_
+              "container-wrapper px-6 group-has-data-[slot=designer]/layout:max-w-none \
+               3xl:fixed:px-0"
+          ]
         [ Node.div
             ~attrs:
               [ Attr.class_
                   "flex h-(--header-height) items-center **:data-[slot=separator]:h-4! \
+                   group-has-data-[slot=designer]/layout:fixed:max-w-none \
                    3xl:fixed:container"
               ]
             [ mobile_nav ~open_:mobile_open ~set_open:set_mobile_open
@@ -337,6 +349,18 @@ let site_header ~section ~mobile_open ~set_mobile_open ~open_search ~toggle_mode
                 ; github_link
                 ; separator ()
                 ; mode_switcher ~on_click:toggle_mode
+                  (* shadcn's DesignerActions: Get Code on Create (its "Open in
+                     v0" has no loon counterpart). *)
+                ; (match designer_actions with
+                   | None -> Node.none
+                   | Some actions ->
+                     Node.div
+                       ~attrs:
+                         [ Attr.class_
+                             "hidden items-center gap-2 \
+                              group-has-data-[slot=designer]/layout:md:flex"
+                         ]
+                       [ separator (); actions ])
                 ; Node.div
                     ~attrs:[ Attr.class_ "flex items-center gap-2 md:hidden" ]
                     [ separator ()
@@ -366,7 +390,7 @@ let site_footer =
     ~attrs:
       [ Attr.class_
           "group-has-[.section-soft]/body:bg-surface/40 \
-           group-has-[[data-slot=docs]]/body:hidden dark:bg-transparent \
+           group-has-[[data-slot=designer]]/body:hidden group-has-[[data-slot=docs]]/body:hidden dark:bg-transparent \
            dark:group-has-[.section-soft]/body:bg-surface/40 3xl:fixed:bg-transparent"
       ]
     [ Node.div
@@ -1513,7 +1537,23 @@ let docs ~hash ~set_hash (local_ graph) =
         main_view shown ~outline ~mode ~set_mode:set_mode_saved ~hash ~set_hash graph)
       graph
   in
+  let designer_actions =
+    Bonsai.enum
+      (module Shown)
+      ~match_:shown
+      ~with_:(fun shown (local_ graph) ->
+        match shown with
+        | Tool "create" ->
+          Bonsai.map
+            (Create_page.header_actions
+               ~query:(Bonsai.map hash ~f:Customize_query.of_hash)
+               graph)
+            ~f:Option.some
+        | _ -> Bonsai.return None)
+      graph
+  in
   let%arr main
+  and designer_actions
   and shown
   and mode
   and set_mode
@@ -1562,7 +1602,8 @@ let docs ~hash ~set_hash (local_ graph) =
   Node.div
     ~attrs:
       [ Attr.create "data-slot" "layout"
-      ; Attr.class_ "group/layout relative z-10 flex min-h-svh flex-col bg-background"
+      ; Attr.class_ "group/layout relative z-10 flex min-h-svh flex-col bg-background \
+           has-data-[slot=designer]:h-svh has-data-[slot=designer]:overflow-hidden"
       ; global_keys
       ]
     [ site_header
@@ -1571,6 +1612,7 @@ let docs ~hash ~set_hash (local_ graph) =
         ~set_mobile_open:set_nav_open
         ~open_search
         ~toggle_mode
+        ~designer_actions
     ; Node.main ~attrs:[ Attr.id "main"; Attr.class_ "flex min-h-0 flex-1 flex-col" ] [ main ]
     ; site_footer
     ; search_dialog

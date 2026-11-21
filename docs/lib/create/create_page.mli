@@ -13,3 +13,7 @@ val component
   -> set_query:(string -> unit Effect.t) Bonsai.t
   -> local_ Bonsai.graph
   -> Vdom.Node.t Bonsai.t
+
+(** The site header's actions on this page (shadcn's [DesignerActions]):
+    Get Code, for the preset in [query]. *)
+val header_actions : query:string Bonsai.t -> local_ Bonsai.graph -> Vdom.Node.t Bonsai.t
