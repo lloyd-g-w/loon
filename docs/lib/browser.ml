@@ -5,6 +5,10 @@ let in_browser () = Js.Optdef.test (Js.Unsafe.global##.document : _ Js.Optdef.t)
 let hash () = Js.to_string Dom_html.window##.location##.hash
 let set_hash h = Dom_html.window##.location##.hash := Js.string h
 
+let replace_hash h =
+  Dom_html.window##.history##replaceState Js.null (Js.string "") (Js.some (Js.string h))
+;;
+
 let storage () =
   try Js.Optdef.to_option Dom_html.window##.localStorage with
   | _ -> None

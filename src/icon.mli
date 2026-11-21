@@ -7,6 +7,7 @@
 open! Import
 
 type t =
+  | A_large_small
   | Activity
   | App_window
   | Archive
@@ -14,6 +15,7 @@ type t =
   | Arrow_down
   | Arrow_down_from_line
   | Arrow_left
+  | Arrow_left_right
   | Arrow_right
   | Arrow_up
   | Arrow_up_down
@@ -28,10 +30,12 @@ type t =
   | Bookmark
   | Bot
   | Brain
+  | Building_complex
   | Calculator
   | Calendar
   | Calendar_plus
   | Camera
+  | Car
   | Chart_area
   | Chart_column
   | Chart_column_big
@@ -60,10 +64,13 @@ type t =
   | Clock
   | Clock_2
   | Cloud
+  | Cloud_upload
   | Code
   | Code_xml
+  | Coffee
   | Columns_2
   | Command
+  | Container
   | Contrast
   | Copy
   | Corner_down_left
@@ -79,6 +86,7 @@ type t =
   | Eye_off
   | Face_slightly_smiling
   | File
+  | File_chart_column_increasing
   | File_code
   | File_text
   | File_type
@@ -109,6 +117,7 @@ type t =
   | Italic
   | Keyboard
   | Laptop
+  | Layout_dashboard
   | Layout_list
   | Letter_b
   | Life_buoy
@@ -120,6 +129,8 @@ type t =
   | Loader
   | Loader_circle
   | Lock
+  | Lock_keyhole
+  | Lock_open
   | Log_out
   | Mail
   | Mail_check
@@ -127,10 +138,12 @@ type t =
   | Menu
   | Message_circle
   | Message_circle_question_mark
+  | Message_square
   | Minus
   | Monitor
   | Moon
   | Mouse_pointer_2
+  | Move_horizontal
   | Move_right
   | Octagon_x
   | Paintbrush
@@ -138,20 +151,26 @@ type t =
   | Panel_left_close
   | Panel_left_open
   | Pencil
+  | Pilcrow
   | Plus
   | Popcorn
   | Radar
   | Redo
   | Refresh_ccw
   | Refresh_cw
+  | Repeat
   | Rotate_ccw
   | Rotate_cw
   | Search
   | Send
+  | Server
   | Settings
   | Settings_2
   | Share
+  | Shield
   | Shield_exclamation_point
+  | Shopping_bag
+  | Shopping_cart
   | Slash
   | Sliders_horizontal
   | Smartphone
@@ -165,15 +184,18 @@ type t =
   | Sun
   | Tablet
   | Tag
+  | Target
   | Terminal
   | Text_align_center
   | Text_align_end
   | Text_align_start
+  | Thermometer
   | Timer
   | Trash
   | Trending_down
   | Trending_up
   | Triangle_exclamation_point
+  | Tv
   | Type
   | Underline
   | Undo
@@ -182,9 +204,12 @@ type t =
   | User_round_x
   | Users
   | Video
+  | Volume_2
   | Volume_off
+  | Wallet
   | Waves_horizontal
   | X
+  | Zap
 [@@deriving enumerate, sexp_of, compare, equal]
 
 (** Lucide's name for it: [circle-check]. *)

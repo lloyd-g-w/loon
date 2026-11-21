@@ -196,6 +196,7 @@ let checkbox_item
 let radio_item
   ?(attrs = [])
   ?class_
+  ?indicator:indicator_icon
   ?(disabled = false)
   ?text_value
   ?(close_on_select = true)
@@ -219,7 +220,12 @@ let radio_item
                ]
                @ nav
                @ attrs)
-            (indicator c ~checked (Icon.view ~class_:"size-2 fill-current" Circle)
+            (indicator
+               c
+               ~checked
+               (match indicator_icon with
+                | Some icon -> icon
+                | None -> Icon.view ~class_:"size-2 fill-current" Circle)
              :: children))
     }
 ;;

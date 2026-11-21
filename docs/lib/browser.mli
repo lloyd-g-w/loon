@@ -7,6 +7,9 @@ val in_browser : unit -> bool
 val hash : unit -> string
 val set_hash : string -> unit
 
+(** Changes the hash in place: no history entry and no [hashchange]. *)
+val replace_hash : string -> unit
+
 (** Calls [f] with the new hash whenever it changes (links, back/forward). *)
 val on_hash_change : (string -> unit) -> unit
 

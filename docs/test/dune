@@ -1,12 +1,25 @@
-; Expect tests for the docs app's pure parts: routes, highlighting, search.
+; Expect tests for the docs app: its pure parts (routes, highlighting,
+; search, the customisers' presets and CSS), and the customisers driven by
+; Bonsai_web_test's handles.
 
 (library
  (name loon_docs_test)
  (enabled_if %{bin-available:node})
  (preprocess
-  (pps ppx_jane js_of_ocaml-ppx))
+  (pps ppx_jane js_of_ocaml-ppx bonsai.ppx_bonsai))
  (inline_tests
   (modes js)
   (flags
    (-source-tree-root .)))
- (libraries core expect_test_helpers_core loon_docs))
+ (libraries
+  core
+  bonsai
+  bonsai_web
+  bonsai_web_test
+  bonsai_test
+  virtual_dom
+  virtual_dom.vdom_test_helpers
+  expect_test_helpers_core
+  js_of_ocaml
+  loon
+  loon_docs))

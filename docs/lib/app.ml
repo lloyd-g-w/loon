@@ -56,23 +56,30 @@ module Shown = struct
   type t =
     | Home
     | Page of string
+    | Tool of string (* Create and Typeset: full-page customisers *)
     | Not_found
   [@@deriving compare, equal, sexp_of]
 
+  let tools = [ "create"; "typeset" ]
+
   let all =
-    Home :: Page components_slug :: Not_found :: List.map pages ~f:(fun p -> Page p.slug)
+    (Home :: Page components_slug :: Not_found :: List.map pages ~f:(fun p -> Page p.slug))
+    @ List.map tools ~f:(fun t -> Tool t)
   ;;
 
   let of_hash hash =
     match Route.of_hash hash with
     | Home -> Home
     | Page slug when String.equal slug components_slug -> Page slug
+    | Page slug when List.mem tools slug ~equal:String.equal -> Tool slug
     | Page slug -> if Option.is_some (find_page slug) then Page slug else Not_found
   ;;
 
   let section = function
     | Page s when String.equal s components_slug -> Some Doc.Section.Components
     | Page s -> Option.map (find_page s) ~f:(fun p -> p.section)
+    | Tool "create" -> Some Doc.Section.Create
+    | Tool _ -> Some Doc.Section.Typeset
     | Home | Not_found -> None
   ;;
 end
@@ -1332,6 +1339,8 @@ let title_of (shown : Shown.t) =
   | Home -> "loon - The Foundation for your Design System"
   | Not_found -> "Not found - loon"
   | Page slug when String.equal slug components_slug -> "Components - loon"
+  | Tool "create" -> "Create - loon"
+  | Tool _ -> "Typeset - loon"
   | Page slug ->
     (match find_page slug with
      | Some p -> p.title ^ " - loon"
@@ -1364,9 +1373,21 @@ let docs_layout ~current content =
     ]
 ;;
 
-let main_view (shown : Shown.t) ~outline (local_ graph) =
+let main_view (shown : Shown.t) ~outline ~mode ~set_mode ~hash ~set_hash (local_ graph) =
   match shown with
   | Home -> Home.view graph
+  | Tool slug ->
+    let query = Bonsai.map hash ~f:Customize_query.of_hash in
+    let set_query =
+      Bonsai.return (fun q ->
+        let h = Customize_query.to_hash ~slug q in
+        Effect.of_thunk (fun () ->
+          Browser.replace_hash h;
+          set_hash h))
+    in
+    (match slug with
+     | "create" -> Create_page.component ~mode ~set_mode ~query ~set_query graph
+     | _ -> Typeset_page.component ~mode ~set_mode ~query ~set_query graph)
   | Not_found -> Bonsai.return not_found
   | Page slug when String.equal slug components_slug ->
     Bonsai.return
@@ -1402,7 +1423,7 @@ let main_view (shown : Shown.t) ~outline (local_ graph) =
             content))
 ;;
 
-let docs ~hash (local_ graph) =
+let docs ~hash ~set_hash (local_ graph) =
   Browser.install_scroll_spy ();
   let shown = Bonsai.map hash ~f:Shown.of_hash in
   let initial_mode =
@@ -1412,6 +1433,14 @@ let docs ~hash (local_ graph) =
     | _ -> Loon.Theme.Mode.preferred ()
   in
   let mode, set_mode = Bonsai.state initial_mode graph in
+  let set_mode_saved =
+    let%arr set_mode in
+    fun m ->
+      Effect.Many
+        [ set_mode m
+        ; Effect.of_thunk (fun () -> Browser.set_item "loon-docs-mode" (mode_name m))
+        ]
+  in
   let nav_open, set_nav_open = Bonsai.state false graph in
   let search_open, set_search_open = Bonsai.state false graph in
   let search, set_search = Bonsai.state Cmdk.State.empty graph in
@@ -1478,7 +1507,8 @@ let docs ~hash (local_ graph) =
     Bonsai.enum
       (module Shown)
       ~match_:shown
-      ~with_:(fun shown (local_ graph) -> main_view shown ~outline graph)
+      ~with_:(fun shown (local_ graph) ->
+        main_view shown ~outline ~mode ~set_mode:set_mode_saved ~hash ~set_hash graph)
       graph
   in
   let%arr main
@@ -1575,5 +1605,5 @@ let component (local_ graph) =
       ~with_:(fun name (local_ graph) ->
         Block_viewer.full_page (Option.value_exn (Loon_blocks.Block.find name)) graph)
       graph
-  | None -> docs ~hash graph
+  | None -> docs ~hash ~set_hash:(Bonsai.Expert.Var.set hash_var) graph
 ;;

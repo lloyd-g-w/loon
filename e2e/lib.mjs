@@ -74,7 +74,7 @@ export async function open(engineName, { device = "desktop", colorScheme = "ligh
 // The page drawn, and its fonts loaded; with [slug], that page's article (a
 // goto that only changes the hash keeps the old one for a frame or two).
 export async function ready(page, slug) {
-  await page.waitForSelector(slug === undefined ? "[data-page], [data-block-page]" : `[data-page="${slug}"]`);
+  await page.waitForSelector(slug === undefined ? "[data-page], [data-block-page], [data-tool]" : `[data-page="${slug}"], [data-tool="${slug}"]`);
   await page.evaluate(() =>
     Promise.all([
       document.fonts.load('1em "Geist"'),
