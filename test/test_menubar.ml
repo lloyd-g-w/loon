@@ -96,6 +96,12 @@ let%expect_test "shadcn's classes" =
                overflow: visible;
                max-width: none;
                max-height: none;
+               white-space: normal;
+               text-align: start;
+               font-weight: normal;
+               font-style: normal;
+               letter-spacing: normal;
+               text-transform: none;
              }>
           <div data-slot="menubar-content"
                id="menubar-0-content"

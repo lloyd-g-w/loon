@@ -68,6 +68,12 @@ let%expect_test "shadcn's classes, open" =
              overflow: visible;
              max-width: none;
              max-height: none;
+             white-space: normal;
+             text-align: start;
+             font-weight: normal;
+             font-style: normal;
+             letter-spacing: normal;
+             text-transform: none;
              position: fixed;
              width: 100%;
              height: 100%;
@@ -176,6 +182,12 @@ let%expect_test "size sm, with media" =
              overflow: visible;
              max-width: none;
              max-height: none;
+             white-space: normal;
+             text-align: start;
+             font-weight: normal;
+             font-style: normal;
+             letter-spacing: normal;
+             text-transform: none;
              position: fixed;
              width: 100%;
              height: 100%;
@@ -295,6 +307,12 @@ let%expect_test
              overflow: visible;
              max-width: none;
              max-height: none;
+             white-space: normal;
+             text-align: start;
+             font-weight: normal;
+             font-style: normal;
+             letter-spacing: normal;
+             text-transform: none;
              position: fixed;
              width: 100%;
              height: 100%;
