@@ -32,7 +32,10 @@ let view (local_ graph) =
     [ Card.content ~class_:"px-4" [ calendar.view ]
     ; Card.footer
         ~class_:"flex gap-2 border-t px-4 !pt-4 *:[div]:w-full"
-        [ time_input ~id:"time-from" ~label:"Start Time" ~default_value:"10:30:00"
+        [ time_input
+            ~id:"time-from"
+            ~label:"Start Time"
+            ~default_value:"10:30:00"
         ; Node.span [ Node.text "-" ]
         ; time_input ~id:"time-to" ~label:"End Time" ~default_value:"12:30:00"
         ]

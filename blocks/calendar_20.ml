@@ -11,7 +11,10 @@ let time_slots =
     sprintf "%02d:%02d" ((total_minutes / 60) + 9) (total_minutes % 60))
 ;;
 
-let booked_dates = List.init 3 ~f:(fun i -> Date.create_exn ~y:2025 ~m:Jun ~d:(17 + i))
+let booked_dates =
+  List.init 3 ~f:(fun i -> Date.create_exn ~y:2025 ~m:Jun ~d:(17 + i))
+;;
+
 let is_booked d = List.mem booked_dates d ~equal:Date.equal
 
 let view (local_ graph) =
@@ -22,14 +25,17 @@ let view (local_ graph) =
       ~show_outside_days:false
       ~modifiers:[ is_booked, "[&>button]:line-through opacity-100" ]
       ~class_:
-        "bg-transparent p-0 [--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
+        "bg-transparent p-0 [--cell-size:--spacing(10)] \
+         md:[--cell-size:--spacing(12)]"
       ~format_weekday_name:(fun day ->
         String.prefix (Day_of_week.to_string_long day |> String.capitalize) 3)
       ~default:(Single (Some (Date.create_exn ~y:2025 ~m:Jun ~d:12)))
       graph
   in
   let selected_time, set_selected_time = Bonsai.state (Some "10:00") graph in
-  let%arr calendar and selected_time and set_selected_time in
+  let%arr calendar
+  and selected_time
+  and set_selected_time in
   let date =
     match calendar.selected with
     | Single d -> d
@@ -43,9 +49,9 @@ let view (local_ graph) =
         ; Node.div
             ~attrs:
               [ Attr.class_
-                  "no-scrollbar inset-y-0 right-0 flex max-h-72 w-full scroll-pb-6 \
-                   flex-col gap-4 overflow-y-auto border-t p-6 md:absolute \
-                   md:max-h-none md:w-48 md:border-t-0 md:border-l"
+                  "no-scrollbar inset-y-0 right-0 flex max-h-72 w-full \
+                   scroll-pb-6 flex-col gap-4 overflow-y-auto border-t p-6 \
+                   md:absolute md:max-h-none md:w-48 md:border-t-0 md:border-l"
               ]
             [ Node.div
                 ~attrs:[ Attr.class_ "grid gap-2" ]
@@ -69,9 +75,12 @@ let view (local_ graph) =
                [ Node.text "Your meeting is booked for "
                ; Node.span
                    ~attrs:[ Attr.class_ "font-medium" ]
-                   [ Node.text (" " ^ Calendar.format "EEEE, MMMM d" date ^ " ") ]
+                   [ Node.text (" " ^ Calendar.format "EEEE, MMMM d" date ^ " ")
+                   ]
                ; Node.text "at "
-               ; Node.span ~attrs:[ Attr.class_ "font-medium" ] [ Node.text time ]
+               ; Node.span
+                   ~attrs:[ Attr.class_ "font-medium" ]
+                   [ Node.text time ]
                ; Node.text "."
                ]
              | _ -> [ Node.text "Select a date and time for your meeting." ])

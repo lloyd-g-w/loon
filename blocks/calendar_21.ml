@@ -25,7 +25,8 @@ let view (local_ graph) =
         ::
         (if outside
          then []
-         else [ Node.span [ Node.text (if is_weekend then "$220" else "$100") ] ]))
+         else
+           [ Node.span [ Node.text (if is_weekend then "$220" else "$100") ] ]))
       ~default:
         (Range
            (Some

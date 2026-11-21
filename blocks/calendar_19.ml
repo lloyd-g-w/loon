@@ -5,7 +5,12 @@ open Loon
 module Node = Vdom.Node
 
 let presets =
-  [ "Today", 0; "Tomorrow", 1; "In 3 days", 3; "In a week", 7; "In 2 weeks", 14 ]
+  [ "Today", 0
+  ; "Tomorrow", 1
+  ; "In 3 days", 3
+  ; "In a week", 7
+  ; "In 2 weeks", 14
+  ]
 ;;
 
 let view (local_ graph) =
