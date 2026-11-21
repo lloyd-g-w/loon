@@ -98,7 +98,9 @@ let view (local_ graph) =
     | Range (Some { from; to_ = Some to_ }) ->
       List.filter chart_data ~f:(fun (date, _) ->
         Date.between (Date.of_string date) ~low:from ~high:to_)
-    | _ -> chart_data
+    (* As shadcn's: with only [from], no day is [<= undefined]. *)
+    | Range (Some { to_ = None; _ }) -> []
+    | Range None | Single _ | Multiple _ -> chart_data
   in
   Card.root
     ~class_:"@container/card w-full max-w-xl"
