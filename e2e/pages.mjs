@@ -94,7 +94,7 @@ await run(async (engine, url) => {
   await page.goto(`${url}#/no-such-component`);
   await page.waitForSelector('.docs-article[data-page=""]');
   console.log(`missing: ${await text(page, ".docs-article h1")} | ${await page.title()}`);
-  await page.click(".docs-article a.loon-button");
+  await page.click(".docs-article a[data-slot=button]");
   await page.waitForSelector('.docs-article[data-page="introduction"]');
   console.log(`back home: ${await page.evaluate(() => location.hash)}`);
 

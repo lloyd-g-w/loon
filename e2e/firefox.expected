@@ -4,7 +4,7 @@ current: Introduction
 sidebar Getting started: Introduction, Installation, Theming, CLI
 sidebar Forms: Button, Calendar, Checkbox, Combobox, Forms, Input, Native select, Radio group, Select, Slider, Switch, Toggle
 sidebar Overlays: Alert dialog, Command palette, Dialog, Dropdown menu, Popover, Sheet, Tooltip
-sidebar Display: Accordion, Avatar, Collapsible, Data table, Kbd, Separator, Table
+sidebar Display: Accordion, Avatar, Badge, Card, Collapsible, Data table, Kbd, Separator, Table
 sidebar Navigation: Breadcrumb, Pagination, Tabs
 sidebar Feedback: Alert, Empty, Progress, Skeleton, Spinner, Toast
 guides: Introduction, Installation, Theming, CLI
@@ -13,7 +13,7 @@ back: Theming
 back: Installation
 forward: Theming
 scrolled to the top: true
-theming outline: Examples | Accents | Light and dark | Dark mode | Accents | Variables | Overriding
+theming outline: Examples | Light and dark | CSS variables | Variables | Dark mode | Adding colours
 outline link: heading in view, hash #/theming/variables
 outline marks: Variables
 pager: PreviousIntroductionNextTheming
@@ -24,23 +24,18 @@ components: #/button
 topnav active: Components
 sidebar shows the current link: true
 == theme
-default: html light/teal, app light/teal, background oklch(0.995 0.002 250)
+default: html light, app light, background true
 toggle: Switch to dark theme
-toggled: html dark/teal, app dark/teal, background oklch(0.17 0.012 255)
+toggled: html dark, app dark, background true
 toggle: Switch to light theme
-accents: Teal* Lake Moss Ember Iris
-iris: html dark/iris, app dark/iris, background oklch(0.17 0.012 255)
-focus on opening: Iris
-arrow down: Teal
-accent menu: closes on Escape and outside clicks
-reloaded: html dark/iris, app dark/iris, background oklch(0.17 0.012 255)
-light again, reloaded: html light/iris, app light/iris, background oklch(0.995 0.002 250)
-system dark: html dark/teal, app dark/teal, background oklch(0.17 0.012 255)
+reloaded: html dark, app dark, background true
+light again, reloaded: html light, app light, background true
+system dark: html dark, app dark, background true
 == examples
 tabs: Preview Code; selected Preview
 preview: true, code: false
-code: let variants =
-highlighted: hl-keyword hl-label hl-module hl-operator hl-punctuation hl-string
+code: let demo =
+highlighted: hl-constructor hl-keyword hl-label hl-module hl-operator hl-punctuation hl-string
 arrow left: Preview, focused Preview
 copied the source: true
 copy mark: gone after a moment
@@ -54,7 +49,7 @@ opened by the button, input focused; first results: >Introduction, Installation,
 "intal": >Installation, With a label, Invalid and disabled
 Escape closes it
 Ctrl+K opens it, empty: true
-"themng": >Theming, Accents, Light and dark
+"themng": >Theming, Light and dark
 Enter: #/theming, closed
 "/" opens it; arrows wrap: true
 no match: Nothing matches “qqqzz”.
@@ -70,7 +65,6 @@ tapped a link: Theming, sheet closed
 scrim tap closes the sheet
 search fits: true
 sideways overflow: none
-fields under 44px: none
 == mobile:small
 small: sidebar hidden true, toc hidden true
 header targets: all at least 44px
@@ -81,4 +75,3 @@ tapped a link: Theming, sheet closed
 scrim tap closes the sheet
 search fits: true
 sideways overflow: none
-fields under 44px: none

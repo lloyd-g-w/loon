@@ -7,7 +7,7 @@ await run(async (engine, url) => {
   await page.goto(`${url}#/button`);
   await ready(page, "button");
   const example = page.locator(".docs-example").first();
-  const tabs = example.locator(".loon-tabs-trigger");
+  const tabs = example.locator("[data-slot=tabs-trigger]");
   console.log(`tabs: ${(await tabs.allTextContents()).join(" ")}; selected ${await example.locator('[aria-selected="true"]').textContent()}`);
   console.log(`preview: ${await example.locator(".docs-preview").isVisible()}, code: ${await example.locator(".docs-example-code").isVisible()}`);
   await tabs.nth(1).click();

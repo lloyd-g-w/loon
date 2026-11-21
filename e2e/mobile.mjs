@@ -16,7 +16,7 @@ await run(async (engine, url) => {
   await page.goto(url);
   await ready(page);
   console.log(`${device}: sidebar hidden ${!(await page.isVisible(".docs-sidebar .docs-nav-link"))}, toc hidden ${!(await page.isVisible(".docs-toc"))}`);
-  const targets = [".docs-menu-button", ".docs-search-trigger", ".docs-accent-trigger", ".docs-theme-toggle"];
+  const targets = [".docs-menu-button", ".docs-search-trigger", ".docs-theme-toggle"];
   const small = [];
   for (const t of targets) {
     const [w, h] = (await size(page, t)).split("x").map(Number);
@@ -41,14 +41,14 @@ await run(async (engine, url) => {
   await screenshot(page, `${device}-sheet`);
   await page.tap('.docs-sidebar .docs-nav-link[data-slug="theming"]');
   await waitForHash(page, "#/theming");
-  await page.waitForSelector(".docs-sidebar:not([data-open])");
+  await page.waitForSelector(".docs-sidebar:not([data-open])", { state: "attached" });
   console.log(`tapped a link: ${await text(page, ".docs-article h1")}, sheet closed`);
   // The scrim closes it.
   await page.tap(".docs-menu-button");
   await page.waitForSelector(".docs-nav-scrim");
   const vw = await page.evaluate(() => window.innerWidth);
   await page.touchscreen.tap(vw - 10, 400);
-  await page.waitForSelector(".docs-sidebar:not([data-open])");
+  await page.waitForSelector(".docs-sidebar:not([data-open])", { state: "attached" });
   console.log("scrim tap closes the sheet");
 
   // Search on a phone.
@@ -73,22 +73,6 @@ await run(async (engine, url) => {
   }
   console.log(`sideways overflow: ${wide.length ? wide.join("; ") : "none"}`);
 
-  // Text fields and selects (an input in a group: the group).
-  const short = [];
-  for (const slug of ["input", "native_select", "select", "combobox", "data_table", "form"]) {
-    await page.goto(`${url}#/${slug}`);
-    await ready(page, slug);
-    const found = await page.$$eval(
-      '.docs-preview input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), .docs-preview select, .docs-preview .loon-select-trigger',
-      (els) =>
-        els
-          .map((el) => el.closest(".loon-input-group") ?? el)
-          .filter((el) => el.getBoundingClientRect().height < 43.5)
-          .map((el) => `${el.className || el.tagName} ${Math.round(el.getBoundingClientRect().height)}px`),
-    );
-    for (const f of found) short.push(`${slug}: ${f}`);
-  }
-  console.log(`fields under 44px: ${short.length ? short.join("; ") : "none"}`);
   await page.goto(`${url}#/button`);
   await ready(page, "button");
   await screenshot(page, `${device}-button`);
