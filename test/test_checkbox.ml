@@ -1,187 +1,31 @@
 open! Core
 open Loon
+module Node = Virtual_dom.Vdom.Node
 module Handle = Bonsai_web_test.Handle
 
-let%expect_test "each state" =
-  List.iter Checkbox.State.all ~f:(fun state ->
-    Render.html
-      (Checkbox.view ~state ~on_change:(fun _ -> Bonsai_web.Effect.Ignore) ()));
+let ignore_ _ = Bonsai_web.Effect.Ignore
+
+let%expect_test "shadcn's classes" =
+  Render.html (Checkbox.view ~id:"terms" ~checked:Checked ~on_change:ignore_ ());
   [%expect
     {|
     <button type="button"
             role="checkbox"
             aria-checked="true"
+            aria-required="false"
             data-state="checked"
-            class="loon-checkbox"
-            @on_click>
-      <svg xmlns="http://www.w3.org/2000/svg"
-           width="24"
-           height="24"
-           viewBox="0 0 24 24"
-           fill="none"
-           stroke="currentColor"
-           stroke-width="2"
-           stroke-linecap="round"
-           stroke-linejoin="round"
-           aria-hidden="true"
-           class="loon-checkbox-mark lucide lucide-check">
-        <path d="M20 6 9 17l-5-5"> </path>
-      </svg>
-    </button>
-    <button type="button"
-            role="checkbox"
-            aria-checked="false"
-            data-state="unchecked"
-            class="loon-checkbox"
-            @on_click> </button>
-    <button type="button"
-            role="checkbox"
-            aria-checked="mixed"
-            data-state="indeterminate"
-            class="loon-checkbox"
-            @on_click>
-      <svg xmlns="http://www.w3.org/2000/svg"
-           width="24"
-           height="24"
-           viewBox="0 0 24 24"
-           fill="none"
-           stroke="currentColor"
-           stroke-width="2"
-           stroke-linecap="round"
-           stroke-linejoin="round"
-           aria-hidden="true"
-           class="loon-checkbox-mark lucide lucide-minus">
-        <path d="M5 12h14"> </path>
-      </svg>
-    </button>
-    |}]
-;;
-
-let%expect_test "indeterminate becomes checked" =
-  let handle =
-    Render.handle (fun _ ->
-      Bonsai_web.Bonsai.return
-        (Checkbox.view
-           ~state:Indeterminate
-           ~on_change:(fun b ->
-             Bonsai_web.Effect.of_thunk (fun () ->
-               print_s [%message (b : bool)]))
-           ()))
-  in
-  Handle.click_on handle ~get_vdom:Fn.id ~selector:"button";
-  [%expect {| (b true) |}]
-;;
-
-let%expect_test "clicking toggles it; disabled ones have no handler" =
-  let handle =
-    Control_render.handle
-      [%sexp_of: bool]
-      (Checkbox.component ~label:"Remember me")
-  in
-  Handle.show handle;
-  [%expect
-    {|
-    <div>
-      <span> value: false </span>
-      <label data-disabled="false" class="loon-checkbox-label">
-        <button type="button"
-                role="checkbox"
-                aria-checked="false"
-                data-state="unchecked"
-                class="loon-checkbox"
-                @on_click> </button>
-        <span> Remember me </span>
-      </label>
-    </div>
-    |}];
-  Handle.click_on handle ~get_vdom:Fn.id ~selector:"button";
-  Handle.show_diff handle;
-  [%expect
-    {|
-      <div>
-    -|  <span> value: false </span>
-    +|  <span> value: true </span>
-        <label data-disabled="false" class="loon-checkbox-label">
-          <button type="button"
-                  role="checkbox"
-    -|            aria-checked="false"
-    +|            aria-checked="true"
-    -|            data-state="unchecked"
-    +|            data-state="checked"
-    -|            class="loon-checkbox"
-    -|            @on_click> </button>
-    +|            class="loon-checkbox"
-    +|            @on_click>
-    +|      <svg xmlns="http://www.w3.org/2000/svg"
-    +|           width="24"
-    +|           height="24"
-    +|           viewBox="0 0 24 24"
-    +|           fill="none"
-    +|           stroke="currentColor"
-    +|           stroke-width="2"
-    +|           stroke-linecap="round"
-    +|           stroke-linejoin="round"
-    +|           aria-hidden="true"
-    +|           class="loon-checkbox-mark lucide lucide-check">
-    +|        <path d="M20 6 9 17l-5-5"> </path>
-    +|      </svg>
-    +|    </button>
-          <span> Remember me </span>
-        </label>
-      </div>
-    |}];
-  Handle.click_on handle ~get_vdom:Fn.id ~selector:"button";
-  Handle.show_diff handle;
-  [%expect
-    {|
-      <div>
-    -|  <span> value: true </span>
-    +|  <span> value: false </span>
-        <label data-disabled="false" class="loon-checkbox-label">
-          <button type="button"
-                  role="checkbox"
-    -|            aria-checked="true"
-    +|            aria-checked="false"
-    -|            data-state="checked"
-    +|            data-state="unchecked"
-    -|            class="loon-checkbox"
-    -|            @on_click>
-    -|      <svg xmlns="http://www.w3.org/2000/svg"
-    -|           width="24"
-    -|           height="24"
-    -|           viewBox="0 0 24 24"
-    -|           fill="none"
-    -|           stroke="currentColor"
-    -|           stroke-width="2"
-    -|           stroke-linecap="round"
-    -|           stroke-linejoin="round"
-    -|           aria-hidden="true"
-    -|           class="loon-checkbox-mark lucide lucide-check">
-    -|        <path d="M20 6 9 17l-5-5"> </path>
-    -|      </svg>
-    -|    </button>
-    +|            class="loon-checkbox"
-    +|            @on_click> </button>
-          <span> Remember me </span>
-        </label>
-      </div>
-    |}];
-  Render.html
-    (Checkbox.view
-       ~disabled:true
-       ~label:"Locked"
-       ~state:Checked
-       ~on_change:(fun _ -> Bonsai_web.Effect.Ignore)
-       ());
-  [%expect
-    {|
-    <label data-disabled="true" class="loon-checkbox-label">
-      <button type="button"
-              role="checkbox"
-              aria-checked="true"
-              data-state="checked"
-              disabled=""
-              class="loon-checkbox">
+            data-slot="checkbox"
+            id="terms"
+            class="aria-invalid:border-destructive aria-invalid:ring-destructive/20 border border-input dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:data-[state=checked]:bg-primary data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 outline-none peer rounded-[4px] shadow-xs shrink-0 size-4 transition-shadow"
+            #value="on"
+            @on_click
+            @on_keydown>
+      <span data-state="checked"
+            data-slot="checkbox-indicator"
+            class="grid place-content-center text-current transition-none"
+            style={
+              pointer-events: none;
+            }>
         <svg xmlns="http://www.w3.org/2000/svg"
              width="24"
              height="24"
@@ -192,11 +36,220 @@ let%expect_test "clicking toggles it; disabled ones have no handler" =
              stroke-linecap="round"
              stroke-linejoin="round"
              aria-hidden="true"
-             class="loon-checkbox-mark lucide lucide-check">
+             class="lucide lucide-check size-3.5">
           <path d="M20 6 9 17l-5-5"> </path>
         </svg>
+      </span>
+    </button>
+    |}]
+;;
+
+let%expect_test
+    "states: unchecked, checked, indeterminate; disabled, required, invalid"
+  =
+  List.iter Checkbox.State.all ~f:(fun checked ->
+    Render.html ~classes:false (Checkbox.view ~checked ~on_change:ignore_ ()));
+  Render.html
+    ~classes:false
+    (Checkbox.view
+       ~disabled:true
+       ~required:true
+       ~invalid:true
+       ~checked:Unchecked
+       ~on_change:ignore_
+       ());
+  [%expect
+    {|
+    <button type="button"
+            role="checkbox"
+            aria-checked="true"
+            aria-required="false"
+            data-state="checked"
+            data-slot="checkbox"
+            #value="on"
+            @on_click
+            @on_keydown>
+      <span data-state="checked" data-slot="checkbox-indicator" style={ pointer-events: none; }>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="M20 6 9 17l-5-5"> </path>
+        </svg>
+      </span>
+    </button>
+    <button type="button"
+            role="checkbox"
+            aria-checked="false"
+            aria-required="false"
+            data-state="unchecked"
+            data-slot="checkbox"
+            #value="on"
+            @on_click
+            @on_keydown> </button>
+    <button type="button"
+            role="checkbox"
+            aria-checked="mixed"
+            aria-required="false"
+            data-state="indeterminate"
+            data-slot="checkbox"
+            #value="on"
+            @on_click
+            @on_keydown>
+      <span data-state="indeterminate" data-slot="checkbox-indicator" style={ pointer-events: none; }>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="M20 6 9 17l-5-5"> </path>
+        </svg>
+      </span>
+    </button>
+    <button type="button"
+            role="checkbox"
+            aria-checked="false"
+            aria-required="true"
+            data-state="unchecked"
+            data-slot="checkbox"
+            aria-invalid="true"
+            data-disabled=""
+            disabled=""
+            #value="on"
+            @on_keydown> </button>
+    |}]
+;;
+
+let%expect_test "a click toggles; an indeterminate box becomes checked" =
+  let handle =
+    Control_render.handle Bool.sexp_of_t (Checkbox.component ~id:"c")
+  in
+  Handle.show handle;
+  Drive.click handle "#c";
+  Handle.show handle;
+  Drive.click handle "#c";
+  Handle.show handle;
+  [%expect
+    {|
+    <div>
+      <button type="button"
+              role="checkbox"
+              aria-checked="false"
+              aria-required="false"
+              data-state="unchecked"
+              data-slot="checkbox"
+              id="c"
+              #value="on"
+              @on_click
+              @on_keydown> </button>
+      <output> false </output>
+    </div>
+    <div>
+      <button type="button"
+              role="checkbox"
+              aria-checked="true"
+              aria-required="false"
+              data-state="checked"
+              data-slot="checkbox"
+              id="c"
+              #value="on"
+              @on_click
+              @on_keydown>
+        <span data-state="checked" data-slot="checkbox-indicator" style={ pointer-events: none; }>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true">
+            <path d="M20 6 9 17l-5-5"> </path>
+          </svg>
+        </span>
       </button>
-      <span> Locked </span>
-    </label>
+      <output> true </output>
+    </div>
+    <div>
+      <button type="button"
+              role="checkbox"
+              aria-checked="false"
+              aria-required="false"
+              data-state="unchecked"
+              data-slot="checkbox"
+              id="c"
+              #value="on"
+              @on_click
+              @on_keydown> </button>
+      <output> false </output>
+    </div>
+    |}];
+  let clicked = ref [] in
+  let indeterminate =
+    Checkbox.view
+      ~checked:Indeterminate
+      ~on_change:(fun b ->
+        clicked := b :: !clicked;
+        Bonsai_web.Effect.Ignore)
+      ()
+  in
+  let handle =
+    Render.handle ~classes:false (fun _ ->
+      Bonsai_web.Bonsai.return indeterminate)
+  in
+  Drive.click handle "button";
+  print_s [%sexp (!clicked : bool list)];
+  [%expect {| (true) |}]
+;;
+
+let%expect_test "a disabled box has no click handler" =
+  let handle =
+    Control_render.handle
+      Bool.sexp_of_t
+      (Checkbox.component ~id:"c" ~disabled:true)
+  in
+  Handle.show handle;
+  [%expect
+    {|
+    <div>
+      <button type="button"
+              role="checkbox"
+              aria-checked="false"
+              aria-required="false"
+              data-state="unchecked"
+              data-slot="checkbox"
+              id="c"
+              data-disabled=""
+              disabled=""
+              #value="on"
+              @on_keydown> </button>
+      <output> false </output>
+    </div>
+    |}]
+;;
+
+let%expect_test "Enter does not toggle (Radix: only Space, the button's click)" =
+  let handle =
+    Control_render.handle Bool.sexp_of_t (Checkbox.component ~id:"c")
+  in
+  Drive.key handle "#c" Enter;
+  Render.html ~classes:false ~selector:"output" (Handle.last_result handle);
+  [%expect
+    {|
+    ("default prevented" (key Enter))
+    <output> false </output>
     |}]
 ;;
