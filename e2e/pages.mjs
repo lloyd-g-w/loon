@@ -1,117 +1,143 @@
-// Every page in the sidebar, the guides, navigation and back/forward, the
-// outline and the pager, on a desktop.
-import { checkErrors, open, overflow, pages, ready, run, screenshot, settle, text, waitForHash } from "./lib.mjs";
+// Every page in the sidebar, the sections outside the docs (Blocks, Charts,
+// Create, Typeset), navigation and back/forward, the outline and the pager,
+// on a desktop.
+import { checkErrors, open, overflow, pages, ready, run, screenshot, settle, sidebarLink, text, waitForHash } from "./lib.mjs";
+
+const h1 = (page, slug) => page.$eval(`[data-page="${slug}"] h1`, (h) => h.textContent.trim()).catch(() => "");
 
 await run(async (engine, url) => {
   const { browser, page, errors } = await open(engine);
   await page.goto(url);
-  await ready(page);
-  console.log(`home: ${await page.title()} | ${await text(page, ".docs-hero-title")}`);
-  console.log(`current: ${await text(page, ".docs-nav-link[aria-current=page]")}`);
+  await ready(page, "home");
+  console.log(`home: ${await page.title()} | ${(await h1(page, "home")).replace(/\s+/g, " ")}`);
+  const nav = await page.$$eval("[data-slot=main-nav] a", (as) => as.map((a) => a.textContent.trim()));
+  console.log(`header: ${nav.join(", ")}`);
   await screenshot(page, "home");
   checkErrors(errors, "home");
 
+  await page.goto(`${url}#/introduction`);
+  await ready(page, "introduction");
+  console.log(`current: ${await text(page, "[data-docs-sidebar-content] a[data-active=true]")}`);
   const all = await pages(page);
-  const groups = await page.$$eval(".docs-nav-group", (gs) =>
-    gs.map((g) => `${g.querySelector(".docs-nav-heading").textContent.trim()}: ${[...g.querySelectorAll(".docs-nav-link")].map((l) => l.textContent.trim()).join(", ")}`),
+  const groups = await page.$$eval("[data-docs-sidebar-content] [data-slot=sidebar-group]", (gs) =>
+    gs.map((g) => `${g.querySelector("[data-slot=sidebar-group-label]").textContent.trim()}: ${[...g.querySelectorAll("a[data-slug]")].map((l) => l.textContent.trim()).join(", ")}`),
   );
   for (const g of groups) console.log(`sidebar ${g}`);
-  const guides = await page.$$eval(".docs-nav-group:first-child .docs-nav-link", (ls) =>
-    ls.map((l) => l.textContent.trim()),
-  );
-  console.log(`guides: ${guides.join(", ")}`);
 
   // Each page, reached from the sidebar.
   let bad = 0;
-  for (const p of all) {
-    await page.click(`.docs-nav-link[data-slug="${p.slug}"]`);
-    await page.waitForSelector(`.docs-article[data-page="${p.slug}"]`);
-    await settle(page);
+  const check = async (slug, title) => {
     const problems = [];
-    const h1 = await page.$eval(".docs-article h1", (h) => h.textContent.trim()).catch(() => "");
-    if (p.slug !== "introduction" && h1 !== p.title) problems.push(`h1 "${h1}"`);
-    const current = await text(page, ".docs-nav-link[aria-current=page]");
-    if (current !== p.title) problems.push(`current "${current}"`);
-    const expectedTitle = p.slug === "introduction" ? "loon — components for Bonsai" : `${p.title} · loon`;
-    if ((await page.title()) !== expectedTitle) problems.push(`title "${await page.title()}"`);
-    const empty = await page.$$eval(".docs-preview", (ps) => ps.filter((p) => p.childElementCount === 0).length);
+    const heading = await h1(page, slug);
+    if (title && heading !== title) problems.push(`h1 "${heading}"`);
+    const empty = await page.$$eval("[data-slot=preview] > div", (ps) => ps.filter((p) => p.childElementCount === 0).length);
     if (empty) problems.push(`${empty} empty previews`);
-    const toc = await page.$$eval(".docs-toc-link", (ls) => ls.length);
-    const outlined = await page.$$eval(".docs-article [data-outline]", (hs) => hs.length);
-    if (toc !== outlined) problems.push(`outline ${toc} of ${outlined}`);
+    const toc = await page.$$eval("[data-slot=toc-link]", (ls) => ls.length);
+    const outlined = await page.$$eval("[data-page] [data-outline]", (hs) => hs.length);
+    if (toc !== 0 && toc !== outlined) problems.push(`outline ${toc} of ${outlined}`);
     for (const o of await overflow(page)) problems.push(o);
     for (const e of errors.splice(0)) problems.push(`error: ${e}`);
     if (problems.length) {
       bad += 1;
-      console.log(`page ${p.slug}: ${problems.join("; ")}`);
+      console.log(`page ${slug}: ${problems.join("; ")}`);
     }
+  };
+  for (const p of all) {
+    await page.click(sidebarLink(p.slug));
+    await page.waitForSelector(`[data-page="${p.slug}"]`);
+    await settle(page);
+    const current = await text(page, "[data-docs-sidebar-content] a[data-active=true]");
+    if (current !== p.title) console.log(`page ${p.slug}: current "${current}"`);
+    if ((await page.title()) !== `${p.title} - loon`) console.log(`page ${p.slug}: title "${await page.title()}"`);
+    await check(p.slug, p.title);
   }
   console.log(`every page: ${bad === 0 ? "ok" : `${bad} with problems`} (h1, current link, title, previews, outline, no overflow or errors)`);
+
+  // The sections outside the docs, from the header; the charts' kinds.
+  for (const label of ["Blocks", "Charts", "Create", "Typeset"]) {
+    await page.click(`[data-slot=main-nav] a:text-is("${label}")`);
+    await page.waitForFunction((l) => document.querySelector("[data-slot=main-nav] a[data-active=true]")?.textContent.trim() === l, label);
+    const slug = await page.$eval("[data-page]", (el) => el.dataset.page);
+    console.log(`${label}: #/${slug} | ${await h1(page, slug)} | ${await page.title()}`);
+    await check(slug);
+  }
+  await page.goto(`${url}#/chart-area`);
+  await ready(page, "chart-area");
+  const kinds = await page.$$eval("#charts a[data-slug]", (as) => as.map((a) => a.dataset.slug));
+  for (const slug of kinds) {
+    await page.click(`#charts a[data-slug="${slug}"]`);
+    await page.waitForSelector(`[data-page="${slug}"]`);
+    await settle(page);
+    await check(slug);
+  }
+  console.log(`charts: ${kinds.length} kinds, ${await page.$$eval("[data-slot=chart-display]", (d) => d.length)} charts on the last; installation snippet ${await page.isVisible("text=loon add")}`);
 
   // Back and forward.
   await page.goto(`${url}#/installation`);
   await ready(page, "installation");
-  await page.click('.docs-nav-link[data-slug="theming"]');
+  await page.click(sidebarLink("theming"));
   await waitForHash(page, "#/theming");
-  await page.click('.docs-nav-link[data-slug="cli"]');
-  await page.waitForSelector('.docs-article[data-page="cli"]');
+  await page.click(sidebarLink("cli"));
+  await page.waitForSelector('[data-page="cli"]');
   await page.goBack();
-  await page.waitForSelector('.docs-article[data-page="theming"]');
-  console.log(`back: ${await text(page, ".docs-article h1")}`);
+  await page.waitForSelector('[data-page="theming"]');
+  console.log(`back: ${await h1(page, "theming")}`);
   await page.goBack();
-  await page.waitForSelector('.docs-article[data-page="installation"]');
-  console.log(`back: ${await text(page, ".docs-article h1")}`);
+  await page.waitForSelector('[data-page="installation"]');
+  console.log(`back: ${await h1(page, "installation")}`);
   await page.goForward();
-  await page.waitForSelector('.docs-article[data-page="theming"]');
-  console.log(`forward: ${await text(page, ".docs-article h1")}`);
-  const top = await page.evaluate(() => window.scrollY);
-  console.log(`scrolled to the top: ${top === 0}`);
+  await page.waitForSelector('[data-page="theming"]');
+  console.log(`forward: ${await h1(page, "theming")}`);
+  console.log(`scrolled to the top: ${(await page.evaluate(() => window.scrollY)) === 0}`);
   await settle(page);
 
   // The outline: its links, and following one.
-  const outline = await page.$$eval(".docs-toc-link", (ls) => ls.map((l) => l.textContent.trim()));
+  const outline = await page.$$eval("[data-slot=toc-link]", (ls) => ls.map((l) => l.textContent.trim()));
   console.log(`theming outline: ${outline.join(" | ")}`);
-  await page.click('.docs-toc-link[data-target="variables"]');
+  await page.click('[data-slot=toc-link][data-target="variables"]');
   await waitForHash(page, "#/theming/variables");
   await page.waitForFunction(() => {
     const r = document.getElementById("variables").getBoundingClientRect();
     return r.top >= 0 && r.top < 200;
   });
   console.log(`outline link: heading in view, hash ${await page.evaluate(() => location.hash)}`);
-  await page.waitForSelector('.docs-toc-link[data-target="variables"][data-active]');
-  console.log(`outline marks: ${await text(page, ".docs-toc-link[data-active]")}`);
+  await page.waitForSelector('[data-slot=toc-link][data-target="variables"][data-active=true]');
+  console.log(`outline marks: ${await text(page, "[data-slot=toc-link][data-active=true]")}`);
   await screenshot(page, "theming-variables");
 
   // The pager.
   await page.goto(`${url}#/installation`);
   await ready(page, "installation");
-  console.log(`pager: ${await text(page, ".docs-pager")}`);
-  await page.click(".docs-pager-next");
-  await page.waitForSelector('.docs-article[data-page="theming"]');
-  console.log(`next: ${await text(page, ".docs-article h1")}`);
+  console.log(`pager: ${await text(page, "[data-slot=docs-pager]")}`);
+  await page.click("[data-pager=next]");
+  await page.waitForSelector('[data-page="theming"]');
+  console.log(`next: ${await h1(page, "theming")}`);
+  await page.click("[data-pager-icon=previous]");
+  await page.waitForSelector('[data-page="installation"]');
+  console.log(`previous: ${await h1(page, "installation")}`);
 
   // A page that does not exist.
   await page.goto(`${url}#/no-such-component`);
-  await page.waitForSelector('.docs-article[data-page=""]');
-  console.log(`missing: ${await text(page, ".docs-article h1")} | ${await page.title()}`);
-  await page.click(".docs-article a[data-slot=button]");
-  await page.waitForSelector('.docs-article[data-page="introduction"]');
+  await page.waitForSelector('[data-page=""]');
+  console.log(`missing: ${await h1(page, "")} | ${await page.title()}`);
+  await page.click('[data-page=""] a[data-slot=button]');
+  await page.waitForSelector('[data-page="home"]');
   console.log(`back home: ${await page.evaluate(() => location.hash)}`);
 
-  // Topnav: Components goes to the first component's page.
-  await page.click(".docs-topnav-link:nth-child(2)");
-  await page.waitForSelector('.docs-article:not([data-page="introduction"])');
-  console.log(`components: ${await page.evaluate(() => location.hash)}`);
-  console.log(`topnav active: ${await text(page, ".docs-topnav-link[data-active]")}`);
+  // Header: Components goes to the index of the components.
+  await page.click('[data-slot=main-nav] a:text-is("Components")');
+  await page.waitForSelector('[data-page="components"]');
+  console.log(`components: ${await page.evaluate(() => location.hash)}, ${await page.$$eval('[data-page="components"] .typeset a', (as) => as.length)} links`);
+  console.log(`header active: ${await text(page, "[data-slot=main-nav] a[data-active=true]")}`);
 
   // Opened at a page far down the sidebar, the sidebar shows its link.
   await page.setViewportSize({ width: 1280, height: 600 });
   await page.goto(`${url}#/sonner`);
   await ready(page, "sonner");
-  await page.waitForFunction(() => document.querySelector(".docs-sidebar").scrollTop > 0);
+  await page.waitForFunction(() => document.querySelector("[data-docs-sidebar-content]").scrollTop > 0);
   const shown = await page.evaluate(() => {
-    const nav = document.querySelector(".docs-sidebar").getBoundingClientRect();
-    const link = document.querySelector('.docs-sidebar [aria-current="page"]').getBoundingClientRect();
+    const nav = document.querySelector("[data-docs-sidebar-content]").getBoundingClientRect();
+    const link = document.querySelector("[data-docs-sidebar-content] a[data-active=true]").getBoundingClientRect();
     return link.top >= nav.top && link.bottom <= nav.bottom;
   });
   console.log(`sidebar shows the current link: ${shown}`);

@@ -99,7 +99,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Avatar"
-    ~group:Display
     ~description:"An image element with a fallback for representing the user."
     ~usage:
       {|Avatar.component

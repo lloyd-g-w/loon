@@ -3,7 +3,7 @@
 # diffs what they print with ENGINE.expected (chromium.expected,
 # firefox.expected, webkit.expected): pages.mjs (every page, navigation,
 # back/forward, the outline), theme.mjs (light/dark, accents, persistence),
-# examples.mjs (Preview/Code tabs, copying, highlighting), search.mjs, and
+# examples.mjs (View Code, copying, highlighting, Copy Page, overlays from previews), search.mjs, and
 # mobile.mjs on a phone and a small phone. Pages are found from the
 # sidebar, so new components are checked without changes here.
 #
@@ -14,7 +14,7 @@
 #   ENGINES         browsers to run (default: chromium firefox webkit)
 #   SHOTS           a directory to save screenshots of each step in
 #   JOBS            how many scripts run at once (default: the number of CPUs)
-#   SCRIPT_TIMEOUT  seconds a script may take (default 180)
+#   SCRIPT_TIMEOUT  seconds a script may take (default 600: a full run loads every page in three engines at once)
 #   UPDATE=1        rewrite ENGINE.expected instead of diffing
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -33,7 +33,7 @@ run_one() {
 	local engine=$1 script=$2 status=0
 	local file=${script%%:*} part=${script#*:}
 	[ "$part" != "$script" ] || part=""
-	timeout -k 10 "${SCRIPT_TIMEOUT:-180}" node "$here/$file.mjs" "$engine" $part \
+	timeout -k 10 "${SCRIPT_TIMEOUT:-600}" node "$here/$file.mjs" "$engine" $part \
 		>"$tmp/$engine-$script.out" 2>"$tmp/$engine-$script.err" || status=$?
 	echo "$status" >"$tmp/$engine-$script.status"
 }

@@ -113,7 +113,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Command"
-    ~group:Overlays
     ~description:"Fast, composable, unstyled command menu."
     ~usage:
       {|Command.component

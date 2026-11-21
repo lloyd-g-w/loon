@@ -93,8 +93,8 @@ let interactive (local_ graph) =
       ~default_value:"90d"
       (Bonsai.return
          (Select.trigger
+            ~attrs:[ Attr.create "aria-label" "Select a value" ]
             ~class_:"hidden w-[160px] rounded-lg sm:ml-auto sm:flex"
-            ~attrs:[ Vdom.Attr.create "aria-label" "Select a value" ]
             ~placeholder:"Last 3 months"
             ()))
       (Bonsai.return
@@ -575,7 +575,7 @@ let page =
   Doc.page
     ~slug:"chart-area"
     ~title:"Area Charts"
-    ~group:Charts
+    ~section:Charts
     ~order:1
     ~description:"Area charts: stacked, expanded, gradients, steps, legends and an interactive one."
     [ Doc.example ~page "Area Chart - Interactive" (Chart_data.frame ~wide:true interactive)

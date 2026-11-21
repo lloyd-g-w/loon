@@ -34,7 +34,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Separator"
-    ~group:Display
     ~description:"Visually or semantically separates content."
     ~usage:{|Separator.view ()|}
     ~body:

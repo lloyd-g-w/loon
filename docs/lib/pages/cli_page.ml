@@ -5,7 +5,7 @@ let page =
     ~order:3
     ~slug:"cli"
     ~title:"CLI"
-    ~group:Guide
+    ~section:Get_started
     ~description:
       "Copy components into your project, with what they depend on, and make them \
        your own."

@@ -98,7 +98,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Sheet"
-    ~group:Overlays
     ~description:
       "Extends the Dialog component to display content that complements the main \
        content of the screen."

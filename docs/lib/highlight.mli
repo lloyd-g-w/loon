@@ -36,5 +36,12 @@ end
     texts gives back the input. *)
 val tokenize : Lang.t -> string -> (Kind.t * string) list
 
-(** A [<code>] of spans with the kinds' classes ([hl-keyword], ...). *)
-val view : ?lang:Lang.t -> string -> Vdom.Node.t
+val lang_name : Lang.t -> string
+
+(** A [<code>] as shiki's: a [<span data-line>] per line, of spans with the
+    kinds' classes ([hl-keyword], ...); [line_numbers] numbers the lines
+    ([data-line-numbers]). *)
+val view : ?lang:Lang.t -> ?line_numbers:bool -> string -> Vdom.Node.t
+
+(** The highlighted spans alone, for inline code. *)
+val tokens : ?lang:Lang.t -> string -> Vdom.Node.t

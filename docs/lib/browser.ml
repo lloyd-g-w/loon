@@ -42,7 +42,7 @@ let scroll_to_anchor id =
 
 let reveal_current_nav () =
   let find s = Js.Opt.to_option (Dom_html.document##querySelector (Js.string s)) in
-  match find ".docs-sidebar", find ".docs-sidebar .docs-nav-link[aria-current=\"page\"]" with
+  match find "[data-docs-sidebar-content]", find "[data-docs-sidebar-content] [data-active=\"true\"]" with
   | Some nav, Some link ->
     let nav_box = nav##getBoundingClientRect in
     let link_box = link##getBoundingClientRect in
@@ -71,12 +71,12 @@ let article_page () =
   if not (in_browser ())
   then None
   else
-    Js.Opt.to_option (Dom_html.document##querySelector (Js.string ".docs-article"))
+    Js.Opt.to_option (Dom_html.document##querySelector (Js.string "[data-page]"))
     |> Option.bind ~f:(fun el -> attr el "data-page")
 ;;
 
 let outline () =
-  query_all ".docs-article [data-outline]"
+  query_all "[data-page] [data-outline]"
   |> List.filter_map ~f:(fun (el : Dom_html.element Js.t) ->
     match attr el "data-outline", Js.to_string el##.id with
     | Some title, id when not (String.is_empty id) ->
@@ -88,8 +88,8 @@ let outline () =
 (* Marks the outline's link to the section being read: the last heading
    above a line a little below the header. *)
 let update_scroll_spy () =
-  let headings = query_all ".docs-article [data-outline]" in
-  let links = query_all ".docs-toc-link" in
+  let headings = query_all "[data-page] [data-outline]" in
+  let links = query_all "[data-slot=toc-link]" in
   let active =
     List.fold headings ~init:None ~f:(fun acc (el : Dom_html.element Js.t) ->
       let top = Js.to_float el##getBoundingClientRect##.top in
@@ -106,9 +106,7 @@ let update_scroll_spy () =
       | Some a, Some t -> String.equal a t
       | _ -> false
     in
-    if is_active
-    then link##setAttribute (Js.string "data-active") (Js.string "")
-    else link##removeAttribute (Js.string "data-active"))
+    link##setAttribute (Js.string "data-active") (Js.string (Bool.to_string is_active)))
 ;;
 
 let install_scroll_spy () =
@@ -151,9 +149,7 @@ let is_mac () =
 
 let set_body_scroll_locked locked =
   let body = Dom_html.document##.body in
-  if locked
-  then body##setAttribute (Js.string "data-scroll-locked") (Js.string "")
-  else body##removeAttribute (Js.string "data-scroll-locked")
+  body##.style##.overflow := Js.string (if locked then "hidden" else "")
 ;;
 
 let active_element_is_editable () =

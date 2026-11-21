@@ -97,7 +97,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Dialog"
-    ~group:Overlays
     ~description:
       "A window overlaid on either the primary window or another dialog \
        window, rendering the content underneath inert."

@@ -79,7 +79,7 @@ let page =
     ~order:0
     ~slug:page
     ~title:"Introduction"
-    ~group:Guide
+    ~section:Get_started
     ~description:"Calm, well-made components for Bonsai_web."
     ~body:
       [ Doc.h2 "What loon is"

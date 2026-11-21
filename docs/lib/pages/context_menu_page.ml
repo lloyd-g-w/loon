@@ -75,7 +75,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Context menu"
-    ~group:Overlays
     ~description:
       "Displays a menu to the user — such as a set of actions or functions — triggered \
        by a right click."

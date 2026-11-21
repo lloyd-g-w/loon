@@ -134,7 +134,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Spinner"
-    ~group:Feedback
     ~description:"An indicator that can be used to show a loading state."
     ~usage:{|Spinner.view ()|}
     ~body:

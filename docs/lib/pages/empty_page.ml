@@ -155,7 +155,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Empty"
-    ~group:Feedback
     ~description:"Use the Empty component to display an empty state."
     ~usage:
       {|Empty.root

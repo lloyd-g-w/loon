@@ -110,8 +110,8 @@ let interactive (local_ graph) =
       ~default_value:"january"
       (Bonsai.return
          (Select.trigger
+            ~attrs:[ Attr.create "aria-label" "Select a value" ]
             ~class_:"ml-auto h-7 w-[130px] rounded-lg pl-2.5"
-            ~attrs:[ Vdom.Attr.create "aria-label" "Select a value" ]
             ~placeholder:"Select month"
             ()))
       (Bonsai.return
@@ -125,19 +125,19 @@ let interactive (local_ graph) =
                ; "april", "April"
                ; "may", "May"
                ]
-               ~f:(fun (value, label) ->
+               ~f:(fun (key, label) ->
                  Select.item
                    ~class_:"rounded-lg [&_span]:flex"
-                   ~value
+                   ~text_value:label
+                   ~value:key
                    [ Node.div
-                       ~attrs:[ Vdom.Attr.class_ "flex items-center gap-2 text-xs" ]
+                       ~attrs:[ Attr.class_ "flex items-center gap-2 text-xs" ]
                        [ Node.span
                            ~attrs:
-                             [ Vdom.Attr.class_ "flex h-3 w-3 shrink-0 rounded-xs"
-                             ; Vdom.Attr.style
-                                 (Css_gen.create
-                                    ~field:"background-color"
-                                    ~value:("var(--color-" ^ value ^ ")"))
+                             [ Attr.class_ "flex h-3 w-3 shrink-0 rounded-xs"
+                             ; Attr.style
+                                 (Css_gen.background_color
+                                    (`Var ("--color-" ^ key)))
                              ]
                            []
                        ; Node.text label
@@ -602,7 +602,7 @@ let page =
   Doc.page
     ~slug:"chart-pie"
     ~title:"Pie Charts"
-    ~group:Charts
+    ~section:Charts
     ~order:4
     ~description:"Pie and donut charts: labels, legends, centre text, active sectors and stacked rings."
     [ Doc.example ~page "Pie Chart - Interactive" (Chart_data.frame ~wide:true interactive)

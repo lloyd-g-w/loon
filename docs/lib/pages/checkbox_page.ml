@@ -207,7 +207,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Checkbox"
-    ~group:Forms
     ~description:
       "A control that allows the user to toggle between checked and not checked."
     ~usage:

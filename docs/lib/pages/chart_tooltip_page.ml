@@ -348,7 +348,7 @@ let page =
   Doc.page
     ~slug:"chart-tooltip"
     ~title:"Tooltips"
-    ~group:Charts
+    ~section:Charts
     ~order:7
     ~description:
       "Chart tooltips: indicators, custom labels, label formatters, formatters and icons."

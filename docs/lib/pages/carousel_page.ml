@@ -225,7 +225,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Carousel"
-    ~group:Display
     ~description:"A carousel with motion and swipe built using Embla."
     ~usage:
       {|let%sub carousel = Carousel.component graph in

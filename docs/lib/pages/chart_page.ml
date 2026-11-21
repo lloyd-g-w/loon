@@ -378,8 +378,6 @@ let page =
   Doc.page
     ~slug:"chart"
     ~title:"Chart"
-    ~group:Charts
-    ~order:0
     ~description:
       "Beautiful charts. Built using Recharts. Copy and paste into your apps. Here, drawn in \
        OCaml: the same SVG, styled by shadcn's classes."

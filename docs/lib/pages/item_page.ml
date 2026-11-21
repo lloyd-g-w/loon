@@ -319,7 +319,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Item"
-    ~group:Display
     ~description:"A versatile component that you can use to display any content."
     ~usage:
       {|Item.view ~variant:Outline

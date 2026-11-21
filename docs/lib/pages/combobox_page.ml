@@ -170,7 +170,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Combobox"
-    ~group:Forms
     ~description:"Autocomplete input and command palette with a list of suggestions."
     ~usage:
       {|(* value * view *)

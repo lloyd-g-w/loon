@@ -566,7 +566,7 @@ let page =
   Doc.page
     ~slug:"chart-line"
     ~title:"Line Charts"
-    ~group:Charts
+    ~section:Charts
     ~order:3
     ~description:
       "Line charts: natural, linear and step curves, multiple lines, dots, labels and \

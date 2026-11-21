@@ -242,7 +242,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Dropdown menu"
-    ~group:Overlays
     ~description:
       "Displays a menu to the user — such as a set of actions or functions — triggered \
        by a button."

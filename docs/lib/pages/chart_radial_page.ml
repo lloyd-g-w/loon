@@ -376,7 +376,7 @@ let page =
   Doc.page
     ~slug:"chart-radial"
     ~title:"Radial Charts"
-    ~group:Charts
+    ~section:Charts
     ~order:6
     ~description:"Radial bar charts: labels, grids, centre text, custom shapes and stacking."
     [ Doc.example ~page "Radial Chart" (Chart_data.frame simple)

@@ -98,7 +98,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Menubar"
-    ~group:Overlays
     ~description:
       "A visually persistent menu common in desktop applications that provides quick \
        access to a consistent set of commands."

@@ -250,7 +250,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Input"
-    ~group:Forms
     ~description:
       "A text input component for forms and user data entry with built-in styling and \
        accessibility features."

@@ -95,7 +95,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Native Select"
-    ~group:Forms
     ~description:
       "A styled native HTML select element with consistent design system integration."
     ~usage:

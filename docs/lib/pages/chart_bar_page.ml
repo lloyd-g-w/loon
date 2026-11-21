@@ -556,7 +556,7 @@ let page =
   Doc.page
     ~slug:"chart-bar"
     ~title:"Bar Charts"
-    ~group:Charts
+    ~section:Charts
     ~order:2
     ~description:
       "Bar charts: grouped, stacked, horizontal, with labels, active bars, negative \

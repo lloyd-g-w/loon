@@ -51,7 +51,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Hover card"
-    ~group:Overlays
     ~description:"For sighted users to preview content available behind a link."
     ~usage:
       {|Hover_card.component

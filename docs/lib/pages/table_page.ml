@@ -51,7 +51,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Table"
-    ~group:Display
     ~description:"A responsive table component."
     ~usage:
       {|Table.root

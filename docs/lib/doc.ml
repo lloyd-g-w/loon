@@ -3,25 +3,30 @@ open Bonsai_web
 module Node = Vdom.Node
 module Attr = Vdom.Attr
 
-module Group = struct
+module Section = struct
   type t =
-    | Guide
+    | Get_started
+    | Components
     | Forms
-    | Overlays
-    | Display
-    | Navigation
-    | Feedback
+    | Blocks
     | Charts
+    | Create
+    | Typeset
   [@@deriving enumerate, sexp_of, compare, equal]
 
   let title = function
-    | Guide -> "Getting started"
+    | Get_started -> "Get Started"
+    | Components -> "Components"
     | Forms -> "Forms"
-    | Overlays -> "Overlays"
-    | Display -> "Display"
-    | Navigation -> "Navigation"
-    | Feedback -> "Feedback"
+    | Blocks -> "Blocks"
     | Charts -> "Charts"
+    | Create -> "Create"
+    | Typeset -> "Typeset"
+  ;;
+
+  let is_docs = function
+    | Get_started | Components | Forms -> true
+    | Blocks | Charts | Create | Typeset -> false
   ;;
 end
 
@@ -38,7 +43,7 @@ module Page = struct
   type t =
     { slug : string
     ; title : string
-    ; group : Group.t
+    ; section : Section.t
     ; description : string
     ; usage : string option
     ; body : Vdom.Node.t list
@@ -62,8 +67,17 @@ let example ~page title view =
 
 let static ~page title node = example ~page title (fun _ -> Bonsai.return node)
 
-let page ?(order = 100) ?usage ?(body = []) ~slug ~title ~group ~description examples =
-  { Page.slug; title; group; description; usage; body; examples; order }
+let page
+      ?(order = 100)
+      ?(section = Section.Components)
+      ?usage
+      ?(body = [])
+      ~slug
+      ~title
+      ~description
+      examples
+  =
+  { Page.slug; title; section; description; usage; body; examples; order }
 ;;
 
 let anchor text =
@@ -75,18 +89,19 @@ let anchor text =
 ;;
 
 let h2 text =
+  let id = anchor text in
   Node.h2
-    ~attrs:
-      [ Attr.class_ "docs-h2"
-      ; Attr.id (anchor text)
-      ; Attr.create "data-outline" text
-      ]
+    ~attrs:[ Attr.id id; Attr.create "data-outline" text ]
     [ Node.text text ]
 ;;
 
-let h3 text = Node.h3 ~attrs:[ Attr.class_ "docs-h3" ] [ Node.text text ]
+let h3 text =
+  let id = anchor text in
+  Node.h3 ~attrs:[ Attr.id id; Attr.create "data-outline" text ] [ Node.text text ]
+;;
+
 let text = Node.text
-let code text = Node.code ~attrs:[ Attr.class_ "docs-code-inline" ] [ Node.text text ]
+let code text = Node.code [ Node.text text ]
 
 (* Splits on the outermost brackets, so [[ `A | `B ]] is one piece of code. *)
 let inline s =
@@ -116,61 +131,90 @@ let inline s =
   List.rev !pieces
 ;;
 
-let p text = Node.p ~attrs:[ Attr.class_ "docs-p" ] (inline text)
-let p' nodes = Node.p ~attrs:[ Attr.class_ "docs-p" ] nodes
+let p text = Node.p (inline text)
+let p' nodes = Node.p nodes
 
 let link ~href text =
   let external_ = String.is_prefix href ~prefix:"http" in
   Node.a
     ~attrs:
-      ([ Attr.href href; Attr.class_ "docs-link" ]
-       @ if external_ then [ Attr.create "target" "_blank"; Attr.create "rel" "noopener" ] else [])
+      (Attr.href href
+       :: (if external_
+           then [ Attr.create "target" "_blank"; Attr.create "rel" "noreferrer" ]
+           else []))
     [ Node.text text ]
 ;;
 
-let ul items =
-  Node.ul ~attrs:[ Attr.class_ "docs-ul" ] (List.map items ~f:(fun item -> Node.li item))
-;;
-
+let ul items = Node.ul (List.map items ~f:(fun item -> Node.li item))
 let pre ?lang source = Code_block.view ?lang source
 
-let note ?(tone = "info") ?title children =
-  Node.div
-    ~attrs:[ Attr.classes [ "docs-note"; "docs-note-" ^ tone ] ]
+(* shadcn's Callout. *)
+let note ?(tone = "default") ?title children =
+  Loon.Alert.root
+    ~attrs:[ Attr.create "data-variant" tone ]
+    ~class_:
+      "not-typeset mt-6 w-auto rounded-2xl border-surface bg-surface \
+       text-surface-foreground md:-mx-1 **:[a]:font-medium **:[a]:underline \
+       **:[a]:decoration-current/30 **:[a]:hover:decoration-current **:[code]:border"
     ((match title with
       | None -> []
-      | Some title -> [ Node.div ~attrs:[ Attr.class_ "docs-note-title" ] [ Node.text title ] ])
-     @ [ Node.div ~attrs:[ Attr.class_ "docs-note-body" ] children ])
+      | Some title -> [ Loon.Alert.title [ Node.text title ] ])
+     @ [ Loon.Alert.description ~class_:"text-card-foreground/80" children ])
+;;
+
+(* shadcn's mdx table: a typeset table in a scroller. *)
+let scroll_table table =
+  Node.div
+    ~attrs:[ Attr.class_ "typeset-scroll scroll-fade-x scrollbar-none *:[table]:w-full" ]
+    [ table ]
 ;;
 
 let table head rows =
-  Node.div
-    ~attrs:[ Attr.class_ "docs-props" ]
-    [ Node.table
-        [ Node.thead [ Node.tr (List.map head ~f:(fun h -> Node.th [ Node.text h ])) ]
-        ; Node.tbody (List.map rows ~f:(fun cells -> Node.tr (List.map cells ~f:(fun c -> Node.td [ c ]))))
-        ]
-    ]
+  scroll_table
+    (Node.table
+       [ Node.thead [ Node.tr (List.map head ~f:(fun h -> Node.th [ Node.text h ])) ]
+       ; Node.tbody
+           (List.map rows ~f:(fun cells ->
+              Node.tr (List.map cells ~f:(fun c -> Node.td [ c ]))))
+       ])
 ;;
 
 let props rows =
-  Node.div
-    ~attrs:[ Attr.class_ "docs-props" ]
-    [ Node.table
-        [ Node.thead
-            [ Node.tr
-                [ Node.th [ Node.text "Argument" ]
-                ; Node.th [ Node.text "Type" ]
-                ; Node.th [ Node.text "Description" ]
-                ]
-            ]
-        ; Node.tbody
-            (List.map rows ~f:(fun (name, type_, description) ->
-               Node.tr
-                 [ Node.td [ code name ]
-                 ; Node.td [ Highlight.view type_ ]
-                 ; Node.td (inline description)
-                 ]))
+  scroll_table
+    (Node.table
+       [ Node.thead
+           [ Node.tr
+               [ Node.th [ Node.text "Argument" ]
+               ; Node.th [ Node.text "Type" ]
+               ; Node.th [ Node.text "Description" ]
+               ]
+           ]
+       ; Node.tbody
+           (List.map rows ~f:(fun (name, type_, description) ->
+              Node.tr
+                [ Node.td [ code name ]
+                ; Node.td [ Node.code [ Highlight.tokens type_ ] ]
+                ; Node.td (inline description)
+                ]))
+       ])
+;;
+
+let coming_soon () =
+  Loon.Empty.root
+    ~attrs:[ Attr.create "data-docs" "coming-soon"; Attr.create "data-not-typeset" "" ]
+    ~class_:"my-12 border border-dashed bg-background"
+    [ Loon.Empty.header
+        [ Loon.Empty.media ~variant:Icon [ Loon.Icon.view Square_dashed ]
+        ; Loon.Empty.title [ Node.text "Coming soon" ]
+        ; Loon.Empty.description
+            [ Node.text "This part of loon is being ported. Check back soon." ]
+        ]
+    ; Loon.Empty.content
+        [ Loon.Button.link
+            ~variant:Outline
+            ~size:Sm
+            ~href:"#/components"
+            [ Node.text "Browse the components" ]
         ]
     ]
 ;;
