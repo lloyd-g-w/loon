@@ -32,6 +32,21 @@ val view
   -> (t -> Node.t list)
   -> Node.t
 
+(** The state alone, for the caller's element to be the root: shadcn's
+    [<Collapsible asChild>], as in
+    [Sidebar.menu_item ~attrs:(Collapsible.root_attrs c) ...] (with
+    {!trigger}, {!content} inside). *)
+val create
+  :  ?disabled:bool
+  -> ?id:string
+  -> open_:bool
+  -> on_change:(bool -> unit Effect.t)
+  -> unit
+  -> t
+
+(** The root's [data-state] (and [data-disabled]), without [data-slot]. *)
+val root_attrs : t -> Attr.t list
+
 (** Keeps whether it is open: closed at first unless [default_open]. *)
 val component
   :  ?attrs:Attr.t list

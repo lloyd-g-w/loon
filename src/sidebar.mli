@@ -200,7 +200,8 @@ val menu_button_classes
 
 (** [SidebarMenuButton]: a [<button>], or an [<a>] with [href] (shadcn's
     [asChild] over a link). [tooltip] shows beside it while the sidebar is
-    collapsed to its icons. *)
+    collapsed to its icons, or whenever it is hovered with
+    [~tooltip_hidden:false] (shadcn's [tooltip={{ hidden: false }}]). *)
 val menu_button
   :  ?attrs:Attr.t list
   -> ?class_:string
@@ -208,6 +209,7 @@ val menu_button
   -> ?size:Menu_button_size.t
   -> ?is_active:bool
   -> ?tooltip:string
+  -> ?tooltip_hidden:bool
   -> ?href:string
   -> ?on_click:unit Effect.t
   -> Node.t list

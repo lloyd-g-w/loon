@@ -135,6 +135,15 @@ end
 
 let presence = Presence.attr
 
+let create ?(disabled = false) ?(id = "collapsible") ~open_ ~on_change () =
+  { open_; on_change; id; disabled }
+;;
+
+let root_attrs t =
+  [ data "state" (state t.open_) ]
+  @ if t.disabled then [ data "disabled" "" ] else []
+;;
+
 let view
       ?(attrs = [])
       ?class_
