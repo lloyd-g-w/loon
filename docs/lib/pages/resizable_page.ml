@@ -157,7 +157,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Resizable"
-    ~group:Display
     ~description:
       "Accessible resizable panel groups and layouts with keyboard support."
     ~usage:

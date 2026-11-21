@@ -80,7 +80,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Scroll area"
-    ~group:Display
     ~description:
       "Augments native scroll functionality for custom, cross-browser styling."
     ~usage:

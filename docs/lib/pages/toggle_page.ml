@@ -84,7 +84,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Toggle"
-    ~group:Forms
     ~description:"A two-state button that can be either on or off."
     ~usage:
       {|Toggle.view ~attrs:[ Attr.create "aria-label" "Toggle italic" ] ~pressed

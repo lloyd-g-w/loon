@@ -20,7 +20,7 @@ let fruit (local_ graph) =
   in
   let%arr value, view = select in
   Node.div
-    ~attrs:[ Vdom.Attr.class_ "docs-row" ]
+    ~attrs:[ Vdom.Attr.class_ "flex flex-wrap items-center justify-center gap-3" ]
     [ view
     ; Node.span
         [ Node.text
@@ -65,7 +65,7 @@ let timezone (local_ graph) =
   in
   let%arr zone, view = select in
   Node.div
-    ~attrs:[ Vdom.Attr.class_ "docs-row" ]
+    ~attrs:[ Vdom.Attr.class_ "flex flex-wrap items-center justify-center gap-3" ]
     [ view
     ; Node.span
         ~attrs:[ Vdom.Attr.class_ "loon-field-description" ]
@@ -83,7 +83,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Select"
-    ~group:Forms
     ~description:"Choose one value from a list that opens beside its trigger."
     ~usage:
       {|let%sub value, view =

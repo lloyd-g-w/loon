@@ -18,7 +18,7 @@ let sides (local_ graph) =
       ~trigger:(fun attrs -> Button.view ~attrs ~variant:Outline [ Node.text name ])
       (Bonsai.return (fun ~close ->
          ( [ Node.div
-               ~attrs:[ Vdom.Attr.class_ "docs-stack" ]
+               ~attrs:[ Vdom.Attr.class_ "flex flex-col gap-3" ]
                (List.map [ "Inbox"; "Starred"; "Sent"; "Archive" ] ~f:(fun l ->
                   Node.div [ Node.text l ]))
            ]
@@ -29,14 +29,13 @@ let sides (local_ graph) =
   in
   let views = Bonsai.all (List.map Sheet.Side.all ~f:(fun side -> sheet side graph)) in
   let%arr views in
-  Node.div ~attrs:[ Vdom.Attr.class_ "docs-row" ] views
+  Node.div ~attrs:[ Vdom.Attr.class_ "flex flex-wrap items-center justify-center gap-3" ] views
 (*$*)
 
 let page =
   Doc.page
     ~slug:page
     ~title:"Sheet"
-    ~group:Overlays
     ~description:"A panel that slides in from an edge of the screen."
     ~usage:
       {|Sheet.component

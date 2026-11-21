@@ -65,7 +65,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Sonner"
-    ~group:Feedback
     ~description:"An opinionated toast component."
     ~usage:
       {|(* once, in your app *)

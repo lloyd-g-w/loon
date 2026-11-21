@@ -10,11 +10,11 @@ let page = "tooltip"
 let icon_buttons =
   Node.div
     ~attrs:
-      [ Vdom.Attr.class_ "docs-stack"
+      [ Vdom.Attr.class_ "flex flex-col gap-3"
       ; Vdom.Attr.create "style" "align-items: center; text-align: center"
       ]
     [ Node.div
-        ~attrs:[ Vdom.Attr.class_ "docs-row" ]
+        ~attrs:[ Vdom.Attr.class_ "flex flex-wrap items-center justify-center gap-3" ]
         (List.map
            [ "tip-edit", Icon.Pencil, "Edit"
            ; "tip-copy", Copy, "Copy to clipboard"
@@ -38,7 +38,7 @@ let icon_buttons =
 (*$ Sides *)
 let sides =
   Node.div
-    ~attrs:[ Vdom.Attr.class_ "docs-row" ]
+    ~attrs:[ Vdom.Attr.class_ "flex flex-wrap items-center justify-center gap-3" ]
     (List.map Floating.Side.all ~f:(fun side ->
        let name = Floating.Side.name side in
        Tooltip.view
@@ -58,7 +58,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Tooltip"
-    ~group:Overlays
     ~description:
       "A short label shown when the pointer rests on, or the keyboard focuses, \
        an element."

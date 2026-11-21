@@ -510,7 +510,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Field"
-    ~group:Forms
     ~description:
       "Combine labels, controls, and help text to compose accessible form fields and \
        grouped inputs."

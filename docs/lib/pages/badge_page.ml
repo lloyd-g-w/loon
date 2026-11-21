@@ -58,7 +58,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Badge"
-    ~group:Display
     ~description:"Displays a badge or a component that looks like a badge."
     ~usage:{|Badge.view ~variant:Outline [ Node.text "Badge" ]|}
     ~body:

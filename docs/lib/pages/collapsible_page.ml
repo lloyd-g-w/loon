@@ -52,7 +52,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Collapsible"
-    ~group:Display
     ~description:"An interactive component which expands/collapses a panel."
     ~usage:
       {|Collapsible.component

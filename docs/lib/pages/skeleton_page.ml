@@ -36,7 +36,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Skeleton"
-    ~group:Feedback
     ~description:"Use to show a placeholder while content is loading."
     ~usage:{|Skeleton.view ~class_:"h-[20px] w-[100px] rounded-full" []|}
     ~body:

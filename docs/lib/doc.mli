@@ -3,17 +3,25 @@
 open! Core
 open Bonsai_web
 
-module Group : sig
+(** Where a page belongs: the header's sections. [Get_started],
+    [Components] and [Forms] pages are the docs (with the sidebar, grouped
+    under these titles); the others are shown full width, with their
+    section's pages listed in a bar under the page header. *)
+module Section : sig
   type t =
-    | Guide
+    | Get_started
+    | Components
     | Forms
-    | Overlays
-    | Display
-    | Navigation
-    | Feedback
+    | Blocks
+    | Charts
+    | Create
+    | Typeset
   [@@deriving enumerate, sexp_of, compare, equal]
 
   val title : t -> string
+
+  (** [Get_started], [Components] and [Forms]: pages in the docs' sidebar. *)
+  val is_docs : t -> bool
 end
 
 module Example : sig
@@ -30,12 +38,12 @@ module Page : sig
   type t =
     { slug : string
     ; title : string
-    ; group : Group.t
+    ; section : Section.t
     ; description : string
     ; usage : string option (** a short code snippet shown first *)
     ; body : Vdom.Node.t list (** prose and tables after the examples *)
     ; examples : Example.t list
-    ; order : int (** within its group (then by title); 100 by default *)
+    ; order : int (** within its section (then by title); 100 by default *)
     }
 end
 
@@ -51,20 +59,22 @@ val example
 (** An example that needs no state. *)
 val static : page:string -> string -> Vdom.Node.t -> Example.t
 
+(** A page; [section] defaults to [Components]. *)
 val page
   :  ?order:int
+  -> ?section:Section.t
   -> ?usage:string
   -> ?body:Vdom.Node.t list
   -> slug:string
   -> title:string
-  -> group:Group.t
   -> description:string
   -> Example.t list
   -> Page.t
 
 (** Prose helpers for [body]. *)
 
-(** A section heading, listed in the page's "On this page" outline. *)
+(** A section heading, listed in the page's "On this page" outline; its
+    text links to it. *)
 val h2 : string -> Vdom.Node.t
 
 val h3 : string -> Vdom.Node.t
@@ -90,8 +100,8 @@ val ul : Vdom.Node.t list list -> Vdom.Node.t
 (** A highlighted code block with a copy button. *)
 val pre : ?lang:Highlight.Lang.t -> string -> Vdom.Node.t
 
-(** A highlighted aside: [tone] is ["info"] (default), ["warning"] or
-    ["tip"]. *)
+(** shadcn's Callout: [tone] (its [data-variant]) is ["default"],
+    ["info"] or ["warning"]. *)
 val note : ?tone:string -> ?title:string -> Vdom.Node.t list -> Vdom.Node.t
 
 (** A plain table: column headings and rows of cells. *)
@@ -102,3 +112,7 @@ val anchor : string -> string
 
 (** A table of a component's arguments: name, type, description. *)
 val props : (string * string * string) list -> Vdom.Node.t
+
+(** A "Coming soon" placeholder (shadcn's Empty), for a section's page not
+    written yet. *)
+val coming_soon : unit -> Vdom.Node.t

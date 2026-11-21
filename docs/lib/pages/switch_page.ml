@@ -127,7 +127,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Switch"
-    ~group:Forms
     ~description:
       "A control that allows the user to toggle between checked and not checked."
     ~usage:{|Switch.view ~id:"airplane-mode" ~checked ~on_change:set_checked ()|}

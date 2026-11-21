@@ -91,7 +91,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Input OTP"
-    ~group:Forms
     ~description:"Accessible one-time password component with copy paste functionality."
     ~usage:
       {|Input_otp.component ~max_length:6

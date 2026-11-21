@@ -27,7 +27,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Aspect ratio"
-    ~group:Display
     ~description:"Displays content within a desired ratio."
     ~usage:
       {|Aspect_ratio.view ~ratio:(16. /. 9.)

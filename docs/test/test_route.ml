@@ -3,7 +3,7 @@ module Route = Loon_docs.Route
 
 let%expect_test "of_hash" =
   List.iter
-    [ ""; "#"; "#/"; "#/button"; "#button"; "#/theming/variables"; "#/tabs?x=1"; "#//" ]
+    [ ""; "#"; "#/"; "#/button"; "#button"; "#/theming/variables"; "#/tabs?x=1"; "#//"; "#/introduction" ]
     ~f:(fun h -> print_s [%message h (Route.of_hash h : Route.t)]);
   [%expect
     {|
@@ -23,7 +23,7 @@ let%expect_test "round trip" =
     let h = Route.to_hash r in
     print_s
       [%message
-        h (Route.slug r) ~round_trips:(Route.equal r (Route.of_hash h) : bool)]);
+        h ~round_trips:(Route.equal r (Route.of_hash h) : bool)]);
   [%expect
     {|
     (#/ introduction (round_trips true))

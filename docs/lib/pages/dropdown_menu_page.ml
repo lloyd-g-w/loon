@@ -58,7 +58,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Dropdown menu"
-    ~group:Overlays
     ~description:"A menu of actions, toggles and choices opened from a button."
     ~usage:
       {|Dropdown_menu.component

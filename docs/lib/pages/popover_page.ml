@@ -58,14 +58,13 @@ let sides (local_ graph) =
     |> Bonsai.all
   in
   let%arr views in
-  Node.div ~attrs:[ Attr.class_ "docs-row" ] views
+  Node.div ~attrs:[ Attr.class_ "flex flex-wrap items-center justify-center gap-3" ] views
 (*$*)
 
 let page =
   Doc.page
     ~slug:page
     ~title:"Popover"
-    ~group:Overlays
     ~description:"Rich content in a panel that opens beside its trigger."
     ~usage:
       {|Popover.component

@@ -25,7 +25,7 @@ let delete_account (local_ graph) =
   in
   let%arr dialog and deleted in
   Node.div
-    ~attrs:[ Vdom.Attr.class_ "docs-row" ]
+    ~attrs:[ Vdom.Attr.class_ "flex flex-wrap items-center justify-center gap-3" ]
     [ dialog
     ; (if deleted then Badge.view ~variant:Destructive [ Node.text "Deleted" ] else Node.none)
     ]
@@ -35,7 +35,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Alert dialog"
-    ~group:Overlays
     ~description:"Asks for confirmation before something important, often destructive."
     ~usage:
       {|Alert_dialog.component

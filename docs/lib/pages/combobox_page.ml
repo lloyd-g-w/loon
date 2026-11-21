@@ -33,7 +33,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Combobox"
-    ~group:Forms
     ~description:"A select with a search box, for choosing one of many options."
     ~usage:
       {|let%sub value, view =

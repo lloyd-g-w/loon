@@ -283,7 +283,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Data table"
-    ~group:Display
     ~description:"Powerful table and datagrids built using TanStack Table."
     ~usage:
       {|let table =

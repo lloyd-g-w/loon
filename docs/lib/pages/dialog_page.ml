@@ -32,7 +32,7 @@ let edit_profile (local_ graph) =
            ]
        in
        ( [ Node.div
-             ~attrs:[ Attr.class_ "docs-stack" ]
+             ~attrs:[ Attr.class_ "flex flex-col gap-3" ]
              [ field "Name" "Lloyd"; field "Username" "@lloyd" ]
          ]
        , [ Button.view ~variant:Outline ~on_click:close [ Node.text "Cancel" ]
@@ -62,14 +62,13 @@ let sizes (local_ graph) =
       ]
   in
   let%arr views in
-  Node.div ~attrs:[ Attr.class_ "docs-row" ] views
+  Node.div ~attrs:[ Attr.class_ "flex flex-wrap items-center justify-center gap-3" ] views
 (*$*)
 
 let page =
   Doc.page
     ~slug:page
     ~title:"Dialog"
-    ~group:Overlays
     ~description:
       "A window over the page that must be dealt with before going back to it."
     ~usage:

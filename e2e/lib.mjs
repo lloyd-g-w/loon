@@ -74,7 +74,7 @@ export async function open(engineName, { device = "desktop", colorScheme = "ligh
 // The page drawn, and its fonts loaded; with [slug], that page's article (a
 // goto that only changes the hash keeps the old one for a frame or two).
 export async function ready(page, slug) {
-  await page.waitForSelector(slug === undefined ? ".docs-article" : `.docs-article[data-page="${slug}"]`);
+  await page.waitForSelector(slug === undefined ? "[data-page]" : `[data-page="${slug}"]`);
   await page.evaluate(() =>
     Promise.all([
       document.fonts.load('1em "Geist"'),
@@ -98,7 +98,7 @@ export async function screenshot(page, name) {
 
 // The pages the sidebar links to, in its order.
 export async function pages(page) {
-  return page.$$eval(".docs-nav-link[data-slug]", (links) =>
+  return page.$$eval("[data-docs-sidebar-content] a[data-slug]", (links) =>
     links.map((a) => ({ slug: a.dataset.slug, title: a.textContent.trim(), href: a.getAttribute("href") })),
   );
 }

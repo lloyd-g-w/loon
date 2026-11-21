@@ -39,7 +39,7 @@ let inline (local_ graph) =
   in
   let%arr command and last in
   Node.div
-    ~attrs:[ Vdom.Attr.class_ "docs-stack" ]
+    ~attrs:[ Vdom.Attr.class_ "flex flex-col gap-3" ]
     [ Node.div
         ~attrs:
           [ Vdom.Attr.style
@@ -71,7 +71,7 @@ let palette (local_ graph) =
   and last in
   Node.div
     ~attrs:
-      [ Vdom.Attr.class_ "docs-stack"
+      [ Vdom.Attr.class_ "flex flex-col gap-3"
       ; Vdom.Attr.style (Css_gen.create ~field:"align-items" ~value:"flex-start")
       ]
     [ Button.view
@@ -92,7 +92,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Command palette"
-    ~group:Overlays
     ~description:"A search box over a grouped list of commands, fuzzy-filtered as you type."
     ~usage:
       {|let%sub view, open_palette =

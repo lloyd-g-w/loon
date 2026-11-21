@@ -5,7 +5,7 @@ let page =
     ~order:1
     ~slug:"installation"
     ~title:"Installation"
-    ~group:Guide
+    ~section:Get_started
     ~description:"Add loon to a Bonsai_web project and load its stylesheet."
     ~body:
       [ Doc.h2 "Requirements"

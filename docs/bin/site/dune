@@ -3,22 +3,25 @@
  (action
   (copy ../main.bc.js main.bc.js)))
 
-; The docs' stylesheet: loon's Tailwind input, scanning the docs' sources
-; (examples use Tailwind classes too) as well as loon's.
+; The docs' stylesheet: loon's Tailwind input and the site's own styles
+; (../site.css: ui.shadcn.com's globals and typeset), scanning the docs'
+; sources (examples use Tailwind classes too) as well as loon's.
 
 (rule
  (target loon.css)
  (deps
   (glob_files ../../../src/css/*.css)
   (glob_files ../../../src/*.ml)
-  (glob_files_rec ../../lib/**.ml))
+  (glob_files_rec ../../lib/**.ml)
+  ../site.css
+  index.html)
  (action
   (system
-   "{ cat ../../../src/css/*.css; printf '\\n@source \"../../../src/*.ml\";\\n@source \"../../lib/**/*.ml\";\\n'; } > docs.input.css && tailwindcss --silent --input docs.input.css --output loon.css")))
+   "{ cat ../../../src/css/*.css ../site.css; printf '\\n@source \"../../../src/*.ml\";\\n@source \"../../lib/**/*.ml\";\\n'; } > docs.input.css && tailwindcss --silent --input docs.input.css --output loon.css")))
 
 (copy_files
  (files
-  ../{index.html,docs.css,icon.svg,temporal-polyfill.js,LICENSE-temporal-polyfill,geist-sans.woff2,geist-mono.woff2,geist-OFL.txt}))
+  ../{index.html,icon.svg,temporal-polyfill.js,LICENSE-temporal-polyfill,geist-sans.woff2,geist-mono.woff2,geist-OFL.txt}))
 
 (install
  (section share)
@@ -27,7 +30,6 @@
   (main.bc.js as docs/main.bc.js)
   (loon.css as docs/loon.css)
   (index.html as docs/index.html)
-  (docs.css as docs/docs.css)
   (icon.svg as docs/icon.svg)
   (temporal-polyfill.js as docs/temporal-polyfill.js)
   (LICENSE-temporal-polyfill as docs/LICENSE-temporal-polyfill)

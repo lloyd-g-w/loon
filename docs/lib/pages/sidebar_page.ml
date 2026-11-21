@@ -366,7 +366,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Sidebar"
-    ~group:Navigation
     ~description:"A composable, themeable and customizable sidebar component."
     ~body:
       [ Doc.h2 "Structure"

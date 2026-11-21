@@ -19,7 +19,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Label"
-    ~group:Forms
     ~description:"Renders an accessible label associated with controls."
     ~usage:{|Label.view ~for_:"email" [ Node.text "Your email address" ]|}
     ~body:
