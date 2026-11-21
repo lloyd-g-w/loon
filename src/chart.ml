@@ -2741,10 +2741,13 @@ let render_pie (ctx : render_ctx) : rendered =
         | h, _ -> h
       in
       let hovered = Option.filter hovered ~f:(fun i -> i >= 0 && i < Array.length rows) in
+      (* A fixed [active_index] (shadcn's [shape] drawing one sector larger)
+         stays put; otherwise the active shape follows the tooltip, as
+         Recharts' [activeShape]. *)
       let active_index =
-        match hovered with
+        match p.p_active_index with
         | Some i -> Some i
-        | None -> p.p_active_index
+        | None -> hovered
       in
       let name_of i = Option.value (Row.text rows.(i) p.p_name_key) ~default:(Int.to_string i) in
       Option.iter hovered ~f:(fun i ->
