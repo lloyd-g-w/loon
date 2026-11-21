@@ -177,26 +177,23 @@ let date_picker (local_ graph) =
     | Single date -> date
     | Multiple _ | Range _ -> None
   in
-  Popover.view
-    ~align:Start
-    ~id:"date-picker"
-    ~open_
-    ~on_change:set_open
-    ~trigger:(fun attrs ->
-      Button.view
-        ~attrs
-        ~variant:Outline
-        ~class_:
-          (Cn.cn
-             [ "w-[240px] justify-start text-left font-normal"
-             ; (if Option.is_none date then "text-muted-foreground" else "")
-             ])
-        [ Icon.view Calendar
-        ; (match date with
-           | Some date -> Node.text (Calendar.format "PPP" date)
-           | None -> Node.span [ Node.text "Pick a date" ])
-        ])
-    [ calendar.view ]
+  Popover.view ~id:"date-picker" ~open_ ~on_open_change:set_open (fun popover ->
+    [ Popover.trigger
+        popover
+        (Button.view
+           ~variant:Outline
+           ~class_:
+             (Cn.cn
+                [ "w-[240px] justify-start text-left font-normal"
+                ; (if Option.is_none date then "text-muted-foreground" else "")
+                ])
+           [ Icon.view Calendar
+           ; (match date with
+              | Some date -> Node.text (Calendar.format "PPP" date)
+              | None -> Node.span [ Node.text "Pick a date" ])
+           ])
+    ; Popover.content popover ~class_:"w-auto p-0" ~align:Start [ calendar.view ]
+    ])
 (*$*)
 
 (*$ Date Picker with Presets
@@ -204,7 +201,7 @@ let date_picker (local_ graph) =
 let date_picker_presets (local_ graph) =
   let open_, set_open = Bonsai.state false graph in
   let calendar = Calendar.component ~default:(Single None) graph in
-  let select_state, set_select_state = Bonsai.state Select.State.Closed graph in
+  let select_state, set_select_state = Bonsai.state Select.State.closed graph in
   let preset, set_preset = Bonsai.state None graph in
   let%arr calendar
   and open_
@@ -218,32 +215,29 @@ let date_picker_presets (local_ graph) =
     | Single date -> date
     | Multiple _ | Range _ -> None
   in
-  Popover.view
-    ~align:Start
-    ~id:"date-picker-presets"
-    ~open_
-    ~on_change:set_open
-    ~trigger:(fun attrs ->
-      Button.view
-        ~attrs
-        ~variant:Outline
-        ~class_:
-          (Cn.cn
-             [ "w-[240px] justify-start text-left font-normal"
-             ; (if Option.is_none date then "text-muted-foreground" else "")
-             ])
-        [ Icon.view Calendar
-        ; (match date with
-           | Some date -> Node.text (Calendar.format "PPP" date)
-           | None -> Node.span [ Node.text "Pick a date" ])
-        ])
-    [ Node.div
-        ~attrs:[ Attr.class_ "flex w-auto flex-col space-y-2 p-2" ]
+  Popover.view ~id:"date-picker-presets" ~open_ ~on_open_change:set_open (fun popover ->
+    [ Popover.trigger
+        popover
+        (Button.view
+           ~variant:Outline
+           ~class_:
+             (Cn.cn
+                [ "w-[240px] justify-start text-left font-normal"
+                ; (if Option.is_none date then "text-muted-foreground" else "")
+                ])
+           [ Icon.view Calendar
+           ; (match date with
+              | Some date -> Node.text (Calendar.format "PPP" date)
+              | None -> Node.span [ Node.text "Pick a date" ])
+           ])
+    ; Popover.content
+        popover
+        ~class_:"flex w-auto flex-col space-y-2 p-2"
+        ~align:Start
         [ Select.view
             ~id:"date-picker-presets-select"
-            ~placeholder:"Select"
             ~value:preset
-            ~on_change:(fun value ->
+            ~on_value_change:(fun value ->
               let date = Date.add_days (Calendar.today ()) (Int.of_string value) in
               Effect.Many
                 [ set_preset (Some value)
@@ -251,17 +245,18 @@ let date_picker_presets (local_ graph) =
                 ; calendar.set_month date
                 ])
             ~state:select_state
-            ~on_state:set_select_state
-            [ Select.Group.create
-                [ Select.Option_.create ~label:"Today" "0"
-                ; Select.Option_.create ~label:"Tomorrow" "1"
-                ; Select.Option_.create ~label:"In 3 days" "3"
-                ; Select.Option_.create ~label:"In a week" "7"
-                ]
-            ]
+            ~on_state_change:set_select_state
+            (Select.trigger ~class_:"w-full" ~placeholder:"Select" ())
+            (Select.content
+               ~position:Popper
+               [ Select.item ~value:"0" [ Node.text "Today" ]
+               ; Select.item ~value:"1" [ Node.text "Tomorrow" ]
+               ; Select.item ~value:"3" [ Node.text "In 3 days" ]
+               ; Select.item ~value:"7" [ Node.text "In a week" ]
+               ])
         ; Node.div ~attrs:[ Attr.class_ "rounded-md border" ] [ calendar.view ]
         ]
-    ]
+    ])
 (*$*)
 
 (*$ Date Range Picker
@@ -284,29 +279,28 @@ let date_range_picker (local_ graph) =
   in
   Node.div
     ~attrs:[ Attr.class_ "grid gap-2" ]
-    [ Popover.view
-        ~align:Start
-        ~id:"date-range-picker"
-        ~open_
-        ~on_change:set_open
-        ~trigger:(fun attrs ->
-          Button.view
-            ~attrs
-            ~variant:Outline
-            ~class_:
-              (Cn.cn
-                 [ "w-[300px] justify-start text-left font-normal"
-                 ; (if Option.is_none range then "text-muted-foreground" else "")
-                 ])
-            [ Icon.view Calendar
-            ; (match range with
-               | Some { from; to_ = Some to_ } ->
-                 Node.text
-                   (Calendar.format "LLL dd, y" from ^ " - " ^ Calendar.format "LLL dd, y" to_)
-               | Some { from; to_ = None } -> Node.text (Calendar.format "LLL dd, y" from)
-               | None -> Node.span [ Node.text "Pick a date" ])
-            ])
-        [ calendar.view ]
+    [ Popover.view ~id:"date-range-picker" ~open_ ~on_open_change:set_open (fun popover ->
+        [ Popover.trigger
+            popover
+            (Button.view
+               ~variant:Outline
+               ~class_:
+                 (Cn.cn
+                    [ "w-[300px] justify-start text-left font-normal"
+                    ; (if Option.is_none range then "text-muted-foreground" else "")
+                    ])
+               [ Icon.view Calendar
+               ; (match range with
+                  | Some { from; to_ = Some to_ } ->
+                    Node.text
+                      (Calendar.format "LLL dd, y" from
+                       ^ " - "
+                       ^ Calendar.format "LLL dd, y" to_)
+                  | Some { from; to_ = None } -> Node.text (Calendar.format "LLL dd, y" from)
+                  | None -> Node.span [ Node.text "Pick a date" ])
+               ])
+        ; Popover.content popover ~class_:"w-auto p-0" ~align:Start [ calendar.view ]
+        ])
     ]
 (*$*)
 
@@ -330,23 +324,25 @@ let date_of_birth (local_ graph) =
   in
   Node.div
     ~attrs:[ Attr.class_ "mx-auto flex w-44 flex-col gap-3" ]
-    [ Label.view ~for_:"date-of-birth-trigger" [ Node.text "Date of birth" ]
-    ; Popover.view
-        ~align:Start
-        ~id:"date-of-birth"
-        ~open_
-        ~on_change:set_open
-        ~trigger:(fun attrs ->
-          Button.view
-            ~attrs
-            ~variant:Outline
-            ~class_:"justify-start font-normal"
-            [ Node.text
-                (match date with
-                 | Some date -> Calendar.format "P" date
-                 | None -> "Select date")
-            ])
-        [ calendar.view ]
+    [ Label.view ~for_:"date-of-birth-trigger" ~class_:"px-1" [ Node.text "Date of birth" ]
+    ; Popover.view ~id:"date-of-birth" ~open_ ~on_open_change:set_open (fun popover ->
+        [ Popover.trigger
+            popover
+            (Button.view
+               ~variant:Outline
+               ~class_:"w-48 justify-between font-normal"
+               [ Node.text
+                   (match date with
+                    | Some date -> Calendar.format "P" date
+                    | None -> "Select date")
+               ; Icon.view Chevron_down
+               ])
+        ; Popover.content
+            popover
+            ~class_:"w-auto overflow-hidden p-0"
+            ~align:Start
+            [ calendar.view ]
+        ])
     ]
 (*$*)
 

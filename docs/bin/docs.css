@@ -172,7 +172,8 @@ body[data-scroll-locked] {
   background: var(--loon-muted);
   color: var(--loon-foreground);
 }
-.docs-app :is(a, button, input, [tabindex]):focus-visible {
+/* The docs' own controls; the examples' components have shadcn's rings. */
+.docs-app :is(a, button, input, [tabindex]):focus-visible:not(.docs-preview *) {
   outline: none;
   box-shadow: 0 0 0 2px var(--loon-background), 0 0 0 4px var(--loon-ring);
 }

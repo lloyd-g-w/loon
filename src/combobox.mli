@@ -1,40 +1,49 @@
-(** A select with a search box: choose one of many options by typing to
-    filter them (a Command_palette in a popover). *)
+(** Autocomplete input and command palette with a list of suggestions.
+    Port of shadcn/ui's [Combobox] demo, built from a {!Popover} and a
+    {!Command}: an outline button showing the chosen option, opening a
+    searchable list; picking the chosen option again clears it. Compose
+    [Popover] and [Command] yourself for other shapes (see the docs). *)
+
+(* Core has a Command too: name ours before Import opens Core. *)
+module Cmdk := Command
 
 open! Import
 
-module State : sig
+module Option_ : sig
   type t =
-    | Closed
-    | Open of Command_palette.State.t
+    { value : string
+    ; label : string
+    }
   [@@deriving sexp_of, equal]
 end
 
-(** Controlled. Options are Select's; [id] must be unique on the page. *)
+(** Controlled: [value], [on_value_change], whether it is [open_], and the
+    command's state. [id] (unique on the page) prefixes the parts' ids. *)
 val view
-  :  ?attrs:Attr.t list
+  :  ?class_:string
+  -> ?content_class:string
+  -> ?id:string
   -> ?placeholder:string
   -> ?search_placeholder:string
   -> ?empty:string
-  -> ?disabled:bool
-  -> ?invalid:bool
-  -> id:string
   -> value:string option
-  -> on_change:(string -> unit Effect.t)
-  -> state:State.t
-  -> on_state:(State.t -> unit Effect.t)
-  -> Select.Group.t list
+  -> on_value_change:(string option -> unit Effect.t)
+  -> open_:bool
+  -> on_open_change:(bool -> unit Effect.t)
+  -> command:Cmdk.State.t
+  -> on_command_change:(Cmdk.State.t -> unit Effect.t)
+  -> Option_.t list
   -> Node.t
 
-(** Keeps the value (initially [default]) and the search; returns the value
-    and the view. *)
+(** Keeps the value (initially [default_value]) and the rest; returns the
+    value and the view. *)
 val component
-  :  ?attrs:Attr.t list
+  :  ?class_:string
+  -> ?content_class:string
   -> ?placeholder:string
   -> ?search_placeholder:string
   -> ?empty:string
-  -> ?disabled:bool
-  -> ?default:string
-  -> Select.Group.t list Bonsai.t
+  -> ?default_value:string
+  -> Option_.t list Bonsai.t
   -> local_ Bonsai.graph
   -> (string option * Node.t) Bonsai.t

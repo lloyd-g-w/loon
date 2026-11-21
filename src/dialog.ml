@@ -1,98 +1,95 @@
 open! Import
 
-module Size = struct
-  type t =
-    | Sm
-    | Md
-    | Lg
-    | Xl
-  [@@deriving enumerate, sexp_of, compare, equal]
+type t = Modal.t
 
-  let name t = String.lowercase (Sexp.to_string (sexp_of_t t))
-end
+let view ?id = Modal.view ?id
+let component = Modal.component
+let trigger ?attrs t node = Modal.trigger ~slot:"dialog-trigger" ?attrs t node
+let close ?attrs t node = Modal.close ~slot:"dialog-close" ?attrs t node
 
-let header ~id ?description title =
+let overlay_class =
+  "fixed inset-0 z-50 bg-black/50 data-[state=closed]:animate-out \
+   data-[state=closed]:fade-out-0 data-[state=open]:animate-in \
+   data-[state=open]:fade-in-0"
+;;
+
+let content_class =
+  "fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] \
+   translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 \
+   shadow-lg duration-200 outline-none data-[state=closed]:animate-out \
+   data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 \
+   data-[state=open]:animate-in data-[state=open]:fade-in-0 \
+   data-[state=open]:zoom-in-95 sm:max-w-lg"
+;;
+
+let close_class =
+  "absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background \
+   transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring \
+   focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none \
+   data-[state=open]:bg-accent data-[state=open]:text-muted-foreground \
+   [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+;;
+
+let content ?(attrs = []) ?class_ ?(show_close_button = true) ?initial_focus t children =
+  Modal.content
+    ?initial_focus
+    ~overlay:(Modal.overlay ~slot:"dialog-overlay" ~class_:overlay_class t)
+    ~content_attrs:([ data "slot" "dialog-content"; Cn.with_class ?class_ [ content_class ] ] @ attrs)
+    t
+    (children
+     @
+     if show_close_button
+     then
+       [ Node.button
+           ~attrs:
+             [ Attr.type_ "button"
+             ; data "slot" "dialog-close"
+             ; Attr.class_ close_class
+             ; Attr.on_click (fun _ -> t.on_open_change false)
+             ]
+           [ Icon.view X; Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "Close" ] ]
+       ]
+     else [])
+;;
+
+let header ?(attrs = []) ?class_ children =
   Node.div
-    ~attrs:[ Attr.class_ "loon-dialog-header" ]
-    (Node.h2
-       ~attrs:[ Attr.class_ "loon-dialog-title"; Attr.id (Modal.title_id id) ]
-       [ Node.text title ]
-     ::
-     (match description with
-      | None -> []
-      | Some d ->
-        [ Node.p
-            ~attrs:[ Attr.class_ "loon-dialog-description"; Attr.id (Modal.description_id id) ]
-            [ Node.text d ]
-        ]))
+    ~attrs:
+      ([ data "slot" "dialog-header"
+       ; Cn.with_class ?class_ [ "flex flex-col gap-2 text-center sm:text-left" ]
+       ]
+       @ attrs)
+    children
 ;;
 
-let footer buttons = Node.div ~attrs:[ Attr.class_ "loon-dialog-footer" ] buttons
-
-let view
-  ?attrs:extra
-  ?(size = Size.Md)
-  ?description
-  ?footer:buttons
-  ?(close_button = true)
-  ?trigger
-  ~id
-  ~open_
-  ~on_change
-  ~title
-  body
-  =
-  let on_close = on_change false in
-  let modal =
-    Modal.view
-      ~role:"dialog"
-      ~class_:"loon-dialog"
-      ~id
-      ~open_
-      ~on_close
-      ~has_description:(Option.is_some description)
-      ~panel_attrs:(attrs ?attrs:extra [ "loon-dialog-" ^ Size.name size ])
-      (List.concat
-         [ [ header ~id ?description title ]
-         ; (match body with
-            | [] -> []
-            | body -> [ Node.div ~attrs:[ Attr.class_ "loon-dialog-body" ] body ])
-         ; Option.value_map buttons ~default:[] ~f:(fun b -> [ footer b ])
-         ; (if close_button
-            then
-              [ Node.button
-                  ~attrs:
-                    [ Attr.type_ "button"
-                    ; Attr.class_ "loon-dialog-close"
-                    ; aria "label" "Close"
-                    ; Attr.on_click (fun _ -> Modal.close ~id ~on_close)
-                    ]
-                  [ Icon.view X ]
-              ]
-            else [])
-         ])
-  in
-  Modal.with_trigger ?trigger ~id ~open_ ~on_change modal
+let footer ?(attrs = []) ?class_ ?show_close_button children =
+  Node.div
+    ~attrs:
+      ([ data "slot" "dialog-footer"
+       ; Cn.with_class ?class_ [ "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end" ]
+       ]
+       @ attrs)
+    (children
+     @
+     match show_close_button with
+     | None -> []
+     | Some t -> [ close t (Button.view ~variant:Outline [ Node.text "Close" ]) ])
 ;;
 
-let component ?attrs ?size ?description ?close_button ~trigger ~title content (local_ graph)
-  =
-  let open_, set_open = Bonsai.state false graph in
-  let id = Bonsai.path_id graph in
-  let open Bonsai.Let_syntax in
-  let%arr open_ and set_open and id and content in
-  let id = "loon" ^ id in
-  let body, footer = content ~close:(Modal.close ~id ~on_close:(set_open false)) in
-  view
+let title ?attrs ?class_ t children =
+  Modal.title
+    ~slot:"dialog-title"
+    ~class_:(Cn.cn [ "text-lg leading-none font-semibold"; Option.value class_ ~default:"" ])
     ?attrs
-    ?size
-    ?description
-    ~footer
-    ?close_button
-    ~trigger
-    ~id
-    ~open_
-    ~on_change:set_open
-    ~title
-    body
+    t
+    children
+;;
+
+let description ?attrs ?class_ t children =
+  Modal.description
+    ~slot:"dialog-description"
+    ~class_:(Cn.cn [ "text-sm text-muted-foreground"; Option.value class_ ~default:"" ])
+    ?attrs
+    t
+    children
 ;;

@@ -3,7 +3,7 @@ home: loon — components for Bonsai | Calm, well-made components for Bonsai.
 current: Introduction
 sidebar Getting started: Introduction, Installation, Theming, CLI
 sidebar Forms: Button, Button Group, Calendar, Checkbox, Combobox, Field, Forms, Input, Input Group, Input OTP, Label, Native Select, Radio Group, Select, Slider, Switch, Textarea, Toggle, Toggle Group
-sidebar Overlays: Alert dialog, Command palette, Dialog, Dropdown menu, Popover, Sheet, Tooltip
+sidebar Overlays: Alert dialog, Command, Context menu, Dialog, Drawer, Dropdown menu, Hover card, Menubar, Popover, Sheet, Tooltip
 sidebar Display: Accordion, Aspect ratio, Avatar, Badge, Card, Carousel, Collapsible, Data table, Item, Kbd, Resizable, Scroll area, Separator, Table
 sidebar Navigation: Breadcrumb, Navigation Menu, Pagination, Sidebar, Tabs
 sidebar Feedback: Alert, Empty, Progress, Skeleton, Sonner, Spinner

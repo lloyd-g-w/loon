@@ -136,7 +136,6 @@ let columns ~open_menu ~set_open_menu : Payment.t Data_table.Column.t list =
         let (payment : Payment.t) = row.original in
         let id = "payment-actions-" ^ payment.id in
         [ Dropdown_menu.view
-            ~align:End
             ~id
             ~state:
               (match open_menu with
@@ -147,26 +146,27 @@ let columns ~open_menu ~set_open_menu : Payment.t Data_table.Column.t list =
                 (match (state : Dropdown_menu.State.t) with
                  | Closed -> None
                  | Open _ -> Some (id, state)))
-            ~trigger:(fun attrs ->
-              Button.view
-                ~attrs
-                ~variant:Ghost
-                ~class_:"h-8 w-8 p-0"
-                [ Node.span
-                    ~attrs:[ Attr.class_ "sr-only" ]
-                    [ Node.text "Open menu" ]
-                ; Icon.view Ellipsis
-                ])
-            [ Dropdown_menu.Item.label "Actions"
-            ; Dropdown_menu.Item.action
-                ~on_select:(copy_to_clipboard payment.id)
-                "Copy payment ID"
-            ; Dropdown_menu.Item.separator
-            ; Dropdown_menu.Item.action ~on_select:Effect.Ignore "View customer"
-            ; Dropdown_menu.Item.action
-                ~on_select:Effect.Ignore
-                "View payment details"
-            ]
+            (fun menu ->
+              [ Dropdown_menu.trigger
+                  menu
+                  (Button.view
+                     ~variant:Ghost
+                     ~class_:"h-8 w-8 p-0"
+                     [ Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "Open menu" ]
+                     ; Icon.view Ellipsis
+                     ])
+              ; Dropdown_menu.content
+                  menu
+                  ~align:End
+                  [ Dropdown_menu.label [ Node.text "Actions" ]
+                  ; Dropdown_menu.item
+                      ~on_select:(copy_to_clipboard payment.id)
+                      [ Node.text "Copy payment ID" ]
+                  ; Dropdown_menu.separator ()
+                  ; Dropdown_menu.item [ Node.text "View customer" ]
+                  ; Dropdown_menu.item [ Node.text "View payment details" ]
+                  ]
+              ])
         ])
       ()
   ]
@@ -188,23 +188,27 @@ let demo (local_ graph) =
   in
   let column_menu =
     Dropdown_menu.component
-      ~align:End
-      ~attrs:[ Attr.class_ "ml-auto" ]
-      ~trigger:(fun attrs ->
-        Button.view
-          ~attrs
-          ~variant:Outline
-          ~class_:"ml-auto"
-          [ Node.text "Columns"; Icon.view Chevron_down ])
       (let%arr table in
-       Data_table.all_columns table
-       |> List.filter ~f:Data_table.can_hide
-       |> List.map ~f:(fun column ->
-         let id = Data_table.Column.id column in
-         Dropdown_menu.Item.checkbox
-           ~checked:(Data_table.is_visible table id)
-           ~on_change:(Data_table.toggle_visibility table id)
-           (String.capitalize id)))
+       fun menu ->
+         [ Dropdown_menu.trigger
+             menu
+             (Button.view
+                ~variant:Outline
+                ~class_:"ml-auto"
+                [ Node.text "Columns"; Icon.view Chevron_down ])
+         ; Dropdown_menu.content
+             menu
+             ~align:End
+             (Data_table.all_columns table
+              |> List.filter ~f:Data_table.can_hide
+              |> List.map ~f:(fun column ->
+                let id = Data_table.Column.id column in
+                Dropdown_menu.checkbox_item
+                  ~class_:"capitalize"
+                  ~checked:(Data_table.is_visible table id)
+                  ~on_checked_change:(Data_table.toggle_visibility table id)
+                  [ Node.text id ]))
+         ])
       graph
   in
   let%arr table

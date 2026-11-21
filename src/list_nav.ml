@@ -41,7 +41,7 @@ let letter : Dom_html.Keyboard_code.t -> char option = function
   | _ -> None
 ;;
 
-let move ~equal ~items ~current (key : Dom_html.Keyboard_code.t) =
+let move ?(loop = true) ~equal ~items ~current (key : Dom_html.Keyboard_code.t) =
   let items = Array.of_list items in
   let n = Array.length items in
   if n = 0
@@ -54,9 +54,9 @@ let move ~equal ~items ~current (key : Dom_html.Keyboard_code.t) =
     let at i = Some (fst items.(i)) in
     match key, index with
     | ArrowDown, None -> at 0
-    | ArrowDown, Some i -> at ((i + 1) % n)
+    | ArrowDown, Some i -> if loop then at ((i + 1) % n) else at (Int.min (i + 1) (n - 1))
     | ArrowUp, None -> at (n - 1)
-    | ArrowUp, Some i -> at ((i - 1 + n) % n)
+    | ArrowUp, Some i -> if loop then at ((i - 1 + n) % n) else at (Int.max (i - 1) 0)
     | Home, _ | PageUp, _ -> at 0
     | End, _ | PageDown, _ -> at (n - 1)
     | key, index ->
@@ -69,4 +69,15 @@ let move ~equal ~items ~current (key : Dom_html.Keyboard_code.t) =
            let label = String.lowercase (String.strip (snd items.(i))) in
            (not (String.is_empty label)) && Char.equal label.[0] c)
          |> Option.bind ~f:at))
+;;
+
+let rec text_of_nodes nodes =
+  List.map nodes ~f:(fun (node : Node.t) ->
+    match node with
+    | Text s -> s
+    | Fragment nodes -> text_of_nodes nodes
+    | Lazy { t; _ } -> text_of_nodes [ Lazy.force t ]
+    | None | Element _ | Widget _ -> "")
+  |> String.concat
+  |> String.strip
 ;;
