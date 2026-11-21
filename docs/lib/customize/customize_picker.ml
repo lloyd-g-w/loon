@@ -47,7 +47,9 @@ let classes : Menu.Classes.t =
   ; item = item_class
   ; checkbox_item = radio_item_class
   ; radio_item = radio_item_class
-  ; indicator = "pointer-events-none absolute right-2 flex items-center justify-center"
+  (* Menu's own radio indicator (a circle); radio_item draws picker.tsx's
+     check instead. *)
+  ; indicator = "hidden"
   ; label = "px-2 py-1.5 text-xs font-medium text-neutral-400 data-[inset]:pl-8"
   ; separator = "-mx-1.5 my-1.5 h-px bg-neutral-600 dark:bg-neutral-700"
   ; shortcut =
@@ -208,8 +210,10 @@ module Radio_item = struct
 end
 
 let radio_group ?(attrs = []) ?on_item_preview ~value ~on_value_change items =
-  Menu.group
-    ~attrs:([ data "slot" "dropdown-menu-radio-group"; Attr.role "group" ] @ attrs)
+  Menu.radio_group
+    ~attrs
+    ~value
+    ~on_value_change
     (List.map items ~f:(fun (item : Radio_item.t) ->
        item ~checked:value ~on_value_change ~on_item_preview))
 ;;
@@ -224,7 +228,7 @@ let radio_item
   children
   : Radio_item.t
   =
-  fun ~checked ~on_value_change ~on_item_preview ->
+  fun ~checked ~on_value_change:_ ~on_item_preview ->
   let is_checked = String.equal checked value in
   let preview =
     match on_item_preview with
@@ -232,20 +236,13 @@ let radio_item
     | Some f ->
       [ Attr.on_mousemove (fun _ -> f value); Attr.on_focus (fun _ -> f value) ]
   in
-  Menu.item
-    ~attrs:
-      ([ data "slot" "dropdown-menu-radio-item"
-       ; Attr.role "menuitemradio"
-       ; aria "checked" (Bool.to_string is_checked)
-       ; data "state" (if is_checked then "checked" else "unchecked")
-       ]
-       @ preview
-       @ attrs)
+  Menu.radio_item
+    ~attrs:(preview @ attrs)
     ~class_:(Cn.cn [ radio_item_class; class_ ])
     ?disabled
     ?text_value
     ~close_on_select
-    ~on_select:(on_value_change value)
+    ~value
     (Node.span
        ~attrs:
          [ Attr.class_ "pointer-events-none absolute right-2 flex items-center justify-center"
