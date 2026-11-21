@@ -9,10 +9,11 @@ let%expect_test "shadcn's classes" =
        ~open_:true
        ~on_change:(fun _ -> Bonsai_web.Effect.Ignore)
        (fun c ->
-         [ Collapsible.trigger c [ Node.text "Toggle" ]
-         ; Collapsible.content c [ Node.text "Hidden" ]
-         ]));
-  [%expect {|
+          [ Collapsible.trigger c [ Node.text "Toggle" ]
+          ; Collapsible.content c [ Node.text "Hidden" ]
+          ]));
+  [%expect
+    {|
     <div data-state="open" data-slot="collapsible">
       <button type="button"
               aria-controls="collapsible-content"
@@ -42,7 +43,8 @@ let%expect_test "the trigger opens and closes it; trigger_attrs on a Button" =
             ])))
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div data-state="closed" data-slot="collapsible">
       <button type="button"
               data-slot="button"
@@ -61,7 +63,8 @@ let%expect_test "the trigger opens and closes it; trigger_attrs on a Button" =
     |}];
   Drive.click handle "[aria-controls]";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
     -|<div data-state="closed" data-slot="collapsible">
     +|<div data-state="open" data-slot="collapsible">
         <button type="button"
@@ -85,7 +88,8 @@ let%expect_test "the trigger opens and closes it; trigger_attrs on a Button" =
     |}];
   Drive.click handle "[aria-controls]";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
     -|<div data-state="open" data-slot="collapsible">
     +|<div data-state="closed" data-slot="collapsible">
         <button type="button"
@@ -121,7 +125,8 @@ let%expect_test "disabled" =
             ])))
   in
   Handle.show handle;
-  [%expect {|
+  [%expect
+    {|
     <div data-state="closed" data-slot="collapsible" data-disabled="">
       <button type="button"
               aria-controls="bonsai_path_replaced_in_test-content"

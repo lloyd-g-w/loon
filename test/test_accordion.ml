@@ -7,16 +7,22 @@ let items acc =
   [ Accordion.item
       acc
       ~value:"a"
-      [ Accordion.trigger [ Node.text "A" ]; Accordion.content [ Node.text "Alpha" ] ]
+      [ Accordion.trigger [ Node.text "A" ]
+      ; Accordion.content [ Node.text "Alpha" ]
+      ]
   ; Accordion.item
       acc
       ~value:"b"
-      [ Accordion.trigger [ Node.text "B" ]; Accordion.content [ Node.text "Beta" ] ]
+      [ Accordion.trigger [ Node.text "B" ]
+      ; Accordion.content [ Node.text "Beta" ]
+      ]
   ; Accordion.item
       acc
       ~disabled:true
       ~value:"c"
-      [ Accordion.trigger [ Node.text "C" ]; Accordion.content [ Node.text "Gamma" ] ]
+      [ Accordion.trigger [ Node.text "C" ]
+      ; Accordion.content [ Node.text "Gamma" ]
+      ]
   ]
 ;;
 
@@ -27,14 +33,15 @@ let%expect_test "shadcn's classes" =
        ~value:[ "a" ]
        ~on_change:(fun _ -> Bonsai_web.Effect.Ignore)
        (fun acc ->
-         [ Accordion.item
-             acc
-             ~value:"a"
-             [ Accordion.trigger [ Node.text "A" ]
-             ; Accordion.content [ Node.text "Alpha" ]
-             ]
-         ]));
-  [%expect {|
+          [ Accordion.item
+              acc
+              ~value:"a"
+              [ Accordion.trigger [ Node.text "A" ]
+              ; Accordion.content [ Node.text "Alpha" ]
+              ]
+          ]));
+  [%expect
+    {|
     <div data-orientation="vertical" data-slot="accordion">
       <div @key=a
            data-state="open"
@@ -88,9 +95,7 @@ let%expect_test "shadcn's classes" =
     |}]
 ;;
 
-let show_states handle =
-  Handle.show handle
-;;
+let show_states handle = Handle.show handle
 
 let%expect_test "single: one open at a time; not collapsible keeps it open" =
   let handle =
@@ -102,7 +107,8 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
          (Bonsai_web.Bonsai.return items))
   in
   show_states handle;
-  [%expect {|
+  [%expect
+    {|
     <div data-orientation="vertical" data-slot="accordion">
       <div @key=a data-state="open" data-orientation="vertical" data-slot="accordion-item">
         <h3 data-orientation="vertical" data-state="open">
@@ -237,7 +243,8 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
     |}];
   Drive.click handle "[id$=trigger-b]";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div data-orientation="vertical" data-slot="accordion">
     -|  <div @key=a data-state="open" data-orientation="vertical" data-slot="accordion-item">
     +|  <div @key=a data-state="closed" data-orientation="vertical" data-slot="accordion-item">
@@ -364,7 +371,8 @@ let%expect_test "single, collapsible: the open item closes" =
   Handle.show handle;
   Drive.click handle "[id$=trigger-a]";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
     <div data-orientation="vertical" data-slot="accordion">
       <div @key=a data-state="open" data-orientation="vertical" data-slot="accordion-item">
         <h3 data-orientation="vertical" data-state="open">
@@ -566,7 +574,8 @@ let%expect_test "multiple: several open" =
   Drive.click handle "[id$=trigger-a]";
   Drive.click handle "[id$=trigger-b]";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
     <div data-orientation="vertical" data-slot="accordion">
       <div @key=a data-state="closed" data-orientation="vertical" data-slot="accordion-item">
         <h3 data-orientation="vertical" data-state="closed">
@@ -806,7 +815,8 @@ let%expect_test "multiple: several open" =
     |}];
   Drive.click handle "[id$=trigger-a]";
   Handle.show_diff handle;
-  [%expect {|
+  [%expect
+    {|
       <div data-orientation="vertical" data-slot="accordion">
     -|  <div @key=a data-state="open" data-orientation="vertical" data-slot="accordion-item">
     +|  <div @key=a data-state="closed" data-orientation="vertical" data-slot="accordion-item">
@@ -878,7 +888,8 @@ let%expect_test "toggled" =
   show Single false [ "a" ] "b";
   show Multiple false [ "a" ] "b";
   show Multiple false [ "a"; "b" ] "a";
-  [%expect {|
+  [%expect
+    {|
     (a)
     (a)
     ()

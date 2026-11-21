@@ -14,6 +14,7 @@ let class_attr = function
   | None -> []
   | Some class_ -> [ Cn.attr [ class_ ] ]
 ;;
+
 let state open_ = if open_ then "open" else "closed"
 let content_id t = t.id ^ "-content"
 
@@ -30,7 +31,10 @@ module Presence = struct
   ;;
 
   let measure (el : Dom_html.element Js.t) =
-    el##.style##setProperty (Js.string "animation-name") (Js.string "none") Js.undefined
+    el##.style##setProperty
+      (Js.string "animation-name")
+      (Js.string "none")
+      Js.undefined
     |> ignore;
     let rect = el##getBoundingClientRect in
     let px f = Js.string (sprintf "%gpx" (Js.to_float f)) in
@@ -52,7 +56,9 @@ module Presence = struct
       (fun s -> String.equal (Js.to_string s) "closed")
   ;;
 
-  let hide el = if is_closed el then el##setAttribute (Js.string "hidden") (Js.string "")
+  let hide el =
+    if is_closed el then el##setAttribute (Js.string "hidden") (Js.string "")
+  ;;
 
   let change (el : Dom_html.element Js.t) ~open_ =
     if not open_ then el##removeAttribute (Js.string "hidden");
@@ -111,13 +117,21 @@ module Presence = struct
       let destroy _ _ _ = ()
     end)
 
-  let attr ~open_ = Vdom.Attr.create_hook "loon-collapsible-presence" (Hook.create open_)
+  let attr ~open_ =
+    Vdom.Attr.create_hook "loon-collapsible-presence" (Hook.create open_)
+  ;;
 end
 
 let presence = Presence.attr
 
-let view ?(attrs = []) ?class_ ?(disabled = false) ?(id = "collapsible") ~open_ ~on_change
-  children
+let view
+      ?(attrs = [])
+      ?class_
+      ?(disabled = false)
+      ?(id = "collapsible")
+      ~open_
+      ~on_change
+      children
   =
   let t = { open_; on_change; id; disabled } in
   Node.div
@@ -129,11 +143,21 @@ let view ?(attrs = []) ?class_ ?(disabled = false) ?(id = "collapsible") ~open_ 
     (children t)
 ;;
 
-let component ?attrs ?class_ ?disabled ?(default_open = false) children (local_ graph) =
+let component
+      ?attrs
+      ?class_
+      ?disabled
+      ?(default_open = false)
+      children
+      (local_ graph)
+  =
   let open Bonsai.Let_syntax in
   let open_, set_open = Bonsai.state default_open graph in
   let id = Bonsai.path_id graph in
-  let%arr open_ and set_open and id and children in
+  let%arr open_
+  and set_open
+  and id
+  and children in
   view ?attrs ?class_ ?disabled ~id ~open_ ~on_change:set_open children
 ;;
 
@@ -165,9 +189,7 @@ let content ?(attrs = []) ?class_ t children =
       ([ data "state" (state t.open_); Attr.id (content_id t) ]
        @ (if t.disabled then [ data "disabled" "" ] else [])
        @ (if t.open_ then [] else [ Attr.hidden ])
-       @ [ data "slot" "collapsible-content"
-         ; Presence.attr ~open_:t.open_
-         ]
+       @ [ data "slot" "collapsible-content"; Presence.attr ~open_:t.open_ ]
        @ class_attr class_
        @ attrs)
     children

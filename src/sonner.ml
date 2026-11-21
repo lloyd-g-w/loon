@@ -126,18 +126,18 @@ let fresh_id id =
 ;;
 
 let create
-  ~type_
-  ?(promise = false)
-  ?id
-  ?description
-  ?action
-  ?cancel
-  ?duration
-  ?(dismissible = true)
-  ?close_button
-  ?rich_colors
-  ?class_
-  title
+      ~type_
+      ?(promise = false)
+      ?id
+      ?description
+      ?action
+      ?cancel
+      ?duration
+      ?(dismissible = true)
+      ?close_button
+      ?rich_colors
+      ?class_
+      title
   =
   let%bind.Effect id = fresh_id id in
   send
@@ -164,15 +164,22 @@ let warning = create ~type_:Warning ~promise:false
 let error = create ~type_:Error ~promise:false
 let loading = create ~type_:Loading ~promise:false
 
-let promise ?description ?duration ~loading ~success ~error effect =
+let promise ?description ?duration ~loading ~success ~error eff =
   let%bind.Effect id = fresh_id None in
   let%bind.Effect () =
     create ~type_:Loading ~promise:true ~id ?description ?duration loading
   in
-  match%bind.Effect effect with
+  match%bind.Effect eff with
   | Ok value ->
-    create ~type_:Success ~promise:true ~id ?description ?duration (success value)
-  | Error e -> create ~type_:Error ~promise:true ~id ?description ?duration (error e)
+    create
+      ~type_:Success
+      ~promise:true
+      ~id
+      ?description
+      ?duration
+      (success value)
+  | Error e ->
+    create ~type_:Error ~promise:true ~id ?description ?duration (error e)
 ;;
 
 let dismiss ?id () = send (Dismiss id)
@@ -224,7 +231,9 @@ module Model = struct
     ; interacting : bool
     }
 
-  let empty = { toasts = []; heights = []; expanded = false; interacting = false }
+  let empty =
+    { toasts = []; heights = []; expanded = false; interacting = false }
+  ;;
 
   (* Sonner's offset: the heights and gaps of the toasts in front. *)
   let offset t ~gap id =
@@ -257,8 +266,11 @@ module Input = struct
     }
 end
 
-let apply_action ctx (input : Input.t Bonsai.Computation_status.t) (model : Model.t)
-  ((now : Time_ns.t), (action : Action.t))
+let apply_action
+      ctx
+      (input : Input.t Bonsai.Computation_status.t)
+      (model : Model.t)
+      ((now : Time_ns.t), (action : Action.t))
   =
   match input with
   | Inactive -> model
@@ -280,7 +292,8 @@ let apply_action ctx (input : Input.t Bonsai.Computation_status.t) (model : Mode
     in
     let delete (model : Model.t) id =
       match
-        List.find model.toasts ~f:(fun e -> String.equal e.toast.id id && not e.removed)
+        List.find model.toasts ~f:(fun e ->
+          String.equal e.toast.id id && not e.removed)
       with
       | None -> model
       | Some _ ->
@@ -291,7 +304,9 @@ let apply_action ctx (input : Input.t Bonsai.Computation_status.t) (model : Mode
             { e with removed = true; offset_before_remove = offset })
         in
         { model with
-          heights = List.filter model.heights ~f:(fun (id', _) -> not (String.equal id id'))
+          heights =
+            List.filter model.heights ~f:(fun (id', _) ->
+              not (String.equal id id'))
         }
     in
     let model =
@@ -304,7 +319,9 @@ let apply_action ctx (input : Input.t Bonsai.Computation_status.t) (model : Mode
          | Some old ->
            map_entry model toast.id ~f:(fun e ->
              let e = { e with toast } in
-             if Type.equal old.toast.type_ Loading && not (Type.equal toast.type_ Loading)
+             if
+               Type.equal old.toast.type_ Loading
+               && not (Type.equal toast.type_ Loading)
              then { e with remaining = Entry.duration settings e }
              else e)
          | None ->
@@ -315,12 +332,16 @@ let apply_action ctx (input : Input.t Bonsai.Computation_status.t) (model : Mode
                  not (String.equal e.toast.id toast.id))
            })
       | Command (Dismiss None) ->
-        List.fold model.toasts ~init:model ~f:(fun model e -> delete model e.toast.id)
+        List.fold model.toasts ~init:model ~f:(fun model e ->
+          delete model e.toast.id)
       | Command (Dismiss (Some id)) -> delete model id
       | Measured (id, height) ->
-        let model = map_entry model id ~f:(fun e -> { e with height; mounted = true }) in
+        let model =
+          map_entry model id ~f:(fun e -> { e with height; mounted = true })
+        in
         let removed =
-          List.exists model.toasts ~f:(fun e -> String.equal e.toast.id id && e.removed)
+          List.exists model.toasts ~f:(fun e ->
+            String.equal e.toast.id id && e.removed)
         in
         if removed
         then model
@@ -333,18 +354,25 @@ let apply_action ctx (input : Input.t Bonsai.Computation_status.t) (model : Mode
           }
         else { model with heights = (id, height) :: model.heights }
       | Expire (id, timer) ->
-        (match List.find model.toasts ~f:(fun e -> String.equal e.toast.id id) with
-         | Some e when e.timer = timer && Option.is_some e.started -> delete model id
+        (match
+           List.find model.toasts ~f:(fun e -> String.equal e.toast.id id)
+         with
+         | Some e when e.timer = timer && Option.is_some e.started ->
+           delete model id
          | _ -> model)
       | Remove id ->
         { model with
-          toasts = List.filter model.toasts ~f:(fun e -> not (String.equal e.toast.id id))
+          toasts =
+            List.filter model.toasts ~f:(fun e ->
+              not (String.equal e.toast.id id))
         }
       | Set_expanded expanded -> { model with expanded }
       | Set_interacting interacting -> { model with interacting }
     in
     let model =
-      if List.length model.toasts <= 1 then { model with expanded = false } else model
+      if List.length model.toasts <= 1
+      then { model with expanded = false }
+      else model
     in
     (* Timers run while the stack is neither hovered nor touched; a pause
        keeps what is left. *)
@@ -359,12 +387,14 @@ let apply_action ctx (input : Input.t Bonsai.Computation_status.t) (model : Mode
       | Some started when paused || not runs ->
         { e with
           started = None
-          ; timer = e.timer + 1
-          ; remaining = Time_ns.Span.(e.remaining - Time_ns.diff now started)
+        ; timer = e.timer + 1
+        ; remaining = Time_ns.Span.(e.remaining - Time_ns.diff now started)
         }
       | None when runs && not paused ->
         let timer = e.timer + 1 in
-        after (Time_ns.Span.max e.remaining Time_ns.Span.zero) (Action.Expire (e.toast.id, timer));
+        after
+          (Time_ns.Span.max e.remaining Time_ns.Span.zero)
+          (Action.Expire (e.toast.id, timer));
         { e with started = Some now; timer }
       | Some _ | None -> e
     in
@@ -384,7 +414,9 @@ module Measure = struct
     let combine _ t = t
   end
 
-  let height (el : Dom_html.element Js.t) = Js.to_float el##getBoundingClientRect##.height
+  let height (el : Dom_html.element Js.t) =
+    Js.to_float el##getBoundingClientRect##.height
+  ;;
 
   module Hook = Vdom.Attr.Hooks.Make (struct
       module State = Unit
@@ -412,7 +444,9 @@ module Measure = struct
     end)
 
   let attr ~key ~on_height =
-    Vdom.Attr.create_hook "loon-sonner-measure" (Hook.create { Input.key; on_height })
+    Vdom.Attr.create_hook
+      "loon-sonner-measure"
+      (Hook.create { Input.key; on_height })
   ;;
 end
 
@@ -424,7 +458,9 @@ let close_icon =
       ~attrs:(List.map attrs ~f:(fun (k, v) -> Attr.create k v))
       children
   in
-  let line x1 y1 x2 y2 = svg "line" [ "x1", x1; "y1", y1; "x2", x2; "y2", y2 ] [] in
+  let line x1 y1 x2 y2 =
+    svg "line" [ "x1", x1; "y1", y1; "x2", x2; "y2", y2 ] []
+  in
   svg
     "svg"
     [ "xmlns", "http://www.w3.org/2000/svg"
@@ -450,34 +486,39 @@ let style fields =
 ;;
 
 let toast_view
-  ~(model : Model.t)
-  ~settings:({ gap; _ } : Settings.t)
-  ~position
-  ~expand
-  ~rich_colors
-  ~close_button
-  ~visible_toasts
-  ~count
-  ~inject
-  index
-  (entry : Entry.t)
+      ~(model : Model.t)
+      ~settings:({ gap; _ } : Settings.t)
+      ~position
+      ~expand
+      ~rich_colors
+      ~close_button
+      ~visible_toasts
+      ~count
+      ~inject
+      index
+      (entry : Entry.t)
   =
   let toast = entry.toast in
   let id = toast.id in
   let front = index = 0 in
   let delete = inject (Action.Command (Dismiss (Some id))) in
   let offset =
-    if entry.removed then entry.offset_before_remove else Model.offset model ~gap id
+    if entry.removed
+    then entry.offset_before_remove
+    else Model.offset model ~gap id
   in
   let close_button = Option.value toast.close_button ~default:close_button in
   let loading = Type.equal toast.type_ Loading in
-  let button ~kind (label, effect) =
+  let button ~kind (label, on_click) =
     Node.button
       ~attrs:
         [ data "button" "true"
         ; data kind "true"
         ; Attr.on_click (fun _ ->
-            Effect.Many [ effect; (if toast.dismissible then delete else Effect.Ignore) ])
+            Effect.Many
+              [ on_click
+              ; (if toast.dismissible then delete else Effect.Ignore)
+              ])
         ]
       [ Node.text label ]
   in
@@ -493,8 +534,12 @@ let toast_view
                  then
                    Some
                      (Node.div
-                        ~attrs:[ Attr.class_ "sonner-loader"; data "visible" (bool loading) ]
-                        [ Icon.view ~class_:"size-4 animate-spin" Loader_circle ])
+                        ~attrs:
+                          [ Attr.class_ "sonner-loader"
+                          ; data "visible" (bool loading)
+                          ]
+                        [ Icon.view ~class_:"size-4 animate-spin" Loader_circle
+                        ])
                  else None)
               ; Type.icon toast.type_
               ]))
@@ -503,9 +548,12 @@ let toast_view
     ~key:id
     ~attrs:
       ([ Attr.tabindex 0 ]
-       @ Option.value_map toast.class_ ~default:[] ~f:(fun c -> [ Attr.class_ c ])
+       @ Option.value_map toast.class_ ~default:[] ~f:(fun c ->
+         [ Attr.class_ c ])
        @ [ data "sonner-toast" ""
-         ; data "rich-colors" (bool (Option.value toast.rich_colors ~default:rich_colors))
+         ; data
+             "rich-colors"
+             (bool (Option.value toast.rich_colors ~default:rich_colors))
          ; data "styled" "true"
          ; data "mounted" (bool entry.mounted)
          ; data "promise" (bool toast.promise)
@@ -519,7 +567,8 @@ let toast_view
          ; data "swiping" "false"
          ; data "dismissible" (bool toast.dismissible)
          ]
-       @ Option.value_map (Type.name toast.type_) ~default:[] ~f:(fun n -> [ data "type" n ])
+       @ Option.value_map (Type.name toast.type_) ~default:[] ~f:(fun n ->
+         [ data "type" n ])
        @ [ data "invert" "false"
          ; data "swipe-out" "false"
          ; data "expanded" (bool (model.expanded || (expand && entry.mounted)))
@@ -528,7 +577,7 @@ let toast_view
              ; "--toasts-before", Int.to_string index
              ; "--z-index", Int.to_string (count - index)
              ; "--offset", px offset
-             ; "--initial-height", (if expand then "auto" else px entry.height)
+             ; ("--initial-height", if expand then "auto" else px entry.height)
              ]
          ; Measure.attr
              ~key:
@@ -562,35 +611,44 @@ let toast_view
               ~attrs:[ data "content" "" ]
               (Node.div ~attrs:[ data "title" "" ] [ Node.text toast.title ]
                :: Option.value_map toast.description ~default:[] ~f:(fun d ->
-                 [ Node.div ~attrs:[ data "description" "" ] [ Node.text d ] ])))
+                 [ Node.div ~attrs:[ data "description" "" ] [ Node.text d ] ])
+              ))
        ; Option.map toast.cancel ~f:(button ~kind:"cancel")
        ; Option.map toast.action ~f:(button ~kind:"action")
        ])
 ;;
 
 let toaster
-  ?class_
-  ?(position = Position.Bottom_right)
-  ?(theme = Theme.System)
-  ?(expand = false)
-  ?(rich_colors = false)
-  ?(close_button = false)
-  ?(visible_toasts = 3)
-  ?(duration = toast_lifetime)
-  ?(gap = 14)
-  (local_ graph)
+      ?class_
+      ?(position = Position.Bottom_right)
+      ?(theme = Theme.System)
+      ?(expand = false)
+      ?(rich_colors = false)
+      ?(close_button = false)
+      ?(visible_toasts = 3)
+      ?(duration = toast_lifetime)
+      ?(gap = 14)
+      (local_ graph)
   =
   let open Bonsai.Let_syntax in
   let settings = { Settings.duration; gap } in
   let sleep = Bonsai.Clock.sleep graph in
   let now = Bonsai.Clock.get_current_time graph in
   let input =
-    let%arr sleep and now in
+    let%arr sleep
+    and now in
     { Input.sleep; now; settings }
   in
-  let model, inject_at = Bonsai.state_machine_with_input ~default_model:Model.empty ~apply_action input graph in
+  let model, inject_at =
+    Bonsai.state_machine_with_input
+      ~default_model:Model.empty
+      ~apply_action
+      input
+      graph
+  in
   let inject =
-    let%arr inject_at and now in
+    let%arr inject_at
+    and now in
     fun action ->
       let%bind.Effect now = now in
       inject_at (now, action)
@@ -598,12 +656,14 @@ let toaster
   let key = Bonsai.path_id graph in
   Bonsai.Edge.lifecycle
     ~on_activate:
-      (let%arr inject and key in
+      (let%arr inject
+       and key in
        let%bind.Effect commands =
          Effect.of_thunk (fun () ->
            toasters
            := (key, fun c -> inject (Action.Command c))
-              :: List.filter !toasters ~f:(fun (k, _) -> not (String.equal k key));
+              :: List.filter !toasters ~f:(fun (k, _) ->
+                not (String.equal k key));
            let commands = Queue.to_list pending in
            Queue.clear pending;
            commands)
@@ -612,9 +672,11 @@ let toaster
     ~on_deactivate:
       (let%arr key in
        Effect.of_thunk (fun () ->
-         toasters := List.filter !toasters ~f:(fun (k, _) -> not (String.equal k key))))
+         toasters
+         := List.filter !toasters ~f:(fun (k, _) -> not (String.equal k key))))
     graph;
-  let%arr model and inject in
+  let%arr model
+  and inject in
   let count = List.length model.toasts in
   let list =
     if count = 0
@@ -631,7 +693,11 @@ let toaster
             ; data "x-position" (Position.x position)
             ; style
                 ([ ( "--front-toast-height"
-                   , px (Option.value_map (List.hd model.heights) ~default:0. ~f:snd) )
+                   , px
+                       (Option.value_map
+                          (List.hd model.heights)
+                          ~default:0.
+                          ~f:snd) )
                  ; "--width", sprintf "%dpx" toast_width
                  ; "--gap", sprintf "%dpx" gap
                  ; "--normal-bg", "var(--popover)"
@@ -639,13 +705,21 @@ let toaster
                  ; "--normal-border", "var(--border)"
                  ; "--border-radius", "var(--radius)"
                  ]
-                 @ List.concat_map [ "top"; "right"; "bottom"; "left" ] ~f:(fun side ->
-                   [ "--offset-" ^ side, "24px"; "--mobile-offset-" ^ side, "16px" ]))
+                 @ List.concat_map
+                     [ "top"; "right"; "bottom"; "left" ]
+                     ~f:(fun side ->
+                       [ "--offset-" ^ side, "24px"
+                       ; "--mobile-offset-" ^ side, "16px"
+                       ]))
             ; Attr.on_mouseenter (fun _ -> inject (Set_expanded true))
             ; Attr.on_mousemove (fun _ ->
-                if model.expanded then Effect.Ignore else inject (Set_expanded true))
+                if model.expanded
+                then Effect.Ignore
+                else inject (Set_expanded true))
             ; Attr.on_mouseleave (fun _ ->
-                if model.interacting then Effect.Ignore else inject (Set_expanded false))
+                if model.interacting
+                then Effect.Ignore
+                else inject (Set_expanded false))
             ; Attr.on_pointerdown (fun _ -> inject (Set_interacting true))
             ; Attr.on_pointerup (fun _ -> inject (Set_interacting false))
             ]
@@ -669,7 +743,9 @@ let toaster
     match Dom_util.key ev with
     | KeyT when Js.to_bool ev##.altKey && count > 0 ->
       Effect.Many
-        [ inject (Set_expanded true); Dom_util.focus_selector "[data-sonner-toaster]" ]
+        [ inject (Set_expanded true)
+        ; Dom_util.focus_selector "[data-sonner-toaster]"
+        ]
     | Escape when model.expanded -> inject (Set_expanded false)
     | _ -> Effect.Ignore
   in

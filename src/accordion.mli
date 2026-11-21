@@ -41,7 +41,12 @@ end
 
 (** The open items' values after the item [value] is pressed, from [open_]
     ([collapsible]: a [Single] accordion's open item closes when pressed). *)
-val toggled : Type.t -> collapsible:bool -> open_:string list -> string -> string list
+val toggled
+  :  Type.t
+  -> collapsible:bool
+  -> open_:string list
+  -> string
+  -> string list
 
 (** Controlled: [value] lists the open items' values (at most one for
     [Single]). [id] (unique on the page, ["accordion"] by default) prefixes

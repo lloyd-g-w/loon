@@ -61,16 +61,16 @@ let state open_ = if open_ then "open" else "closed"
 let orientation_attr t = data "orientation" (Orientation.name t.orientation)
 
 let view
-  ?(attrs = [])
-  ?class_
-  ?(collapsible = false)
-  ?(disabled = false)
-  ?(orientation = Orientation.Vertical)
-  ?(id = "accordion")
-  ~type_
-  ~value
-  ~on_change
-  children
+      ?(attrs = [])
+      ?class_
+      ?(collapsible = false)
+      ?(disabled = false)
+      ?(orientation = Orientation.Vertical)
+      ?(id = "accordion")
+      ~type_
+      ~value
+      ~on_change
+      children
   =
   let t = { type_; collapsible; disabled; orientation; id; value; on_change } in
   Node.div
@@ -82,20 +82,23 @@ let view
 ;;
 
 let component
-  ?attrs
-  ?class_
-  ?collapsible
-  ?disabled
-  ?orientation
-  ?(default_value = [])
-  ~type_
-  children
-  (local_ graph)
+      ?attrs
+      ?class_
+      ?collapsible
+      ?disabled
+      ?orientation
+      ?(default_value = [])
+      ~type_
+      children
+      (local_ graph)
   =
   let open Bonsai.Let_syntax in
   let value, set_value = Bonsai.state default_value graph in
   let id = Bonsai.path_id graph in
-  let%arr value and set_value and id and children in
+  let%arr value
+  and set_value
+  and id
+  and children in
   view
     ?attrs
     ?class_
@@ -130,33 +133,38 @@ let item ?(attrs = []) ?class_ ?(disabled = false) t ~value parts =
    DOM: those of its own items (not of nested accordions), wrapping round. *)
 let move_focus ~from key =
   Effect.of_thunk (fun () ->
-    Js.Opt.iter (Dom_html.document##getElementById (Js.string from)) (fun trigger ->
-      Js.Opt.iter (trigger##closest (Js.string "[data-slot=accordion]")) (fun root ->
-        let triggers =
-          root##querySelectorAll
-            (Js.string
-               ":scope > [data-slot=accordion-item] > h3 > \
-                [data-slot=accordion-trigger]:not([disabled])")
-          |> Dom.list_of_nodeList
-        in
-        let n = List.length triggers in
-        let index =
-          List.findi triggers ~f:(fun _ el -> String.equal (Js.to_string el##.id) from)
-          |> Option.map ~f:fst
-        in
-        let target =
-          match key, index with
-          | `First, _ -> Some 0
-          | `Last, _ -> Some (n - 1)
-          | `Next, Some i -> Some ((i + 1) % n)
-          | `Prev, Some i -> Some ((i - 1 + n) % n)
-          | (`Next | `Prev), None -> None
-        in
-        Option.iter target ~f:(fun i ->
-          match List.nth triggers i with
-          | Some el ->
-            (Js.Unsafe.coerce el : Dom_html.element Js.t)##focus
-          | None -> ()))))
+    Js.Opt.iter
+      (Dom_html.document##getElementById (Js.string from))
+      (fun trigger ->
+         Js.Opt.iter
+           (trigger##closest (Js.string "[data-slot=accordion]"))
+           (fun root ->
+              let triggers =
+                root##querySelectorAll
+                  (Js.string
+                     ":scope > [data-slot=accordion-item] > h3 > \
+                      [data-slot=accordion-trigger]:not([disabled])")
+                |> Dom.list_of_nodeList
+              in
+              let n = List.length triggers in
+              let index =
+                List.findi triggers ~f:(fun _ el ->
+                  String.equal (Js.to_string el##.id) from)
+                |> Option.map ~f:fst
+              in
+              let target =
+                match key, index with
+                | `First, _ -> Some 0
+                | `Last, _ -> Some (n - 1)
+                | `Next, Some i -> Some ((i + 1) % n)
+                | `Prev, Some i -> Some ((i - 1 + n) % n)
+                | (`Next | `Prev), None -> None
+              in
+              Option.iter target ~f:(fun i ->
+                match List.nth triggers i with
+                | Some el ->
+                  (Js.Unsafe.coerce el : Dom_html.element Js.t)##focus
+                | None -> ()))))
 ;;
 
 let in_browser () = Js.Optdef.test (Js.Unsafe.global##.document : _ Js.Optdef.t)
@@ -200,17 +208,20 @@ let trigger ?(attrs = []) ?class_ children (item : Item.t) =
            ; data "state" (state item.open_)
            ]
            @ (if locked then [ aria "disabled" "true" ] else [])
-           @ (if item.disabled then [ data "disabled" ""; Attr.disabled ] else [])
+           @ (if item.disabled
+              then [ data "disabled" ""; Attr.disabled ]
+              else [])
            @ [ orientation_attr t
              ; Attr.id (trigger_id t item.value)
              ; data "slot" "accordion-trigger"
              ; Cn.with_class
                  ?class_
-                 [ "flex flex-1 items-start justify-between gap-4 rounded-md py-4 \
-                    text-left text-sm font-medium transition-all outline-none \
-                    hover:underline focus-visible:border-ring focus-visible:ring-[3px] \
-                    focus-visible:ring-ring/50 disabled:pointer-events-none \
-                    disabled:opacity-50 [&[data-state=open]>svg]:rotate-180"
+                 [ "flex flex-1 items-start justify-between gap-4 rounded-md \
+                    py-4 text-left text-sm font-medium transition-all \
+                    outline-none hover:underline focus-visible:border-ring \
+                    focus-visible:ring-[3px] focus-visible:ring-ring/50 \
+                    disabled:pointer-events-none disabled:opacity-50 \
+                    [&[data-state=open]>svg]:rotate-180"
                  ]
              ; Attr.on_keydown on_keydown
              ]
@@ -240,9 +251,7 @@ let content ?(attrs = []) ?class_ children (item : Item.t) =
   let t = item.root in
   Node.div
     ~attrs:
-      ([ data "state" (state item.open_)
-       ; Attr.id (content_id t item.value)
-       ]
+      ([ data "state" (state item.open_); Attr.id (content_id t item.value) ]
        @ (if item.open_ then [] else [ Attr.hidden ])
        @ (if item.disabled then [ data "disabled" "" ] else [])
        @ [ Attr.role "region"

@@ -23,13 +23,16 @@ let demo (local_ graph) =
         [ Node.text "Show Toast" ]
     ; toaster
     ]
+;;
+
 (*$*)
 
 (*$ Types *)
 let types (local_ graph) =
   let toaster = Sonner.toaster graph in
   let sleep = Bonsai.Clock.sleep graph in
-  let%arr toaster and sleep in
+  let%arr toaster
+  and sleep in
   let button label on_click =
     Button.view ~variant:Outline ~on_click [ Node.text label ]
   in
@@ -37,8 +40,12 @@ let types (local_ graph) =
     ~attrs:[ Attr.class_ "flex flex-wrap gap-2" ]
     [ button "Default" (Sonner.toast "Event has been created")
     ; button "Success" (Sonner.success "Event has been created")
-    ; button "Info" (Sonner.info "Be at the area 10 minutes before the event time")
-    ; button "Warning" (Sonner.warning "Event start time cannot be earlier than 8am")
+    ; button
+        "Info"
+        (Sonner.info "Be at the area 10 minutes before the event time")
+    ; button
+        "Warning"
+        (Sonner.warning "Event start time cannot be earlier than 8am")
     ; button "Error" (Sonner.error "Event has not been created")
     ; button
         "Promise"
@@ -50,6 +57,8 @@ let types (local_ graph) =
             Ok "Event"))
     ; toaster
     ]
+;;
+
 (*$*)
 
 let page =
@@ -77,19 +86,27 @@ Button.view ~on_click:(Sonner.toast "Event has been created") [ Node.text "Show 
           ; ( "Sonner.promise"
             , "'a Or_error.t Effect.t -> unit Effect.t"
             , "[~loading] while the effect runs, then [~success] or [~error]." )
-          ; "Sonner.dismiss", "?id:string -> unit -> unit Effect.t", "Closes one or all."
+          ; ( "Sonner.dismiss"
+            , "?id:string -> unit -> unit Effect.t"
+            , "Closes one or all." )
           ]
       ; Doc.h2 "Options"
       ; Doc.props
           [ "description", "string", "A second, muted line."
-          ; "action", "string * unit Effect.t", "A button that also dismisses the toast."
+          ; ( "action"
+            , "string * unit Effect.t"
+            , "A button that also dismisses the toast." )
           ; "cancel", "string * unit Effect.t", "A quieter button."
           ; "duration", "Time_ns.Span.t", "How long it shows (default 4 s)."
-          ; "id", "string", "Update the toast with this id instead of adding one."
+          ; ( "id"
+            , "string"
+            , "Update the toast with this id instead of adding one." )
           ]
       ; Doc.h2 "Toaster"
       ; Doc.props
-          [ "position", "Sonner.Position.t", "Where the toasts appear ([Bottom_right])."
+          [ ( "position"
+            , "Sonner.Position.t"
+            , "Where the toasts appear ([Bottom_right])." )
           ; "expand", "bool", "Spread out the stack without hovering."
           ; "rich_colors", "bool", "Colour toasts by type (off)."
           ; "close_button", "bool", "A close button on each toast."
