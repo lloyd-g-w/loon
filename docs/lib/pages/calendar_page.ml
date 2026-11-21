@@ -330,7 +330,7 @@ let date_of_birth (local_ graph) =
   in
   Node.div
     ~attrs:[ Attr.class_ "mx-auto flex w-44 flex-col gap-3" ]
-    [ Label.text ~for_:"date-of-birth-trigger" "Date of birth"
+    [ Label.view ~for_:"date-of-birth-trigger" [ Node.text "Date of birth" ]
     ; Popover.view
         ~align:Start
         ~id:"date-of-birth"

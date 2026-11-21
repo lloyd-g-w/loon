@@ -65,7 +65,7 @@ let columns ~open_menu ~set_open_menu : Payment.t Data_table.Column.t list =
       ~header:(fun table ->
         [ Checkbox.view
             ~attrs:[ Attr.create "aria-label" "Select all" ]
-            ~state:
+            ~checked:
               (if Data_table.is_all_page_rows_selected table
                then Checked
                else if Data_table.is_some_page_rows_selected table
@@ -77,7 +77,7 @@ let columns ~open_menu ~set_open_menu : Payment.t Data_table.Column.t list =
       ~cell:(fun table row ->
         [ Checkbox.view
             ~attrs:[ Attr.create "aria-label" "Select row" ]
-            ~state:(Checkbox.State.of_bool (Data_table.is_selected table row))
+            ~checked:(Checkbox.State.of_bool (Data_table.is_selected table row))
             ~on_change:(Data_table.toggle_selected table row)
             ()
         ])
@@ -215,7 +215,7 @@ let demo (local_ graph) =
     [ Node.div
         ~attrs:[ Attr.class_ "flex items-center py-4" ]
         [ Input.view
-            ~attrs:[ Attr.class_ "max-w-sm" ]
+            ~class_:"max-w-sm"
             ~placeholder:"Filter emails..."
             ~value:(Data_table.filter_value table "email")
             ~on_input:(Data_table.set_filter_value table "email")
