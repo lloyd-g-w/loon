@@ -39,6 +39,7 @@ module Group = struct
         ; class_ : string option
         ; placeholder : string option
         ; disabled : bool
+        ; auto_focus : bool
         }
     | List of
         { attrs : Attr.t list
@@ -62,8 +63,10 @@ end
 
 type part = Group.part
 
-let input ?(attrs = []) ?class_ ?placeholder ?(disabled = false) () : part =
-  Input { attrs; class_; placeholder; disabled }
+let input ?(attrs = []) ?class_ ?placeholder ?(disabled = false) ?(auto_focus = false) ()
+  : part
+  =
+  Input { attrs; class_; placeholder; disabled; auto_focus }
 ;;
 
 let list ?(attrs = []) ?class_ parts : part = List { attrs; class_; parts }
@@ -259,7 +262,7 @@ let view
     List.map parts ~f:(fun (p : part) ->
       match p with
       | Static node -> node
-      | Input { attrs; class_; placeholder; disabled } ->
+      | Input { attrs; class_; placeholder; disabled; auto_focus } ->
         Node.div
           ~attrs:
             [ data "slot" "command-input-wrapper"
@@ -294,6 +297,7 @@ let view
                    ]
                  @ Option.value_map placeholder ~default:[] ~f:(fun p -> [ Attr.placeholder p ])
                  @ (if disabled then [ Attr.disabled ] else [])
+                 @ (if auto_focus then [ Focus.when_ true ] else [])
                  @ attrs)
               ()
           ]
