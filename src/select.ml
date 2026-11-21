@@ -357,7 +357,7 @@ let view
           (match selected with
            | Some (_, _, _, children) -> children
            | None -> [ Node.text (Option.value t.placeholder ~default:"") ])
-      ; Icon.view ~class_:"size-4 opacity-50" ~attrs:[ aria "hidden" "true" ] Chevron_down
+      ; Icon.view ~class_:"size-4 opacity-50" Chevron_down
       ]
   in
   let content_node =

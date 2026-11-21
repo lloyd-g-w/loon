@@ -297,28 +297,47 @@ let position (p : Placement.t) (wrapper : Dom_html.element Js.t) =
          | Left -> "translateY(50%) rotate(-90deg) translateX(50%)"))
 ;;
 
-(* Radix Select's item-aligned position (simplified): measured once, as the
-   page does not scroll while a select is open. *)
+(* Radix Select's item-aligned position: the selected item (else the first)
+   over the trigger's value. The wrapper runs from the item's top part down
+   to the bottom margin of the window (or from the top margin, scrolling the
+   list, when the items above it do not fit); scrolling the list then grows
+   it, up to the window's height ([expand_on_scroll]). *)
 let margin = 10.
 
-let position_item_aligned ~anchor (wrapper : Dom_html.element Js.t) =
+type item_aligned =
+  { mutable anchored_bottom : bool
+  ; mutable min_height : float
+  ; mutable prev_scroll : float
+  ; mutable expand : bool
+  }
+
+let float_style (el : Dom_html.element Js.t) name =
+  let v =
+    Js.to_string
+      ((Dom_html.window##getComputedStyle el)##getPropertyValue (Js.string name))
+  in
+  Option.value (Float.of_string_opt (String.chop_suffix_if_exists v ~suffix:"px")) ~default:0.
+;;
+
+let position_item_aligned (st : item_aligned) ~anchor (wrapper : Dom_html.element Js.t) =
   match by_id anchor, first_child wrapper with
   | None, _ | _, None -> ()
   | Some trigger, Some content ->
     let vw, vh = viewport () in
+    let available = vh -. (2. *. margin) in
     let t = rect_of trigger in
     let value =
       Option.value_map (query trigger "[data-slot=select-value]") ~default:t ~f:rect_of
     in
-    let viewport_el = query content "[data-radix-select-viewport]" in
+    let items = Dom.list_of_nodeList (content##querySelectorAll (Js.string "[role=option]")) in
     let item =
       match query content "[role=option][data-state=checked]" with
       | Some item -> Some item
-      | None -> query content "[role=option]"
+      | None -> List.hd items
     in
-    set_style wrapper "max-height" (px (vh -. (2. *. margin)));
     set_style content "max-height" "100%";
-    set_style wrapper "--radix-select-content-available-height" (px (vh -. (2. *. margin)));
+    set_style wrapper "max-height" (px available);
+    set_style wrapper "--radix-select-content-available-height" (px available);
     let c = rect_of content in
     (* Horizontally: the item's text over the trigger's value. *)
     let text_left =
@@ -334,32 +353,93 @@ let position_item_aligned ~anchor (wrapper : Dom_html.element Js.t) =
     set_style wrapper "min-width" (px min_width);
     let width = Float.max min_width c.width in
     let left = Float.max margin (Float.min left (vw -. margin -. width)) in
-    (* Vertically: the item's middle on the trigger's, scrolling the list
-       when the item is far down it. *)
-    let top =
-      match item, viewport_el with
-      | Some item, Some vp ->
-        let i = rect_of item in
-        let scroll = Js.to_float vp##.scrollTop in
-        let item_middle = i.top -. c.top +. scroll +. (i.height /. 2.) in
-        let max_scroll = Float.of_int (vp##.scrollHeight - vp##.clientHeight) in
-        let target = t.top +. (t.height /. 2.) in
-        let top = target -. item_middle in
-        let scroll =
-          if Float.(top < margin)
-          then Float.min max_scroll (margin -. top)
-          else 0.
-        in
-        vp##.scrollTop := Js.float scroll;
-        target -. (item_middle -. scroll)
-      | _ -> t.top
-    in
-    let height = Float.of_int content##.offsetHeight in
-    let top = Float.min top (vh -. margin -. height) in
-    let top = Float.max margin top in
     let ox, oy = fixed_origin wrapper in
     set_style wrapper "left" (px (left -. ox));
-    set_style wrapper "top" (px (top -. oy))
+    (match item, query content "[data-radix-select-viewport]" with
+     | Some item, Some vp ->
+       let border_top = float_style content "border-top-width" in
+       let border_bottom = float_style content "border-bottom-width" in
+       let padding_top = float_style content "padding-top" in
+       let padding_bottom = float_style content "padding-bottom" in
+       let vp_padding_top = float_style vp "padding-top" in
+       let vp_padding_bottom = float_style vp "padding-bottom" in
+       let items_height = Float.of_int vp##.scrollHeight in
+       let full =
+         border_top +. padding_top +. items_height +. padding_bottom +. border_bottom
+       in
+       let item_height = Float.of_int item##.offsetHeight in
+       let min_height = Float.min (item_height *. 5.) full in
+       let top_to_trigger_middle = t.top +. (t.height /. 2.) -. margin in
+       let trigger_middle_to_bottom = available -. top_to_trigger_middle in
+       let half = item_height /. 2. in
+       let item_middle = Float.of_int item##.offsetTop +. half in
+       let content_top_to_item_middle = border_top +. padding_top +. item_middle in
+       let item_middle_to_content_bottom = full -. content_top_to_item_middle in
+       let vp_top = Float.of_int vp##.offsetTop in
+       let height, top, scroll =
+         if Float.(content_top_to_item_middle <= top_to_trigger_middle)
+         then (
+           let is_last = Option.equal phys_equal (List.last items) (Some item) in
+           let vp_offset_bottom =
+             Float.of_int (content##.clientHeight - vp##.offsetTop - vp##.offsetHeight)
+           in
+           let below =
+             Float.max
+               trigger_middle_to_bottom
+               (half
+                +. (if is_last then vp_padding_bottom else 0.)
+                +. vp_offset_bottom
+                +. border_bottom)
+           in
+           let height = Float.min available (content_top_to_item_middle +. below) in
+           st.anchored_bottom <- true;
+           height, margin +. available -. height, 0.)
+         else (
+           let is_first = Option.equal phys_equal (List.hd items) (Some item) in
+           let above =
+             Float.max
+               top_to_trigger_middle
+               (border_top +. vp_top +. (if is_first then vp_padding_top else 0.) +. half)
+           in
+           let height = Float.min available (above +. item_middle_to_content_bottom) in
+           st.anchored_bottom <- false;
+           height, margin, content_top_to_item_middle -. top_to_trigger_middle +. vp_top)
+       in
+       let height = Float.max height min_height in
+       st.min_height <- min_height;
+       set_style wrapper "min-height" (px min_height);
+       set_style wrapper "height" (px height);
+       set_style wrapper "top" (px (top -. oy));
+       vp##.scrollTop := Js.float scroll;
+       st.prev_scroll <- Js.to_float vp##.scrollTop
+     | _ -> set_style wrapper "top" (px (t.top -. oy)))
+;;
+
+(* Radix's [SelectViewport] onScroll: while the wrapper is shorter than the
+   window allows, scrolling grows it instead (upwards when it is anchored at
+   the bottom). *)
+let expand_on_scroll (st : item_aligned) (wrapper : Dom_html.element Js.t) (vp : Dom_html.element Js.t)
+  =
+  let scroll = Js.to_float vp##.scrollTop in
+  let delta = Float.abs (st.prev_scroll -. scroll) in
+  (if st.expand && Float.(delta > 0.)
+   then (
+     let _, vh = viewport () in
+     let available = vh -. (2. *. margin) in
+     let height = (rect_of wrapper).height in
+     if Float.(height < available)
+     then (
+       let next = Float.max st.min_height height +. delta in
+       let clamped = Float.min available next in
+       let diff = next -. clamped in
+       set_style wrapper "height" (px clamped);
+       if st.anchored_bottom
+       then (
+         let top = (rect_of wrapper).top -. (clamped -. height) in
+         let _, oy = fixed_origin wrapper in
+         set_style wrapper "top" (px (top -. oy));
+         vp##.scrollTop := Js.float (if Float.(diff > 0.) then diff else 0.)))));
+  st.prev_scroll <- Js.to_float vp##.scrollTop
 ;;
 
 module Mode = struct
@@ -375,6 +455,8 @@ module Hook = Vdom.Attr.Hooks.Make (struct
         { mutable mode : Mode.t
         ; mutable frame : Dom_html.animation_frame_request_id option
         ; mutable frames : int
+        ; item_aligned : item_aligned
+        ; mutable listener : Dom.event_listener_id option
         }
     end
 
@@ -384,13 +466,42 @@ module Hook = Vdom.Attr.Hooks.Make (struct
       let combine _ second = second
     end
 
-    let init mode _ = { State.mode; frame = None; frames = 0 }
+    let init mode _ =
+      { State.mode
+      ; frame = None
+      ; frames = 0
+      ; item_aligned =
+          { anchored_bottom = false; min_height = 0.; prev_scroll = 0.; expand = false }
+      ; listener = None
+      }
+    ;;
 
     let rec tick (state : State.t) el () =
       state.frames <- state.frames + 1;
       (match state.mode with
        | Popper p -> position p el
-       | Item_aligned anchor -> if state.frames <= 2 then position_item_aligned ~anchor el);
+       | Item_aligned anchor ->
+         if state.frames <= 2
+         then position_item_aligned state.item_aligned ~anchor el
+         else if state.frames = 3
+         then (
+           state.item_aligned.expand <- true;
+           match
+             Option.bind (first_child el) ~f:(fun c ->
+               query c "[data-radix-select-viewport]")
+           with
+           | None -> ()
+           | Some vp ->
+             state.item_aligned.prev_scroll <- Js.to_float vp##.scrollTop;
+             state.listener
+             <- Some
+                  (Dom_html.addEventListener
+                     vp
+                     Dom_html.Event.scroll
+                     (Dom_html.handler (fun _ ->
+                        expand_on_scroll state.item_aligned el vp;
+                        Js._true))
+                     Js._false)));
       state.frame
       <- Some
            (Dom_html.window##requestAnimationFrame
@@ -417,6 +528,7 @@ module Hook = Vdom.Attr.Hooks.Make (struct
 
     let destroy _ (state : State.t) _ =
       Option.iter state.frame ~f:(fun id -> Dom_html.window##cancelAnimationFrame id);
+      Option.iter state.listener ~f:Dom_html.removeEventListener;
       state.frame <- None
     ;;
   end)
