@@ -7,24 +7,59 @@ module Attr = Vdom.Attr
 
 let page = "pagination"
 
-(*$ Pages *)
-let pages (local_ graph) =
-  let pagination = Pagination.component ~default:4 ~pages:(Bonsai.return 12) graph in
-  let%arr { Pagination.page; view } = pagination in
-  Node.div
-    ~attrs:[ Attr.class_ "docs-stack"; Attr.create "style" "align-items: center; width: 100%" ]
-    [ view
-    ; Node.span
-        ~attrs:[ Attr.create "style" "color: var(--loon-muted-foreground); font-size: 0.875rem" ]
-        [ Node.textf "Showing results %d–%d of 120" (((page - 1) * 10) + 1) (page * 10) ]
+(*$ Demo *)
+let demo =
+  Pagination.root
+    [ Pagination.content
+        [ Pagination.item [ Pagination.previous ~href:"#/pagination" () ]
+        ; Pagination.item
+            [ Pagination.link ~href:"#/pagination" [ Node.text "1" ] ]
+        ; Pagination.item
+            [ Pagination.link
+                ~href:"#/pagination"
+                ~is_active:true
+                [ Node.text "2" ]
+            ]
+        ; Pagination.item
+            [ Pagination.link ~href:"#/pagination" [ Node.text "3" ] ]
+        ; Pagination.item [ Pagination.ellipsis () ]
+        ; Pagination.item [ Pagination.next ~href:"#/pagination" () ]
+        ]
     ]
+;;
+
 (*$*)
 
-(*$ Compact *)
-let compact (local_ graph) =
-  let pagination = Pagination.component ~compact:true ~pages:(Bonsai.return 8) graph in
-  let%arr { Pagination.view; _ } = pagination in
-  view
+(*$ With state
+   [Pagination.entries] picks the page numbers to show around the current
+   one; [on_click] changes page without following the link. *)
+let with_state (local_ graph) =
+  let current, set_current = Bonsai.state 5 graph in
+  let%arr current
+  and set_current in
+  let pages = 20 in
+  let go p = set_current (Int.clamp_exn p ~min:1 ~max:pages) in
+  Pagination.root
+    [ Pagination.content
+        ([ Pagination.item
+             [ Pagination.previous ~href:"#" ~on_click:(go (current - 1)) () ]
+         ]
+         @ List.map (Pagination.entries ~page:current ~pages ()) ~f:(function
+           | Ellipsis -> Pagination.item [ Pagination.ellipsis () ]
+           | Page p ->
+             Pagination.item
+               [ Pagination.link
+                   ~href:"#"
+                   ~is_active:(p = current)
+                   ~on_click:(go p)
+                   [ Node.text (Int.to_string p) ]
+               ])
+         @ [ Pagination.item
+               [ Pagination.next ~href:"#" ~on_click:(go (current + 1)) () ]
+           ])
+    ]
+;;
+
 (*$*)
 
 let page =
@@ -32,19 +67,29 @@ let page =
     ~slug:page
     ~title:"Pagination"
     ~group:Navigation
-    ~description:"Moving through the pages of a long list."
-    ~usage:{|Pagination.view ~page ~pages:12 ~on_change:set_page ()|}
+    ~description:"Pagination with page navigation, next and previous links."
+    ~usage:
+      {|Pagination.root
+  [ Pagination.content
+      [ Pagination.item [ Pagination.previous ~href:"#" () ]
+      ; Pagination.item [ Pagination.link ~href:"#" [ Node.text "1" ] ]
+      ; Pagination.item [ Pagination.ellipsis () ]
+      ; Pagination.item [ Pagination.next ~href:"#" () ]
+      ]
+  ]|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "page", "int", "The current page, from 1."
-          ; "pages", "int", "How many there are."
-          ; "on_change", "int -> unit Effect.t", "Go to a page."
-          ; "siblings", "int", "Pages shown either side of the current one (default 1)."
-          ; "compact", "bool", "\"Page 3 of 10\" in place of the numbers."
+          [ ( "is_active"
+            , "bool"
+            , "[Pagination.link]: the current page (outlined, \
+               [aria-current=\"page\"])." )
+          ; "size", "Button.Size.t", "[Pagination.link]: [Icon] by default."
+          ; "href", "string", "Where the link goes."
+          ; ( "on_click"
+            , "unit Effect.t"
+            , "Runs instead of following [href] (for pages kept in state)." )
           ]
-      ; Doc.p
-          "[Pagination.component] keeps the page itself and returns it with the view."
       ]
-    [ Doc.example ~page "Pages" pages; Doc.example ~page "Compact" compact ]
+    [ Doc.static ~page "Demo" demo; Doc.example ~page "With state" with_state ]
 ;;
