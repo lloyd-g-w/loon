@@ -1,5 +1,4 @@
-(** shadcn's [Label] and [Input] (their classes), for the overlays'
-    examples' forms until loon's own are ported. *)
+(** [Label] and [Input] as the overlays' examples' forms use them. *)
 
 open! Core
 open Bonsai_web

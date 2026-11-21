@@ -104,7 +104,6 @@ let%expect_test "the trigger toggles it; Esc closes it" =
               id="bonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
               aria-expanded="false"
-              aria-controls="bonsai_path_replaced_in_test-content"
               data-state="closed"
               @on_click> Open popover </button>
       <Vdom.Node.none-widget> </Vdom.Node.none-widget>
@@ -181,7 +180,6 @@ let%expect_test "the trigger toggles it; Esc closes it" =
               id="bonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
               aria-expanded="false"
-              aria-controls="bonsai_path_replaced_in_test-content"
               data-state="closed"
               @on_click> Open popover </button>
       <Vdom.Node.none-widget> </Vdom.Node.none-widget>
@@ -201,7 +199,6 @@ let%expect_test "the trigger toggles it; Esc closes it" =
               id="bonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
               aria-expanded="false"
-              aria-controls="bonsai_path_replaced_in_test-content"
               data-state="closed"
               @on_click> Open popover </button>
       <Vdom.Node.none-widget> </Vdom.Node.none-widget>
@@ -307,7 +304,6 @@ let%expect_test "the trigger's own id, for a label" =
               id="date"
               aria-haspopup="dialog"
               aria-expanded="false"
-              aria-controls="pop-content"
               data-state="closed"
               @on_click> Select date </button>
     </div>

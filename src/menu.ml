@@ -294,7 +294,7 @@ let sub_trigger
   { common = common ?text_value ~disabled children; attrs; class_; inset; children }
 ;;
 
-let sub_content ?(attrs = []) ?class_ ?(side_offset = 0.) ?(align_offset = -5.) items
+let sub_content ?(attrs = []) ?class_ ?(side_offset = 0.) ?(align_offset = 0.) items
   : Sub_content.t
   =
   { attrs; class_; side_offset; align_offset; items }
@@ -406,7 +406,9 @@ let level_keydown t ~prefix items ev =
         (t.set_state
            { highlighted = Some prefix; open_sub = trim state.open_sub ~path:prefix })
     | ArrowLeft, _ -> Option.map t.on_edge ~f:(fun f -> Effect.Many [ Dom_util.stop ev; f `Left ])
-    | ArrowRight, _ when List.is_empty prefix ->
+    (* In a sub-menu too, as Radix's menubar: on an item that opens nothing,
+       ArrowRight goes to the next menu. *)
+    | ArrowRight, _ ->
       Option.map t.on_edge ~f:(fun f -> Effect.Many [ Dom_util.stop ev; f `Right ])
     | _ ->
       (match

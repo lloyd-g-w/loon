@@ -237,7 +237,6 @@ let%expect_test "open, search, choose; choosing the value again clears it" =
               id="bonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
               aria-expanded="false"
-              aria-controls="bonsai_path_replaced_in_test-content"
               data-state="closed"
               @on_click>
         Select framework...
@@ -424,7 +423,6 @@ let%expect_test "open, search, choose; choosing the value again clears it" =
               id="bonsai_path_replaced_in_test-trigger"
               aria-haspopup="dialog"
               aria-expanded="false"
-              aria-controls="bonsai_path_replaced_in_test-content"
               data-state="closed"
               @on_click>
         Nuxt.js
@@ -462,7 +460,6 @@ let%expect_test "open, search, choose; choosing the value again clears it" =
             id="bonsai_path_replaced_in_test-trigger"
             aria-haspopup="dialog"
             aria-expanded="false"
-            aria-controls="bonsai_path_replaced_in_test-content"
             data-state="closed"
             @on_click>
       Select framework...

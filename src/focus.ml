@@ -79,6 +79,21 @@ let focus_inside (el : Dom_html.element Js.t) mode =
 
 let active () = Js.Opt.to_option Dom_html.document##.activeElement
 
+(* Set by [no_restore], for the overlays closing now (until the next frame). *)
+let skip_restore = ref false
+
+let no_restore =
+  Effect.of_thunk (fun () ->
+    if in_browser ()
+    then (
+      skip_restore := true;
+      let (_ : Dom_html.animation_frame_request_id) =
+        Dom_html.window##requestAnimationFrame
+          (Js.wrap_callback (fun (_ : Js.number_t) -> skip_restore := false))
+      in
+      ()))
+;;
+
 module Mount_hook = Vdom.Attr.Hooks.Make (struct
     module State = struct
       type t = { mutable previous : Dom_html.element Js.t option }
@@ -126,7 +141,7 @@ module Mount_hook = Vdom.Attr.Hooks.Make (struct
             (not (phys_equal a p)) && contains a p)
       in
       match state.previous with
-      | Some prev when lost && Js.to_bool (Js.Unsafe.coerce prev)##.isConnected ->
+      | Some prev when lost && (not !skip_restore) && Js.to_bool (Js.Unsafe.coerce prev)##.isConnected ->
         focus_no_scroll prev
       | _ -> ()
     ;;

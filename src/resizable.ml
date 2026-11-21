@@ -409,11 +409,22 @@ let view
     Node.div
       ~attrs:
         ([ data "slot" "resizable-panel"
-         ; data "panel" ""
+         ; data "panel" "true"
          ; Attr.id (panel_id k)
          ; Attr.style
              (Css_gen.concat
-                [ Css_gen.create ~field:"display" ~value:"flex"
+                (* As react-resizable-panels: without [min-*: 0] a flex item
+                   does not shrink below its content. *)
+                [ Css_gen.create ~field:"min-height" ~value:"0"
+                ; Css_gen.create ~field:"max-height" ~value:"100%"
+                ; Css_gen.create ~field:"height" ~value:"auto"
+                ; Css_gen.create ~field:"min-width" ~value:"0"
+                ; Css_gen.create ~field:"max-width" ~value:"100%"
+                ; Css_gen.create ~field:"width" ~value:"auto"
+                ; Css_gen.create ~field:"border" ~value:"0"
+                ; Css_gen.create ~field:"padding" ~value:"0"
+                ; Css_gen.create ~field:"margin" ~value:"0"
+                ; Css_gen.create ~field:"display" ~value:"flex"
                 ; Css_gen.create ~field:"flex-basis" ~value:"0"
                 ; Css_gen.create ~field:"flex-shrink" ~value:"1"
                 ; Css_gen.create ~field:"overflow" ~value:"visible"

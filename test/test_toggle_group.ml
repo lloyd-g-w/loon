@@ -25,7 +25,7 @@ let%expect_test "shadcn's classes" =
           ]));
   [%expect
     {|
-    <div role="group"
+    <div role="toolbar"
          dir="ltr"
          data-slot="toggle-group"
          data-variant="outline"
@@ -72,7 +72,7 @@ let%expect_test "spacing, size and vertical orientation" =
        (fun group -> [ Toggle_group.item group ~value:"a" [ Node.text "A" ] ]));
   [%expect
     {|
-    <div role="group"
+    <div role="radiogroup"
          dir="ltr"
          data-slot="toggle-group"
          data-size="sm"
@@ -109,7 +109,7 @@ let%expect_test
   [%expect
     {|
     <div>
-      <div role="group" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
+      <div role="radiogroup" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
         <button type="button"
                 data-state="off"
                 role="radio"
@@ -160,7 +160,7 @@ let%expect_test
   [%expect
     {|
       <div>
-        <div role="group" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
+        <div role="radiogroup" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
           <button type="button"
                   data-state="off"
                   role="radio"
@@ -217,7 +217,7 @@ let%expect_test
   [%expect
     {|
       <div>
-        <div role="group" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
+        <div role="radiogroup" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
     -|    <button type="button"
     -|            data-state="off"
     -|            role="radio"
@@ -279,7 +279,7 @@ let%expect_test
   [%expect
     {|
       <div>
-        <div role="group" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
+        <div role="radiogroup" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
           <button type="button"
     -|            data-state="on"
     +|            data-state="off"
@@ -351,7 +351,7 @@ let%expect_test
   [%expect
     {|
     <div>
-      <div role="group" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
+      <div role="toolbar" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
         <button type="button"
                 data-state="off"
                 aria-pressed="false"
@@ -398,7 +398,7 @@ let%expect_test
   [%expect
     {|
       <div>
-        <div role="group" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
+        <div role="toolbar" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
           <button type="button"
     -|            data-state="off"
     +|            data-state="on"
@@ -447,7 +447,7 @@ let%expect_test
   [%expect
     {|
       <div>
-        <div role="group" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
+        <div role="toolbar" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
           <button type="button"
                   data-state="on"
                   aria-pressed="true"

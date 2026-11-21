@@ -295,8 +295,9 @@ let component
     ?previous
     ~value
     ~on_change:(fun next ->
-      (* The content open before, to slide from (kept while all are closed). *)
-      set_state (next, Option.first_some value previous))
+      (* The content open before, to slide from; none when opening from
+         closed (Radix's previousValue). *)
+      set_state (next, value))
     children
 ;;
 
@@ -385,13 +386,15 @@ let trigger ?(attrs = []) ?class_ ?(disabled = false) t ~value children =
        ; Attr.type_ "button"
        ; data "state" (if open_ then "open" else "closed")
        ; aria_bool "expanded" open_
-       ; aria "controls" (content_id t value)
-       ; data "slot" "navigation-menu-trigger"
-       ; Cn.with_class ?class_ [ trigger_base; "group" ]
-       ; Attr.on_keydown on_keydown
-       ; Attr.on_pointerenter (on_pointer_enter_trigger t value)
-       ; Attr.on_pointerleave (on_pointer_leave t)
        ]
+       (* Radix names the content only while it is there. *)
+       @ (if open_ then [ aria "controls" (content_id t value) ] else [])
+       @ [ data "slot" "navigation-menu-trigger"
+         ; Cn.with_class ?class_ [ trigger_base; "group" ]
+         ; Attr.on_keydown on_keydown
+         ; Attr.on_pointerenter (on_pointer_enter_trigger t value)
+         ; Attr.on_pointerleave (on_pointer_leave t)
+         ]
        @ (if disabled
           then [ Attr.disabled; data "disabled" "" ]
           else
