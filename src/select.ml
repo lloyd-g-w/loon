@@ -238,15 +238,18 @@ module Scroll_buttons = Vdom.Attr.Hooks.Make (struct
               match button with
               | None -> []
               | Some b ->
-                [ listen b Dom_html.Event.pointermove (fun () ->
-                    if Option.is_none state.timer
-                    then
-                      state.timer
-                      <- Some
-                           (Dom_html.window##setInterval
-                              (Js.wrap_callback (fun () ->
-                                 vp##.scrollTop := Js.float (Js.to_float vp##.scrollTop +. dy)))
-                              (Js.float 50.)))
+                let start () =
+                  if Option.is_none state.timer
+                  then
+                    state.timer
+                    <- Some
+                         (Dom_html.window##setInterval
+                            (Js.wrap_callback (fun () ->
+                               vp##.scrollTop := Js.float (Js.to_float vp##.scrollTop +. dy)))
+                            (Js.float 50.))
+                in
+                [ listen b Dom_html.Event.pointerdown start
+                ; listen b Dom_html.Event.pointermove start
                 ; listen b Dom_html.Event.pointerleave stop
                 ]
             in
@@ -551,7 +554,6 @@ let view
       Node.div
         ~attrs:
           [ Attr.style (Css_gen.create ~field:"display" ~value:"contents")
-          ; Presence.attr
           ; Dismiss.attr
               ~inside:[ trigger_id ]
               ~modal:true

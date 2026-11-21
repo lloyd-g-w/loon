@@ -25,6 +25,7 @@ module Layer = struct
   type t =
     { el : Dom_html.element Js.t
     ; mutable input : Input.t
+    ; mutable dismissed : bool
     }
 end
 
@@ -53,7 +54,7 @@ let target (ev : #Dom_html.event Js.t) : Dom.node Js.t option =
 
 let update_pointer_events () =
   let body = Dom_html.document##.body in
-  let modal = List.exists !layers ~f:(fun l -> l.input.modal) in
+  let modal = List.exists !layers ~f:(fun l -> l.input.modal && not l.dismissed) in
   match modal, !body_pointer_events with
   | true, None ->
     body_pointer_events := Some (Js.to_string body##.style##.pointerEvents);
@@ -89,7 +90,23 @@ let install () =
       | _ -> ());
     listen "pointerdown" ~capture:true (fun (ev : Dom_html.event Js.t) ->
       match !layers, target ev with
-      | top :: _, Some t when not (is_inside top t) -> dispatch top Pointer_outside
+      | top :: _, Some t when not (is_inside top t) ->
+        (* React removes Radix's layer before the pointerup: the page takes
+           pointer events again for the rest of this click (a right click
+           elsewhere reopens a context menu there). Ours goes on the next
+           render, so stop blocking the page now. *)
+        top.dismissed <- true;
+        update_pointer_events ();
+        let (_ : Dom_html.timeout_id_safe) =
+          Dom_html.setTimeout
+            (fun () ->
+              if top.dismissed && List.exists !layers ~f:(phys_equal top)
+              then (
+                top.dismissed <- false;
+                update_pointer_events ()))
+            500.
+        in
+        dispatch top Pointer_outside
       | _ -> ());
     listen "focusin" ~capture:true (fun (ev : Dom_html.event Js.t) ->
       match !layers, target ev with
@@ -111,15 +128,21 @@ module Hook = Vdom.Attr.Hooks.Make (struct
       `Schedule_immediately_after_this_dom_patch_completes
         (fun input (state : State.t) el ->
           install ();
-          let layer = { Layer.el; input } in
+          let layer = { Layer.el; input; dismissed = false } in
           state.layer <- Some layer;
           layers := layer :: !layers;
           if input.modal then el##.style##.pointerEvents := Js.string "auto";
           update_pointer_events ())
     ;;
 
+    (* Still here after a render: the dismissal was not taken. *)
     let update ~old_input:_ ~new_input (state : State.t) _ =
-      Option.iter state.layer ~f:(fun l -> l.input <- new_input)
+      Option.iter state.layer ~f:(fun l ->
+        l.input <- new_input;
+        if l.dismissed
+        then (
+          l.dismissed <- false;
+          update_pointer_events ()))
     ;;
 
     let destroy _ (state : State.t) _ =

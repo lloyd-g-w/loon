@@ -35,9 +35,18 @@ let%expect_test "shadcn's classes" =
            touch-action: pan-y;
          }>
       <div data-slot="resizable-panel"
-           data-panel=""
+           data-panel="true"
            id="resizable-panel-0"
            style={
+             min-height: 0;
+             max-height: 100%;
+             height: auto;
+             min-width: 0;
+             max-width: 100%;
+             width: auto;
+             border: 0;
+             padding: 0;
+             margin: 0;
              display: flex;
              flex-basis: 0;
              flex-shrink: 1;
@@ -100,9 +109,18 @@ let%expect_test "shadcn's classes" =
         </div>
       </div>
       <div data-slot="resizable-panel"
-           data-panel=""
+           data-panel="true"
            id="resizable-panel-1"
            style={
+             min-height: 0;
+             max-height: 100%;
+             height: auto;
+             min-width: 0;
+             max-width: 100%;
+             width: auto;
+             border: 0;
+             padding: 0;
+             margin: 0;
              display: flex;
              flex-basis: 0;
              flex-shrink: 1;
@@ -200,9 +218,18 @@ let%expect_test "arrow keys, Home and End move the handle" =
            touch-action: pan-y;
          }>
       <div data-slot="resizable-panel"
-           data-panel=""
+           data-panel="true"
            id="bonsai_path_replaced_in_test-panel-0"
            style={
+             min-height: 0;
+             max-height: 100%;
+             height: auto;
+             min-width: 0;
+             max-width: 100%;
+             width: auto;
+             border: 0;
+             padding: 0;
+             margin: 0;
              display: flex;
              flex-basis: 0;
              flex-shrink: 1;
@@ -243,9 +270,18 @@ let%expect_test "arrow keys, Home and End move the handle" =
              touch-action: none;
            }> </div>
       <div data-slot="resizable-panel"
-           data-panel=""
+           data-panel="true"
            id="bonsai_path_replaced_in_test-panel-1"
            style={
+             min-height: 0;
+             max-height: 100%;
+             height: auto;
+             min-width: 0;
+             max-width: 100%;
+             width: auto;
+             border: 0;
+             padding: 0;
+             margin: 0;
              display: flex;
              flex-basis: 0;
              flex-shrink: 1;
@@ -268,18 +304,18 @@ let%expect_test "arrow keys, Home and End move the handle" =
     {|
     ("default prevented" (key ArrowRight))
 
-             height: 100%;
-             width: 100%;
-             overflow: hidden;
-             display: flex;
-             flex-direction: row;
-             flex-wrap: nowrap;
-             touch-action: pan-y;
-           }>
-        <div data-slot="resizable-panel"
-             data-panel=""
+             data-panel="true"
              id="bonsai_path_replaced_in_test-panel-0"
              style={
+               min-height: 0;
+               max-height: 100%;
+               height: auto;
+               min-width: 0;
+               max-width: 100%;
+               width: auto;
+               border: 0;
+               padding: 0;
+               margin: 0;
                display: flex;
                flex-basis: 0;
                flex-shrink: 1;
@@ -321,10 +357,19 @@ let%expect_test "arrow keys, Home and End move the handle" =
                flex-shrink: 0;
                touch-action: none;
              }> </div>
-        <div data-slot="resizable-panel"
-             data-panel=""
+
+             data-panel="true"
              id="bonsai_path_replaced_in_test-panel-1"
              style={
+               min-height: 0;
+               max-height: 100%;
+               height: auto;
+               min-width: 0;
+               max-width: 100%;
+               width: auto;
+               border: 0;
+               padding: 0;
+               margin: 0;
                display: flex;
                flex-basis: 0;
                flex-shrink: 1;
@@ -352,18 +397,18 @@ let%expect_test "arrow keys, Home and End move the handle" =
     {|
     ("default prevented" (key End))
 
-             height: 100%;
-             width: 100%;
-             overflow: hidden;
-             display: flex;
-             flex-direction: row;
-             flex-wrap: nowrap;
-             touch-action: pan-y;
-           }>
-        <div data-slot="resizable-panel"
-             data-panel=""
+             data-panel="true"
              id="bonsai_path_replaced_in_test-panel-0"
              style={
+               min-height: 0;
+               max-height: 100%;
+               height: auto;
+               min-width: 0;
+               max-width: 100%;
+               width: auto;
+               border: 0;
+               padding: 0;
+               margin: 0;
                display: flex;
                flex-basis: 0;
                flex-shrink: 1;
@@ -405,10 +450,19 @@ let%expect_test "arrow keys, Home and End move the handle" =
                flex-shrink: 0;
                touch-action: none;
              }> </div>
-        <div data-slot="resizable-panel"
-             data-panel=""
+
+             data-panel="true"
              id="bonsai_path_replaced_in_test-panel-1"
              style={
+               min-height: 0;
+               max-height: 100%;
+               height: auto;
+               min-width: 0;
+               max-width: 100%;
+               width: auto;
+               border: 0;
+               padding: 0;
+               margin: 0;
                display: flex;
                flex-basis: 0;
                flex-shrink: 1;
@@ -432,18 +486,18 @@ let%expect_test "arrow keys, Home and End move the handle" =
     {|
     ("default prevented" (key Home))
 
-             height: 100%;
-             width: 100%;
-             overflow: hidden;
-             display: flex;
-             flex-direction: row;
-             flex-wrap: nowrap;
-             touch-action: pan-y;
-           }>
-        <div data-slot="resizable-panel"
-             data-panel=""
+             data-panel="true"
              id="bonsai_path_replaced_in_test-panel-0"
              style={
+               min-height: 0;
+               max-height: 100%;
+               height: auto;
+               min-width: 0;
+               max-width: 100%;
+               width: auto;
+               border: 0;
+               padding: 0;
+               margin: 0;
                display: flex;
                flex-basis: 0;
                flex-shrink: 1;
@@ -485,10 +539,19 @@ let%expect_test "arrow keys, Home and End move the handle" =
                flex-shrink: 0;
                touch-action: none;
              }> </div>
-        <div data-slot="resizable-panel"
-             data-panel=""
+
+             data-panel="true"
              id="bonsai_path_replaced_in_test-panel-1"
              style={
+               min-height: 0;
+               max-height: 100%;
+               height: auto;
+               min-width: 0;
+               max-width: 100%;
+               width: auto;
+               border: 0;
+               padding: 0;
+               margin: 0;
                display: flex;
                flex-basis: 0;
                flex-shrink: 1;
@@ -541,9 +604,18 @@ let%expect_test "vertical groups use up and down" =
            touch-action: pan-x;
          }>
       <div data-slot="resizable-panel"
-           data-panel=""
+           data-panel="true"
            id="bonsai_path_replaced_in_test-panel-0"
            style={
+             min-height: 0;
+             max-height: 100%;
+             height: auto;
+             min-width: 0;
+             max-width: 100%;
+             width: auto;
+             border: 0;
+             padding: 0;
+             margin: 0;
              display: flex;
              flex-basis: 0;
              flex-shrink: 1;
@@ -584,9 +656,18 @@ let%expect_test "vertical groups use up and down" =
              touch-action: none;
            }> </div>
       <div data-slot="resizable-panel"
-           data-panel=""
+           data-panel="true"
            id="bonsai_path_replaced_in_test-panel-1"
            style={
+             min-height: 0;
+             max-height: 100%;
+             height: auto;
+             min-width: 0;
+             max-width: 100%;
+             width: auto;
+             border: 0;
+             padding: 0;
+             margin: 0;
              display: flex;
              flex-basis: 0;
              flex-shrink: 1;
@@ -619,9 +700,18 @@ let%expect_test "vertical groups use up and down" =
              touch-action: none;
            }> </div>
       <div data-slot="resizable-panel"
-           data-panel=""
+           data-panel="true"
            id="bonsai_path_replaced_in_test-panel-2"
            style={
+             min-height: 0;
+             max-height: 100%;
+             height: auto;
+             min-width: 0;
+             max-width: 100%;
+             width: auto;
+             border: 0;
+             padding: 0;
+             margin: 0;
              display: flex;
              flex-basis: 0;
              flex-shrink: 1;

@@ -180,7 +180,16 @@ let position (p : Placement.t) (wrapper : Dom_html.element Js.t) =
     let vw, vh = viewport () in
     let pad = p.collision_padding in
     let arrow = query content "[data-popper-arrow]" in
-    let arrow_h = if Option.is_some arrow then arrow_height else 0. in
+    (* Radix measures its arrow's wrapper: shadcn's [size-2.5] arrow is
+       10px high, not the SVG's 5. *)
+    let arrow_w, arrow_h =
+      match arrow with
+      | None -> arrow_width, 0.
+      | Some el ->
+        let w = Float.of_int el##.offsetWidth
+        and h = Float.of_int el##.offsetHeight in
+        if Float.(h > 0.) then w, h else arrow_width, arrow_height
+    in
     let offset = p.side_offset +. arrow_h in
     let coords side ~w ~h =
       let cross = if Align.equal p.align End then -.p.align_offset else p.align_offset in
@@ -272,11 +281,11 @@ let position (p : Placement.t) (wrapper : Dom_html.element Js.t) =
       set_style arrow base "0";
       (match side with
        | Top | Bottom ->
-         let ax = clamp (a.left +. (a.width /. 2.) -. x -. (arrow_width /. 2.)) ~lo:0. ~hi:(w -. arrow_width) in
+         let ax = clamp (a.left +. (a.width /. 2.) -. x -. (arrow_w /. 2.)) ~lo:0. ~hi:(w -. arrow_w) in
          set_style arrow "left" (px ax)
        | Left | Right ->
          let ay =
-           clamp (a.top +. (a.height /. 2.) -. y -. (arrow_width /. 2.)) ~lo:0. ~hi:(h -. arrow_width)
+           clamp (a.top +. (a.height /. 2.) -. y -. (arrow_w /. 2.)) ~lo:0. ~hi:(h -. arrow_w)
          in
          set_style arrow "top" (px ay));
       set_style

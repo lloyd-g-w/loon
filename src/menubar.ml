@@ -128,6 +128,17 @@ let content
 
 let menu ?value trigger content : Menu_.t = { value; trigger; content }
 
+(* Radix's [data-highlighted] on the focused trigger; set on the element
+   directly, as focus is not in our state. *)
+let set_highlighted (ev : Js_of_ocaml.Dom_html.focusEvent Js_of_ocaml.Js.t) on =
+  let open Js_of_ocaml in
+  Effect.of_thunk (fun () ->
+    Js.Opt.iter ev##.target (fun (el : Dom_html.element Js.t) ->
+      if on
+      then el##setAttribute (Js.string "data-highlighted") (Js.string "")
+      else el##removeAttribute (Js.string "data-highlighted")))
+;;
+
 let view ?(attrs = []) ?class_ ?(id = "menubar") ~state ~on_change (menus : Menu_.t list) =
   let state : State.t = state in
   let menus =
@@ -201,10 +212,18 @@ let view ?(attrs = []) ?class_ ?(id = "menubar") ~state ~on_change (menus : Menu
                     | Some open_ when not (String.equal open_ v) ->
                       Effect.Many [ open_menu v; Focus.restore (trigger_id v) ]
                     | _ -> Effect.Ignore)
-                ; Attr.on_focus (fun _ ->
-                    if Option.equal String.equal state.current (Some v)
-                    then Effect.Ignore
-                    else on_change { state with current = Some v })
+                ; Attr.on_focus (fun ev ->
+                    Effect.Many
+                      [ set_highlighted ev true
+                      ; (* While a menu is open, its trigger stays the tab
+                           stop (focus passes through others as menus
+                           switch). *)
+                        (if Option.equal String.equal state.current (Some v)
+                            || Option.is_some state.value
+                         then Effect.Ignore
+                         else on_change { state with current = Some v })
+                      ])
+                ; Attr.on_blur (fun ev -> set_highlighted ev false)
                 ; Attr.on_keydown (fun ev ->
                     match Dom_util.key ev with
                     | Enter | Space | ArrowDown ->
@@ -256,8 +275,9 @@ let view ?(attrs = []) ?class_ ?(id = "menubar") ~state ~on_change (menus : Menu
           ; on_edge =
               Some
                 (fun dir ->
+                  (* Radix highlights nothing in a menu opened this way. *)
                   match neighbour v dir with
-                  | Some w -> open_menu ~first:true w
+                  | Some w -> open_menu w
                   | None -> Effect.Ignore)
           }
         in
@@ -283,7 +303,6 @@ let view ?(attrs = []) ?class_ ?(id = "menubar") ~state ~on_change (menus : Menu
       ([ data "slot" "menubar"
        ; Cn.with_class ?class_ [ root_class ]
        ; Attr.role "menubar"
-       ; aria "orientation" "horizontal"
        ]
        @ attrs)
     (List.map menus ~f:render_menu)

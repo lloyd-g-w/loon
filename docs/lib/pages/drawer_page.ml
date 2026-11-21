@@ -97,7 +97,7 @@ let responsive_dialog (local_ graph) =
       [ Node.div
           ~attrs:[ Attr.class_ "grid gap-3" ]
           [ label ~for_:"email" "Email"
-          ; input ~attrs:[ Attr.type_ "email" ] ~id:"email" "shadcn@example.com"
+          ; input ~type_:Email ~id:"email" "shadcn@example.com"
           ]
       ; Node.div
           ~attrs:[ Attr.class_ "grid gap-3" ]

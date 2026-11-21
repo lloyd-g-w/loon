@@ -65,8 +65,10 @@ let%expect_test "shadcn's classes" =
                  inputmode="numeric"
                  maxlength="2"
                  data-slot="input-otp"
+                 spellcheck="false"
                  class="disabled:cursor-not-allowed"
                  #value="1"
+                 loon-input-otp-selection=<fun>
                  @on_blur
                  @on_focus
                  @on_input
@@ -148,7 +150,9 @@ let%expect_test
                  inputmode="numeric"
                  maxlength="6"
                  data-slot="input-otp"
+                 spellcheck="false"
                  #value=""
+                 loon-input-otp-selection=<fun>
                  @on_blur
                  @on_focus
                  @on_input
@@ -264,8 +268,10 @@ let%expect_test
                    inputmode="numeric"
                    maxlength="6"
                    data-slot="input-otp"
+                   spellcheck="false"
     -|             #value=""
     +|             #value="12"
+                   loon-input-otp-selection=<fun>
                    @on_blur
                    @on_focus
                    @on_input
@@ -348,8 +354,10 @@ let%expect_test
                    inputmode="numeric"
                    maxlength="6"
                    data-slot="input-otp"
+                   spellcheck="false"
     -|             #value="12"
     +|             #value="123456"
+                   loon-input-otp-selection=<fun>
                    @on_blur
                    @on_focus
                    @on_input
@@ -409,15 +417,15 @@ let%expect_test
                    inputmode="numeric"
                    maxlength="6"
                    data-slot="input-otp"
+                   spellcheck="false"
                    #value="123456"
+                   loon-input-otp-selection=<fun>
                    @on_blur
                    @on_focus
                    @on_input
                    style={
                      position: absolute;
                      inset: 0;
-                     width: 100%;
-                     height: 100%;
     |}]
 ;;
 
@@ -499,9 +507,11 @@ let%expect_test "disabled" =
                  inputmode="numeric"
                  maxlength="2"
                  data-slot="input-otp"
+                 spellcheck="false"
                  id="otp"
                  disabled=""
                  #value=""
+                 loon-input-otp-selection=<fun>
                  @on_blur
                  @on_focus
                  @on_input
@@ -530,5 +540,46 @@ let%expect_test "disabled" =
       </div>
       <output> "" </output>
     </div>
+    |}]
+;;
+
+let%expect_test "the caret selects a character, as input-otp's" =
+  let show ~value ?prev sel =
+    let max_length = 6 in
+    match Input_otp.Selection.adjust ~value ~max_length ~prev sel with
+    | None -> print_endline "kept"
+    | Some (s, e, dir) ->
+      printf
+        "%d-%d %s\n"
+        s
+        e
+        (match dir with
+         | Forward -> "forward"
+         | Backward -> "backward")
+  in
+  (* Empty, or the caret after the code: kept. *)
+  show ~value:"" (0, 0);
+  show ~value:"12a3" (4, 4);
+  (* ArrowLeft from the end: the last character. *)
+  show ~value:"12a3" ~prev:(4, 4) (3, 3);
+  (* ArrowLeft again, from [3-4] (collapsed at 3 by the browser). *)
+  show ~value:"12a3" ~prev:(3, 4) (3, 3);
+  (* ArrowRight from [1-2] collapses at 2. *)
+  show ~value:"123" ~prev:(1, 2) (2, 2);
+  (* Home; a full code with the caret at the end. *)
+  show ~value:"123" ~prev:(2, 3) (0, 0);
+  show ~value:"123456" (6, 6);
+  (* A real selection is kept. *)
+  show ~value:"123" (0, 2);
+  [%expect
+    {|
+    kept
+    kept
+    3-4 backward
+    2-3 backward
+    2-3 forward
+    0-1 forward
+    5-6 backward
+    kept
     |}]
 ;;
