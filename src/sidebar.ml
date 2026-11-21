@@ -463,13 +463,15 @@ let inset ?(attrs = []) ?class_ children =
     children
 ;;
 
-let input ?(attrs = []) ?class_ ?placeholder ~value ~on_input () =
+let input ?(attrs = []) ?class_ ?type_ ?id ?placeholder ?value ?on_input () =
   Input.view
     ~class_:(Cn.cn ("h-8 w-full bg-background shadow-none" :: Option.to_list class_))
     ~attrs:(data "sidebar" "input" :: attrs)
+    ?type_
+    ?id
     ?placeholder
-    ~value
-    ~on_input
+    ?value
+    ?on_input
     ()
 ;;
 

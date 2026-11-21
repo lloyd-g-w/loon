@@ -32,6 +32,21 @@ val view
   -> (t -> Node.t list)
   -> Node.t
 
+(** The state for parts without the root's [<div>]: shadcn's
+    [<Collapsible asChild>] over another element, which takes
+    {!root_attrs}. *)
+val create
+  :  ?disabled:bool
+  -> ?id:string
+  -> open_:bool
+  -> on_change:(bool -> unit Effect.t)
+  -> unit
+  -> t
+
+(** The root's [data-state] (and [data-disabled]), for the element in its
+    place (without [data-slot]: the element keeps its own). *)
+val root_attrs : t -> Attr.t list
+
 (** Keeps whether it is open: closed at first unless [default_open]. *)
 val component
   :  ?attrs:Attr.t list

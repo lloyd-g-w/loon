@@ -124,13 +124,16 @@ val rail : ?attrs:Attr.t list -> ?class_:string -> t -> Node.t
 (** [SidebarInset]: the [<main>] beside an [Inset] sidebar. *)
 val inset : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
 
-(** [SidebarInput]: an {!Input} sized for the sidebar. *)
+(** [SidebarInput]: an {!Input} sized for the sidebar (controlled with
+    [value] and [on_input], else the browser keeps what is typed). *)
 val input
   :  ?attrs:Attr.t list
   -> ?class_:string
+  -> ?type_:Input.Type.t
+  -> ?id:string
   -> ?placeholder:string
-  -> value:string
-  -> on_input:(string -> unit Effect.t)
+  -> ?value:string
+  -> ?on_input:(string -> unit Effect.t)
   -> unit
   -> Node.t
 

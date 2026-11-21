@@ -53,7 +53,8 @@ end
 
     [text_value] is the text typeahead matches (by default the item's text
     nodes). [close_on_select] (default [true]): choosing the item closes the
-    menu, as Radix does unless [onSelect] prevents it. *)
+    menu, as Radix does unless [onSelect] prevents it. [href] makes an item
+    an [<a>] (Radix's [asChild] over a link). *)
 
 val item
   :  ?attrs:Attr.t list
@@ -64,6 +65,7 @@ val item
   -> ?text_value:string
   -> ?close_on_select:bool
   -> ?on_select:unit Effect.t
+  -> ?href:string
   -> Node.t list
   -> Item.t
 

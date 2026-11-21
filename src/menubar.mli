@@ -102,6 +102,7 @@ val item
   -> ?text_value:string
   -> ?close_on_select:bool
   -> ?on_select:unit Effect.t
+  -> ?href:string
   -> Node.t list
   -> Menu.Item.t
 

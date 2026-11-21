@@ -125,6 +125,7 @@ let item
   ?text_value
   ?(close_on_select = true)
   ?(on_select = Effect.Ignore)
+  ?href
   children
   : Item.t
   =
@@ -134,7 +135,12 @@ let item
     ; close_on_select
     ; render =
         (fun c nav ->
-          Node.div
+          let element ~attrs =
+            match href with
+            | None -> Node.div ~attrs
+            | Some href -> Node.a ~attrs:(Attr.href href :: attrs)
+          in
+          element
             ~attrs:
               ([ slot c "item" ]
                @ inset_attr inset
