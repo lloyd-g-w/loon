@@ -19,7 +19,7 @@
   js_of_ocaml))
 
 ; The stylesheet's Tailwind input: css/*.css in name order (Tailwind and its
-; plugins, the theme, then the stylesheets of components not yet ported),
+; plugins, the theme, then sonner.css: Sonner's own stylesheet),
 ; written here, next to the sources it scans.
 
 (rule

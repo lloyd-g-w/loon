@@ -1,4 +1,5 @@
-(** Scrolling an element into view. *)
+(** Scrolling: an element into view, and locking the page's scroll under a
+    modal. *)
 
 open! Import
 

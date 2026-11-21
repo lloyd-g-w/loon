@@ -4,7 +4,8 @@
 open! Import
 
 (** [merge ~defaults attrs node]: [node] with [attrs] added (classes and
-    styles merge, handlers for the same event both run), and each of
+    styles merge, handlers for the same event both run, other attributes
+    replace the node's), and each of
     [defaults] (attribute name, attribute) unless [node] has that attribute
     already: as Radix's Slot, the child's own [type] wins. A [data-slot]
     among [defaults] replaces the child's (shadcn's components spread the

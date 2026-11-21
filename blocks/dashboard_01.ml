@@ -64,7 +64,7 @@ end
 
 (* {2 nav-main.tsx} *)
 
-let nav_main items =
+let nav_main ~sidebar items =
   Sidebar.group
     [ Sidebar.group_content
         ~class_:"flex flex-col gap-2"
@@ -72,7 +72,7 @@ let nav_main items =
             [ Sidebar.menu_item
                 ~class_:"flex items-center gap-2"
                 [ Sidebar.menu_button
-                    ~tooltip:"Quick Create"
+                    ~tooltip:(Sidebar.menu_tooltip sidebar "Quick Create")
                     ~class_:
                       "min-w-8 bg-primary text-primary-foreground duration-200 \
                        ease-linear hover:bg-primary/90 \
@@ -90,7 +90,7 @@ let nav_main items =
             (List.map items ~f:(fun (title, _url, icon) ->
                Sidebar.menu_item
                  [ Sidebar.menu_button
-                     ~tooltip:title
+                     ~tooltip:(Sidebar.menu_tooltip sidebar title)
                      [ Icon.view icon; Node.span [ Node.text title ] ]
                  ]))
         ]
@@ -256,7 +256,7 @@ let app_sidebar ?variant ~sidebar (local_ graph) =
             ]
         ]
     ; Sidebar.content
-        [ nav_main App_data.nav_main
+        [ nav_main ~sidebar App_data.nav_main
         ; nav_documents
         ; nav_secondary ~class_:"mt-auto" App_data.nav_secondary
         ]

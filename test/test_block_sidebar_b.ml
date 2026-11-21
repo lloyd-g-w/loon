@@ -20,7 +20,6 @@ let%expect_test "sidebar-09" =
       sidebar-content x2
       sidebar-group x2
       sidebar-group-content x2
-      tooltip-content x5
       sidebar-footer
       dropdown-menu-trigger
       avatar
@@ -40,32 +39,32 @@ let%expect_test "sidebar-09" =
       breadcrumb-separator
       breadcrumb-page
     text:
-      Acme Inc Enterprise Inbox Inbox Drafts Drafts Sent Sent Junk Junk Trash
-      Trash CN shadcn m@example.com Inbox Unreads William Smith 09:34 AM Meeting
-      Tomorrow Hi team, just a reminder about our meeting tomorrow at 10 AM.
-      Please come prepared with your project updates. Alice Smith Yesterday Re:
-      Project Update Thanks for the update. The progress looks great so far. Let's
-      schedule a call to discuss the next steps. Bob Johnson 2 days ago Weekend
-      Plans Hey everyone! I'm thinking of organizing a team outing this weekend.
-      Would you be interested in a hiking trip or a beach day? Emily Davis 2 days
-      ago Re: Question about Budget I've reviewed the budget numbers you sent
-      over. Can we set up a quick call to discuss some potential adjustments?
-      Michael Wilson 1 week ago Important Announcement Please join us for an
-      all-hands meeting this Friday at 3 PM. We have some exciting news to share
-      about the company's future. Sarah Brown 1 week ago Re: Feedback on Proposal
-      Thank you for sending over the proposal. I've reviewed it and have some
-      thoughts. Could we schedule a meeting to discuss my feedback in detail?
-      David Lee 1 week ago New Project Idea I've been brainstorming and came up
-      with an interesting project concept. Do you have time this week to discuss
-      its potential impact and feasibility? Olivia Wilson 1 week ago Vacation
-      Plans Just a heads up that I'll be taking a two-week vacation next month.
-      I'll make sure all my projects are up to date before I leave. James Martin 1
-      week ago Re: Conference Registration I've completed the registration for the
-      upcoming tech conference. Let me know if you need any additional information
-      from my end. Sophia White 1 week ago Team Dinner To celebrate our recent
-      project success, I'd like to organize a team dinner. Are you available next
-      Friday evening? Please let me know your preferences. Toggle Sidebar All
-      Inboxes Inbox
+      Acme Inc Enterprise Inbox Drafts Sent Junk Trash CN shadcn m@example.com
+      Inbox Unreads William Smith 09:34 AM Meeting Tomorrow Hi team, just a
+      reminder about our meeting tomorrow at 10 AM. Please come prepared with your
+      project updates. Alice Smith Yesterday Re: Project Update Thanks for the
+      update. The progress looks great so far. Let's schedule a call to discuss
+      the next steps. Bob Johnson 2 days ago Weekend Plans Hey everyone! I'm
+      thinking of organizing a team outing this weekend. Would you be interested
+      in a hiking trip or a beach day? Emily Davis 2 days ago Re: Question about
+      Budget I've reviewed the budget numbers you sent over. Can we set up a quick
+      call to discuss some potential adjustments? Michael Wilson 1 week ago
+      Important Announcement Please join us for an all-hands meeting this Friday
+      at 3 PM. We have some exciting news to share about the company's future.
+      Sarah Brown 1 week ago Re: Feedback on Proposal Thank you for sending over
+      the proposal. I've reviewed it and have some thoughts. Could we schedule a
+      meeting to discuss my feedback in detail? David Lee 1 week ago New Project
+      Idea I've been brainstorming and came up with an interesting project
+      concept. Do you have time this week to discuss its potential impact and
+      feasibility? Olivia Wilson 1 week ago Vacation Plans Just a heads up that
+      I'll be taking a two-week vacation next month. I'll make sure all my
+      projects are up to date before I leave. James Martin 1 week ago Re:
+      Conference Registration I've completed the registration for the upcoming
+      tech conference. Let me know if you need any additional information from my
+      end. Sophia White 1 week ago Team Dinner To celebrate our recent project
+      success, I'd like to organize a team dinner. Are you available next Friday
+      evening? Please let me know your preferences. Toggle Sidebar All Inboxes
+      Inbox
     |}]
 ;;
 
@@ -379,7 +378,6 @@ let%expect_test "sidebar-16" =
       sidebar-content
       sidebar-group x3
       sidebar-group-label x2
-      tooltip-content x4
       collapsible-trigger x4
       collapsible-content x4
       sidebar-menu-sub x4
@@ -394,11 +392,11 @@ let%expect_test "sidebar-16" =
       sidebar-inset
     text:
       Build Your Application Data Fetching Search Acme Inc Enterprise Platform
-      Playground Playground Toggle History Starred Settings Models Models Toggle
-      Genesis Explorer Quantum Documentation Documentation Toggle Introduction Get
-      Started Tutorials Changelog Settings Settings Toggle General Team Billing
-      Limits Projects Design Engineering More Sales & Marketing More Travel More
-      More Support Feedback CN shadcn m@example.com
+      Playground Toggle History Starred Settings Models Toggle Genesis Explorer
+      Quantum Documentation Toggle Introduction Get Started Tutorials Changelog
+      Settings Toggle General Team Billing Limits Projects Design Engineering More
+      Sales & Marketing More Travel More More Support Feedback CN shadcn
+      m@example.com
     |}]
 ;;
 

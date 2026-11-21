@@ -15,12 +15,11 @@ them your own, as with shadcn.
   composed like shadcn's parts (`Card.root`, `Card.header`, ...); stateful
   ones as a controlled `view` or a Bonsai `component`.
 
-The port is in progress: Button, Badge, Card and Tabs are ported; the other
-components still have loon's earlier styles.
-
 The documentation site (`nix build .#docs`, or `dune build` then serve
 `_build/default/docs/bin/site/` over http) shows every component live next
-to its source.
+to its source, and ports ui.shadcn.com's other pages: Blocks (dashboard,
+sidebars, login, signup and calendars: the `loon_blocks` library in
+`blocks/`), Charts, Create and Typeset.
 
 ## Quick start
 
@@ -40,7 +39,9 @@ Depend on it in dune:
 ```
 
 Load the stylesheet — link `loon.css` (installed in `share/loon/`, built by
-Tailwind from loon's sources), or let OCaml put it in the page:
+Tailwind from loon's sources), or let OCaml put it in the page. It has the
+classes loon's components use; for Tailwind classes of your own, copy the
+components with the CLI (below), whose dune rule compiles your sources too.
 
 ```ocaml
 open! Core
@@ -70,17 +71,19 @@ let () =
 
 ## Components
 
-| Group | Components |
-|---|---|
-| Forms | Button, Input, Textarea, Label, Field, Checkbox, Switch, Radio group, Native select, Select, Combobox, Slider, Toggle, Toggle group, Calendar |
-| Overlays | Alert dialog, Command, Context menu, Dialog, Drawer, Dropdown menu, Hover card, Menubar, Popover, Sheet, Tooltip |
-| Display | Card, Badge, Avatar, Table, Data table (sort, filter, select, paginate), Accordion, Collapsible, Separator, Kbd |
-| Navigation | Tabs, Breadcrumb, Pagination |
-| Feedback | Alert, Sonner, Progress, Spinner, Skeleton, Empty |
+Accordion, Alert, Alert dialog, Aspect ratio, Avatar, Badge, Breadcrumb,
+Button, Button group, Calendar, Card, Carousel, Chart, Checkbox,
+Collapsible, Combobox, Command, Context menu, Data table, Dialog, Drawer,
+Dropdown menu, Empty, Field, Hover card, Input, Input group, Input OTP,
+Item, Kbd, Label, Menubar, Native select, Navigation menu, Pagination,
+Popover, Progress, Radio group, Resizable, Scroll area, Select, Separator,
+Sheet, Sidebar, Skeleton, Slider, Sonner, Spinner, Switch, Table, Tabs,
+Textarea, Toggle, Toggle group, Tooltip.
 
-Plus `Icon` (Lucide), `Cn` (shadcn's `cn`: class names, with a
-tailwind-merge), `Theme` and `Stylesheet`, and the helpers the components
-share (`Popper`, `Portal`, `Presence`, `Dismiss`, `Menu`, `Modal`, `List_nav`, `Roving`, `Fuzzy`, …).
+Plus `Icon` (Lucide), `Cn` (shadcn's `cn`, with a tailwind-merge port),
+`Theme`, `Stylesheet`, `Use_mobile`, and the Radix primitives the
+components share (`Portal`, `Popper`, `Presence`, `Dismiss`, `Focus`,
+`Menu`, `Modal`, `Slot`, `List_nav`, `Roving`, …).
 
 ## Theming
 
@@ -100,10 +103,15 @@ loon diff                                 # how your copies differ from loon's
 ```
 
 `loon add` takes `-dir DIR` (default `src/ui`), `-overwrite`, `-dry-run`,
-and `-all`. The project's `loon.css` (the theme) is Tailwind's input: the
-dune file `loon init` writes compiles it with `tailwindcss`, scanning the
-components for their classes. The copies are yours: write `Ui.Button.view`
-where the docs write `Loon.Button.view`.
+and `-all`, and copies the modules a component uses (Sidebar brings Sheet,
+Tooltip, Portal, Popper, …). The directory's `loon.css` is Tailwind v4's
+input: Tailwind, tw-animate-css, shadcn's custom variants and theme
+(`@theme inline`, `.dark`), and Sonner's stylesheet once you add `sonner`.
+The dune file `loon init` writes compiles it to `ui.css` with `tailwindcss`
+(v4, e.g. nixpkgs' `tailwindcss_4`), scanning the components' sources; for your
+own sources' classes, add `@source` lines to `loon.css` (and the files to
+the rule's `deps`). The copies are yours: write
+`Ui.Button.view` where the docs write `Loon.Button.view`.
 
 ## Development
 
@@ -126,6 +134,7 @@ See `AGENTS.md` for the conventions a component follows, and
 
 ## Licence
 
-MIT. loon is derived from shadcn/ui (MIT), and includes tw-animate-css
-(MIT) and Lucide's icons (ISC); the docs site bundles the Geist fonts (OFL)
-and temporal-polyfill (MIT). See `THIRD_PARTY_NOTICES.md`.
+MIT. loon is derived from shadcn/ui and Radix Primitives (MIT), and
+includes tw-animate-css and Sonner's stylesheet (MIT) and Lucide's icons
+(ISC); the docs site bundles fonts (Geist and others, OFL) and
+temporal-polyfill (MIT). See `THIRD_PARTY_NOTICES.md`.

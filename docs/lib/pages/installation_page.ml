@@ -57,18 +57,28 @@ let page =
       ; Doc.p'
           [ Doc.text "or serve it yourself: it is installed in "
           ; Doc.code "share/loon/loon.css"
-          ; Doc.text " (and is "
-          ; Doc.code "%{lib:loon:loon.css}"
-          ; Doc.text " in dune) — link it from your page's head."
+          ; Doc.text ": link it from your page's head."
           ]
       ; Doc.pre ~lang:Plain "<link rel=\"stylesheet\" href=\"loon.css\">"
-      ; Doc.h2 "Wrap your app"
       ; Doc.p'
-          [ Doc.text "Components look for their theme on an ancestor. Wrap your app in "
+          [ Doc.text "It is Tailwind v4's output for the classes loon's components use. \
+                      For Tailwind classes of your own, copy the components with "
+          ; Doc.link ~href:"#/cli" "the CLI"
+          ; Doc.text ": its dune rule compiles your sources' classes too."
+          ]
+      ; Doc.h2 "Use a component"
+      ; Doc.p'
+          [ Doc.text "The stylesheet gives "
+          ; Doc.code "<body>"
+          ; Doc.text " the theme's background and text colours, as shadcn's does. "
           ; Doc.code "Loon.Theme.root"
-          ; Doc.text " (or give its outermost element "
-          ; Doc.code "class=\"loon\""
-          ; Doc.text "):"
+          ; Doc.text " does the same for a subtree ("
+          ; Doc.code "~mode:Dark"
+          ; Doc.text " adds the class "
+          ; Doc.code "dark"
+          ; Doc.text "; see "
+          ; Doc.link ~href:"#/theming" "Theming"
+          ; Doc.text ")."
           ]
       ; Doc.pre
           "let component (local_ graph) =\n\

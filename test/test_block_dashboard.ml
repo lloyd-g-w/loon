@@ -20,7 +20,6 @@ let%expect_test "dashboard-01 renders" =
       sidebar-content
       sidebar-group x3
       sidebar-group-content x2
-      tooltip-content x6
       button x17
       sidebar-group-label
       dropdown-menu-trigger x15
@@ -60,17 +59,17 @@ let%expect_test "dashboard-01 renders" =
       drawer-trigger x10
       input x20
     text:
-      Acme Inc. Quick Create Quick Create Inbox Dashboard Dashboard Lifecycle
-      Lifecycle Analytics Analytics Projects Projects Team Team Documents Data
-      Library More Reports More Word Assistant More More Settings Get Help Search
-      CN shadcn m@example.com Toggle Sidebar Documents GitHub Total Revenue
-      $1,250.00 +12.5% Trending up this month Visitors for the last 6 months New
-      Customers 1,234 -20% Down 20% this period Acquisition needs attention Active
-      Accounts 45,678 +12.5% Strong user retention Engagement exceed targets
-      Growth Rate 4.5% +4.5% Steady performance increase Meets growth projections
-      Total Visitors Total for the last 3 months Last 3 months Last 3 months Last
-      30 days Last 7 days Last 3 months [data-chart=chart-bonsai_path_y_x_x_x_x] {
-      --color-desktop: var(--primary); --color-mobile: var(--primary); } .dark
+      Acme Inc. Quick Create Inbox Dashboard Lifecycle Analytics Projects Team
+      Documents Data Library More Reports More Word Assistant More More Settings
+      Get Help Search CN shadcn m@example.com Toggle Sidebar Documents GitHub
+      Total Revenue $1,250.00 +12.5% Trending up this month Visitors for the last
+      6 months New Customers 1,234 -20% Down 20% this period Acquisition needs
+      attention Active Accounts 45,678 +12.5% Strong user retention Engagement
+      exceed targets Growth Rate 4.5% +4.5% Steady performance increase Meets
+      growth projections Total Visitors Total for the last 3 months Last 3 months
+      Last 3 months Last 30 days Last 7 days Last 3 months
+      [data-chart=chart-bonsai_path_y_x_x_x_x] { --color-desktop: var(--primary);
+      --color-mobile: var(--primary); } .dark
       [data-chart=chart-bonsai_path_y_x_x_x_x] { --color-desktop: var(--primary);
       --color-mobile: var(--primary); } Apr 6 Apr 26 May 17 Jun 6 Jun 30 View
       Outline Outline Past Performance 3 Key Personnel 2 Focus Documents Customize

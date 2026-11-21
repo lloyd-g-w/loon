@@ -285,8 +285,11 @@ let app_sidebar ~sidebar (local_ graph) =
                         (List.map nav_main ~f:(fun (title, icon) ->
                            Sidebar.menu_item
                              [ Sidebar.menu_button
-                                 ~tooltip:title
-                                 ~tooltip_hidden:false
+                                 ~tooltip:
+                                   (Sidebar.menu_tooltip
+                                      ~hidden:false
+                                      sidebar
+                                      title)
                                  ~on_click:
                                    (Effect.Many
                                       [ set_active_item title
