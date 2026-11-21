@@ -1,51 +1,77 @@
-(** A window over the page that the user must deal with before going back
-    to it: a title, a description, content and buttons. Esc, the close
-    button or a click outside closes it; focus stays inside while it is
-    open. *)
+(** A window overlaid on either the primary window or another dialog
+    window, rendering the content underneath inert. Port of shadcn/ui's
+    [Dialog] (Radix Dialog: focus moves into the content and stays there
+    while it is open, Esc or a click outside closes it, focus returns to
+    the trigger, the page does not scroll).
+
+    {[
+      Dialog.component
+        (return (fun dialog ->
+          [ Dialog.trigger dialog (Button.view ~variant:Outline [ Node.text "Open" ])
+          ; Dialog.content dialog
+              [ Dialog.header
+                  [ Dialog.title dialog [ Node.text "Edit profile" ]
+                  ; Dialog.description dialog [ Node.text "..." ]
+                  ]
+              ; Dialog.footer
+                  [ Dialog.close dialog (Button.view ~variant:Outline [ Node.text "Cancel" ]) ]
+              ]
+          ]))
+        graph
+    ]} *)
 
 open! Import
 
-module Size : sig
-  type t =
-    | Sm
-    | Md
-    | Lg
-    | Xl
-  [@@deriving enumerate, sexp_of, compare, equal]
-end
+(** The dialog's state, for its parts. *)
+type t = Modal.t
 
-(** Controlled. [trigger attrs], when given, is the element that opens it.
-    [footer] is a row of buttons (stacked on phones). [id] must be unique
-    on the page. *)
+(** Controlled. [id] (unique on the page) prefixes the parts' ids. *)
 val view
-  :  ?attrs:Attr.t list
-  -> ?size:Size.t
-  -> ?description:string
-  -> ?footer:Node.t list
-  -> ?close_button:bool
-  -> ?trigger:(Attr.t list -> Node.t)
-  -> id:string
+  :  ?id:string
   -> open_:bool
-  -> on_change:(bool -> unit Effect.t)
-  -> title:string
-  -> Node.t list
+  -> on_open_change:(bool -> unit Effect.t)
+  -> (t -> Node.t list)
   -> Node.t
 
-(** Keeps whether it is open. [content ~close] gives the body and footer,
-    with an effect that closes it. *)
+(** Keeps whether it is open ([default_open], [false] by default). *)
 val component
-  :  ?attrs:Attr.t list
-  -> ?size:Size.t
-  -> ?description:string
-  -> ?close_button:bool
-  -> trigger:(Attr.t list -> Node.t)
-  -> title:string
-  -> (close:unit Effect.t -> Node.t list * Node.t list) Bonsai.t
+  :  ?default_open:bool
+  -> (t -> Node.t list) Bonsai.t
   -> local_ Bonsai.graph
   -> Node.t Bonsai.t
 
-(** The header (title and description) and footer, for building other
-    dialogs. *)
-val header : id:string -> ?description:string -> string -> Node.t
+(** The element that opens it, with the trigger's attributes (Radix's
+    [<DialogTrigger asChild>]). *)
+val trigger : ?attrs:Attr.t list -> t -> Node.t -> Node.t
 
-val footer : Node.t list -> Node.t
+(** An element that closes it (Radix's [<DialogClose asChild>]). *)
+val close : ?attrs:Attr.t list -> t -> Node.t -> Node.t
+
+(** The overlay and the dialog, while open. [show_close_button] (default
+    [true]): the X in the corner. [initial_focus]: a selector for the
+    element to focus when it opens (default: the first focusable one). *)
+val content
+  :  ?attrs:Attr.t list
+  -> ?class_:string
+  -> ?show_close_button:bool
+  -> ?initial_focus:string
+  -> t
+  -> Node.t list
+  -> Node.t
+
+val header : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
+
+(** [~show_close_button:dialog] adds an outline "Close" button that closes
+    [dialog] (shadcn's [showCloseButton]). *)
+val footer
+  :  ?attrs:Attr.t list
+  -> ?class_:string
+  -> ?show_close_button:t
+  -> Node.t list
+  -> Node.t
+
+(** The dialog's accessible name. *)
+val title : ?attrs:Attr.t list -> ?class_:string -> t -> Node.t list -> Node.t
+
+(** Its accessible description. *)
+val description : ?attrs:Attr.t list -> ?class_:string -> t -> Node.t list -> Node.t

@@ -1,122 +1,114 @@
+(* Core has a Command too: name ours before Import opens Core. *)
+module Cmdk = Command
 open! Import
 
-module State = struct
+module Option_ = struct
   type t =
-    | Closed
-    | Open of Command_palette.State.t
+    { value : string
+    ; label : string
+    }
   [@@deriving sexp_of, equal]
 end
 
 let view
-  ?attrs
-  ?placeholder
-  ?(search_placeholder = "Search…")
-  ?empty
-  ?(disabled = false)
-  ?(invalid = false)
-  ~id
+  ?(class_ = "w-[200px] justify-between")
+  ?(content_class = "w-[200px] p-0")
+  ?(id = "combobox")
+  ?(placeholder = "Select an option...")
+  ?(search_placeholder = "Search...")
+  ?(empty = "No option found.")
   ~value
-  ~on_change
-  ~state
-  ~on_state
-  groups
+  ~on_value_change
+  ~open_
+  ~on_open_change
+  ~command
+  ~on_command_change
+  (options : Option_.t list)
   =
-  let options = List.concat_map groups ~f:(fun (g : Select.Group.t) -> g.options) in
-  let selected =
-    Option.bind value ~f:(fun v ->
-      List.find options ~f:(fun (o : Select.Option_.t) -> String.equal o.value v))
+  let on_open_change o =
+    if o
+    then on_open_change true
+    else Effect.Many [ on_open_change false; on_command_change Cmdk.State.empty ]
   in
-  let open_ =
-    match (state : State.t) with
-    | Closed -> false
-    | Open _ -> true
-  in
-  let open_state = State.Open { query = ""; highlighted = value } in
-  let choose v = Effect.Many [ Floating.and_refocus ~id (on_state State.Closed); on_change v ] in
-  let trigger_keydown ev =
-    match Dom_util.key ev with
-    | ArrowDown | ArrowUp -> Effect.Many [ Dom_util.prevent_default ev; on_state open_state ]
-    | _ -> Effect.Ignore
-  in
-  let command_groups =
-    List.map groups ~f:(fun (g : Select.Group.t) ->
-      Command_palette.Group.create
-        ?heading:g.label
-        (List.map g.options ~f:(fun (o : Select.Option_.t) ->
-           Command_palette.Item.create
-             ~value:o.value
-             ?icon:o.icon
-             ~disabled:o.disabled
-             ~on_select:(choose o.value)
-             o.label)))
-  in
-  let trigger =
-    Node.button
-      ~attrs:
-        (Floating.trigger_attrs
-           ~id
-           ~haspopup:"listbox"
-           ~open_
-           ~on_toggle:(on_state (if open_ then State.Closed else open_state))
-         @ [ Attr.type_ "button"
-           ; Attr.class_ "loon-select-trigger"
-           ; Attr.role "combobox"
-           ; Attr.on_keydown trigger_keydown
-           ]
-         @ (if invalid then [ aria "invalid" "true" ] else [])
-         @ (if Option.is_none selected then [ data "placeholder" "" ] else [])
-         @ if disabled then [ Attr.disabled ] else [])
-      [ Node.span
-          ~attrs:[ Attr.class_ "loon-select-value" ]
-          (match selected with
-           | Some o ->
-             List.filter_opt
-               [ Option.map o.icon ~f:(fun i -> Icon.view i); Some (Node.text o.label) ]
-           | None -> [ Node.text (Option.value placeholder ~default:"Select…") ])
-      ; Icon.view ~attrs:[ Attr.class_ "loon-select-chevron" ] Chevrons_up_down
-      ]
-  in
-  Floating.view
-    ~attrs:(Import.attrs ?attrs [ "loon-select"; "loon-combobox" ])
-    ~match_width:true
-    ~id
-    ~open_
-    ~on_dismiss:(on_state State.Closed)
-    ~content_attrs:[ Attr.class_ "loon-combobox-content" ]
-    ~trigger
-    (match state with
-     | Closed -> []
-     | Open command_state ->
-       [ Command_palette.view
-           ~placeholder:search_placeholder
-           ?empty
-           ~autofocus:true
-           ~id:(id ^ "-command")
-           ~state:command_state
-           ~on_state:(fun s -> on_state (State.Open s))
-           command_groups
-       ])
+  Popover.view ~id ~open_ ~on_open_change (fun popover ->
+    [ Popover.trigger
+        popover
+        (Button.view
+           ~variant:Outline
+           ~attrs:[ Attr.role "combobox"; aria_bool "expanded" open_ ]
+           ~class_
+           [ Node.text
+               (match
+                  List.find options ~f:(fun o ->
+                    Option.equal String.equal value (Some o.value))
+                with
+                | Some o -> o.label
+                | None -> placeholder)
+           ; Icon.view ~class_:"opacity-50" Chevrons_up_down
+           ])
+    ; Popover.content
+        popover
+        ~class_:content_class
+        [ Cmdk.view
+            ~id:(id ^ "-command")
+            ~state:command
+            ~on_change:on_command_change
+            [ Cmdk.input ~placeholder:search_placeholder ~class_:"h-9" ()
+            ; Cmdk.list
+                [ Cmdk.empty [ Node.text empty ]
+                ; Cmdk.group
+                    (List.map options ~f:(fun o ->
+                       let chosen = Option.equal String.equal value (Some o.value) in
+                       Cmdk.item
+                         ~value:o.value
+                         ~keywords:[ o.label ]
+                         ~on_select:
+                           (Effect.Many
+                              [ on_value_change (if chosen then None else Some o.value)
+                              ; on_open_change false
+                              ])
+                         [ Node.text o.label
+                         ; Icon.view
+                             ~class_:
+                               (Cn.cn [ "ml-auto"; (if chosen then "opacity-100" else "opacity-0") ])
+                             Check
+                         ]))
+                ]
+            ]
+        ]
+    ])
 ;;
 
-let component ?attrs ?placeholder ?search_placeholder ?empty ?disabled ?default groups
+let component
+  ?class_
+  ?content_class
+  ?placeholder
+  ?search_placeholder
+  ?empty
+  ?default_value
+  options
   (local_ graph)
   =
-  let value, set_value = Bonsai.state_opt ?default_model:default graph in
-  let state, set_state = Bonsai.state State.Closed ~equal:State.equal graph in
-  let id = Bonsai.path_id graph in
   let open Bonsai.Let_syntax in
-  let%arr value and set_value and state and set_state and id and groups in
+  let value, set_value = Bonsai.state_opt ?default_model:default_value graph in
+  let open_, set_open = Bonsai.state false graph in
+  let command, set_command = Bonsai.state Cmdk.State.empty graph in
+  let id = Bonsai.path_id graph in
+  let%arr value and set_value and open_ and set_open and command and set_command and id
+  and options in
   ( value
   , view
-      ?attrs
+      ?class_
+      ?content_class
+      ~id
       ?placeholder
       ?search_placeholder
       ?empty
-      ?disabled
-      ~id:("loon" ^ id)
       ~value
-      ~on_change:(fun v -> set_value (Some v))
-      ~state
-      ~on_state:set_state
-      groups )
+      ~on_value_change:set_value
+      ~open_
+      ~on_open_change:set_open
+      ~command
+      ~on_command_change:set_command
+      options )
 ;;

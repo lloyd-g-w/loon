@@ -1,34 +1,67 @@
-(** Rich content in a panel next to its trigger: a form, details, a
-    picker. Dismissed by a click outside or Esc. *)
+(** Displays rich content in a portal, triggered by a button. Port of
+    shadcn/ui's [Popover] (Radix Popover: the trigger toggles it; focus
+    moves into the content when it opens and back to the trigger when it
+    closes; Esc, a click outside or focus leaving it closes it).
+
+    {[
+      Popover.component
+        (return (fun popover ->
+          [ Popover.trigger popover
+              (Button.view ~variant:Outline [ Node.text "Open popover" ])
+          ; Popover.content popover ~class_:"w-80" [ ... ]
+          ]))
+        graph
+    ]} *)
 
 open! Import
 
-(** Controlled. [trigger attrs] is the element that opens it, given the
-    attributes that make it one (e.g. [fun attrs -> Button.view ~attrs ...]).
-    [id] must be unique on the page. *)
+(** The popover's state, for its parts. *)
+type t
+
+(** Controlled: [open_] and [on_open_change]. [id] (unique on the page)
+    prefixes the parts' ids. [modal] (default [false]): while open, the rest
+    of the page ignores the pointer and focus stays inside. *)
 val view
-  :  ?attrs:Attr.t list
-  -> ?side:Floating.Side.t
-  -> ?align:Floating.Align.t
-  -> id:string
+  :  ?id:string
+  -> ?modal:bool
   -> open_:bool
-  -> on_change:(bool -> unit Effect.t)
-  -> trigger:(Attr.t list -> Node.t)
-  -> Node.t list
+  -> on_open_change:(bool -> unit Effect.t)
+  -> (t -> Node.t list)
   -> Node.t
 
-(** Keeps whether it is open. The content is given an effect closing it. *)
+(** Keeps whether it is open ([default_open], [false] by default). *)
 val component
-  :  ?attrs:Attr.t list
-  -> ?side:Floating.Side.t
-  -> ?align:Floating.Align.t
-  -> trigger:(Attr.t list -> Node.t)
-  -> (close:unit Effect.t -> Node.t list) Bonsai.t
+  :  ?default_open:bool
+  -> ?modal:bool
+  -> (t -> Node.t list) Bonsai.t
   -> local_ Bonsai.graph
   -> Node.t Bonsai.t
 
-(** A title and a description for the top of a popover. *)
-val header : ?description:string -> string -> Node.t
+val is_open : t -> bool
+val set_open : t -> bool -> unit Effect.t
 
-(** A row of buttons at the bottom of a popover, aligned to the end. *)
-val footer : Node.t list -> Node.t
+(** The element that toggles it (usually a [Button.view]), with the
+    trigger's attributes: Radix's [<PopoverTrigger asChild>]. *)
+val trigger : ?attrs:Attr.t list -> t -> Node.t -> Node.t
+
+(** The trigger's id, to name it from elsewhere (e.g. [aria-labelledby]). *)
+val trigger_id : t -> string
+
+(** The content ([role="dialog"]), shown while open, beside the trigger
+    ([side] [Bottom], [side_offset] 4, [align] [Center] by default; it flips
+    when there is no room). *)
+val content
+  :  ?attrs:Attr.t list
+  -> ?class_:string
+  -> ?side:Popper.Side.t
+  -> ?side_offset:float
+  -> ?align:Popper.Align.t
+  -> ?align_offset:float
+  -> ?avoid_collisions:bool
+  -> t
+  -> Node.t list
+  -> Node.t
+
+val header : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
+val title : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
+val description : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
