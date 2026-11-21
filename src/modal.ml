@@ -59,6 +59,11 @@ let content ?(dismissible = true) ?initial_focus ?(role = "dialog") ~overlay ~co
   else (
     let id = content_id t in
     let close = t.on_open_change false in
+    (* The page's pointerdown outside (Dismiss) closes it in a browser; the
+       click also does, where there is no pointer (tests). *)
+    let overlay =
+      if dismissible then Slot.merge [ Attr.on_click (fun _ -> close) ] overlay else overlay
+    in
     let content =
       Node.div
         ~attrs:
