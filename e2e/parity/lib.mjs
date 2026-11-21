@@ -38,10 +38,9 @@ export async function both(engine = process.argv[2] ?? "chromium", options = {})
     async open(slug, title, name) {
       await loon.page.goto(`${server.url}#/${slug}`);
       await ready(loon.page, slug);
-      const ex = loon.page.locator(".docs-example", {
-        has: loon.page.locator(".docs-example-title", { hasText: new RegExp(`^\\s*${title}\\s*$`) }),
-      });
-      const lp = ex.locator(".docs-preview").first();
+      // The example's preview: the docs' [data-example] is the title's anchor.
+      const anchor = title.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean).join("-");
+      const lp = loon.page.locator(`[data-docs=example][data-example="${anchor}"] [data-slot=preview]`).first();
       // In the middle of the window, as the reference centres its example.
       await lp.evaluate((el) => el.scrollIntoView({ block: "center" }));
       // A fresh load: the app does not always redraw on a hash change.
