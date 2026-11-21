@@ -11,6 +11,7 @@ module Group : sig
     | Display
     | Navigation
     | Feedback
+    | Charts
   [@@deriving enumerate, sexp_of, compare, equal]
 
   val title : t -> string

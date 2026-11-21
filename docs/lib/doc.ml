@@ -11,6 +11,7 @@ module Group = struct
     | Display
     | Navigation
     | Feedback
+    | Charts
   [@@deriving enumerate, sexp_of, compare, equal]
 
   let title = function
@@ -20,6 +21,7 @@ module Group = struct
     | Display -> "Display"
     | Navigation -> "Navigation"
     | Feedback -> "Feedback"
+    | Charts -> "Charts"
   ;;
 end
 
