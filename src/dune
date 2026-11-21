@@ -19,19 +19,24 @@
   js_of_ocaml))
 
 ; The stylesheet's Tailwind input: css/*.css in name order (Tailwind and its
-; plugins, the theme, then sonner.css: Sonner's own stylesheet),
-; written here, next to the sources it scans.
+; plugins, the theme, then sonner.css: Sonner's own stylesheet), and
+; @source lines for the sources beside it: here, loon's; installed in
+; lib/loon/, loon's and loon.blocks' (lib/loon/blocks/), so that a project's
+; own Tailwind input can @import it (Tailwind resolves the @source paths
+; from this file's real path). It depends on the sources so that, within a
+; dune workspace, they are in _build beside it when it is imported.
 
 (rule
  (target loon.input.css)
  (deps
-  (glob_files css/*.css))
+  (glob_files css/*.css)
+  (glob_files *.ml))
  (action
   (with-stdout-to
    loon.input.css
    (progn
     (system "cat css/*.css")
-    (echo "\n@source \"./*.ml\";\n")))))
+    (echo "\n@source \"./*.ml\";\n@source \"./blocks/*.ml\";\n")))))
 
 (rule
  (target loon.css)
@@ -45,4 +50,9 @@
 (install
  (section share)
  (package loon)
- (files loon.css loon.input.css))
+ (files loon.css))
+
+(install
+ (section lib)
+ (package loon)
+ (files loon.input.css))
