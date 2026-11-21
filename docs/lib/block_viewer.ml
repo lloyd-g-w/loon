@@ -363,7 +363,7 @@ let viewer ~page (block : Block.t) (local_ graph) =
       ; Attr.class_
           "group/block-view-wrapper flex min-w-0 scroll-mt-24 flex-col-reverse \
            items-stretch gap-4 overflow-hidden md:flex-col"
-      ; Attr.style (Css_gen.create ~field:"--height" ~value:block.iframe_height)
+      ; Attr.__css_vars_no_kebabs [ "--height", block.iframe_height ]
       ]
     [ toolbar
     ; (match view with
