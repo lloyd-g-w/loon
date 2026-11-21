@@ -75,9 +75,24 @@ let add_to_range ~required ~min ~max date (range : Range.t option) : Range.t opt
   | _ -> range
 ;;
 
-let select ?(required = false) ?(min = 0) ?(max = 0) (selection : Selection.t) date
+let rec select
+  ?(required = false)
+  ?(min = 0)
+  ?(max = 0)
+  ?excluded
+  (selection : Selection.t)
+  date
   : Selection.t
   =
+  match excluded with
+  | Some excluded ->
+    (match select ~required ~min ~max selection date with
+     | Range (Some { from; to_ = Some to_ })
+       when List.exists
+              (List.init (Date.diff to_ from + 1) ~f:(Date.add_days from))
+              ~f:excluded -> Range (Some { from = date; to_ = None })
+     | selection -> selection)
+  | None ->
   match selection with
   | Single (Some d) when Date.equal d date -> if required then selection else Single None
   | Single _ -> Single (Some date)
@@ -245,6 +260,74 @@ let format pattern date =
   Buffer.contents buf
 ;;
 
+module Locale = struct
+  type t =
+    { code : string
+    ; month_names : string list
+    ; day_names : string list
+    ; short_day_names : string list
+    ; week_starts_on : Day_of_week.t
+    ; full_date : Date.t -> string
+    }
+
+  let days_from_sunday = List.init 7 ~f:Day_of_week.of_int_exn
+
+  let en_us =
+    { code = "en-US"
+    ; month_names = List.map Month.all ~f:month_name
+    ; day_names = List.map days_from_sunday ~f:day_name
+    ; short_day_names =
+        List.map days_from_sunday ~f:(fun d -> String.prefix (day_name d) 2)
+    ; week_starts_on = Sun
+    ; full_date = format "PPPP"
+    }
+  ;;
+
+  let es_months =
+    [ "enero"
+    ; "febrero"
+    ; "marzo"
+    ; "abril"
+    ; "mayo"
+    ; "junio"
+    ; "julio"
+    ; "agosto"
+    ; "septiembre"
+    ; "octubre"
+    ; "noviembre"
+    ; "diciembre"
+    ]
+  ;;
+
+  let es_days =
+    [ "domingo"; "lunes"; "martes"; "miércoles"; "jueves"; "viernes"; "sábado" ]
+  ;;
+
+  (* date-fns's [es]: "PPPP" is "EEEE, d 'de' MMMM 'de' y". *)
+  let es =
+    { code = "es"
+    ; month_names = es_months
+    ; day_names = es_days
+    ; short_day_names = [ "do"; "lu"; "ma"; "mi"; "ju"; "vi"; "sá" ]
+    ; week_starts_on = Mon
+    ; full_date =
+        (fun d ->
+          sprintf
+            "%s, %d de %s de %d"
+            (List.nth_exn es_days (Day_of_week.to_int (Date.day_of_week d)))
+            (Date.day d)
+            (List.nth_exn es_months (Month.to_int (Date.month d) - 1))
+            (Date.year d))
+    }
+  ;;
+
+  let code t = t.code
+  let month_name t m = List.nth_exn t.month_names (Month.to_int m - 1)
+  let day_name t d = List.nth_exn t.day_names (Day_of_week.to_int d)
+  let short_day_name t d = List.nth_exn t.short_day_names (Day_of_week.to_int d)
+  let caption t d = sprintf "%s %d" (month_name t (Date.month d)) (Date.year d)
+end
+
 let today () =
   let now = new%js Js.date_now in
   Date.create_exn
@@ -273,13 +356,18 @@ let view
   ?(attrs = [])
   ?class_
   ?(id = "calendar")
+  ?(locale = Locale.en_us)
+  ?format_weekday_name
+  ?(format_month_dropdown = fun m -> String.prefix (month_name m) 3)
+  ?(disable_navigation = false)
+  ?(exclude_disabled = false)
   ?(caption_layout = Caption_layout.Label)
   ?(button_variant = Button.Variant.Ghost)
   ?(show_outside_days = true)
   ?(show_week_number = false)
   ?(fixed_weeks = false)
   ?(number_of_months = 1)
-  ?(week_starts_on = Day_of_week.Sun)
+  ?week_starts_on
   ?start_month
   ?end_month
   ?(disabled = fun _ -> false)
@@ -298,6 +386,7 @@ let view
   ()
   =
   let today = match today_opt with Some t -> t | None -> today () in
+  let week_starts_on = Option.value week_starts_on ~default:locale.week_starts_on in
   let first = first_of_month month in
   let n = Int.max 1 number_of_months in
   let months = List.init n ~f:(fun i -> Date.add_months first i) in
@@ -309,6 +398,7 @@ let view
   in
   let start_bound =
     match start_month with
+    | _ when disable_navigation -> Some first
     | Some s -> Some (first_of_month s)
     | None ->
       if year_dropdown
@@ -317,6 +407,7 @@ let view
   in
   let end_bound =
     match end_month with
+    | _ when disable_navigation -> Some (last_of_month last)
     | Some e -> Some (last_of_month e)
     | None ->
       if year_dropdown then Some (Date.create_exn ~y:(Date.year today) ~m:Dec ~d:31) else None
@@ -440,7 +531,7 @@ let view
     in
     let label =
       (if is_today then "Today, " else "")
-      ^ format "PPPP" d
+      ^ locale.full_date d
       ^ if sel then ", selected" else ""
     in
     let button =
@@ -482,7 +573,16 @@ let view
           ; aria "label" label
           ; Attr.on_click (fun _ ->
               Effect.Many
-                [ on_select (select ~required ~min ~max selected d); on_focus (Some d) ])
+                [ on_select
+                    (select
+                       ~required
+                       ~min
+                       ~max
+                       ?excluded:(Option.some_if exclude_disabled disabled)
+                       selected
+                       d)
+                ; on_focus (Some d)
+                ])
           ; Attr.on_focus (fun _ -> on_focus (Some d))
           ; Attr.on_blur (fun _ -> on_focus None)
           ; Attr.on_keydown (on_keydown d)
@@ -547,7 +647,7 @@ let view
       ]
   in
   let caption i display_month =
-    let caption_text = format "LLLL y" display_month in
+    let caption_text = Locale.caption locale display_month in
     let go_to m = on_month_change (clamp (Date.add_months m (-i))) in
     let months_dropdown () =
       let year = Date.year display_month in
@@ -558,7 +658,7 @@ let view
           (List.init 12 ~f:(fun k ->
              let m = Date.create_exn ~y:year ~m:(Month.of_int_exn (k + 1)) ~d:1 in
              ( k
-             , format "LLL" m
+             , format_month_dropdown (Date.month m)
              , not
                  (Option.for_all start_bound ~f:(fun s ->
                     Date.( >= ) (last_of_month m) s)
@@ -566,7 +666,7 @@ let view
         ~value:(Month.to_int (Date.month display_month) - 1)
         ~on_change:(fun k ->
           go_to (Date.create_exn ~y:year ~m:(Month.of_int_exn (k + 1)) ~d:1))
-        ~caption:(format "LLL" display_month)
+        ~caption:(format_month_dropdown (Date.month display_month))
     in
     let years_dropdown () =
       let low =
@@ -619,9 +719,14 @@ let view
              ])
       ]
   in
-  let weekday_names =
+  let weekdays =
     List.init 7 ~f:(fun i ->
-      day_name (Day_of_week.of_int_exn ((Day_of_week.to_int week_starts_on + i) % 7)))
+      Day_of_week.of_int_exn ((Day_of_week.to_int week_starts_on + i) % 7))
+  in
+  let weekday_name =
+    match format_weekday_name with
+    | Some f -> f
+    | None -> Locale.short_day_name locale
   in
   let month_view i display_month =
     Node.div
@@ -635,7 +740,7 @@ let view
                 (match selected with
                  | Single _ -> "false"
                  | Multiple _ | Range _ -> "true")
-            ; aria "label" (format "LLLL y" display_month)
+            ; aria "label" (Locale.caption locale display_month)
             ; Attr.class_ "w-full border-collapse rdp-month_grid"
             ]
           [ Node.thead
@@ -653,16 +758,16 @@ let view
                           []
                       ]
                     else [])
-                   @ List.map weekday_names ~f:(fun name ->
+                   @ List.map weekdays ~f:(fun day ->
                      Node.th
                        ~attrs:
-                         [ aria "label" name
+                         [ aria "label" (Locale.day_name locale day)
                          ; Attr.class_
                              "flex-1 rounded-md text-[0.8rem] font-normal \
                               text-muted-foreground select-none rdp-weekday"
                          ; Attr.create "scope" "col"
                          ]
-                       [ Node.text (String.prefix name 2) ]))
+                       [ Node.text (weekday_name day) ]))
               ]
           ; Node.tbody
               ~attrs:[ Attr.class_ "rdp-weeks" ]
@@ -774,6 +879,11 @@ type t =
 let component
   ?attrs
   ?class_
+  ?locale
+  ?format_weekday_name
+  ?format_month_dropdown
+  ?disable_navigation
+  ?exclude_disabled
   ?caption_layout
   ?button_variant
   ?show_outside_days
@@ -796,11 +906,24 @@ let component
   (local_ graph)
   =
   let open Bonsai.Let_syntax in
+  (* react-day-picker's [getInitialMonth]: kept within the bounds. *)
   let initial_month =
-    first_of_month
-      (match default_month with
-       | Some m -> m
-       | None -> Option.value_or_thunk today_opt ~default:today)
+    let m =
+      first_of_month
+        (match default_month with
+         | Some m -> m
+         | None -> Option.value_or_thunk today_opt ~default:today)
+    in
+    let m =
+      match end_month with
+      | Some e ->
+        let n = Option.value number_of_months ~default:1 in
+        Date.min m (Date.add_months (first_of_month e) (-(n - 1)))
+      | None -> m
+    in
+    match start_month with
+    | Some s -> Date.max m (first_of_month s)
+    | None -> m
   in
   let selected, set_selected = Bonsai.state default graph in
   let month, set_month = Bonsai.state initial_month graph in
@@ -814,6 +937,11 @@ let component
         ?attrs
         ?class_
         ~id:("loon" ^ id)
+        ?locale
+        ?format_weekday_name
+        ?format_month_dropdown
+        ?disable_navigation
+        ?exclude_disabled
         ?caption_layout
         ?button_variant
         ?show_outside_days
