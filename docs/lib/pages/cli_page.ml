@@ -21,23 +21,41 @@ let page =
           [ Doc.code "loon init"
           ; Doc.text " creates a directory (by default "
           ; Doc.code "src/ui"
-          ; Doc.text ") with a dune library, the theme's stylesheet and the small "
+          ; Doc.text ") with a dune library, the small "
           ; Doc.code "Import"
-          ; Doc.text " module the components share:"
+          ; Doc.text " and "
+          ; Doc.code "Theme"
+          ; Doc.text " modules, and "
+          ; Doc.code "loon.css"
+          ; Doc.text ", Tailwind's input:"
           ]
       ; Doc.pre ~lang:Shell "nix run github:lloyd-g-w/loon -- init\n# or, installed: loon init"
       ; Doc.h2 "Add components"
       ; Doc.pre ~lang:Shell "loon add button tabs\nloon add dialog -dir lib/ui"
       ; Doc.p
-          "Each component comes with the components and helpers it uses. Their styles \
-           are their Tailwind classes: the directory's [loon.css] holds the theme and \
-           is Tailwind's input, compiled by the rule [loon init] writes in its dune \
-           file. Files you already have are left alone unless you pass [-overwrite]."
+          "Each component comes with the components and helpers it uses (Sidebar \
+           brings Sheet, Tooltip, Portal, Popper, …). Files you already have are left \
+           alone unless you pass [-overwrite]."
+      ; Doc.h2 "Styles"
+      ; Doc.p
+          "A component's styles are its Tailwind classes. The directory's [loon.css] \
+           is Tailwind v4's input: Tailwind, tw-animate-css, shadcn's custom variants \
+           and theme ([:root], [.dark], [@theme inline]), and Sonner's stylesheet \
+           once you add [sonner]. The dune rule [loon init] writes compiles it to \
+           [ui.css] with [tailwindcss] (v4: nixpkgs' [tailwindcss_4]), scanning the \
+           components' sources. Link [ui.css] from your page. For your own sources' \
+           classes, add [@source] lines to [loon.css] (and the files to the rule's \
+           [deps], so it reruns when they change):"
+      ; Doc.pre ~lang:Css "@source \"../app/*.ml\";"
       ; Doc.h2 "Commands"
       ; Doc.table
           [ "Command"; "What it does" ]
-          [ [ Doc.code "loon list"; Doc.text "The components, with a line about each." ]
-          ; [ Doc.code "loon init"; Doc.text "Creates the ui directory and its dune file." ]
+          [ [ Doc.code "loon list"
+            ; Doc.text "The components and helpers, with a line about each."
+            ]
+          ; [ Doc.code "loon init"
+            ; Doc.text "Creates the ui directory, its dune file and loon.css."
+            ]
           ; [ Doc.code "loon info NAME"
             ; Doc.text "What a component is, its files and what it needs."
             ]
@@ -47,10 +65,12 @@ let page =
                    "Copies components and their dependencies ([-all] for every \
                     one, [-dry-run] to see what it would do).")
             ]
-          ; [ Doc.code "loon diff NAME"
-            ; Doc.text "Shows how your copy differs from loon's."
+          ; [ Doc.code "loon diff [NAME…]"
+            ; Doc.text "Shows how your copies differ from loon's."
             ]
-          ; [ Doc.code "loon css"; Doc.text "Prints the whole stylesheet." ]
+          ; [ Doc.code "loon css"
+            ; Doc.text "Prints the whole Tailwind input (the theme and Sonner's styles)."
+            ]
           ]
       ; Doc.h2 "Using copied components"
       ; Doc.p'

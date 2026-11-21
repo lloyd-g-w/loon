@@ -14,16 +14,17 @@ The reference checkouts (read-only): `~/src/shadcn-ui` (components in
 | Path | What |
 |---|---|
 | `src/` | the `loon` library: one module per component (`button.ml`/`.mli`) |
-| `src/css/` | Tailwind's input, concatenated in name order: `00-tailwind.css` (`@import "tailwindcss"`), `01-tw-animate.css`, `02-shadcn.css` (shadcn's variants and keyframes), `03-theme.css` (shadcn's neutral theme, `@theme inline`, base layer); then `10-`/`11-` and `<component>.css`: the old hand-written styles of components **not yet ported** (delete a component's file when you port it) |
+| `src/css/` | Tailwind's input, concatenated in name order: `00-tailwind.css` (`@import "tailwindcss"`), `01-tw-animate.css`, `02-shadcn.css` (shadcn's variants and keyframes), `03-theme.css` (shadcn's neutral theme, `@theme inline`, base layer); then `<component>.css`, only for a component whose shadcn original ships a stylesheet (`sonner.css`, Sonner's own). The CLI gives the `00`–`03` files to `loon init` and a component's file to `loon add` |
 | `src/loon.css` (built) | `tailwindcss` over that input, scanning `src/*.ml` for class names; installed, and embedded as `Loon.Stylesheet.css` (`src/embedded/`) |
 | `tools/` | `gen-icons.mjs` writes `src/icon.ml(i)` from Lucide (`tools/icons.txt`: the icons included) |
 | `test/` | expect tests, run under node: `test_<component>.ml` |
-| `docs/lib/` | the documentation site; `docs/lib/pages/<slug>_page.ml` is a page, found by `docs/gen` (no list to edit) |
+| `blocks/` | the `loon_blocks` library: shadcn's blocks (`sidebar-07` is `sidebar_07.ml`), shown on the docs' Blocks page |
+| `docs/lib/` | the documentation site; `docs/lib/pages/<slug>_page.ml` is a page, found by `docs/gen` (no list to edit); `create/` and `typeset/` port ui.shadcn.com's /create and /typeset (`customize/`: what they share) |
 | `docs/bin/` | the page and its assets; `docs/bin/site/` is the built site (its `loon.css` scans the docs' sources too, so examples may use any Tailwind class) |
 | `cli/` | the `loon` command: `cli/gen` embeds `src/` into `cli/registry` (no list to edit); cram tests in `cli/test` |
 | `e2e/` | Playwright scripts against the built site |
 | `nix/` | the OxCaml pins and patches, shared with prigh |
-| `THIRD_PARTY_NOTICES.md` | shadcn/ui, Radix, tw-animate-css, Lucide, Geist |
+| `THIRD_PARTY_NOTICES.md` | shadcn/ui, Radix, tw-animate-css, Sonner, Lucide, the fonts, temporal-polyfill: add an entry when you bundle something new |
 
 - Dev shell: `nix develop` (OxCaml, `tailwindcss` v4, node). In scripts,
   `nix print-dev-env --accept-flake-config . > /tmp/<you>-env.sh` once, then
@@ -89,15 +90,14 @@ Read `ui/<name>.tsx` and the Radix primitive it wraps, then write
   tools/gen-icons.mjs` (needs `~/src/lucide`).
 - **Dark mode is the class `dark`** on an ancestor (`Theme.root ~mode:Dark`
   or `<html class="dark">`), as shadcn's `@custom-variant dark`.
-- Delete the component's old `src/css/<name>.css` and any `loon-<name>`
-  classes; update the components that used its old API.
+- Update the components, blocks and docs that used its old API.
 - `loon add` copies a component plus the modules it names; the first
   sentence of the `.mli`'s leading doc comment is its description (use
   shadcn's description, then "Port of shadcn/ui's [Name]."). A component must
   build when copied alone (`cli/test/compile.t` builds every one): name
   other components by module (`Button`), never `Loon.`, and never a
   generated module. A component's styles are its Tailwind classes, so it
-  carries no CSS.
+  carries no CSS (Sonner, whose original ships one, aside).
 
 Practical notes:
 
@@ -108,9 +108,6 @@ Practical notes:
   tests); `Dom_util.prevent_default`, `Dom_util.focus_selector`.
 - A long class string may be split across lines only at a space, with
   OCaml's `\` continuation (as in `button.ml`); never split a class.
-- `src/css/10-loon-tokens.css` (the old `--loon-*` variables) stays until
-  the last component is ported: unported components and the docs' own
-  `docs/bin/docs.css` still use them.
 - The e2e prints some docs content (sidebar groups, search results such as
   example titles, the Button page's first example). When a port changes it
   on purpose, rewrite the expectations with `UPDATE=1 ./check --full` (all
