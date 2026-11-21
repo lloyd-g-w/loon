@@ -425,7 +425,6 @@ let%expect_test "sidebar-09: the nav picks the inbox list, Unreads toggles" =
     <button type="button"
             role="switch"
             aria-checked="true"
-            aria-required="false"
             data-state="checked"
             data-slot="switch"
             data-size="default"
