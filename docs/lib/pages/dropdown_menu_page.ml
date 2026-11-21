@@ -111,6 +111,133 @@ let radio_group (local_ graph) =
     graph
 (*$*)
 
+(*$ Dialog
+   An item that opens a dialog: the menu is not modal, and the item sets the
+   dialog's state. *)
+let dialog (local_ graph) =
+  let show_new, set_show_new = Bonsai.state false graph in
+  let show_share, set_show_share = Bonsai.state false graph in
+  let input_class =
+    "h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 \
+     text-base shadow-xs transition-[color,box-shadow] outline-none \
+     placeholder:text-muted-foreground focus-visible:border-ring \
+     focus-visible:ring-[3px] focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"
+  in
+  let label for_ text =
+    Node.label
+      ~attrs:
+        [ Attr.for_ for_
+        ; Attr.class_ "flex items-center gap-2 text-sm leading-none font-medium select-none"
+        ]
+      [ Node.text text ]
+  in
+  let field children = Node.div ~attrs:[ Attr.class_ "grid gap-3" ] children in
+  let file_dialog ~id ~open_ ~on_open_change ~title ~description ~fields ~submit =
+    Dialog.view ~id ~open_ ~on_open_change (fun d ->
+      [ Dialog.content
+          d
+          ~class_:"sm:max-w-[425px]"
+          [ Dialog.header
+              [ Dialog.title d [ Node.text title ]
+              ; Dialog.description d [ Node.text description ]
+              ]
+          ; Node.div ~attrs:[ Attr.class_ "flex flex-col gap-4 py-3" ] fields
+          ; Dialog.footer
+              [ Dialog.close d (Button.view ~variant:Outline [ Node.text "Cancel" ])
+              ; Button.view ~type_:`Submit [ Node.text submit ]
+              ]
+          ]
+      ])
+  in
+  Dropdown_menu.component
+    ~modal:false
+    (let%arr show_new and set_show_new and show_share and set_show_share in
+     fun menu ->
+       [ Dropdown_menu.trigger
+           menu
+           (Button.view
+              ~variant:Outline
+              ~size:Icon_sm
+              ~attrs:[ Attr.create "aria-label" "Open menu" ]
+              [ Icon.view Ellipsis ])
+       ; Dropdown_menu.content
+           menu
+           ~class_:"w-40"
+           ~align:End
+           [ Dropdown_menu.label [ Node.text "File Actions" ]
+           ; Dropdown_menu.group
+               [ Dropdown_menu.item
+                   ~on_select:(set_show_new true)
+                   [ Node.text "New File..." ]
+               ; Dropdown_menu.item
+                   ~on_select:(set_show_share true)
+                   [ Node.text "Share..." ]
+               ; Dropdown_menu.item ~disabled:true [ Node.text "Download" ]
+               ]
+           ]
+       ; file_dialog
+           ~id:"new-file-dialog"
+           ~open_:show_new
+           ~on_open_change:set_show_new
+           ~title:"Create New File"
+           ~description:
+             "Provide a name for your new file. Click create when you're done."
+           ~fields:
+             [ field
+                 [ label "filename" "File Name"
+                 ; Node.input
+                     ~attrs:
+                       [ Attr.id "filename"
+                       ; Attr.name "filename"
+                       ; Attr.placeholder "document.txt"
+                       ; Attr.class_ input_class
+                       ]
+                     ()
+                 ]
+             ]
+           ~submit:"Create"
+       ; file_dialog
+           ~id:"share-file-dialog"
+           ~open_:show_share
+           ~on_open_change:set_show_share
+           ~title:"Share File"
+           ~description:"Anyone with the link will be able to view this file."
+           ~fields:
+             [ field
+                 [ label "email" "Email Address"
+                 ; Node.input
+                     ~attrs:
+                       [ Attr.id "email"
+                       ; Attr.name "email"
+                       ; Attr.type_ "email"
+                       ; Attr.placeholder "shadcn@vercel.com"
+                       ; Attr.create "autocomplete" "off"
+                       ; Attr.class_ input_class
+                       ]
+                     ()
+                 ]
+             ; field
+                 [ label "message" "Message (Optional)"
+                 ; Node.textarea
+                     ~attrs:
+                       [ Attr.id "message"
+                       ; Attr.name "message"
+                       ; Attr.placeholder "Check out this file"
+                       ; Attr.class_
+                           "flex field-sizing-content min-h-16 w-full rounded-md border \
+                            border-input bg-transparent px-3 py-2 text-base shadow-xs \
+                            outline-none placeholder:text-muted-foreground \
+                            focus-visible:border-ring focus-visible:ring-[3px] \
+                            focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"
+                       ]
+                     []
+                 ]
+             ]
+           ~submit:"Send Invite"
+       ])
+    graph
+(*$*)
+
 let page =
   Doc.page
     ~slug:page
@@ -170,5 +297,6 @@ let page =
     [ Doc.example ~page "Demo" demo
     ; Doc.example ~page "Checkboxes" checkboxes
     ; Doc.example ~page "Radio Group" radio_group
+    ; Doc.example ~page "Dialog" dialog
     ]
 ;;
