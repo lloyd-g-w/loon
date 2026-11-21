@@ -401,22 +401,23 @@ let view
     | Dropdown | Dropdown_years -> true
     | Label | Dropdown_months -> false
   in
-  let start_bound =
+  (* react-day-picker's navigation months: days outside them are hidden. *)
+  let nav_start =
     match start_month with
-    | _ when disable_navigation -> Some first
     | Some s -> Some (first_of_month s)
     | None ->
       if year_dropdown
       then Some (Date.create_exn ~y:(Date.year today - 100) ~m:Jan ~d:1)
       else None
   in
-  let end_bound =
+  let nav_end =
     match end_month with
-    | _ when disable_navigation -> Some (last_of_month last)
     | Some e -> Some (last_of_month e)
     | None ->
       if year_dropdown then Some (Date.create_exn ~y:(Date.year today) ~m:Dec ~d:31) else None
   in
+  let start_bound = if disable_navigation then Some first else nav_start in
+  let end_bound = if disable_navigation then Some (last_of_month last) else nav_end in
   let in_bounds d =
     Option.for_all start_bound ~f:(fun s -> Date.( >= ) d s)
     && Option.for_all end_bound ~f:(fun e -> Date.( <= ) d e)
@@ -501,7 +502,11 @@ let view
   in
   let day_cell display_month d =
     let outside = not (Date.equal (first_of_month d) display_month) in
-    let hidden = outside && not show_outside_days in
+    let hidden =
+      (outside && not show_outside_days)
+      || Option.exists nav_start ~f:(fun s -> Date.( < ) d s)
+      || Option.exists nav_end ~f:(fun e -> Date.( > ) d e)
+    in
     let is_disabled = not (enabled d) in
     let sel = is_selected d in
     let is_today = Date.equal d today in

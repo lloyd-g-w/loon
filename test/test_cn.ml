@@ -18,7 +18,13 @@ let%expect_test "text sizes, colours and alignment are separate" =
   show [ "text-sm text-muted-foreground text-left"; "text-lg"; "text-primary/80" ];
   [%expect {| text-left text-lg text-primary/80 |}];
   show [ "text-[13px] text-[#333]"; "text-xs" ];
-  [%expect {| text-[#333] text-xs |}]
+  [%expect {| text-[#333] text-xs |}];
+  (* Only a size with a line height overrides [leading-*] (CardTitle's
+     [leading-none] with [text-xl]). *)
+  show [ "leading-none font-semibold"; "text-xl" ];
+  [%expect {| leading-none font-semibold text-xl |}];
+  show [ "leading-none text-sm"; "text-xl/7" ];
+  [%expect {| text-xl/7 |}]
 ;;
 
 let%expect_test "variants keep their own groups" =

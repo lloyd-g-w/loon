@@ -20,7 +20,7 @@ let%expect_test "the caller's class wins" =
   [%expect
     {|
     <label data-slot="label"
-           class="flex font-medium gap-2 group-data-[disabled=true]:opacity-50 group-data-[disabled=true]:pointer-events-none items-center peer-disabled:cursor-not-allowed peer-disabled:opacity-50 select-none text-base"
+           class="flex font-medium gap-2 group-data-[disabled=true]:opacity-50 group-data-[disabled=true]:pointer-events-none items-center leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-50 select-none text-base"
            @on_mousedown> Big </label>
     |}]
 ;;

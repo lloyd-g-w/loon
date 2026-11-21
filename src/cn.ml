@@ -266,7 +266,7 @@ let group base : (string * string list) option =
     |? lazy
          (match value ~prefix:"text" base with
           | Some v when List.mem sizes_text v ~equal:String.equal || is_length_value v ->
-            Some ("font-size", [ "leading" ])
+            Some ("font-size", [])
           | Some ("left" | "center" | "right" | "justify" | "start" | "end") ->
             Some ("text-align", [])
           | Some v when not (String.is_empty v) -> Some ("text-color", [])
@@ -399,15 +399,20 @@ let merge classes =
              | Some b -> "!", b
              | None -> "", base)
         in
-        let base =
+        let base, modifier =
           (* [/50] opacity on colours does not change the group. *)
           match String.rsplit2 base ~on:'/' with
-          | Some (b, _) when not (String.mem b '[') -> b
-          | _ -> base
+          | Some (b, _) when not (String.mem b '[') -> b, true
+          | _ -> base, false
         in
         match group base with
         | None -> cls :: kept
         | Some (g, overrides) ->
+          (* As tailwind-merge: only a font size with a line height
+             ([text-lg/7]) sets [line-height] over an earlier [leading-*]. *)
+          let overrides =
+            if modifier && String.equal g "font-size" then "leading" :: overrides else overrides
+          in
           let key g =
             String.concat ~sep:":" (List.sort variants ~compare:String.compare)
             ^ "|"

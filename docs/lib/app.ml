@@ -877,12 +877,12 @@ let components_index =
 ;;
 
 (* shadcn's PageNav: the section's pages in a bar (ChartsNav, BlocksNav). *)
-let section_nav ~id (page : Doc.Page.t) =
+let section_nav ?(extra = []) ~id (page : Doc.Page.t) =
   Node.div
     ~attrs:[ Attr.id id; Attr.class_ "container-wrapper scroll-mt-24" ]
     [ Node.div
         ~attrs:[ Attr.class_ "container flex items-center justify-between gap-4 py-4" ]
-        [ Node.div
+        (Node.div
             ~attrs:[ Attr.class_ "relative overflow-hidden" ]
             [ Node.div
                 ~attrs:
@@ -906,7 +906,7 @@ let section_nav ~id (page : Doc.Page.t) =
                        ]
                      [ Node.text p.title ]))
             ]
-        ]
+         :: extra)
     ]
 ;;
 
@@ -935,6 +935,53 @@ let section_page (page : Doc.Page.t) (local_ graph) =
     ; Node.div
         ~attrs:[ Attr.class_ "container-wrapper section-soft flex-1 pb-6" ]
         [ Node.div ~attrs:[ Attr.class_ "container typeset" ] (examples @ page.body) ]
+    ]
+;;
+
+(* shadcn's /blocks: its header, the categories in a bar, then the
+   category's blocks (the page's view: Block_viewer's gallery). *)
+let blocks_page (page : Doc.Page.t) (local_ graph) =
+  let view =
+    match page.view with
+    | Some view -> view graph
+    | None -> Bonsai.return Node.none
+  in
+  let%arr view in
+  Node.div
+    ~attrs:[ Attr.class_ "flex flex-1 flex-col"; Attr.create "data-page" page.slug ]
+    [ Site.page_header
+        ~before:[ Home.announcement ]
+        ~title:"Building Blocks for the Web"
+        ~description:
+          [ Node.text
+              "Clean, modern building blocks. Copy and paste into your apps. Built \
+               from loon's components. Open Source. Free forever."
+          ]
+        ~actions:
+          [ Button.link
+              ~class_:"h-[35px]"
+              ~href:(Route.to_hash (Page page.slug) ^ "/blocks")
+              [ Node.text "Browse Blocks" ]
+          ; Button.link
+              ~variant:Secondary
+              ~href:(href components_slug)
+              [ Node.text "View Components" ]
+          ]
+        ()
+    ; section_nav
+        ~id:"blocks"
+        ~extra:
+          [ Button.link
+              ~variant:Secondary
+              ~size:Sm
+              ~class_:"mr-7 hidden shadow-none lg:flex"
+              ~href:(href "blocks-sidebar")
+              [ Node.text "Browse all blocks" ]
+          ]
+        page
+    ; Node.div
+        ~attrs:[ Attr.class_ "container-wrapper flex-1 section-soft md:py-12" ]
+        [ Node.div ~attrs:[ Attr.class_ "container" ] [ view ] ]
     ]
 ;;
 
@@ -1409,6 +1456,7 @@ let main_view (shown : Shown.t) ~outline ~mode ~set_mode ~hash ~set_hash (local_
     (match find_page slug with
      | None -> Bonsai.return not_found
      | Some page when Doc.Section.equal page.section Charts -> charts_page page graph
+     | Some page when Doc.Section.equal page.section Blocks -> blocks_page page graph
      | Some page when not (Doc.Section.is_docs page.section) -> section_page page graph
      | Some page ->
        let content = page_content page graph in

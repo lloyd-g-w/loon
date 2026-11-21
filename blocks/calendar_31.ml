@@ -20,7 +20,6 @@ let view (local_ graph) =
     Calendar.component
       ~class_:"bg-transparent p-0"
       ~required:true
-      ~default_month:june_12
       ~default:(Single (Some june_12))
       graph
   in

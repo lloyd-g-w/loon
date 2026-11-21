@@ -11,8 +11,8 @@ val block_of_hash : string -> Loon_blocks.Block.t option
 
 val hash : Loon_blocks.Block.t -> string
 
-(** The blocks' pages: the navigation between their categories, then a
-    viewer for each block. [page] is the docs page's slug, for anchors. *)
+(** The blocks' pages: a viewer for each block (the page puts shadcn's
+    header and the categories' bar above). [page] is the docs page's slug, for anchors. *)
 val gallery
   :  page:string
   -> Loon_blocks.Block.t list

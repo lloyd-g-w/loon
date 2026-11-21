@@ -55,29 +55,43 @@ let guard ~id side =
     []
 ;;
 
-let focus_no_scroll (el : Dom_html.element Js.t) =
+let focus_no_scroll (el : Dom_html.element Js.t) : unit =
   (Js.Unsafe.coerce el)##focus
     (object%js
        val preventScroll = Js._true
      end)
 ;;
 
+let active () = Js.Opt.to_option Dom_html.document##.activeElement
+
 let focus_inside (el : Dom_html.element Js.t) mode =
   let first selector = Js.Opt.to_option (el##querySelector (Js.string selector)) in
-  let first_tabbable () = Option.value (first (focusable_not_guard ())) ~default:el in
-  let target =
-    match first "[data-highlighted]" with
-    | Some h -> h
-    | None ->
-      (match mode with
-       | `First_tabbable -> first_tabbable ()
-       | `Selector s -> Option.value_or_thunk (first s) ~default:first_tabbable
-       | `Self -> el)
+  (* Radix's FocusScope: the first tabbable that takes the focus (not one
+     hidden), links left out; else the element itself. *)
+  let focus_first_tabbable () =
+    let candidates =
+      Dom.list_of_nodeList (el##querySelectorAll (Js.string (focusable_not_guard ())))
+      |> List.filter ~f:(fun (c : Dom_html.element Js.t) ->
+        not (String.equal (Js.to_string c##.tagName) "A"))
+    in
+    let focused =
+      List.exists candidates ~f:(fun c ->
+        focus_no_scroll c;
+        Option.value_map (active ()) ~default:false ~f:(fun a -> phys_equal a c))
+    in
+    if not focused then focus_no_scroll el
   in
-  focus_no_scroll target
+  match first "[data-highlighted]" with
+  | Some h -> focus_no_scroll h
+  | None ->
+    (match mode with
+     | `First_tabbable -> focus_first_tabbable ()
+     | `Selector s ->
+       (match first s with
+        | Some t -> focus_no_scroll t
+        | None -> focus_first_tabbable ())
+     | `Self -> focus_no_scroll el)
 ;;
-
-let active () = Js.Opt.to_option Dom_html.document##.activeElement
 
 module Mount_hook = Vdom.Attr.Hooks.Make (struct
     module State = struct

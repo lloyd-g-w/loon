@@ -22,39 +22,6 @@ let block_of_hash hash =
    load its parent's URL), changed to reload it. *)
 let frame_src (block : Block.t) ~reload = sprintf "?view=%d%s" reload (hash block)
 
-let page_slug = function
-  | None -> "blocks"
-  | Some c -> "blocks-" ^ Block.Category.slug c
-;;
-
-let nav ~page =
-  Node.div
-    ~attrs:[ Attr.class_ "relative overflow-hidden" ]
-    [ Node.div
-        ~attrs:[ Attr.class_ "flex items-center overflow-x-auto" ]
-        (List.filter_map
-           (None :: List.map Block.Category.all ~f:Option.some)
-           ~f:(fun category ->
-             match category with
-             | Some c when Block.Category.hidden c -> None
-             | _ ->
-               let slug = page_slug category in
-               let name = Option.value_map category ~default:"Featured" ~f:Block.Category.name in
-               Some
-                 (Node.a
-                    ~attrs:
-                      [ Attr.href ("#/" ^ slug)
-                      ; Attr.class_
-                          "flex h-7 items-center justify-center px-4 text-center \
-                           text-base font-medium text-muted-foreground \
-                           transition-colors hover:text-primary \
-                           data-[active=true]:text-primary"
-                      ; Attr.create "data-active" (Bool.to_string (String.equal slug page))
-                      ]
-                    [ Node.text name ])))
-    ]
-;;
-
 let files (block : Block.t) =
   let m = Block.module_name block in
   List.filter Block_sources.all ~f:(fun (file, _) ->
@@ -247,7 +214,7 @@ let viewer ~page (block : Block.t) (local_ graph) =
               ~on_layout_change:(fun l -> Effect.Many [ set_layout l; set_size None ])
               ~class_:
                 "relative z-10 after:absolute after:inset-0 after:right-3 after:z-0 \
-                 after:rounded-xl after:bg-muted/50"
+                 after:rounded-xl after:bg-surface/50"
               [ Loon.Resizable.panel
                   ~class_:
                     "relative overflow-hidden rounded-lg border bg-background \
@@ -273,8 +240,8 @@ let viewer ~page (block : Block.t) (local_ graph) =
     Node.div
       ~attrs:
         [ Attr.class_
-            "mr-[14px] flex overflow-hidden rounded-xl border bg-muted/30 \
-             group-data-[view=preview]/block-view-wrapper:hidden md:h-(--height)"
+            "mr-[14px] flex overflow-hidden rounded-xl border bg-code \
+             text-code-foreground group-data-[view=preview]/block-view-wrapper:hidden md:h-(--height)"
         ]
       [ Node.div
           ~attrs:[ Attr.class_ "w-72" ]
@@ -326,7 +293,8 @@ let viewer ~page (block : Block.t) (local_ graph) =
               ~attrs:
                 [ Attr.class_
                     "flex h-12 shrink-0 items-center gap-2 border-b px-4 py-2 \
-                     [&_svg]:size-4 [&_svg]:opacity-70"
+                     text-code-foreground [&_svg]:size-4 \
+                     [&_svg]:text-code-foreground [&_svg]:opacity-70"
                 ]
               [ Icon.view File_code
               ; Node.text active
@@ -380,7 +348,7 @@ let gallery ~page blocks (local_ graph) =
   let%arr viewers in
   Node.div
     ~attrs:[ Attr.class_ "flex flex-col gap-12 md:gap-24"; Attr.create "data-blocks" "" ]
-    (nav ~page :: viewers
+    (viewers
      @
      if String.equal page "blocks"
      then
@@ -439,11 +407,11 @@ let full_page (block : Block.t) (local_ graph) =
   Node.div
     ~attrs:
       [ Attr.class_
-          (Loon.Cn.cn
-             [ "bg-background *:data-[slot=card]:has-[[data-slot=chart]]:shadow-none"
-             ; Option.value block.container ~default:""
-             ])
+          "bg-background *:data-[slot=card]:has-[[data-slot=chart]]:shadow-none"
       ; Attr.create "data-block-page" block.name
       ]
-    [ view ]
+    [ (match block.container with
+       | None -> view
+       | Some container -> Node.div ~attrs:[ Attr.class_ container ] [ view ])
+    ]
 ;;
