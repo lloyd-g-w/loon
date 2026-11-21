@@ -34,16 +34,21 @@ let href slug =
   if String.equal slug Route.home_slug then "#/" else Route.to_hash (Page slug)
 ;;
 
+(* The full-page tools, outside the docs' layout: slug and title. *)
+let tools = [ "create", "Create"; "typeset", "Typeset" ]
+let tool_title slug = List.Assoc.find tools ~equal:String.equal slug
+let is_tool slug = Option.is_some (tool_title slug)
+
 (* The page shown: its slug, or "" for one that does not exist. *)
 module Shown = struct
   type t = string [@@deriving compare, equal, sexp_of]
 
-  let all = "" :: List.map pages ~f:(fun p -> p.slug)
+  let all = ("" :: List.map pages ~f:(fun p -> p.slug)) @ List.map tools ~f:fst
 end
 
 let shown_of_hash hash =
   let slug = Route.slug (Route.of_hash hash) in
-  if Option.is_some (find_page slug) then slug else ""
+  if Option.is_some (find_page slug) || is_tool slug then slug else ""
 ;;
 
 let mode_name : Theme.Mode.t -> string = function
@@ -473,6 +478,27 @@ let search_dialog ~query ~set_query ~selected ~set_selected ~move ~close ~go =
 
 (* {1 The app} *)
 
+(* The docs' layout, or a tool's page in its place. *)
+let layout ~tool ~attrs children =
+  match tool with
+  | Some page ->
+    Node.main
+      ~attrs:[ Attr.id "main"; Attr.class_ "docs-tool"; Attr.tabindex (-1) ]
+      [ page ]
+  | None -> Node.div ~attrs children
+;;
+
+let tool_view slug ~mode ~set_mode ~hash ~set_hash (local_ graph) =
+  let query = Bonsai.map hash ~f:Customize_query.of_hash in
+  let set_query =
+    let%arr set_hash in
+    fun q -> set_hash (Customize_query.to_hash ~slug q)
+  in
+  match slug with
+  | "create" -> Create_page.component ~mode ~set_mode ~query ~set_query graph
+  | _ -> Typeset_page.component ~mode ~set_mode ~query ~set_query graph
+;;
+
 let anchor_of_hash hash =
   match String.split (String.chop_prefix_if_exists hash ~prefix:"#/") ~on:'/' with
   | _ :: anchor :: _ when not (String.is_empty anchor) -> Some anchor
@@ -492,6 +518,20 @@ let component (local_ graph) =
     | _ -> Theme.Mode.preferred ()
   in
   let mode, set_mode = Bonsai.state initial_mode graph in
+  let set_mode =
+    let%arr set_mode in
+    fun m ->
+      Effect.Many
+        [ set_mode m
+        ; Effect.of_thunk (fun () -> Browser.set_item "loon-docs-mode" (mode_name m))
+        ]
+  in
+  let replace_hash =
+    Bonsai.return (fun h ->
+      Effect.of_thunk (fun () ->
+        Browser.replace_hash h;
+        Bonsai.Expert.Var.set hash_var h))
+  in
   let nav_open, set_nav_open = Bonsai.state false graph in
   let search_open, set_search_open = Bonsai.state false graph in
   let search, update_search = Bonsai.state' ("", 0) graph in
@@ -539,6 +579,8 @@ let component (local_ graph) =
                  (match find_page slug with
                   | Some p when not (String.equal slug Route.home_slug) ->
                     p.title ^ " · loon"
+                  | None when is_tool slug ->
+                    Option.value_exn (tool_title slug) ^ " · loon"
                   | Some _ -> "loon — components for Bonsai"
                   | None -> "Not found · loon");
                Browser.reveal_current_nav ();
@@ -587,6 +629,8 @@ let component (local_ graph) =
       ~match_:shown
       ~with_:(fun slug (local_ graph) ->
         match find_page slug with
+        | None when is_tool slug ->
+          tool_view slug ~mode ~set_mode ~hash ~set_hash:replace_hash graph
         | None -> Bonsai.return not_found
         | Some page -> page_view page graph)
       graph
@@ -606,12 +650,6 @@ let component (local_ graph) =
   and move_selected
   and outline
   and open_search in
-  let set_mode m =
-    Effect.Many
-      [ set_mode m
-      ; Effect.of_thunk (fun () -> Browser.set_item "loon-docs-mode" (mode_name m))
-      ]
-  in
   let go hash =
     Effect.Many
       [ set_search_open false; Effect.of_thunk (fun () -> Browser.set_hash hash) ]
@@ -635,6 +673,8 @@ let component (local_ graph) =
   let mod_key = if Browser.is_mac () then "⌘" else "Ctrl" in
   let section_active label =
     match find_page current with
+    | None when is_tool current ->
+      Option.equal String.equal (tool_title current) (Some label)
     | Some p ->
       if String.equal label "Docs"
       then Doc.Group.equal p.group Guide
@@ -672,7 +712,11 @@ let component (local_ graph) =
             ; Node.nav
                 ~attrs:[ Attr.class_ "docs-topnav"; Attr.create "aria-label" "Main" ]
                 (List.map
-                   [ "Docs", "installation"; "Components", first_component ]
+                   [ "Docs", "installation"
+                   ; "Components", first_component
+                   ; "Create", "create"
+                   ; "Typeset", "typeset"
+                   ]
                    ~f:(fun (label, slug) ->
                      Node.a
                        ~attrs:
@@ -724,7 +768,8 @@ let component (local_ graph) =
                 [ Icon.view Github ]
             ]
         ]
-    ; Node.div
+    ; layout
+        ~tool:(Option.some_if (is_tool current) article)
         ~attrs:[ Attr.class_ "docs-layout" ]
         [ Node.aside
             ~attrs:

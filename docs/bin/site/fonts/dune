@@ -1,0 +1,13 @@
+; The customisers' fonts (tools/fetch-fonts.sh), served from fonts/.
+
+(copy_files
+ (files ../../fonts/*.{woff2,txt}))
+
+(install
+ (section share)
+ (package loon)
+ (files
+  (glob_files
+   (*.woff2 with_prefix docs/fonts))
+  (glob_files
+   (*.txt with_prefix docs/fonts))))

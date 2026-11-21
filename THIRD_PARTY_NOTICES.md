@@ -184,6 +184,17 @@ The docs site bundles the Geist and Geist Mono fonts
 (https://github.com/vercel/geist-font), under the SIL Open Font License 1.1:
 `docs/bin/geist-OFL.txt`.
 
+## The customisers' fonts
+
+The docs' Create and Typeset pages bundle, in `docs/bin/fonts/`, the latin
+subsets of these families from Google Fonts (fetched by
+`tools/fetch-fonts.sh`), each under the SIL Open Font License 1.1, whose
+text and copyright notice is beside it (`<name>-OFL.txt`): Geist, Inter,
+Noto Sans, Nunito Sans, Figtree, Roboto, Raleway, DM Sans, Public Sans,
+Outfit, Oxanium, Manrope, Space Grotesk, Montserrat, IBM Plex Sans, Source
+Sans 3, Instrument Sans, JetBrains Mono, Geist Mono, Noto Serif,
+Merriweather, Lora, Playfair Display, EB Garamond and Instrument Serif.
+
 ## temporal-polyfill
 
 The docs site bundles temporal-polyfill (MIT): `docs/bin/LICENSE-temporal-polyfill`.
