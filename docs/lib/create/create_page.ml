@@ -1238,8 +1238,11 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
               ~on_click:actions.reset
               [ text "Reset" ]
           ]
+      (* [*:] where shadcn has [**:]: the dialog stays in this footer (loon's
+         overlays are in the top layer, not portalled), and its buttons must
+         keep their width. *)
       ; Ui.card_footer
-          ~class_:"-mt-3 flex min-w-0 gap-2 md:flex-col md:**:[button,a]:w-full"
+          ~class_:"-mt-3 flex min-w-0 gap-2 md:flex-col md:*:[button,a]:w-full"
           [ get_code ]
       ]
   in
