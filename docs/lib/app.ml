@@ -616,7 +616,110 @@ let pager_icon_button ~dir (p : Doc.Page.t) =
      | _ -> [ sr_only "Next"; Icon.view Arrow_right ])
 ;;
 
-let docs_page ~slug ~title ~description ~outline content =
+let is_component_page (page : Doc.Page.t) =
+  Doc.Section.equal page.section Components
+;;
+
+let page_markdown (page : Doc.Page.t) =
+  let code lang src = sprintf "```%s\n%s\n```" lang (String.strip src) in
+  [ Some ("# " ^ page.title)
+  ; Some page.description
+  ; (if is_component_page page
+     then Some ("## Installation\n\n" ^ code "bash" ("loon add " ^ page.slug))
+     else None)
+  ; Option.map page.usage ~f:(fun u -> "## Usage\n\n" ^ code "ocaml" u)
+  ]
+  @ List.map page.examples ~f:(fun (e : Doc.Example.t) ->
+    Some (sprintf "## %s\n\n%s" e.title (code "ocaml" e.source)))
+  |> List.filter_opt
+  |> String.concat ~sep:"\n\n"
+;;
+
+(* shadcn's DocsCopyPage: Copy Page (the page as Markdown), and a menu of
+   links to the page's sources. *)
+let docs_copy_page (page : Doc.Page.t) (local_ graph) =
+  let module_ = String.tr page.slug ~target:'-' ~replacement:'_' in
+  let open_url url =
+    Effect.of_thunk (fun () ->
+      ignore
+        (Js_of_ocaml.Dom_html.window##open_
+           (Js_of_ocaml.Js.string url)
+           (Js_of_ocaml.Js.string "_blank")
+           Js_of_ocaml.Js.null
+         : Js_of_ocaml.Dom_html.window Js_of_ocaml.Js.t Js_of_ocaml.Js.opt))
+  in
+  let link icon text url =
+    Loon.Dropdown_menu.item ~on_select:(open_url url) [ Icon.view icon; Node.text text ]
+  in
+  let items =
+    (if is_component_page page
+     then
+       [ link Code "View source on GitHub" (sprintf "%s/blob/main/src/%s.ml" github module_)
+       ; link
+           File_text
+           "View the shadcn/ui docs"
+           ("https://ui.shadcn.com/docs/components/"
+            ^ String.tr page.slug ~target:'_' ~replacement:'-')
+       ]
+     else [])
+    @ [ link
+          Github
+          "View this page on GitHub"
+          (sprintf "%s/blob/main/docs/lib/pages/%s_page.ml" github module_)
+      ]
+  in
+  let markdown = page_markdown page in
+  Loon.Dropdown_menu.component
+    (Bonsai.return (fun menu ->
+       [ Node.div
+           ~attrs:
+             [ Attr.create "data-docs" "copy-page"
+             ; Attr.class_
+                 "group/buttons relative flex rounded-lg bg-secondary \
+                  *:[[data-slot=button]]:focus-visible:relative \
+                  *:[[data-slot=button]]:focus-visible:z-10"
+             ]
+           [ Node.button
+               ~attrs:
+                 [ Attr.type_ "button"
+                 ; Attr.create "data-slot" "button"
+                 ; Attr.create "data-copied" "false"
+                 ; Attr.class_
+                     (Button.classes
+                        ~variant:Secondary
+                        ~size:Sm
+                        ~class_:"group/copy h-8 shadow-none md:h-7 md:text-[0.8rem]"
+                        ())
+                 ; Attr.on_click (Code_block.copy ~text:markdown)
+                 ]
+               [ Icon.view ~class_:"group-data-[copied=true]/copy:hidden" Copy
+               ; Icon.view ~class_:"hidden group-data-[copied=true]/copy:block" Check
+               ; Node.text "Copy Page"
+               ]
+           ; Loon.Dropdown_menu.trigger
+               menu
+               (Button.view
+                  ~variant:Secondary
+                  ~size:Sm
+                  ~class_:"peer -ml-0.5 size-8 shadow-none md:size-7 md:text-[0.8rem]"
+                  [ Icon.view Chevron_down; sr_only "More" ])
+           ; Loon.Separator.view
+               ~orientation:Vertical
+               ~class_:
+                 "absolute top-1 right-8 z-0 h-6! bg-foreground/5! \
+                  peer-focus-visible:opacity-0 sm:right-7 sm:h-5!"
+               ()
+           ; Loon.Dropdown_menu.content
+               menu
+               ~align:End
+               ~class_:"animate-none! rounded-lg shadow-none"
+               items
+           ]
+       ]))
+    graph
+;;
+
+let docs_page ?(links = Node.none) ~slug ~title ~description ~outline content =
   let prev, next = neighbours slug in
   let opt o ~f = Option.value_map o ~default:Node.none ~f in
   Node.div
@@ -651,7 +754,8 @@ let docs_page ~slug ~title ~description ~outline content =
                             [ Node.text title ]
                         ; Node.div
                             ~attrs:[ Attr.class_ "docs-nav flex items-center gap-2" ]
-                            [ Node.div
+                            [ Node.div ~attrs:[ Attr.class_ "hidden sm:block" ] [ links ]
+                            ; Node.div
                                 ~attrs:[ Attr.class_ "ml-auto flex gap-2" ]
                                 [ opt prev ~f:(pager_icon_button ~dir:"previous")
                                 ; opt next ~f:(pager_icon_button ~dir:"next")
@@ -706,10 +810,6 @@ let docs_page ~slug ~title ~description ~outline content =
           ]
         [ Node.div ~attrs:[ Attr.class_ "h-(--top-spacing) shrink-0" ] []; toc ~slug outline ]
     ]
-;;
-
-let is_component_page (page : Doc.Page.t) =
-  Doc.Section.equal page.section Components
 ;;
 
 (* A component's page, as shadcn's mdx: the first example (its demo) under
@@ -1289,10 +1389,12 @@ let main_view (shown : Shown.t) ~outline (local_ graph) =
      | Some page when not (Doc.Section.is_docs page.section) -> section_page page graph
      | Some page ->
        let content = page_content page graph in
-       let%arr content and outline in
+       let links = docs_copy_page page graph in
+       let%arr content and outline and links in
        docs_layout
          ~current:slug
          (docs_page
+            ~links
             ~slug
             ~title:page.title
             ~description:(Doc.inline page.description)
