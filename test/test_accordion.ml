@@ -83,11 +83,7 @@ let%expect_test "shadcn's classes" =
              data-orientation="vertical"
              data-slot="accordion-content"
              class="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm"
-             loon-collapsible-presence=true
-             style={
-               --radix-accordion-content-height: var(--radix-collapsible-content-height);
-               --radix-accordion-content-width: var(--radix-collapsible-content-width);
-             }>
+             loon-collapsible-presence=((open_ true)(accordion true))>
           <div class="pb-4 pt-0"> Alpha </div>
         </div>
       </div>
@@ -143,11 +139,7 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
              aria-labelledby="bonsai_path_replaced_in_test-trigger-a"
              data-orientation="vertical"
              data-slot="accordion-content"
-             loon-collapsible-presence=true
-             style={
-               --radix-accordion-content-height: var(--radix-collapsible-content-height);
-               --radix-accordion-content-width: var(--radix-collapsible-content-width);
-             }>
+             loon-collapsible-presence=((open_ true)(accordion true))>
           <div> Alpha </div>
         </div>
       </div>
@@ -184,11 +176,7 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
              aria-labelledby="bonsai_path_replaced_in_test-trigger-b"
              data-orientation="vertical"
              data-slot="accordion-content"
-             loon-collapsible-presence=false
-             style={
-               --radix-accordion-content-height: var(--radix-collapsible-content-height);
-               --radix-accordion-content-width: var(--radix-collapsible-content-width);
-             }>
+             loon-collapsible-presence=((open_ false)(accordion true))>
           <div> Beta </div>
         </div>
       </div>
@@ -231,11 +219,7 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
              aria-labelledby="bonsai_path_replaced_in_test-trigger-c"
              data-orientation="vertical"
              data-slot="accordion-content"
-             loon-collapsible-presence=false
-             style={
-               --radix-accordion-content-height: var(--radix-collapsible-content-height);
-               --radix-accordion-content-width: var(--radix-collapsible-content-width);
-             }>
+             loon-collapsible-presence=((open_ false)(accordion true))>
           <div> Gamma </div>
         </div>
       </div>
@@ -285,12 +269,8 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
                aria-labelledby="bonsai_path_replaced_in_test-trigger-a"
                data-orientation="vertical"
                data-slot="accordion-content"
-    -|         loon-collapsible-presence=true
-    +|         loon-collapsible-presence=false
-               style={
-                 --radix-accordion-content-height: var(--radix-collapsible-content-height);
-                 --radix-accordion-content-width: var(--radix-collapsible-content-width);
-               }>
+    -|         loon-collapsible-presence=((open_ true)(accordion true))>
+    +|         loon-collapsible-presence=((open_ false)(accordion true))>
             <div> Alpha </div>
           </div>
         </div>
@@ -333,12 +313,8 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
                aria-labelledby="bonsai_path_replaced_in_test-trigger-b"
                data-orientation="vertical"
                data-slot="accordion-content"
-    -|         loon-collapsible-presence=false
-    +|         loon-collapsible-presence=true
-               style={
-                 --radix-accordion-content-height: var(--radix-collapsible-content-height);
-                 --radix-accordion-content-width: var(--radix-collapsible-content-width);
-               }>
+    -|         loon-collapsible-presence=((open_ false)(accordion true))>
+    +|         loon-collapsible-presence=((open_ true)(accordion true))>
             <div> Beta </div>
           </div>
         </div>
@@ -351,6 +327,10 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
             <button type="button"
                     aria-controls="bonsai_path_replaced_in_test-content-c"
                     aria-expanded="false"
+                    data-state="closed"
+                    data-disabled=""
+                    disabled=""
+                    data-orientation="vertical"
     |}];
   (* Pressing the open item does nothing unless collapsible. *)
   Drive.click handle "[id$=trigger-b]";
@@ -406,11 +386,7 @@ let%expect_test "single, collapsible: the open item closes" =
              aria-labelledby="bonsai_path_replaced_in_test-trigger-a"
              data-orientation="vertical"
              data-slot="accordion-content"
-             loon-collapsible-presence=true
-             style={
-               --radix-accordion-content-height: var(--radix-collapsible-content-height);
-               --radix-accordion-content-width: var(--radix-collapsible-content-width);
-             }>
+             loon-collapsible-presence=((open_ true)(accordion true))>
           <div> Alpha </div>
         </div>
       </div>
@@ -447,11 +423,7 @@ let%expect_test "single, collapsible: the open item closes" =
              aria-labelledby="bonsai_path_replaced_in_test-trigger-b"
              data-orientation="vertical"
              data-slot="accordion-content"
-             loon-collapsible-presence=false
-             style={
-               --radix-accordion-content-height: var(--radix-collapsible-content-height);
-               --radix-accordion-content-width: var(--radix-collapsible-content-width);
-             }>
+             loon-collapsible-presence=((open_ false)(accordion true))>
           <div> Beta </div>
         </div>
       </div>
@@ -494,11 +466,7 @@ let%expect_test "single, collapsible: the open item closes" =
              aria-labelledby="bonsai_path_replaced_in_test-trigger-c"
              data-orientation="vertical"
              data-slot="accordion-content"
-             loon-collapsible-presence=false
-             style={
-               --radix-accordion-content-height: var(--radix-collapsible-content-height);
-               --radix-accordion-content-width: var(--radix-collapsible-content-width);
-             }>
+             loon-collapsible-presence=((open_ false)(accordion true))>
           <div> Gamma </div>
         </div>
       </div>
@@ -543,12 +511,8 @@ let%expect_test "single, collapsible: the open item closes" =
                aria-labelledby="bonsai_path_replaced_in_test-trigger-a"
                data-orientation="vertical"
                data-slot="accordion-content"
-    -|         loon-collapsible-presence=true
-    +|         loon-collapsible-presence=false
-               style={
-                 --radix-accordion-content-height: var(--radix-collapsible-content-height);
-                 --radix-accordion-content-width: var(--radix-collapsible-content-width);
-               }>
+    -|         loon-collapsible-presence=((open_ true)(accordion true))>
+    +|         loon-collapsible-presence=((open_ false)(accordion true))>
             <div> Alpha </div>
           </div>
         </div>
@@ -561,6 +525,10 @@ let%expect_test "single, collapsible: the open item closes" =
                     data-orientation="vertical"
                     id="bonsai_path_replaced_in_test-trigger-b"
                     data-slot="accordion-trigger"
+                    @on_click
+                    @on_keydown>
+              B
+              <svg xmlns="http://www.w3.org/2000/svg"
     |}]
 ;;
 
@@ -610,11 +578,7 @@ let%expect_test "multiple: several open" =
              aria-labelledby="bonsai_path_replaced_in_test-trigger-a"
              data-orientation="vertical"
              data-slot="accordion-content"
-             loon-collapsible-presence=false
-             style={
-               --radix-accordion-content-height: var(--radix-collapsible-content-height);
-               --radix-accordion-content-width: var(--radix-collapsible-content-width);
-             }>
+             loon-collapsible-presence=((open_ false)(accordion true))>
           <div> Alpha </div>
         </div>
       </div>
@@ -651,11 +615,7 @@ let%expect_test "multiple: several open" =
              aria-labelledby="bonsai_path_replaced_in_test-trigger-b"
              data-orientation="vertical"
              data-slot="accordion-content"
-             loon-collapsible-presence=false
-             style={
-               --radix-accordion-content-height: var(--radix-collapsible-content-height);
-               --radix-accordion-content-width: var(--radix-collapsible-content-width);
-             }>
+             loon-collapsible-presence=((open_ false)(accordion true))>
           <div> Beta </div>
         </div>
       </div>
@@ -698,11 +658,7 @@ let%expect_test "multiple: several open" =
              aria-labelledby="bonsai_path_replaced_in_test-trigger-c"
              data-orientation="vertical"
              data-slot="accordion-content"
-             loon-collapsible-presence=false
-             style={
-               --radix-accordion-content-height: var(--radix-collapsible-content-height);
-               --radix-accordion-content-width: var(--radix-collapsible-content-width);
-             }>
+             loon-collapsible-presence=((open_ false)(accordion true))>
           <div> Gamma </div>
         </div>
       </div>
@@ -747,12 +703,8 @@ let%expect_test "multiple: several open" =
                aria-labelledby="bonsai_path_replaced_in_test-trigger-a"
                data-orientation="vertical"
                data-slot="accordion-content"
-    -|         loon-collapsible-presence=false
-    +|         loon-collapsible-presence=true
-               style={
-                 --radix-accordion-content-height: var(--radix-collapsible-content-height);
-                 --radix-accordion-content-width: var(--radix-collapsible-content-width);
-               }>
+    -|         loon-collapsible-presence=((open_ false)(accordion true))>
+    +|         loon-collapsible-presence=((open_ true)(accordion true))>
             <div> Alpha </div>
           </div>
         </div>
@@ -794,12 +746,8 @@ let%expect_test "multiple: several open" =
                aria-labelledby="bonsai_path_replaced_in_test-trigger-b"
                data-orientation="vertical"
                data-slot="accordion-content"
-    -|         loon-collapsible-presence=false
-    +|         loon-collapsible-presence=true
-               style={
-                 --radix-accordion-content-height: var(--radix-collapsible-content-height);
-                 --radix-accordion-content-width: var(--radix-collapsible-content-width);
-               }>
+    -|         loon-collapsible-presence=((open_ false)(accordion true))>
+    +|         loon-collapsible-presence=((open_ true)(accordion true))>
             <div> Beta </div>
           </div>
         </div>
@@ -812,6 +760,10 @@ let%expect_test "multiple: several open" =
             <button type="button"
                     aria-controls="bonsai_path_replaced_in_test-content-c"
                     aria-expanded="false"
+                    data-state="closed"
+                    data-disabled=""
+                    disabled=""
+                    data-orientation="vertical"
     |}];
   Drive.click handle "[id$=trigger-a]";
   Handle.show_diff handle;
@@ -856,12 +808,8 @@ let%expect_test "multiple: several open" =
                aria-labelledby="bonsai_path_replaced_in_test-trigger-a"
                data-orientation="vertical"
                data-slot="accordion-content"
-    -|         loon-collapsible-presence=true
-    +|         loon-collapsible-presence=false
-               style={
-                 --radix-accordion-content-height: var(--radix-collapsible-content-height);
-                 --radix-accordion-content-width: var(--radix-collapsible-content-width);
-               }>
+    -|         loon-collapsible-presence=((open_ true)(accordion true))>
+    +|         loon-collapsible-presence=((open_ false)(accordion true))>
             <div> Alpha </div>
           </div>
         </div>
@@ -874,6 +822,10 @@ let%expect_test "multiple: several open" =
                     data-orientation="vertical"
                     id="bonsai_path_replaced_in_test-trigger-b"
                     data-slot="accordion-trigger"
+                    @on_click
+                    @on_keydown>
+              B
+              <svg xmlns="http://www.w3.org/2000/svg"
     |}]
 ;;
 

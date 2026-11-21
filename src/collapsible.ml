@@ -30,7 +30,7 @@ module Presence = struct
       [| Js.Unsafe.inject (Js.wrap_callback f) |]
   ;;
 
-  let measure (el : Dom_html.element Js.t) =
+  let measure ~accordion (el : Dom_html.element Js.t) =
     el##.style##setProperty
       (Js.string "animation-name")
       (Js.string "none")
@@ -41,8 +41,11 @@ module Presence = struct
     let set name value =
       el##.style##setProperty (Js.string name) value Js.undefined |> ignore
     in
-    set "--radix-collapsible-content-height" (px rect##.height);
-    set "--radix-collapsible-content-width" (px rect##.width)
+    List.iter
+      ("collapsible" :: (if accordion then [ "accordion" ] else []))
+      ~f:(fun name ->
+        set ("--radix-" ^ name ^ "-content-height") (px rect##.height);
+        set ("--radix-" ^ name ^ "-content-width") (px rect##.width))
   ;;
 
   let animate (el : Dom_html.element Js.t) =
@@ -60,9 +63,9 @@ module Presence = struct
     if is_closed el then el##setAttribute (Js.string "hidden") (Js.string "")
   ;;
 
-  let change (el : Dom_html.element Js.t) ~open_ =
+  let change ~accordion (el : Dom_html.element Js.t) ~open_ =
     if not open_ then el##removeAttribute (Js.string "hidden");
-    measure el;
+    measure ~accordion el;
     animate el;
     if not open_
     then (
@@ -87,38 +90,46 @@ module Presence = struct
                 Js._false)))
   ;;
 
+  module Input = struct
+    type t =
+      { open_ : bool
+      ; accordion : bool
+      }
+    [@@deriving sexp_of]
+
+    let combine _ b = b
+  end
+
   module Hook = Vdom.Attr.Hooks.Make (struct
       module State = struct
         type t = { mutable open_ : bool }
       end
 
-      module Input = struct
-        type t = bool [@@deriving sexp_of]
+      module Input = Input
 
-        let combine _ b = b
-      end
-
-      let init open_ _ = { State.open_ }
+      let init (input : Input.t) _ = { State.open_ = input.open_ }
 
       (* No animation for what is open from the start (Radix prevents the
          mount animation too): it stays off until the first change. *)
       let on_mount =
         `Schedule_immediately_after_this_dom_patch_completes
-          (fun open_ _ el -> if open_ then measure el)
+          (fun (input : Input.t) _ el -> if input.open_ then measure ~accordion:input.accordion el)
       ;;
 
-      let update ~old_input:_ ~new_input:open_ (state : State.t) el =
+      let update ~old_input:_ ~new_input:({ open_; accordion } : Input.t) (state : State.t) el =
         if not (Bool.equal state.open_ open_)
         then (
           state.open_ <- open_;
-          microtask (fun () -> change el ~open_))
+          microtask (fun () -> change ~accordion el ~open_))
       ;;
 
       let destroy _ _ _ = ()
     end)
 
-  let attr ~open_ =
-    Vdom.Attr.create_hook "loon-collapsible-presence" (Hook.create open_)
+  let attr ?(accordion = false) ~open_ () =
+    Vdom.Attr.create_hook
+      "loon-collapsible-presence"
+      (Hook.create { Input.open_; accordion })
   ;;
 end
 
@@ -189,7 +200,7 @@ let content ?(attrs = []) ?class_ t children =
       ([ data "state" (state t.open_); Attr.id (content_id t) ]
        @ (if t.disabled then [ data "disabled" "" ] else [])
        @ (if t.open_ then [] else [ Attr.hidden ])
-       @ [ data "slot" "collapsible-content"; Presence.attr ~open_:t.open_ ]
+       @ [ data "slot" "collapsible-content"; Presence.attr ~open_:t.open_ () ]
        @ class_attr class_
        @ attrs)
     children

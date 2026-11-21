@@ -76,29 +76,13 @@ let%expect_test "a toast, with shadcn's colours and Sonner's DOM" =
             data-sonner-theme="system"
             data-y-position="bottom"
             data-x-position="right"
+            style="--front-toast-height: 0px; --width: 356px; --gap: 14px; --normal-bg: var(--popover); --normal-text: var(--popover-foreground); --normal-border: var(--border); --border-radius: var(--radius); --offset-top: 24px; --mobile-offset-top: 16px; --offset-right: 24px; --mobile-offset-right: 16px; --offset-bottom: 24px; --mobile-offset-bottom: 16px; --offset-left: 24px; --mobile-offset-left: 16px;"
             class="group toaster"
             @on_mouseenter
             @on_mouseleave
             @on_mousemove
             @on_pointerdown
-            @on_pointerup
-            style={
-              --front-toast-height: 0px;
-              --width: 356px;
-              --gap: 14px;
-              --normal-bg: var(--popover);
-              --normal-text: var(--popover-foreground);
-              --normal-border: var(--border);
-              --border-radius: var(--radius);
-              --offset-top: 24px;
-              --mobile-offset-top: 16px;
-              --offset-right: 24px;
-              --mobile-offset-right: 16px;
-              --offset-bottom: 24px;
-              --mobile-offset-bottom: 16px;
-              --offset-left: 24px;
-              --mobile-offset-left: 16px;
-            }>
+            @on_pointerup>
           <li @key=1
               tabindex="0"
               data-sonner-toast=""
@@ -118,14 +102,8 @@ let%expect_test "a toast, with shadcn's colours and Sonner's DOM" =
               data-invert="false"
               data-swipe-out="false"
               data-expanded="false"
-              loon-sonner-measure="Event has been created\nSunday, December 03, 2023 at 9:00 AM\nUndo\n\nDefault"
-              style={
-                --index: 0;
-                --toasts-before: 0;
-                --z-index: 1;
-                --offset: 0px;
-                --initial-height: 0px;
-              }>
+              style="--index: 0; --toasts-before: 0; --z-index: 1; --offset: 0px; --initial-height: 0px;"
+              loon-sonner-measure="Event has been created\nSunday, December 03, 2023 at 9:00 AM\nUndo\n\nDefault">
             <div data-content="">
               <div data-title=""> Event has been created </div>
               <div data-description=""> Sunday, December 03, 2023 at 9:00 AM </div>
@@ -144,14 +122,14 @@ let%expect_test "a toast, with shadcn's colours and Sonner's DOM" =
     {|
     Undo
 
-                --mobile-offset-top: 16px;
-                --offset-right: 24px;
-                --mobile-offset-right: 16px;
-                --offset-bottom: 24px;
-                --mobile-offset-bottom: 16px;
-                --offset-left: 24px;
-                --mobile-offset-left: 16px;
-              }>
+              data-x-position="right"
+              style="--front-toast-height: 0px; --width: 356px; --gap: 14px; --normal-bg: var(--popover); --normal-text: var(--popover-foreground); --normal-border: var(--border); --border-radius: var(--radius); --offset-top: 24px; --mobile-offset-top: 16px; --offset-right: 24px; --mobile-offset-right: 16px; --offset-bottom: 24px; --mobile-offset-bottom: 16px; --offset-left: 24px; --mobile-offset-left: 16px;"
+              class="group toaster"
+              @on_mouseenter
+              @on_mouseleave
+              @on_mousemove
+              @on_pointerdown
+              @on_pointerup>
             <li @key=1
                 tabindex="0"
                 data-sonner-toast=""
@@ -172,12 +150,12 @@ let%expect_test "a toast, with shadcn's colours and Sonner's DOM" =
                 data-invert="false"
                 data-swipe-out="false"
                 data-expanded="false"
-                loon-sonner-measure="Event has been created\nSunday, December 03, 2023 at 9:00 AM\nUndo\n\nDefault"
-                style={
-                  --index: 0;
-                  --toasts-before: 0;
-                  --z-index: 1;
-                  --offset: 0px;
+                style="--index: 0; --toasts-before: 0; --z-index: 1; --offset: 0px; --initial-height: 0px;"
+                loon-sonner-measure="Event has been created\nSunday, December 03, 2023 at 9:00 AM\nUndo\n\nDefault">
+              <div data-content="">
+                <div data-title=""> Event has been created </div>
+                <div data-description=""> Sunday, December 03, 2023 at 9:00 AM </div>
+              </div>
     |}];
   Handle.advance_clock_by h (Time_ns.Span.of_int_ms 200);
   flush h;
@@ -198,29 +176,13 @@ let%expect_test "a toast, with shadcn's colours and Sonner's DOM" =
     -|        data-sonner-theme="system"
     -|        data-y-position="bottom"
     -|        data-x-position="right"
+    -|        style="--front-toast-height: 0px; --width: 356px; --gap: 14px; --normal-bg: var(--popover); --normal-text: var(--popover-foreground); --normal-border: var(--border); --border-radius: var(--radius); --offset-top: 24px; --mobile-offset-top: 16px; --offset-right: 24px; --mobile-offset-right: 16px; --offset-bottom: 24px; --mobile-offset-bottom: 16px; --offset-left: 24px; --mobile-offset-left: 16px;"
     -|        class="group toaster"
     -|        @on_mouseenter
     -|        @on_mouseleave
     -|        @on_mousemove
     -|        @on_pointerdown
-    -|        @on_pointerup
-    -|        style={
-    -|          --front-toast-height: 0px;
-    -|          --width: 356px;
-    -|          --gap: 14px;
-    -|          --normal-bg: var(--popover);
-    -|          --normal-text: var(--popover-foreground);
-    -|          --normal-border: var(--border);
-    -|          --border-radius: var(--radius);
-    -|          --offset-top: 24px;
-    -|          --mobile-offset-top: 16px;
-    -|          --offset-right: 24px;
-    -|          --mobile-offset-right: 16px;
-    -|          --offset-bottom: 24px;
-    -|          --mobile-offset-bottom: 16px;
-    -|          --offset-left: 24px;
-    -|          --mobile-offset-left: 16px;
-    -|        }>
+    -|        @on_pointerup>
     -|      <li @key=1
     -|          tabindex="0"
     -|          data-sonner-toast=""
@@ -240,14 +202,8 @@ let%expect_test "a toast, with shadcn's colours and Sonner's DOM" =
     -|          data-invert="false"
     -|          data-swipe-out="false"
     -|          data-expanded="false"
-    -|          loon-sonner-measure="Event has been created\nSunday, December 03, 2023 at 9:00 AM\nUndo\n\nDefault"
-    -|          style={
-    -|            --index: 0;
-    -|            --toasts-before: 0;
-    -|            --z-index: 1;
-    -|            --offset: 0px;
-    -|            --initial-height: 0px;
-    -|          }>
+    -|          style="--index: 0; --toasts-before: 0; --z-index: 1; --offset: 0px; --initial-height: 0px;"
+    -|          loon-sonner-measure="Event has been created\nSunday, December 03, 2023 at 9:00 AM\nUndo\n\nDefault">
     -|        <div data-content="">
     -|          <div data-title=""> Event has been created </div>
     -|          <div data-description=""> Sunday, December 03, 2023 at 9:00 AM </div>
@@ -296,29 +252,13 @@ let%expect_test "types and their icons" =
             data-sonner-theme="system"
             data-y-position="bottom"
             data-x-position="right"
+            style="--front-toast-height: 0px; --width: 356px; --gap: 14px; --normal-bg: var(--popover); --normal-text: var(--popover-foreground); --normal-border: var(--border); --border-radius: var(--radius); --offset-top: 24px; --mobile-offset-top: 16px; --offset-right: 24px; --mobile-offset-right: 16px; --offset-bottom: 24px; --mobile-offset-bottom: 16px; --offset-left: 24px; --mobile-offset-left: 16px;"
             class="group toaster"
             @on_mouseenter
             @on_mouseleave
             @on_mousemove
             @on_pointerdown
-            @on_pointerup
-            style={
-              --front-toast-height: 0px;
-              --width: 356px;
-              --gap: 14px;
-              --normal-bg: var(--popover);
-              --normal-text: var(--popover-foreground);
-              --normal-border: var(--border);
-              --border-radius: var(--radius);
-              --offset-top: 24px;
-              --mobile-offset-top: 16px;
-              --offset-right: 24px;
-              --mobile-offset-right: 16px;
-              --offset-bottom: 24px;
-              --mobile-offset-bottom: 16px;
-              --offset-left: 24px;
-              --mobile-offset-left: 16px;
-            }>
+            @on_pointerup>
           <li @key=6
               tabindex="0"
               data-sonner-toast=""
@@ -339,14 +279,8 @@ let%expect_test "types and their icons" =
               data-invert="false"
               data-swipe-out="false"
               data-expanded="false"
-              loon-sonner-measure="Loading\n\n\n\nLoading"
-              style={
-                --index: 0;
-                --toasts-before: 0;
-                --z-index: 5;
-                --offset: 0px;
-                --initial-height: 0px;
-              }>
+              style="--index: 0; --toasts-before: 0; --z-index: 5; --offset: 0px; --initial-height: 0px;"
+              loon-sonner-measure="Loading\n\n\n\nLoading">
             <div data-icon="">
               <div data-visible="true" class="sonner-loader">
                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -388,14 +322,8 @@ let%expect_test "types and their icons" =
               data-invert="false"
               data-swipe-out="false"
               data-expanded="false"
-              loon-sonner-measure="Error\n\n\n\nError"
-              style={
-                --index: 1;
-                --toasts-before: 1;
-                --z-index: 4;
-                --offset: 0px;
-                --initial-height: 0px;
-              }>
+              style="--index: 1; --toasts-before: 1; --z-index: 4; --offset: 0px; --initial-height: 0px;"
+              loon-sonner-measure="Error\n\n\n\nError">
             <div data-icon="">
               <svg xmlns="http://www.w3.org/2000/svg"
                    width="24"
@@ -437,14 +365,8 @@ let%expect_test "types and their icons" =
               data-invert="false"
               data-swipe-out="false"
               data-expanded="false"
-              loon-sonner-measure="Warning\n\n\n\nWarning"
-              style={
-                --index: 2;
-                --toasts-before: 2;
-                --z-index: 3;
-                --offset: 0px;
-                --initial-height: 0px;
-              }>
+              style="--index: 2; --toasts-before: 2; --z-index: 3; --offset: 0px; --initial-height: 0px;"
+              loon-sonner-measure="Warning\n\n\n\nWarning">
             <div data-icon="">
               <svg xmlns="http://www.w3.org/2000/svg"
                    width="24"
@@ -486,14 +408,8 @@ let%expect_test "types and their icons" =
               data-invert="false"
               data-swipe-out="false"
               data-expanded="false"
-              loon-sonner-measure="Info\n\n\n\nInfo"
-              style={
-                --index: 3;
-                --toasts-before: 3;
-                --z-index: 2;
-                --offset: 0px;
-                --initial-height: 0px;
-              }>
+              style="--index: 3; --toasts-before: 3; --z-index: 2; --offset: 0px; --initial-height: 0px;"
+              loon-sonner-measure="Info\n\n\n\nInfo">
             <div data-icon="">
               <svg xmlns="http://www.w3.org/2000/svg"
                    width="24"
@@ -535,14 +451,8 @@ let%expect_test "types and their icons" =
               data-invert="false"
               data-swipe-out="false"
               data-expanded="false"
-              loon-sonner-measure="Success\n\n\n\nSuccess"
-              style={
-                --index: 4;
-                --toasts-before: 4;
-                --z-index: 1;
-                --offset: 0px;
-                --initial-height: 0px;
-              }>
+              style="--index: 4; --toasts-before: 4; --z-index: 1; --offset: 0px; --initial-height: 0px;"
+              loon-sonner-measure="Success\n\n\n\nSuccess">
             <div data-icon="">
               <svg xmlns="http://www.w3.org/2000/svg"
                    width="24"
@@ -600,28 +510,12 @@ let%expect_test
             data-sonner-theme="system"
             data-y-position="bottom"
             data-x-position="right"
+            style="--front-toast-height: 0px; --width: 356px; --gap: 14px; --normal-bg: var(--popover); --normal-text: var(--popover-foreground); --normal-border: var(--border); --border-radius: var(--radius); --offset-top: 24px; --mobile-offset-top: 16px; --offset-right: 24px; --mobile-offset-right: 16px; --offset-bottom: 24px; --mobile-offset-bottom: 16px; --offset-left: 24px; --mobile-offset-left: 16px;"
             @on_mouseenter
             @on_mouseleave
             @on_mousemove
             @on_pointerdown
-            @on_pointerup
-            style={
-              --front-toast-height: 0px;
-              --width: 356px;
-              --gap: 14px;
-              --normal-bg: var(--popover);
-              --normal-text: var(--popover-foreground);
-              --normal-border: var(--border);
-              --border-radius: var(--radius);
-              --offset-top: 24px;
-              --mobile-offset-top: 16px;
-              --offset-right: 24px;
-              --mobile-offset-right: 16px;
-              --offset-bottom: 24px;
-              --mobile-offset-bottom: 16px;
-              --offset-left: 24px;
-              --mobile-offset-left: 16px;
-            }>
+            @on_pointerup>
           <li @key=8
               tabindex="0"
               data-sonner-toast=""
@@ -641,14 +535,8 @@ let%expect_test
               data-invert="false"
               data-swipe-out="false"
               data-expanded="false"
-              loon-sonner-measure="Two\n\n\n\nDefault"
-              style={
-                --index: 0;
-                --toasts-before: 0;
-                --z-index: 2;
-                --offset: 0px;
-                --initial-height: 0px;
-              }>
+              style="--index: 0; --toasts-before: 0; --z-index: 2; --offset: 0px; --initial-height: 0px;"
+              loon-sonner-measure="Two\n\n\n\nDefault">
             <div data-content="">
               <div data-title=""> Two </div>
             </div>
@@ -672,14 +560,8 @@ let%expect_test
               data-invert="false"
               data-swipe-out="false"
               data-expanded="false"
-              loon-sonner-measure="One\n\n\n\nDefault"
-              style={
-                --index: 1;
-                --toasts-before: 1;
-                --z-index: 1;
-                --offset: 0px;
-                --initial-height: 0px;
-              }>
+              style="--index: 1; --toasts-before: 1; --z-index: 1; --offset: 0px; --initial-height: 0px;"
+              loon-sonner-measure="One\n\n\n\nDefault">
             <div data-content="">
               <div data-title=""> One </div>
             </div>
@@ -711,14 +593,8 @@ let%expect_test
                 data-swipe-out="false"
     -|          data-expanded="false"
     +|          data-expanded="true"
-                loon-sonner-measure="Two\n\n\n\nDefault"
-                style={
-                  --index: 0;
-                  --toasts-before: 0;
-                  --z-index: 2;
-                  --offset: 0px;
-                  --initial-height: 0px;
-                }>
+                style="--index: 0; --toasts-before: 0; --z-index: 2; --offset: 0px; --initial-height: 0px;"
+                loon-sonner-measure="Two\n\n\n\nDefault">
               <div data-content="">
                 <div data-title=""> Two </div>
               </div>
@@ -743,14 +619,8 @@ let%expect_test
                 data-swipe-out="false"
     -|          data-expanded="false"
     +|          data-expanded="true"
-                loon-sonner-measure="One\n\n\n\nDefault"
-                style={
-                  --index: 1;
-                  --toasts-before: 1;
-                  --z-index: 1;
-                  --offset: 0px;
-                  --initial-height: 0px;
-                }>
+                style="--index: 1; --toasts-before: 1; --z-index: 1; --offset: 0px; --initial-height: 0px;"
+                loon-sonner-measure="One\n\n\n\nDefault">
               <div data-content="">
                 <div data-title=""> One </div>
               </div>
@@ -801,28 +671,12 @@ let%expect_test "toasts expire after their duration" =
             data-sonner-theme="system"
             data-y-position="bottom"
             data-x-position="right"
+            style="--front-toast-height: 0px; --width: 356px; --gap: 14px; --normal-bg: var(--popover); --normal-text: var(--popover-foreground); --normal-border: var(--border); --border-radius: var(--radius); --offset-top: 24px; --mobile-offset-top: 16px; --offset-right: 24px; --mobile-offset-right: 16px; --offset-bottom: 24px; --mobile-offset-bottom: 16px; --offset-left: 24px; --mobile-offset-left: 16px;"
             @on_mouseenter
             @on_mouseleave
             @on_mousemove
             @on_pointerdown
-            @on_pointerup
-            style={
-              --front-toast-height: 0px;
-              --width: 356px;
-              --gap: 14px;
-              --normal-bg: var(--popover);
-              --normal-text: var(--popover-foreground);
-              --normal-border: var(--border);
-              --border-radius: var(--radius);
-              --offset-top: 24px;
-              --mobile-offset-top: 16px;
-              --offset-right: 24px;
-              --mobile-offset-right: 16px;
-              --offset-bottom: 24px;
-              --mobile-offset-bottom: 16px;
-              --offset-left: 24px;
-              --mobile-offset-left: 16px;
-            }>
+            @on_pointerup>
           <li @key=9
               tabindex="0"
               data-sonner-toast=""
@@ -842,14 +696,8 @@ let%expect_test "toasts expire after their duration" =
               data-invert="false"
               data-swipe-out="false"
               data-expanded="false"
-              loon-sonner-measure="One\n\n\n\nDefault"
-              style={
-                --index: 0;
-                --toasts-before: 0;
-                --z-index: 1;
-                --offset: 0px;
-                --initial-height: 0px;
-              }>
+              style="--index: 0; --toasts-before: 0; --z-index: 1; --offset: 0px; --initial-height: 0px;"
+              loon-sonner-measure="One\n\n\n\nDefault">
             <div data-content="">
               <div data-title=""> One </div>
             </div>
@@ -911,28 +759,12 @@ let%expect_test "promise: loading, then success, in the same toast" =
             data-sonner-theme="system"
             data-y-position="bottom"
             data-x-position="right"
+            style="--front-toast-height: 0px; --width: 356px; --gap: 14px; --normal-bg: var(--popover); --normal-text: var(--popover-foreground); --normal-border: var(--border); --border-radius: var(--radius); --offset-top: 24px; --mobile-offset-top: 16px; --offset-right: 24px; --mobile-offset-right: 16px; --offset-bottom: 24px; --mobile-offset-bottom: 16px; --offset-left: 24px; --mobile-offset-left: 16px;"
             @on_mouseenter
             @on_mouseleave
             @on_mousemove
             @on_pointerdown
-            @on_pointerup
-            style={
-              --front-toast-height: 0px;
-              --width: 356px;
-              --gap: 14px;
-              --normal-bg: var(--popover);
-              --normal-text: var(--popover-foreground);
-              --normal-border: var(--border);
-              --border-radius: var(--radius);
-              --offset-top: 24px;
-              --mobile-offset-top: 16px;
-              --offset-right: 24px;
-              --mobile-offset-right: 16px;
-              --offset-bottom: 24px;
-              --mobile-offset-bottom: 16px;
-              --offset-left: 24px;
-              --mobile-offset-left: 16px;
-            }>
+            @on_pointerup>
           <li @key=11
               tabindex="0"
               data-sonner-toast=""
@@ -953,14 +785,8 @@ let%expect_test "promise: loading, then success, in the same toast" =
               data-invert="false"
               data-swipe-out="false"
               data-expanded="false"
-              loon-sonner-measure="Loading...\n\n\n\nLoading"
-              style={
-                --index: 0;
-                --toasts-before: 0;
-                --z-index: 1;
-                --offset: 0px;
-                --initial-height: 0px;
-              }>
+              style="--index: 0; --toasts-before: 0; --z-index: 1; --offset: 0px; --initial-height: 0px;"
+              loon-sonner-measure="Loading...\n\n\n\nLoading">
             <div data-icon="">
               <div data-visible="true">
                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -1011,15 +837,9 @@ let%expect_test "promise: loading, then success, in the same toast" =
                 data-invert="false"
                 data-swipe-out="false"
                 data-expanded="false"
-    -|          loon-sonner-measure="Loading...\n\n\n\nLoading"
-    +|          loon-sonner-measure="Event has been created\n\n\n\nSuccess"
-                style={
-                  --index: 0;
-                  --toasts-before: 0;
-                  --z-index: 1;
-                  --offset: 0px;
-                  --initial-height: 0px;
-                }>
+                style="--index: 0; --toasts-before: 0; --z-index: 1; --offset: 0px; --initial-height: 0px;"
+    -|          loon-sonner-measure="Loading...\n\n\n\nLoading">
+    +|          loon-sonner-measure="Event has been created\n\n\n\nSuccess">
               <div data-icon="">
     -|          <div data-visible="true">
     +|          <div data-visible="false">

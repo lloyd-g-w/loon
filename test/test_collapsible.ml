@@ -24,7 +24,7 @@ let%expect_test "shadcn's classes" =
       <div data-state="open"
            id="collapsible-content"
            data-slot="collapsible-content"
-           loon-collapsible-presence=true> Hidden </div>
+           loon-collapsible-presence=((open_ true)(accordion false))> Hidden </div>
     </div>
     |}]
 ;;
@@ -58,7 +58,7 @@ let%expect_test "the trigger opens and closes it; trigger_attrs on a Button" =
            id="bonsai_path_replaced_in_test-content"
            hidden=""
            data-slot="collapsible-content"
-           loon-collapsible-presence=false> Hidden </div>
+           loon-collapsible-presence=((open_ false)(accordion false))> Hidden </div>
     </div>
     |}];
   Drive.click handle "[aria-controls]";
@@ -82,8 +82,8 @@ let%expect_test "the trigger opens and closes it; trigger_attrs on a Button" =
              id="bonsai_path_replaced_in_test-content"
     -|       hidden=""
              data-slot="collapsible-content"
-    -|       loon-collapsible-presence=false> Hidden </div>
-    +|       loon-collapsible-presence=true> Hidden </div>
+    -|       loon-collapsible-presence=((open_ false)(accordion false))> Hidden </div>
+    +|       loon-collapsible-presence=((open_ true)(accordion false))> Hidden </div>
       </div>
     |}];
   Drive.click handle "[aria-controls]";
@@ -107,8 +107,8 @@ let%expect_test "the trigger opens and closes it; trigger_attrs on a Button" =
              id="bonsai_path_replaced_in_test-content"
     +|       hidden=""
              data-slot="collapsible-content"
-    -|       loon-collapsible-presence=true> Hidden </div>
-    +|       loon-collapsible-presence=false> Hidden </div>
+    -|       loon-collapsible-presence=((open_ true)(accordion false))> Hidden </div>
+    +|       loon-collapsible-presence=((open_ false)(accordion false))> Hidden </div>
       </div>
     |}]
 ;;
@@ -140,7 +140,7 @@ let%expect_test "disabled" =
            data-disabled=""
            hidden=""
            data-slot="collapsible-content"
-           loon-collapsible-presence=false> Hidden </div>
+           loon-collapsible-presence=((open_ false)(accordion false))> Hidden </div>
     </div>
     |}]
 ;;

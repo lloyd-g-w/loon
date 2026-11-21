@@ -59,5 +59,7 @@ val trigger_attrs : t -> Attr.t list
 val content : ?attrs:Attr.t list -> ?class_:string -> t -> Node.t list -> Node.t
 
 (** The measuring and the delayed hiding of {!content}, for an element whose
-    [hidden] attribute follows [open_] (Accordion's content uses it). *)
-val presence : open_:bool -> Attr.t
+    [hidden] attribute follows [open_] (Accordion's content uses it, with
+    [accordion]: the size goes into [--radix-accordion-content-height] and
+    [-width] too). *)
+val presence : ?accordion:bool -> open_:bool -> unit -> Attr.t

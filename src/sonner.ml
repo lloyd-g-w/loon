@@ -479,10 +479,13 @@ let close_icon =
 let bool b = Bool.to_string b
 let px f = sprintf "%gpx" f
 
+(* As a plain attribute: Attr.style drops custom properties in the browser. *)
 let style fields =
-  Attr.style
-    (Css_gen.concat
-       (List.map fields ~f:(fun (field, value) -> Css_gen.create ~field ~value)))
+  Attr.create
+    "style"
+    (String.concat
+       ~sep:" "
+       (List.map fields ~f:(fun (field, value) -> sprintf "%s: %s;" field value)))
 ;;
 
 let toast_view

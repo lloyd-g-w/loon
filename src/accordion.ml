@@ -261,16 +261,7 @@ let content ?(attrs = []) ?class_ children (item : Item.t) =
          ; Attr.class_
              "overflow-hidden text-sm data-[state=closed]:animate-accordion-up \
               data-[state=open]:animate-accordion-down"
-         ; Attr.style
-             (Css_gen.concat
-                [ Css_gen.create
-                    ~field:"--radix-accordion-content-height"
-                    ~value:"var(--radix-collapsible-content-height)"
-                ; Css_gen.create
-                    ~field:"--radix-accordion-content-width"
-                    ~value:"var(--radix-collapsible-content-width)"
-                ])
-         ; Collapsible.presence ~open_:item.open_
+         ; Collapsible.presence ~accordion:true ~open_:item.open_ ()
          ]
        @ attrs)
     [ Node.div ~attrs:[ Cn.with_class ?class_ [ "pt-0 pb-4" ] ] children ]
