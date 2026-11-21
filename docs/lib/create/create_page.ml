@@ -605,6 +605,7 @@ module Actions = struct
     ; reset : unit Effect.t (* asks first *)
     ; toggle_mode : unit Effect.t
     ; open_preset : unit Effect.t
+    ; navigate : unit Effect.t
     ; undo : unit Effect.t option
     ; redo : unit Effect.t option
     }
@@ -638,7 +639,11 @@ let main_menu graph (actions : Actions.t Bonsai.t) =
            ~align_offset:(-8.)
            t
            [ Picker.group
-               [ item ~on_select:actions.open_preset "Open Preset..." "O"
+               [ item
+                   ~on_select:actions.navigate
+                   "Navigate..."
+                   (if mac then "⌘P" else "Ctrl+P")
+               ; item ~on_select:actions.open_preset "Open Preset..." "O"
                ; item ~on_select:actions.shuffle "Shuffle" "R"
                ; item ~on_select:actions.toggle_mode "Light/Dark" "D"
                ]
@@ -1012,6 +1017,46 @@ let get_code_dialog ?(action = "get-code") graph (preset : Create_preset.t Bonsa
     ])
 ;;
 
+(* action-menu.tsx: the preview's blocks and each component's examples. *)
+let navigate_dialog graph ~open_ ~set_open (env : Env.t Bonsai.t) =
+  let state, set_state = Bonsai.state Loon.Command.State.empty graph in
+  let%arr open_ and set_open and state and set_state and env in
+  let on_open_change o =
+    Effect.Many [ set_open o; (if o then set_state Loon.Command.State.empty else Effect.Ignore) ]
+  in
+  let item ~keywords (value, label) =
+    Loon.Command.item
+      ~attrs:
+        [ Attr.create "data-item" value
+        ; Attr.create "data-checked" (Bool.to_string (String.equal env.params.item value))
+        ]
+      ~class_:"px-2"
+      ~value:(label ^ " " ^ keywords)
+      ~on_select:(Effect.Many [ env.set_item value; set_open false ])
+      [ text label ]
+  in
+  Loon.Command.dialog
+    ~id:"create-navigate"
+    ~class_:"animate-none!"
+    ~loop:true
+    ~open_
+    ~on_open_change
+    ~state
+    ~on_change:set_state
+    [ Loon.Command.input ~placeholder:"Search" ()
+    ; Loon.Command.list
+        [ Loon.Command.empty [ text "No items found." ]
+        ; Loon.Command.group
+            (List.map
+               [ "preview", "Preview" ]
+               ~f:(item ~keywords:"block blocks component components")
+             @ List.map
+                 Create_examples.items
+                 ~f:(item ~keywords:"item items component components"))
+        ]
+    ]
+;;
+
 (* {1 The preview} *)
 
 let preview_switcher ~item ~set_item =
@@ -1053,7 +1098,11 @@ let preview graph ~(env : Env.t Bonsai.t) ~(shown : Create_preset.t Bonsai.t) =
     in
     { Create_preview.Info.style; font = font shown.font; font_heading = font heading }
   in
-  let block = Create_preview.component ~info item graph in
+  let block =
+    match%sub Bonsai.map item ~f:Create_examples.mem with
+    | true -> Create_examples.component item graph
+    | false -> Create_preview.component ~info item graph
+  in
   let%arr block and env and shown in
   Node.div
     ~attrs:
@@ -1073,7 +1122,9 @@ let preview graph ~(env : Env.t Bonsai.t) ~(shown : Create_preset.t Bonsai.t) =
                :: Create_preview_style.attrs ~mode:env.mode shown)
             [ block ]
         ]
-    ; preview_switcher ~item:env.params.item ~set_item:env.set_item
+    ; (if List.Assoc.mem Create_preview.items env.params.item ~equal:String.equal
+       then preview_switcher ~item:env.params.item ~set_item:env.set_item
+       else Node.none)
     ]
 ;;
 
@@ -1087,6 +1138,7 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
   let history, set_history = Bonsai.state' Create_history.empty graph in
   let open_preset_open, set_open_preset_open = Bonsai.state false graph in
   let reset_open, set_reset_open = Bonsai.state false graph in
+  let navigate_open, set_navigate_open = Bonsai.state false graph in
   let normal_query = Bonsai.map params ~f:Create_params.to_query in
   (* shadcn writes the preset into a URL without one (hasSyncedPresetToUrl);
      every state is recorded for undo. *)
@@ -1134,7 +1186,7 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
   in
   let actions =
     let%arr env and history and set_history and set_query and mode and set_mode
-    and set_open_preset_open and set_reset_open in
+    and set_open_preset_open and set_reset_open and navigate_open and set_navigate_open in
     let move step =
       Option.map (step history) ~f:(fun (h, q) ->
         Effect.Many [ set_history (fun _ -> h); set_query q ])
@@ -1145,6 +1197,7 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
     ; reset = set_reset_open true
     ; toggle_mode = set_mode (Mode.toggle mode)
     ; open_preset = set_open_preset_open true
+    ; navigate = set_navigate_open (not navigate_open)
     ; undo = move Create_history.undo
     ; redo = move Create_history.redo
     }
@@ -1182,10 +1235,13 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
   let reset =
     reset_dialog ~open_:reset_open ~set_open:set_reset_open ~confirm:confirm_reset
   in
+  let navigate =
+    navigate_dialog graph ~open_:navigate_open ~set_open:set_navigate_open env
+  in
   let get_code = get_code_dialog graph (Bonsai.map params ~f:(fun p -> p.preset)) in
   let preview = preview graph ~env ~shown in
   let%arr menu and pickers and base_picker and copy and open_preset and reset and get_code
-  and preview and actions and set_open_preset_open and is_mobile in
+  and navigate and preview and actions and set_open_preset_open and is_mobile in
   let shortcuts =
     Attr.Global_listeners.keydown ~phase:Bubbling ~f:(fun ev ->
       let open Js_of_ocaml in
@@ -1195,6 +1251,8 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
         | KeyD -> "d"
         | KeyO -> "o"
         | KeyZ -> "z"
+        | KeyY -> "y"
+        | KeyP -> "p"
         | _ -> ""
       in
       let editable = Browser.in_browser () && Browser.active_element_is_editable () in
@@ -1216,6 +1274,7 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
           | Open_preset -> actions.open_preset
           | Undo -> Option.value actions.undo ~default:Effect.Ignore
           | Redo -> Option.value actions.redo ~default:Effect.Ignore
+          | Navigate -> actions.navigate
         in
         Effect.Many [ Loon.Dom_util.prevent_default ev; run ])
   in
@@ -1295,6 +1354,7 @@ let component ~mode ~set_mode ~query ~set_query (local_ graph) =
         [ preview; customizer ]
     ; open_preset
     ; reset
+    ; navigate
     ]
 ;;
 

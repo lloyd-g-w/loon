@@ -94,7 +94,6 @@ let%expect_test "first load writes the preset; the pickers show it" =
   [%expect {|
     query: preset=bIkeymG&item=preview-02
     Menu
-    Base Radix UI
     Style Vega
     Base Color Neutral
     Theme Neutral
@@ -303,5 +302,36 @@ let%expect_test "D toggles the site's mode" =
   [%expect {|
     ("default prevented" (key KeyD))
     Dark
+    |}]
+;;
+
+let%expect_test "Navigate shows a component's examples in the preview" =
+  let h, q, _ = page () in
+  key h ~ctrl:true KeyP;
+  click h "[data-item=button-example]";
+  query q;
+  texts h "[data-slot=example] > div:first-child";
+  print_s
+    [%sexp
+      (Option.is_some (Node_helpers.select_first (view h) ~selector:"[data-item=preview]")
+       : bool)];
+  [%expect {|
+    ("default prevented" (key KeyP))
+    query: preset=bIkeymG&item=button-example
+    Demo
+    Size
+    Default
+    Outline
+    Secondary
+    Ghost
+    Destructive
+    Link
+    Icon
+    With Icon
+    Rounded
+    Spinner
+    Link as a button
+    Counter
+    false
     |}]
 ;;

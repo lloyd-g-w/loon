@@ -1,6 +1,6 @@
 (** The page's keyboard shortcuts, as shadcn's /create: R shuffles, Shift+R
-    resets, D toggles light and dark, O opens a preset, Ctrl/⌘+Z undoes and
-    Shift+Ctrl/⌘+Z redoes. The letters only when focus is not in a text
+    resets, D toggles light and dark, O opens a preset, Ctrl/⌘+P opens the
+    Navigate menu, Ctrl/⌘+Z undoes and Shift+Ctrl/⌘+Z (or Ctrl+Y) redoes. The letters only when focus is not in a text
     field. *)
 
 open! Core
@@ -13,6 +13,7 @@ module Action : sig
     | Open_preset
     | Undo
     | Redo
+    | Navigate
   [@@deriving sexp_of, equal]
 end
 
