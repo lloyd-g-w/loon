@@ -1,6 +1,6 @@
 open! Core
 
-(* A placeholder: the theme designer are coming. *)
+(* A placeholder: the theme designer is coming. *)
 let page =
   Doc.page
     ~slug:"create"

@@ -1,6 +1,6 @@
 open! Core
 
-(* A placeholder: typeset are coming. *)
+(* A placeholder: Typeset is coming. *)
 let page =
   Doc.page
     ~slug:"typeset"

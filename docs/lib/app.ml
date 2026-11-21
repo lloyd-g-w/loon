@@ -511,7 +511,7 @@ let component_preview ?(heading = true) ~level (example : Doc.Example.t) (local_
       ]
   in
   Node.div
-    ~attrs:[ Attr.create "data-slot" "example"; Attr.create "data-example" id ]
+    ~attrs:[ Attr.create "data-docs" "example"; Attr.create "data-example" id ]
     (title
      @ (match example.description with
         | None -> []
@@ -709,19 +709,19 @@ let docs_page ~slug ~title ~description ~outline content =
 ;;
 
 let is_component_page (page : Doc.Page.t) =
-  not (Doc.Section.equal page.section Get_started)
+  Doc.Section.equal page.section Components
 ;;
 
 (* A component's page, as shadcn's mdx: the first example (its demo) under
-   the description, then Installation, Usage, the other examples under
-   Examples, and the page's body (its API reference). *)
+   the description, then Installation, Usage, the other examples (each under
+   its heading), and the page's body (its API reference). *)
 let page_content (page : Doc.Page.t) (local_ graph) =
   let component = is_component_page page in
   let examples =
     List.mapi page.examples ~f:(fun i e ->
       if component && i = 0
       then component_preview ~heading:false ~level:`H2 e graph
-      else component_preview ~level:(if component then `H3 else `H2) e graph)
+      else component_preview ~level:`H2 e graph)
     |> Bonsai.all
   in
   let install, set_install = Bonsai.state "loon" graph in
@@ -745,9 +745,7 @@ let page_content (page : Doc.Page.t) (local_ graph) =
   @ (match page.usage with
      | None -> []
      | Some usage -> [ Doc.h2 "Usage"; Code_block.view usage ])
-  @ (match rest with
-     | [] -> []
-     | rest -> if component then Doc.h2 "Examples" :: rest else rest)
+  @ rest
   @ page.body
 ;;
 
@@ -769,6 +767,40 @@ let components_index =
          [ Node.text p.title ]))
 ;;
 
+(* shadcn's PageNav: the section's pages in a bar (ChartsNav, BlocksNav). *)
+let section_nav ~id (page : Doc.Page.t) =
+  Node.div
+    ~attrs:[ Attr.id id; Attr.class_ "container-wrapper scroll-mt-24" ]
+    [ Node.div
+        ~attrs:[ Attr.class_ "container flex items-center justify-between gap-4 py-4" ]
+        [ Node.div
+            ~attrs:[ Attr.class_ "relative overflow-hidden" ]
+            [ Node.div
+                ~attrs:
+                  [ Attr.class_
+                      "no-scrollbar flex max-w-[600px] items-center overflow-x-auto \
+                       lg:max-w-none"
+                  ]
+                (List.map (in_section page.section) ~f:(fun (p : Doc.Page.t) ->
+                   Node.a
+                     ~attrs:
+                       [ Attr.href (href p.slug)
+                       ; Attr.create "data-slug" p.slug
+                       ; Attr.create
+                           "data-active"
+                           (Bool.to_string (String.equal p.slug page.slug))
+                       ; Attr.class_
+                           "flex h-7 shrink-0 items-center justify-center px-4 \
+                            text-center text-base font-medium text-muted-foreground \
+                            transition-colors hover:text-primary \
+                            data-[active=true]:text-primary"
+                       ]
+                     [ Node.text p.title ]))
+            ]
+        ]
+    ]
+;;
+
 (* A page of a section outside the docs (Blocks, Charts, ...): shadcn's page
    header, the section's pages in a bar (when there are several), then the
    page's examples and body. *)
@@ -787,37 +819,193 @@ let section_page (page : Doc.Page.t) (local_ graph) =
         ()
     ; (match siblings with
        | [] | [ _ ] -> Node.none
-       | siblings ->
-         Node.div
-           ~attrs:[ Attr.id "section-nav"; Attr.class_ "container-wrapper scroll-mt-24" ]
-           [ Node.div
-               ~attrs:
-                 [ Attr.class_ "container flex items-center justify-between gap-4 py-4" ]
-               [ Node.div
-                   ~attrs:
-                     [ Attr.class_
-                         "no-scrollbar flex max-w-full items-center gap-1 overflow-x-auto"
-                     ]
-                   (List.map siblings ~f:(fun (p : Doc.Page.t) ->
-                      Node.a
-                        ~attrs:
-                          [ Attr.href (href p.slug)
-                          ; Attr.create "data-slug" p.slug
-                          ; Attr.create
-                              "data-active"
-                              (Bool.to_string (String.equal p.slug page.slug))
-                          ; Attr.class_
-                              "flex h-7 shrink-0 items-center justify-center px-4 \
-                               text-center text-base font-medium text-muted-foreground \
-                               transition-colors hover:text-primary \
-                               data-[active=true]:text-primary"
-                          ]
-                        [ Node.text p.title ]))
-               ]
-           ])
+       | _ -> section_nav ~id:"section-nav" page)
     ; Node.div
         ~attrs:[ Attr.class_ "container-wrapper section-soft flex-1 pb-6" ]
         [ Node.div ~attrs:[ Attr.class_ "container typeset" ] (examples @ page.body) ]
+    ]
+;;
+
+(* {2 Charts} *)
+
+(* shadcn's ChartToolbar's title: the chart's kind. *)
+let chart_kind slug : Icon.t * string =
+  match slug with
+  | "chart-bar" -> Chart_column_big, "Bar Chart"
+  | "chart-line" -> Chart_line, "Line Chart"
+  | "chart-pie" -> Chart_pie, "Pie Chart"
+  | "chart-radar" -> Hexagon, "Radar Chart"
+  | "chart-radial" -> Radar, "Radial Chart"
+  | "chart-tooltip" -> Mouse_pointer_2, "Tooltip"
+  | _ -> Chart_area, "Area Chart"
+;;
+
+(* shadcn's ChartCodeViewer, on a wide screen: the source in a Sheet. *)
+let chart_code_viewer ~id (example : Doc.Example.t) (local_ graph) =
+  let open_, set_open = Bonsai.state false graph in
+  let%arr open_ and set_open in
+  Loon.Sheet.view ~id ~open_ ~on_open_change:set_open (fun sheet ->
+    [ Loon.Sheet.trigger
+        sheet
+        (Button.view
+           ~size:Sm
+           ~variant:Outline
+           ~class_:
+             "h-6 rounded-[6px] border bg-transparent px-2 text-xs text-foreground \
+              shadow-none hover:bg-muted dark:text-foreground"
+           ~attrs:[ Attr.create "data-docs" "chart-view-code" ]
+           [ Node.text "View Code" ])
+    ; Loon.Sheet.content
+        ~side:Right
+        ~class_:
+          "flex flex-col gap-0 border-l-0 p-0 sm:max-w-sm md:w-[700px] md:max-w-[700px] \
+           dark:border-l"
+        sheet
+        [ Loon.Sheet.header
+            ~class_:"sr-only"
+            [ Loon.Sheet.title sheet [ Node.text "Code" ]
+            ; Loon.Sheet.description sheet [ Node.text "View the code for the chart." ]
+            ]
+        ; Node.div
+            ~attrs:[ Attr.class_ "flex min-w-0 flex-1 flex-col overflow-hidden p-4" ]
+            [ Node.create
+                "figure"
+                ~attrs:
+                  [ Attr.create "data-rehype-pretty-code-figure" ""
+                  ; Attr.class_ "mt-0 flex h-auto min-w-0 flex-1 flex-col overflow-hidden"
+                  ]
+                [ Node.create
+                    "figcaption"
+                    ~attrs:
+                      [ Attr.create "data-language" "ocaml"
+                      ; Attr.class_
+                          "flex h-12 shrink-0 items-center gap-2 border-b py-2 pr-2 pl-4 \
+                           text-foreground [&>svg]:size-4 [&>svg]:text-foreground \
+                           [&>svg]:opacity-70"
+                      ]
+                    [ Icon.view File_code
+                    ; Node.text example.title
+                    ; Node.div
+                        ~attrs:[ Attr.class_ "ml-auto flex items-center gap-2" ]
+                        [ Code_block.copy_button
+                            ~class_:"static size-7 rounded-[6px] bg-transparent"
+                            example.source
+                        ]
+                    ]
+                ; Node.pre
+                    ~attrs:
+                      [ Attr.create "data-not-typeset" ""
+                      ; Attr.class_ "no-scrollbar overflow-y-auto px-4 py-3.5"
+                      ]
+                    [ Highlight.view example.source ]
+                ]
+            ]
+        ]
+    ])
+;;
+
+(* shadcn's ChartDisplay: a toolbar (the kind, copy, View Code) over the
+   chart. The interactive charts span the grid's row. *)
+let chart_display ~slug ~index (example : Doc.Example.t) (local_ graph) =
+  let chart = example.view graph in
+  let id = sprintf "%s-%d" slug index in
+  let viewer = chart_code_viewer ~id:(id ^ "-code") example graph in
+  let%arr chart and viewer in
+  let icon, kind = chart_kind slug in
+  let full_width =
+    String.is_suffix example.title ~suffix:"- Interactive"
+    && List.mem [ "chart-area"; "chart-bar"; "chart-line" ] slug ~equal:String.equal
+  in
+  Node.div
+    ~attrs:
+      [ Attr.id (Doc.anchor example.title)
+      ; Attr.create "data-slot" "chart-display"
+      ; Attr.create "data-example" (Doc.anchor example.title)
+      ; Attr.class_
+          (Cn.cn
+             [ "themes-wrapper group relative flex flex-col overflow-hidden rounded-xl \
+                transition-all duration-200 ease-in-out hover:z-30"
+             ; (if full_width then "md:col-span-2 lg:col-span-3" else "")
+             ])
+      ]
+    [ Node.div
+        ~attrs:
+          [ Attr.class_
+              (Cn.cn [ "flex items-center gap-2"; "relative z-20 flex justify-end px-3 py-2.5" ])
+          ]
+        [ Node.div
+            ~attrs:
+              [ Attr.class_
+                  "flex items-center gap-1.5 pl-1 text-[13px] text-muted-foreground \
+                   [&>svg]:h-[0.9rem] [&>svg]:w-[0.9rem]"
+              ]
+            [ Icon.view icon; Node.text kind ]
+        ; Node.div
+            ~attrs:[ Attr.class_ "ml-auto flex items-center gap-2 [&>form]:flex" ]
+            [ Code_block.copy_button
+                ~class_:
+                  "static h-6 w-6 rounded-[6px] bg-transparent text-foreground shadow-none \
+                   hover:bg-muted dark:text-foreground [&_svg]:h-3 [&_svg]:w-3"
+                example.source
+            ; separator ~class_:"mx-0 hidden h-4! md:flex" ()
+            ; viewer
+            ]
+        ]
+    ; Node.div
+        ~attrs:[ Attr.class_ "relative z-10 overflow-hidden rounded-xl bg-background" ]
+        [ chart ]
+    ]
+;;
+
+let charts_title = "Beautiful Charts & Graphs"
+
+(* shadcn's /charts/<type>: one header for every kind, the kinds in a bar,
+   then the kind's charts in a grid. *)
+let charts_page (page : Doc.Page.t) (local_ graph) =
+  let charts =
+    List.mapi page.examples ~f:(fun index e -> chart_display ~slug:page.slug ~index e graph)
+    |> Bonsai.all
+  in
+  let%arr charts in
+  Node.div
+    ~attrs:[ Attr.class_ "flex flex-1 flex-col"; Attr.create "data-page" page.slug ]
+    [ Site.page_header
+        ~before:[ Home.announcement ]
+        ~title:charts_title
+        ~description:
+          [ Node.text
+              "A collection of ready-to-use chart components built on loon's Chart. From \
+               basic charts to rich data displays, copy and paste into your apps."
+          ]
+        ~actions:
+          [ Button.link
+              ~class_:"h-[35px]"
+              ~href:(Route.to_hash (Page page.slug) ^ "/charts")
+              [ Node.text "Browse Charts" ]
+          ; Button.link ~variant:Secondary ~href:(href "chart") [ Node.text "Documentation" ]
+          ]
+        ()
+    ; section_nav ~id:"charts" page
+    ; Node.div
+        ~attrs:[ Attr.class_ "container-wrapper flex-1" ]
+        [ Node.div
+            ~attrs:[ Attr.class_ "container pb-6" ]
+            [ Node.section
+                ~attrs:[ Attr.class_ "theme-container" ]
+                [ Node.div
+                    ~attrs:[ Attr.class_ "grid flex-1 gap-12 lg:gap-24" ]
+                    [ Node.h2 ~attrs:[ Attr.class_ "sr-only" ] [ Node.text page.title ]
+                    ; Node.div
+                        ~attrs:
+                          [ Attr.class_
+                              "grid flex-1 scroll-mt-20 items-stretch gap-10 \
+                               md:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:gap-10"
+                          ]
+                        charts
+                    ]
+                ]
+            ]
+        ]
     ]
 ;;
 
@@ -836,65 +1024,68 @@ let not_found =
 
 (* {1 Search} *)
 
+module Cmdk = Loon.Command
+
 module Result = struct
   type t =
     { title : string
-    ; group : string
+    ; value : string (* what the search matches; unique *)
     ; hash : string
     ; kind : [ `Nav | `Page | `Component | `Example ]
+    ; context : string option (* an example's page, shown after its title *)
+    ; install : string option (* what ⌘C copies *)
     }
 end
 
-let search_items =
-  List.map nav_items ~f:(fun (label, s) ->
-    { Result.title = label; group = "Pages"; hash = section_href s; kind = `Nav })
-  @ List.map sidebar_order ~f:(fun (p : Doc.Page.t) ->
-    { Result.title = p.title
-    ; group = Doc.Section.title p.section
-    ; hash = href p.slug
-    ; kind = (if is_component_page p then `Component else `Page)
-    })
-  @ List.concat_map pages ~f:(fun (p : Doc.Page.t) ->
-    List.map p.examples ~f:(fun (e : Doc.Example.t) ->
-      { Result.title = e.title
-      ; group = "Examples"
-      ; hash = Route.to_hash (Page p.slug) ^ "/" ^ Doc.anchor e.title
-      ; kind = `Example
-      }))
-;;
-
-let group_order = [ "Pages"; "Get Started"; "Components"; "Forms"; "Examples" ]
-
-(* The results in their groups, in the groups' order (as cmdk), best first
-   within each. An empty query lists the pages. *)
-let search_results query =
-  let results =
-    if String.is_empty (String.strip query)
-    then
-      List.filter search_items ~f:(fun r ->
-        match r.kind with
-        | `Example -> false
-        | `Nav | `Page | `Component -> true)
-    else
-      Search.rank ~query search_items ~fields:(fun (r : Result.t) ->
-        [ r.title; r.group ^ " " ^ r.title ])
-      |> fun l -> List.take l 30
+(* shadcn's CommandMenu's groups: the header's pages, the sidebar's
+   sections, the other sections' pages and (while searching) the
+   examples. *)
+let search_groups : (string * Result.t list) list =
+  let page_group title ps =
+    ( title
+    , List.map ps ~f:(fun (p : Doc.Page.t) ->
+        let component = is_component_page p in
+        { Result.title = p.title
+        ; value = p.title ^ " " ^ title
+        ; hash = href p.slug
+        ; kind = (if component then `Component else `Page)
+        ; install = (if component then Some ("loon add " ^ p.slug) else None)
+        ; context = None
+        }) )
   in
-  List.filter_map group_order ~f:(fun g ->
-    match List.filter results ~f:(fun r -> String.equal r.group g) with
-    | [] -> None
-    | rs -> Some (g, rs))
+  (( "Pages"
+   , List.map nav_items ~f:(fun (label, s) ->
+       { Result.title = label
+       ; value = label ^ " Navigation"
+       ; hash = section_href s
+       ; kind = `Nav
+       ; install = None
+       ; context = None
+       }) )
+   :: page_group
+        "Sections"
+        (List.filter_map top_level_sections ~f:(fun (_, s) -> find_page s))
+   :: List.map docs_groups ~f:(fun (s, ps) -> page_group (Doc.Section.title s) ps))
+  @ List.filter_map Doc.Section.all ~f:(fun s ->
+    match Doc.Section.is_docs s, in_section s with
+    | true, _ | _, [] -> None
+    | false, ps -> Some (page_group (Doc.Section.title s) ps))
+  @ [ ( "Examples"
+      , List.concat_map pages ~f:(fun (p : Doc.Page.t) ->
+          List.map p.examples ~f:(fun (e : Doc.Example.t) ->
+            { Result.title = e.title
+            ; value = sprintf "%s %s example (%s)" e.title p.title p.slug
+            ; hash = Route.to_hash (Page p.slug) ^ "/" ^ Doc.anchor e.title
+            ; kind = `Example
+            ; install = None
+            ; context = Some p.title
+            })) )
+    ]
 ;;
 
-let flat_results query = List.concat_map (search_results query) ~f:snd
-
-(* Moves the search's selection: from the query as it is when the key is
-   handled, not as last drawn, so that keys typed faster than frames count. *)
-let move_selection (query, selected) delta =
-  let count = List.length (flat_results query) in
-  if count = 0
-  then query, 0
-  else query, (Int.clamp_exn selected ~min:0 ~max:(count - 1) + delta + count) % count
+let find_result value =
+  List.find_map search_groups ~f:(fun (_, rs) ->
+    List.find rs ~f:(fun (r : Result.t) -> String.equal r.value value))
 ;;
 
 let command_kbd children =
@@ -908,31 +1099,14 @@ let command_kbd children =
     children
 ;;
 
-let search_item ~selected ~set_selected ~go i (r : Result.t) =
-  let is_selected = i = selected in
-  Node.div
-    ~attrs:
-      [ Attr.id (sprintf "docs-search-%d" i)
-      ; Attr.create "cmdk-item" ""
-      ; Attr.create "role" "option"
-      ; Attr.create "data-slot" "command-item"
-      ; Attr.create "data-hash" r.hash
-      ; Attr.create "aria-selected" (Bool.to_string is_selected)
-      ; Attr.create "data-selected" (Bool.to_string is_selected)
-      ; Attr.class_
-          (Cn.cn
-             [ "relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 \
-                text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none \
-                data-[disabled=true]:opacity-50 data-[selected=true]:bg-accent \
-                data-[selected=true]:text-accent-foreground [&_svg]:pointer-events-none \
-                [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 \
-                [&_svg:not([class*='text-'])]:text-muted-foreground"
-             ; "h-9 rounded-md border border-transparent px-3! font-medium \
-                data-[selected=true]:border-input data-[selected=true]:bg-input/50"
-             ])
-      ; Attr.on_click (fun _ -> go r.hash)
-      ; Attr.on_mousemove (fun _ -> if is_selected then Effect.Ignore else set_selected i)
-      ]
+let search_item ~go (r : Result.t) =
+  Cmdk.item
+    ~class_:
+      "h-9 rounded-md border border-transparent px-3! font-medium \
+       data-[selected=true]:border-input data-[selected=true]:bg-input/50"
+    ~value:r.value
+    ~attrs:[ Attr.create "data-hash" r.hash ]
+    ~on_select:(go r.hash)
     [ (match r.kind with
        | `Component ->
          Node.div
@@ -944,175 +1118,106 @@ let search_item ~selected ~set_selected ~go i (r : Result.t) =
            []
        | `Nav | `Page -> Icon.view Arrow_right
        | `Example -> Icon.view Square_dashed)
-    ; Node.span ~attrs:[ Attr.create "data-slot" "command-item-title" ] [ Node.text r.title ]
+    ; Node.text r.title
+    ; (match r.context with
+       | None -> Node.none
+       | Some c ->
+         Node.span
+           ~attrs:[ Attr.class_ "ml-auto truncate text-xs font-normal text-muted-foreground" ]
+           [ Node.text c ])
     ]
 ;;
 
-(* shadcn's CommandMenu: a Command in a Dialog (with no overlay; a click
-   outside closes it). *)
-let search_dialog ~query ~set_query ~selected ~set_selected ~move ~close ~go =
-  let groups = search_results query in
-  let flat = List.concat_map groups ~f:snd in
-  let count = List.length flat in
-  let selected =
-    if count = 0 then 0 else Int.clamp_exn selected ~min:0 ~max:(count - 1)
-  in
-  let on_keydown ev =
-    match Loon.Dom_util.key ev with
-    | ArrowDown -> Effect.Many [ Loon.Dom_util.prevent_default ev; move 1 ]
-    | ArrowUp -> Effect.Many [ Loon.Dom_util.prevent_default ev; move (-1) ]
-    | Enter ->
-      (match List.nth flat selected with
-       | None -> Effect.Ignore
-       | Some r -> Effect.Many [ Loon.Dom_util.prevent_default ev; go r.hash ])
-    | Escape -> Effect.Many [ Loon.Dom_util.prevent_default ev; close ]
-    | _ -> Effect.Ignore
-  in
-  let _, groups =
-    List.fold_map groups ~init:0 ~f:(fun start (heading, rs) ->
-      ( start + List.length rs
-      , Node.div
-          ~attrs:
-            [ Attr.create "data-slot" "command-group"
-            ; Attr.create "cmdk-group" ""
-            ; Attr.class_
-                (Cn.cn
-                   [ "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 \
-                      [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs \
-                      [&_[cmdk-group-heading]]:font-medium \
-                      [&_[cmdk-group-heading]]:text-muted-foreground"
-                   ; "p-0! **:[[cmdk-group-heading]]:scroll-mt-16 \
-                      **:[[cmdk-group-heading]]:p-3! **:[[cmdk-group-heading]]:pb-1!"
-                   ])
-            ]
-          [ Node.div
-              ~attrs:[ Attr.create "cmdk-group-heading" ""; Attr.create "aria-hidden" "true" ]
-              [ Node.text heading ]
+(* The result the pointer or the arrows selected (none at first). *)
+let selected_result (state : Cmdk.State.t) = Option.bind state.value ~f:find_result
+
+(* shadcn's CommandMenu: the Command in a Dialog near the top of the
+   window; Enter goes to the selected page, ⌘C copies a component's
+   [loon add]. *)
+let search_dialog ~open_ ~on_open_change ~state ~on_change ~go =
+  let searching = not (String.is_empty (String.strip state.Cmdk.State.search)) in
+  let selected = selected_result state in
+  Loon.Dialog.view
+    ~id:"search"
+    ~open_
+    ~on_open_change:(fun o ->
+      if o
+      then on_open_change true
+      else Effect.Many [ on_open_change false; on_change Cmdk.State.empty ])
+    (fun d ->
+      [ Loon.Dialog.content
+          ~show_close_button:false
+          ~initial_focus:"[cmdk-input]"
+          ~attrs:[ Attr.create "data-docs" "search" ]
+          ~class_:
+            "top-[15%] translate-y-0 rounded-xl border-none bg-clip-padding p-2 pb-11 \
+             shadow-2xl ring-4 ring-neutral-200/80 dark:bg-neutral-900 \
+             dark:ring-neutral-800"
+          d
+          [ Loon.Dialog.header
+              ~class_:"sr-only"
+              [ Loon.Dialog.title d [ Node.text "Search documentation..." ]
+              ; Loon.Dialog.description d [ Node.text "Search for a command to run..." ]
+              ]
+          ; Cmdk.view
+              ~id:"search-command"
+              ~label:"Search documentation"
+              ~class_:
+                "rounded-none bg-transparent **:data-[slot=command-input]:h-9! \
+                 **:data-[slot=command-input]:py-0 \
+                 **:data-[slot=command-input-wrapper]:mb-0 \
+                 **:data-[slot=command-input-wrapper]:h-9! \
+                 **:data-[slot=command-input-wrapper]:rounded-md \
+                 **:data-[slot=command-input-wrapper]:border \
+                 **:data-[slot=command-input-wrapper]:border-input \
+                 **:data-[slot=command-input-wrapper]:bg-input/50"
+              ~state
+              ~on_change
+              [ Cmdk.input ~placeholder:"Search documentation..." ()
+              ; Cmdk.list
+                  ~class_:"no-scrollbar min-h-80 scroll-pt-2 scroll-pb-1.5"
+                  (Cmdk.empty
+                     ~class_:"py-12 text-center text-sm text-muted-foreground"
+                     [ Node.text "No results found." ]
+                   :: List.filter_map search_groups ~f:(fun (heading, rs) ->
+                     if String.equal heading "Examples" && not searching
+                     then None
+                     else
+                       Some
+                         (Cmdk.group
+                            ~class_:
+                              "p-0! **:[[cmdk-group-heading]]:scroll-mt-16 \
+                               **:[[cmdk-group-heading]]:p-3! \
+                               **:[[cmdk-group-heading]]:pb-1!"
+                            ~heading
+                            (List.map rs ~f:(search_item ~go)))))
+              ]
           ; Node.div
-              ~attrs:[ Attr.create "role" "group"; Attr.create "aria-label" heading ]
-              (List.mapi rs ~f:(fun i r ->
-                 search_item ~selected ~set_selected ~go (start + i) r))
-          ] ))
-  in
-  Node.div
-    ~attrs:[ Attr.create "data-slot" "dialog-portal" ]
-    [ Node.div
-        ~attrs:
-          [ Attr.create "data-slot" "dialog-overlay"
-          ; Attr.create "data-state" "open"
-          ; Attr.class_ "fixed inset-0 z-50"
-          ; Attr.on_click (fun _ -> close)
-          ]
-        []
-    ; Node.div
-        ~attrs:
-          [ Attr.create "data-slot" "dialog-content"
-          ; Attr.create "data-state" "open"
-          ; Attr.create "role" "dialog"
-          ; Attr.create "aria-modal" "true"
-          ; Attr.create "aria-labelledby" "docs-search-title"
-          ; Attr.class_
-              (Cn.cn
-                 [ "fixed top-[15%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] \
-                    translate-x-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg \
-                    duration-200 outline-none sm:max-w-lg"
-                 ; "rounded-xl border-none bg-clip-padding p-2 pb-11 shadow-2xl ring-4 \
-                    ring-neutral-200/80 dark:bg-neutral-900 dark:ring-neutral-800"
+              ~attrs:
+                [ Attr.class_
+                    "absolute inset-x-0 bottom-0 z-20 flex h-10 items-center gap-2 \
+                     rounded-b-xl border-t border-t-neutral-100 bg-neutral-50 px-4 \
+                     text-xs font-medium text-muted-foreground dark:border-t-neutral-700 \
+                     dark:bg-neutral-800"
+                ]
+              ([ Node.div
+                   ~attrs:[ Attr.class_ "flex items-center gap-2" ]
+                   [ command_kbd [ Icon.view Corner_down_left ]; Node.text "Go to Page" ]
+               ]
+               @
+               match Option.bind selected ~f:(fun (r : Result.t) -> r.install) with
+               | None -> []
+               | Some install ->
+                 [ separator ~class_:"h-4!" ()
+                 ; Node.div
+                     ~attrs:[ Attr.class_ "flex items-center gap-1" ]
+                     [ command_kbd [ Node.text "⌘" ]
+                     ; command_kbd [ Node.text "C" ]
+                     ; Node.text install
+                     ]
                  ])
           ]
-        [ Node.div
-            ~attrs:[ Attr.class_ "sr-only" ]
-            [ Node.h2
-                ~attrs:[ Attr.id "docs-search-title" ]
-                [ Node.text "Search documentation..." ]
-            ; Node.p [ Node.text "Search for a command to run..." ]
-            ]
-        ; Node.div
-            ~attrs:
-              [ Attr.create "data-slot" "command"
-              ; Attr.class_
-                  (Cn.cn
-                     [ "flex h-full w-full flex-col overflow-hidden rounded-md bg-popover \
-                        text-popover-foreground"
-                     ; "rounded-none bg-transparent **:data-[slot=command-input]:h-9! \
-                        **:data-[slot=command-input]:py-0 \
-                        **:data-[slot=command-input-wrapper]:mb-0 \
-                        **:data-[slot=command-input-wrapper]:h-9! \
-                        **:data-[slot=command-input-wrapper]:rounded-md \
-                        **:data-[slot=command-input-wrapper]:border \
-                        **:data-[slot=command-input-wrapper]:border-input \
-                        **:data-[slot=command-input-wrapper]:bg-input/50"
-                     ])
-              ]
-            [ Node.div
-                ~attrs:[ Attr.class_ "relative" ]
-                [ Node.div
-                    ~attrs:
-                      [ Attr.create "data-slot" "command-input-wrapper"
-                      ; Attr.class_ "flex h-9 items-center gap-2 border-b px-3"
-                      ]
-                    [ Icon.view ~class_:"size-4 shrink-0 opacity-50" Search
-                    ; Node.input
-                        ~attrs:
-                          [ Attr.id "docs-search-input"
-                          ; Attr.create "data-slot" "command-input"
-                          ; Attr.type_ "text"
-                          ; Attr.class_
-                              "flex h-10 w-full rounded-md bg-transparent py-3 text-sm \
-                               outline-hidden placeholder:text-muted-foreground \
-                               disabled:cursor-not-allowed disabled:opacity-50"
-                          ; Attr.placeholder "Search documentation..."
-                          ; Attr.create "autocomplete" "off"
-                          ; Attr.create "spellcheck" "false"
-                          ; Attr.create "role" "combobox"
-                          ; Attr.create "aria-expanded" "true"
-                          ; Attr.create "aria-controls" "docs-search-results"
-                          ; Attr.create
-                              "aria-activedescendant"
-                              (sprintf "docs-search-%d" selected)
-                          ; Attr.value query
-                          ; Attr.on_input (fun _ q -> set_query q)
-                          ; Attr.on_keydown on_keydown
-                          ]
-                        ()
-                    ]
-                ]
-            ; Node.div
-                ~attrs:
-                  [ Attr.id "docs-search-results"
-                  ; Attr.create "data-slot" "command-list"
-                  ; Attr.create "role" "listbox"
-                  ; Attr.class_
-                      (Cn.cn
-                         [ "max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto"
-                         ; "no-scrollbar min-h-80 scroll-pt-2 scroll-pb-1.5"
-                         ])
-                  ]
-                (match groups with
-                 | [] ->
-                   [ Node.div
-                       ~attrs:
-                         [ Attr.create "data-slot" "command-empty"
-                         ; Attr.class_ "py-12 text-center text-sm text-muted-foreground"
-                         ]
-                       [ Node.text "No results found." ]
-                   ]
-                 | groups -> groups)
-            ]
-        ; Node.div
-            ~attrs:
-              [ Attr.class_
-                  "absolute inset-x-0 bottom-0 z-20 flex h-10 items-center gap-2 \
-                   rounded-b-xl border-t border-t-neutral-100 bg-neutral-50 px-4 text-xs \
-                   font-medium text-muted-foreground dark:border-t-neutral-700 \
-                   dark:bg-neutral-800"
-              ]
-            [ Node.div
-                ~attrs:[ Attr.class_ "flex items-center gap-2" ]
-                [ command_kbd [ Icon.view Corner_down_left ]; Node.text "Go to Page" ]
-            ]
-        ]
-    ]
+      ])
 ;;
 
 (* {1 The app} *)
@@ -1180,6 +1285,7 @@ let main_view (shown : Shown.t) ~outline (local_ graph) =
   | Page slug ->
     (match find_page slug with
      | None -> Bonsai.return not_found
+     | Some page when Doc.Section.equal page.section Charts -> charts_page page graph
      | Some page when not (Doc.Section.is_docs page.section) -> section_page page graph
      | Some page ->
        let content = page_content page graph in
@@ -1209,21 +1315,7 @@ let component (local_ graph) =
   let mode, set_mode = Bonsai.state initial_mode graph in
   let nav_open, set_nav_open = Bonsai.state false graph in
   let search_open, set_search_open = Bonsai.state false graph in
-  let search, update_search = Bonsai.state' ("", 0) graph in
-  let query = search >>| fst in
-  let selected = search >>| snd in
-  let set_query =
-    let%arr update_search in
-    fun q -> update_search (fun _ -> q, 0)
-  in
-  let set_selected =
-    let%arr update_search in
-    fun i -> update_search (fun (q, _) -> q, i)
-  in
-  let move_selected =
-    let%arr update_search in
-    fun delta -> update_search (fun m -> move_selection m delta)
-  in
+  let search, set_search = Bonsai.state Cmdk.State.empty graph in
   let outline, set_outline = Bonsai.state [] graph in
   (* The document follows the theme: the class [dark] on <html>. *)
   Bonsai.Edge.on_change
@@ -1274,19 +1366,14 @@ let component (local_ graph) =
   Bonsai.Edge.on_change
     ~trigger:`After_display
     ~equal:Bool.equal
-    (Bonsai.map2 nav_open search_open ~f:( || ))
+    nav_open
     ~callback:
       (Bonsai.return (fun locked ->
          Effect.of_thunk (fun () -> Browser.set_body_scroll_locked locked)))
     graph;
   let open_search =
-    let%arr set_search_open and set_query and set_selected in
-    Effect.Many
-      [ set_query ""
-      ; set_selected 0
-      ; set_search_open true
-      ; Loon.Dom_util.focus_selector "#docs-search-input"
-      ]
+    let%arr set_search_open and set_search in
+    Effect.Many [ set_search Cmdk.State.empty; set_search_open true ]
   in
   let main =
     Bonsai.enum
@@ -1303,11 +1390,8 @@ let component (local_ graph) =
   and set_nav_open
   and search_open
   and set_search_open
-  and query
-  and set_query
-  and selected
-  and set_selected
-  and move_selected
+  and search
+  and set_search
   and open_search in
   let toggle_mode =
     let m = Loon.Theme.Mode.toggle mode in
@@ -1333,6 +1417,15 @@ let component (local_ graph) =
       | Slash when (not search_open) && not (Browser.active_element_is_editable ()) ->
         Effect.Many [ Loon.Dom_util.prevent_default ev; open_search ]
       | Escape when nav_open -> set_nav_open false
+      | KeyC when ctrl && search_open ->
+        (match Option.bind (selected_result search) ~f:(fun r -> r.install) with
+         | None -> Effect.Ignore
+         | Some install ->
+           Effect.Many
+             [ Loon.Dom_util.prevent_default ev
+             ; Effect.of_thunk (fun () -> Code_block.write_clipboard install)
+             ; set_search_open false
+             ])
       | _ -> Effect.Ignore)
   in
   Node.div
@@ -1349,16 +1442,11 @@ let component (local_ graph) =
         ~toggle_mode
     ; Node.main ~attrs:[ Attr.id "main"; Attr.class_ "flex min-h-0 flex-1 flex-col" ] [ main ]
     ; site_footer
-    ; (if search_open
-       then
-         search_dialog
-           ~query
-           ~set_query
-           ~selected
-           ~set_selected
-           ~move:move_selected
-           ~close:(set_search_open false)
-           ~go
-       else Node.none)
+    ; search_dialog
+        ~open_:search_open
+        ~on_open_change:set_search_open
+        ~state:search
+        ~on_change:set_search
+        ~go
     ]
 ;;

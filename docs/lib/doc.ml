@@ -201,7 +201,7 @@ let props rows =
 
 let coming_soon () =
   Loon.Empty.root
-    ~attrs:[ Attr.create "data-slot" "coming-soon"; Attr.create "data-not-typeset" "" ]
+    ~attrs:[ Attr.create "data-docs" "coming-soon"; Attr.create "data-not-typeset" "" ]
     ~class_:"my-12 border border-dashed bg-background"
     [ Loon.Empty.header
         [ Loon.Empty.media ~variant:Icon [ Loon.Icon.view Square_dashed ]

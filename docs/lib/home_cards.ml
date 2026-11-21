@@ -556,9 +556,7 @@ let payout_threshold (local_ graph) =
                     ]
                 ; Progress.view
                     ~attrs:
-                      [ Attr.create "aria-labelledby" "home-min-payout-label"
-                      ; Attr.create "aria-valuetext" "$2,500 of $10,000"
-                      ]
+                      [ Attr.create "aria-labelledby" "home-min-payout-label" ]
                     ~value:25.
                     ()
                 ; div

@@ -4,6 +4,9 @@
 open! Core
 open Bonsai_web
 
+(** Copies [text] to the clipboard. *)
+val write_clipboard : string -> unit
+
 (** Copies [text] to the clipboard and marks the element the event came
     from [data-copied="true"] for two seconds. *)
 val copy : text:string -> Js_of_ocaml.Dom_html.mouseEvent Js_of_ocaml.Js.t -> unit Effect.t
