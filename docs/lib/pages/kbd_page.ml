@@ -1,46 +1,51 @@
 open! Core
 open Bonsai_web
 open Loon
-open! Bonsai.Let_syntax
 module Node = Vdom.Node
 module Attr = Vdom.Attr
 
 let page = "kbd"
 
-(*$ Keys and combinations *)
-let keys =
+(*$ Demo *)
+let demo =
+  let key k = Kbd.view [ Node.text k ] in
   Node.div
-    ~attrs:[ Attr.class_ "docs-stack" ]
-    [ Node.div
-        ~attrs:[ Attr.class_ "docs-row" ]
-        [ Kbd.view "Esc"; Kbd.view "Tab"; Kbd.view "K" ]
-    ; Node.div
-        ~attrs:[ Attr.class_ "docs-row" ]
-        [ Kbd.combo [ "Cmd"; "K" ]
-        ; Kbd.combo [ "Ctrl"; "Shift"; "P" ]
-        ; Kbd.combo ~symbols:false [ "Ctrl"; "Alt"; "Delete" ]
-        ]
+    ~attrs:[ Attr.class_ "flex flex-col items-center gap-4" ]
+    [ Kbd.group [ key "⌘"; key "⇧"; key "⌥"; key "⌃" ]
+    ; Kbd.group [ key "Ctrl"; Node.span [ Node.text "+" ]; key "B" ]
     ]
-;;
-
 (*$*)
 
-(*$ In a sentence *)
-let sentence =
-  Node.p
-    ~attrs:
-      [ Attr.create
-          "style"
-          "color: var(--loon-muted-foreground); font-size: 0.875rem"
-      ]
-    [ Node.text "Press "
-    ; Kbd.combo [ "Cmd"; "K" ]
-    ; Node.text " to search, or "
-    ; Kbd.view "?"
-    ; Node.text " for every shortcut."
+(*$ Group
+   [Kbd.group] keeps keys together in text. *)
+let group =
+  Node.div
+    ~attrs:[ Attr.class_ "flex flex-col items-center gap-4" ]
+    [ Node.p
+        ~attrs:[ Attr.class_ "text-sm text-muted-foreground" ]
+        [ Node.text "Use "
+        ; Kbd.group
+            [ Kbd.view [ Node.text "Ctrl + B" ]; Kbd.view [ Node.text "Ctrl + K" ] ]
+        ; Node.text " to open the command palette"
+        ]
     ]
-;;
+(*$*)
 
+(*$ Button *)
+let button =
+  Node.div
+    ~attrs:[ Attr.class_ "flex flex-wrap items-center gap-4" ]
+    [ Button.view
+        ~variant:Outline
+        ~size:Sm
+        ~class_:"pr-2"
+        [ Node.text "Accept "; Kbd.view [ Node.text "⏎" ] ]
+    ; Button.view
+        ~variant:Outline
+        ~size:Sm
+        ~class_:"pr-2"
+        [ Node.text "Cancel "; Kbd.view [ Node.text "Esc" ] ]
+    ]
 (*$*)
 
 let page =
@@ -48,20 +53,18 @@ let page =
     ~slug:page
     ~title:"Kbd"
     ~group:Display
-    ~description:"Keyboard keys and shortcuts."
-    ~usage:{|Kbd.combo [ "Cmd"; "K" ]|}
+    ~description:"Used to display textual user input from keyboard."
+    ~usage:
+      {|Kbd.group [ Kbd.view [ Node.text "Ctrl" ]; Kbd.view [ Node.text "B" ] ]|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "Kbd.view key", "string", "One key."
-          ; "Kbd.combo keys", "string list", "Keys pressed together."
-          ; ( "symbols"
-            , "bool"
-            , "Show Cmd, Shift, Alt, Ctrl, Enter… as ⌘ ⇧ ⌥ ⌃ ↵ (default true)."
-            )
+          [ "class_", "string", "More Tailwind classes, merged last."
+          ; "attrs", "Vdom.Attr.t list", "Extra attributes."
           ]
       ]
-    [ Doc.static ~page "Keys and combinations" keys
-    ; Doc.static ~page "In a sentence" sentence
+    [ Doc.static ~page "Demo" demo
+    ; Doc.static ~page "Group" group
+    ; Doc.static ~page "Button" button
     ]
 ;;

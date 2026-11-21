@@ -75,9 +75,13 @@ let payments (local_ graph) =
     ; (if Set.is_empty selected
        then Node.none
        else
-         Alert.view
-           ~variant:Info
-           [ Node.textf "Selected: %s" (String.concat ~sep:", " (Set.to_list selected)) ])
+         Alert.root
+           [ Alert.description
+               [ Node.textf
+                   "Selected: %s"
+                   (String.concat ~sep:", " (Set.to_list selected))
+               ]
+           ])
     ]
 (*$*)
 

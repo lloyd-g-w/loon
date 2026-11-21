@@ -84,7 +84,8 @@ let parts =
            ]
            ~f:(fun (keys, action) ->
              Table.row
-               [ Table.cell [ Kbd.combo keys ]
+               [ Table.cell
+                   [ Kbd.group (List.map keys ~f:(fun k -> Kbd.view [ Node.text k ])) ]
                ; Table.cell [ Node.text action ]
                ]))
     ]

@@ -26,7 +26,7 @@ component.
   $ loon css | grep '^/\* loon: ' | head -3
   /* loon: theme */
   /* loon: accordion */
-  /* loon: alert */
+  /* loon: breadcrumb */
 
 Unknown names get suggestions.
 

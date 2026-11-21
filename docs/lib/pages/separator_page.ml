@@ -1,38 +1,33 @@
 open! Core
 open Bonsai_web
 open Loon
-open! Bonsai.Let_syntax
 module Node = Vdom.Node
 module Attr = Vdom.Attr
 
 let page = "separator"
 
-(*$ Horizontal and vertical *)
-let basic =
+(*$ Demo *)
+let demo =
   Node.div
     [ Node.div
-        ~attrs:[ Attr.class_ "docs-stack"; Attr.create "style" "gap: 0.25rem" ]
-        [ Node.strong [ Node.text "loon" ]
-        ; Node.span
-            ~attrs:[ Attr.create "style" "color: var(--loon-muted-foreground)" ]
-            [ Node.text "Components for Bonsai, on OxCaml." ]
+        ~attrs:[ Attr.class_ "space-y-1" ]
+        [ Node.h4
+            ~attrs:[ Attr.class_ "text-sm leading-none font-medium" ]
+            [ Node.text "Radix Primitives" ]
+        ; Node.p
+            ~attrs:[ Attr.class_ "text-sm text-muted-foreground" ]
+            [ Node.text "An open-source UI component library." ]
         ]
-    ; Separator.view ~attrs:[ Attr.create "style" "margin: 1rem 0" ] ()
+    ; Separator.view ~class_:"my-4" ()
     ; Node.div
-        ~attrs:[ Attr.class_ "docs-row"; Attr.create "style" "height: 1.25rem" ]
-        [ Node.text "Blog"
+        ~attrs:[ Attr.class_ "flex h-5 items-center space-x-4 text-sm" ]
+        [ Node.div [ Node.text "Blog" ]
         ; Separator.view ~orientation:Vertical ()
-        ; Node.text "Docs"
+        ; Node.div [ Node.text "Docs" ]
         ; Separator.view ~orientation:Vertical ()
-        ; Node.text "Source"
+        ; Node.div [ Node.text "Source" ]
         ]
     ]
-;;
-
-(*$*)
-
-(*$ With a label *)
-let labelled = Separator.view ~label:"or continue with" ()
 (*$*)
 
 let page =
@@ -40,19 +35,19 @@ let page =
     ~slug:page
     ~title:"Separator"
     ~group:Display
-    ~description:"A thin line between groups of content."
-    ~usage:{|Separator.view ~label:"or" ()|}
+    ~description:"Visually or semantically separates content."
+    ~usage:{|Separator.view ()|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "orientation", "Orientation.t", "Horizontal (default) or Vertical."
-          ; "label", "string", "Text in the middle of the line."
-          ; ( "semantic"
+          [ "orientation", "Separator.Orientation.t", "[Horizontal] (default) or [Vertical]."
+          ; ( "decorative"
             , "bool"
-            , "[role=\"separator\"] rather than decorative (default false)." )
+            , "[true] (default): [role=\"none\"], hidden from screen readers; [false]: a \
+               [role=\"separator\"]." )
+          ; "class_", "string", "More Tailwind classes, merged last."
+          ; "attrs", "Vdom.Attr.t list", "Extra attributes."
           ]
       ]
-    [ Doc.static ~page "Horizontal and vertical" basic
-    ; Doc.static ~page "With a label" labelled
-    ]
+    [ Doc.static ~page "Demo" demo ]
 ;;

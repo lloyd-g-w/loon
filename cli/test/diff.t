@@ -17,13 +17,6 @@ differ.
        displayed one at a time. Port of shadcn/ui's [Tabs] (Radix Tabs'
        behaviour: arrow keys move between the triggers and select them, Home
        and End go to the first and last, disabled triggers are skipped).
-  --- loon/alert in loon.css
-  +++ src/ui/loon.css
-  @@ (lines) @@
-     border-color: color-mix(in oklab, var(--loon-danger) 25%, var(--loon-border));
-   }
-   }
-  +.loon-alert { gap: 0 }
   dom_util.mli: not in src/ui/dom_util.mli
 
 The diff undoes with patch.
@@ -35,8 +28,8 @@ The diff undoes with patch.
 With no names, it compares everything the project has.
 
   $ loon diff | grep -E '^(---|[a-z_.]+:)'
-  --- loon/alert in loon.css
   dom_util.mli: not in src/ui/dom_util.mli
+  --- loon/theme in loon.css
   $ loon diff -dir nowhere
   nowhere has no loon components.
 
