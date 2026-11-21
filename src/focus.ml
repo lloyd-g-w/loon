@@ -220,3 +220,35 @@ module When_hook = Vdom.Attr.Hooks.Make (struct
   end)
 
 let when_ focused = Vdom.Attr.create_hook "loon-focus-when" (When_hook.create focused)
+
+let loop_tab (ev : Dom_html.keyboardEvent Js.t) =
+  match Dom_util.key ev with
+  | Tab
+    when in_browser ()
+         && not
+              (Js.to_bool ev##.altKey
+               || Js.to_bool ev##.ctrlKey
+               || Js.to_bool ev##.metaKey) ->
+    Effect.of_thunk (fun () ->
+      let container : Dom_html.element Js.t = Js.Unsafe.get ev "currentTarget" in
+      let tabbables =
+        Dom.list_of_nodeList
+          (container##querySelectorAll (Js.string (focusable_not_guard ())))
+        |> List.filter ~f:(fun (el : Dom_html.element Js.t) ->
+          (Js.Unsafe.coerce el)##getClientRects##.length > 0)
+      in
+      let focused = active () in
+      let is el = Option.exists focused ~f:(fun a -> phys_equal a el) in
+      let go el =
+        Dom.preventDefault ev;
+        focus_no_scroll el
+      in
+      match tabbables, List.last tabbables with
+      | first :: _, Some last ->
+        if Js.to_bool ev##.shiftKey
+        then (if is first then go last)
+        else if is last
+        then go first
+      | _ -> if is container then Dom.preventDefault ev)
+  | _ -> Effect.Ignore
+;;
