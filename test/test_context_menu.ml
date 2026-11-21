@@ -84,7 +84,19 @@ let%expect_test "shadcn's classes" =
             }> Right click here </span>
       <div loon-dismiss=(()false true) loon-presence=() style={ display: contents; }>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Popper((side Right)(side_offset 2)(align Start)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Point(x 10)(y 20)))(name context-menu)))>
+             popover="manual"
+             loon-popper=(Popper((side Right)(side_offset 2)(align Start)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Point(x 10)(y 20)))(name context-menu)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="context-menu-content"
                id="context-menu-content"
                role="menu"
@@ -169,7 +181,19 @@ let%expect_test "a right click opens it at the pointer; Esc closes it" =
             }> Right click here </span>
       <div loon-dismiss=(()false true) loon-presence=() style={ display: contents; }>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Popper((side Right)(side_offset 2)(align Start)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Point(x 120)(y 40)))(name context-menu)))>
+             popover="manual"
+             loon-popper=(Popper((side Right)(side_offset 2)(align Start)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Point(x 120)(y 40)))(name context-menu)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="context-menu-content"
                id="bonsai_path_replaced_in_test-content"
                role="menu"

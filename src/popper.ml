@@ -121,7 +121,7 @@ let fixed_origin (el : Dom_html.element Js.t) =
         , r.top +. Float.of_int p##.clientTop -. Js.to_float p##.scrollTop ))
       else go p##.parentNode
   in
-  go el##.parentNode
+  if Portal.is_shown el then 0., 0. else go el##.parentNode
 ;;
 
 let dpr () =
@@ -511,6 +511,7 @@ module Hook = Vdom.Attr.Hooks.Make (struct
     let on_mount =
       `Schedule_immediately_after_this_dom_patch_completes
         (fun _ (state : State.t) el ->
+          Portal.show el;
           set_style el "position" "fixed";
           set_style el "left" "0";
           set_style el "top" "0";
@@ -549,8 +550,9 @@ let wrapper
   =
   Node.div
     ~attrs:
-      ([ Attr.create "data-radix-popper-content-wrapper" ""
-       ; hook
+      ([ Attr.create "data-radix-popper-content-wrapper" "" ]
+       @ Portal.positioned
+       @ [ hook
            (Popper
               { side
               ; side_offset
@@ -561,7 +563,7 @@ let wrapper
               ; anchor
               ; name
               })
-       ]
+         ]
        @ attrs)
     [ content ]
 ;;
@@ -569,9 +571,9 @@ let wrapper
 let item_aligned_wrapper ?(attrs = []) ~name:_ ~anchor content =
   Node.div
     ~attrs:
-      ([ Attr.create "data-radix-popper-content-wrapper" ""
-       ; hook (Item_aligned anchor)
-       ]
+      ([ Attr.create "data-radix-popper-content-wrapper" "" ]
+       @ Portal.positioned
+       @ [ hook (Item_aligned anchor) ]
        @ attrs)
     [ content ]
 ;;

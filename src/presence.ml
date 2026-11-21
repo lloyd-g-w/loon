@@ -50,6 +50,7 @@ let ghost (el : Dom_html.element Js.t) (parent : Dom.node Js.t) =
   copy##setAttribute (Js.string "inert") (Js.string "");
   copy##.style##.pointerEvents := Js.string "none";
   Dom.appendChild parent copy;
+  Portal.show copy;
   let animating e =
     let style = Dom_html.window##getComputedStyle e in
     let name = Js.to_string ((Js.Unsafe.coerce style)##getPropertyValue (Js.string "animation-name")) in

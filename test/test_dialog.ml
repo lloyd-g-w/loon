@@ -38,7 +38,7 @@ let%expect_test "shadcn's classes, open" =
     {|
     <div>
       <button type="button"
-              data-slot="button"
+              data-slot="dialog-trigger"
               data-variant="outline"
               data-size="default"
               id="d-trigger"
@@ -48,7 +48,25 @@ let%expect_test "shadcn's classes, open" =
               data-state="open"
               class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"
               @on_click> Open Dialog </button>
-      <div loon-presence=() style={ display: contents; }>
+      <div popover="manual"
+           loon-portal=()
+           loon-presence=()
+           style={
+             inset: 0;
+             margin: 0;
+             border: 0;
+             padding: 0;
+             background: transparent;
+             color: inherit;
+             overflow: visible;
+             max-width: none;
+             max-height: none;
+             position: fixed;
+             width: 100%;
+             height: 100%;
+             pointer-events: none;
+             z-index: 50;
+           }>
         <div data-slot="dialog-overlay"
              data-state="open"
              class="bg-black/50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 fixed inset-0 z-50"
@@ -89,7 +107,7 @@ let%expect_test "shadcn's classes, open" =
           <div data-slot="dialog-footer"
                class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
             <button type="button"
-                    data-slot="button"
+                    data-slot="dialog-close"
                     data-variant="outline"
                     data-size="default"
                     class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"
@@ -145,7 +163,7 @@ let%expect_test "closed: only the trigger" =
     {|
     <div>
       <button type="button"
-              data-slot="button"
+              data-slot="dialog-trigger"
               data-variant="outline"
               data-size="default"
               id="d-trigger"
@@ -191,7 +209,7 @@ let%expect_test
     open: true
     <div>
       <button type="button"
-              data-slot="button"
+              data-slot="dialog-trigger"
               data-variant="outline"
               data-size="default"
               id="bonsai_path_replaced_in_test-trigger"
@@ -200,7 +218,25 @@ let%expect_test
               aria-controls="bonsai_path_replaced_in_test-content"
               data-state="open"
               @on_click> Open Dialog </button>
-      <div loon-presence=() style={ display: contents; }>
+      <div popover="manual"
+           loon-portal=()
+           loon-presence=()
+           style={
+             inset: 0;
+             margin: 0;
+             border: 0;
+             padding: 0;
+             background: transparent;
+             color: inherit;
+             overflow: visible;
+             max-width: none;
+             max-height: none;
+             position: fixed;
+             width: 100%;
+             height: 100%;
+             pointer-events: none;
+             z-index: 50;
+           }>
         <div data-slot="dialog-overlay" data-state="open" @on_click style={ pointer-events: auto; }> </div>
         <div data-focus-guard=""
              tabindex="0"
@@ -233,7 +269,7 @@ let%expect_test
           <input id="name"/>
           <div data-slot="dialog-footer">
             <button type="button"
-                    data-slot="button"
+                    data-slot="dialog-close"
                     data-variant="outline"
                     data-size="default"
                     @on_click> Cancel </button>
@@ -312,7 +348,25 @@ let%expect_test
   [%expect
     {|
     <div>
-      <div loon-presence=() style={ display: contents; }>
+      <div popover="manual"
+           loon-portal=()
+           loon-presence=()
+           style={
+             inset: 0;
+             margin: 0;
+             border: 0;
+             padding: 0;
+             background: transparent;
+             color: inherit;
+             overflow: visible;
+             max-width: none;
+             max-height: none;
+             position: fixed;
+             width: 100%;
+             height: 100%;
+             pointer-events: none;
+             z-index: 50;
+           }>
         <div data-slot="dialog-overlay" data-state="open" @on_click style={ pointer-events: auto; }> </div>
         <div data-focus-guard=""
              tabindex="0"
@@ -340,7 +394,7 @@ let%expect_test
              }>
           <div data-slot="dialog-footer">
             <button type="button"
-                    data-slot="button"
+                    data-slot="dialog-close"
                     data-variant="outline"
                     data-size="default"
                     @on_click> Close </button>

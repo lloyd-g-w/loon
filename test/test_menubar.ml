@@ -84,7 +84,19 @@ let%expect_test "shadcn's classes" =
               @on_mouseenter> File </button>
       <div loon-dismiss=((menubar-0-trigger)false false) loon-presence=() style={ display: contents; }>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Popper((side Bottom)(side_offset 8)(align Start)(align_offset -4)(avoid_collisions true)(collision_padding 0)(anchor(Element menubar-0-trigger))(name menubar)))>
+             popover="manual"
+             loon-popper=(Popper((side Bottom)(side_offset 8)(align Start)(align_offset -4)(avoid_collisions true)(collision_padding 0)(anchor(Element menubar-0-trigger))(name menubar)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="menubar-content"
                id="menubar-0-content"
                role="menu"

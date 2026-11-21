@@ -41,7 +41,19 @@ let%expect_test "shadcn's classes" =
               @on_mouseleave> @nextjs </button>
       <div loon-dismiss=((h-trigger)false false) loon-presence=() style={ display: contents; }>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element h-trigger))(name hover-card)))>
+             popover="manual"
+             loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element h-trigger))(name hover-card)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="hover-card-content"
                data-state="open"
                data-side="bottom"
@@ -107,7 +119,19 @@ let%expect_test "the pointer on the trigger or focus opens it; blur closes it" =
              display: contents;
            }>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name hover-card)))>
+             popover="manual"
+             loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name hover-card)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="hover-card-content"
                data-state="open"
                data-side="bottom"
@@ -145,7 +169,19 @@ let%expect_test "the pointer on the trigger or focus opens it; blur closes it" =
              display: contents;
            }>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name hover-card)))>
+             popover="manual"
+             loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name hover-card)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="hover-card-content"
                data-state="open"
                data-side="bottom"
@@ -198,7 +234,19 @@ let%expect_test "the pointer on the trigger or focus opens it; blur closes it" =
              display: contents;
            }>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name hover-card)))>
+             popover="manual"
+             loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name hover-card)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="hover-card-content"
                data-state="open"
                data-side="bottom"

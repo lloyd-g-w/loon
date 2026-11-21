@@ -443,8 +443,26 @@ let%expect_test "the dialog: opened and closed by its state, the search cleared"
         <h2 data-slot="dialog-title" id="d-title"> Command Palette </h2>
         <p data-slot="dialog-description" id="d-description"> Search for a command to run... </p>
       </div>
-      <div loon-presence=() style={ display: contents; }>
-        <div data-slot="dialog-overlay" data-state="open" style={ pointer-events: auto; }> </div>
+      <div popover="manual"
+           loon-portal=()
+           loon-presence=()
+           style={
+             inset: 0;
+             margin: 0;
+             border: 0;
+             padding: 0;
+             background: transparent;
+             color: inherit;
+             overflow: visible;
+             max-width: none;
+             max-height: none;
+             position: fixed;
+             width: 100%;
+             height: 100%;
+             pointer-events: none;
+             z-index: 50;
+           }>
+        <div data-slot="dialog-overlay" data-state="open" @on_click style={ pointer-events: auto; }> </div>
         <div data-focus-guard=""
              tabindex="0"
              aria-hidden="true"

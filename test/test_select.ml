@@ -120,7 +120,19 @@ let%expect_test "shadcn's classes" =
              display: contents;
            }>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Popper((side Bottom)(side_offset 0)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 10)(anchor(Element s-trigger))(name select)))>
+             popover="manual"
+             loon-popper=(Popper((side Bottom)(side_offset 0)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 10)(anchor(Element s-trigger))(name select)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="select-content"
                role="listbox"
                id="s-content"
@@ -320,7 +332,19 @@ let%expect_test "open: the structure, groups, labels and the separator" =
              display: contents;
            }>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Item_aligned bonsai_path_replaced_in_test-trigger)>
+             popover="manual"
+             loon-popper=(Item_aligned bonsai_path_replaced_in_test-trigger)
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="select-content"
                role="listbox"
                id="bonsai_path_replaced_in_test-content"

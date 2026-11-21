@@ -36,7 +36,19 @@ let%expect_test "shadcn's classes" =
               @on_pointerdown> Hover </button>
       <div loon-dismiss=((t-trigger)false false) loon-presence=() style={ display: contents; }>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Popper((side Top)(side_offset 0)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element t-trigger))(name tooltip)))>
+             popover="manual"
+             loon-popper=(Popper((side Top)(side_offset 0)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element t-trigger))(name tooltip)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="tooltip-content"
                id="t-content"
                data-state="delayed-open"
@@ -120,7 +132,19 @@ let%expect_test "the pointer or focus opens it; blur closes it" =
              display: contents;
            }>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Popper((side Top)(side_offset 0)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name tooltip)))>
+             popover="manual"
+             loon-popper=(Popper((side Top)(side_offset 0)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name tooltip)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="tooltip-content"
                id="bonsai_path_replaced_in_test-content"
                data-state="delayed-open"
@@ -191,7 +215,19 @@ let%expect_test "the pointer or focus opens it; blur closes it" =
              display: contents;
            }>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Popper((side Top)(side_offset 0)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name tooltip)))>
+             popover="manual"
+             loon-popper=(Popper((side Top)(side_offset 0)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name tooltip)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="tooltip-content"
                id="bonsai_path_replaced_in_test-content"
                data-state="delayed-open"

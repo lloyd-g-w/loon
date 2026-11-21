@@ -85,7 +85,7 @@ let%expect_test "shadcn's classes" =
   [%expect {|
     <div>
       <button type="button"
-              data-slot="button"
+              data-slot="dropdown-menu-trigger"
               data-variant="default"
               data-size="default"
               id="bonsai_path_replaced_in_test-trigger"
@@ -102,7 +102,19 @@ let%expect_test "shadcn's classes" =
              display: contents;
            }>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name dropdown-menu)))>
+             popover="manual"
+             loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name dropdown-menu)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="dropdown-menu-content"
                id="bonsai_path_replaced_in_test-content"
                role="menu"
@@ -252,7 +264,7 @@ let%expect_test "a click opens it, without a highlight; Esc closes it" =
   [%expect {|
     <div>
       <button type="button"
-              data-slot="button"
+              data-slot="dropdown-menu-trigger"
               data-variant="default"
               data-size="default"
               id="bonsai_path_replaced_in_test-trigger"
@@ -268,7 +280,19 @@ let%expect_test "a click opens it, without a highlight; Esc closes it" =
              display: contents;
            }>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name dropdown-menu)))>
+             popover="manual"
+             loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name dropdown-menu)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="dropdown-menu-content"
                id="bonsai_path_replaced_in_test-content"
                role="menu"
@@ -601,7 +625,7 @@ let%expect_test "Enter and Space open it too; a disabled trigger does nothing" =
   [%expect {|
     <div>
       <button type="button"
-              data-slot="button"
+              data-slot="dropdown-menu-trigger"
               data-variant="default"
               data-size="default"
               id="bonsai_path_replaced_in_test-trigger"
@@ -643,7 +667,7 @@ let%expect_test "sub-menus: ArrowRight opens, ArrowLeft closes, the pointer open
   [%expect {|
     <div>
       <button type="button"
-              data-slot="button"
+              data-slot="dropdown-menu-trigger"
               data-variant="default"
               data-size="default"
               id="bonsai_path_replaced_in_test-trigger"
@@ -659,7 +683,19 @@ let%expect_test "sub-menus: ArrowRight opens, ArrowLeft closes, the pointer open
              display: contents;
            }>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name dropdown-menu)))>
+             popover="manual"
+             loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name dropdown-menu)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="dropdown-menu-content"
                id="bonsai_path_replaced_in_test-content"
                role="menu"
@@ -827,7 +863,19 @@ let%expect_test "sub-menus: ArrowRight opens, ArrowLeft closes, the pointer open
           </div>
         </div>
         <div data-radix-popper-content-wrapper=""
-             loon-popper=(Popper((side Right)(side_offset 0)(align Start)(align_offset -5)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-sub-3-trigger))(name dropdown-menu)))>
+             popover="manual"
+             loon-popper=(Popper((side Right)(side_offset 0)(align Start)(align_offset -5)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-sub-3-trigger))(name dropdown-menu)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+             }>
           <div data-slot="dropdown-menu-sub-content"
                id="bonsai_path_replaced_in_test-sub-3"
                role="menu"

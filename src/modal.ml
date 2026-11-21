@@ -95,7 +95,7 @@ let content ?(dismissible = true) ?initial_focus ?(role = "dialog") ~overlay ~co
     in
     Node.div
       ~attrs:
-        [ Attr.style (Css_gen.create ~field:"display" ~value:"contents"); Presence.attr ]
+        (Presence.attr :: Portal.fullscreen)
       [ overlay; Focus.guard ~id `Start; content; Focus.guard ~id `End ])
 ;;
 
