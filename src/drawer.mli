@@ -19,10 +19,12 @@ module Direction : sig
   val name : t -> string
 end
 
-(** Controlled. [id] (unique on the page) prefixes the parts' ids;
+(** Controlled. [id] (unique on the page) prefixes the parts' ids
+    ([trigger_id], if given, is the trigger's: for a {!Label}'s [for_]);
     [direction] (default [Bottom]) is the edge it comes from. *)
 val view
   :  ?id:string
+  -> ?trigger_id:string
   -> ?direction:Direction.t
   -> open_:bool
   -> on_open_change:(bool -> unit Effect.t)
@@ -50,4 +52,10 @@ val content : ?attrs:Attr.t list -> ?class_:string -> t -> Node.t list -> Node.t
 val header : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
 val footer : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
 val title : ?attrs:Attr.t list -> ?class_:string -> t -> Node.t list -> Node.t
-val description : ?attrs:Attr.t list -> ?class_:string -> t -> Node.t list -> Node.t
+
+val description
+  :  ?attrs:Attr.t list
+  -> ?class_:string
+  -> t
+  -> Node.t list
+  -> Node.t

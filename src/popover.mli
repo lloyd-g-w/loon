@@ -19,10 +19,12 @@ open! Import
 type t
 
 (** Controlled: [open_] and [on_open_change]. [id] (unique on the page)
-    prefixes the parts' ids. [modal] (default [false]): while open, the rest
+    prefixes the parts' ids ([trigger_id], if given, is the trigger's: for a
+    {!Label}'s [for_]). [modal] (default [false]): while open, the rest
     of the page ignores the pointer and focus stays inside. *)
 val view
   :  ?id:string
+  -> ?trigger_id:string
   -> ?modal:bool
   -> open_:bool
   -> on_open_change:(bool -> unit Effect.t)
@@ -32,6 +34,7 @@ val view
 (** Keeps whether it is open ([default_open], [false] by default). *)
 val component
   :  ?default_open:bool
+  -> ?trigger_id:string
   -> ?modal:bool
   -> (t -> Node.t list) Bonsai.t
   -> local_ Bonsai.graph

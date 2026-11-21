@@ -648,3 +648,126 @@ let%expect_test "dropdown caption and week numbers" =
           style="border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal"> February 2001 </span>
     |}]
 ;;
+
+let%expect_test "excludeDisabled: a range holding a disabled day starts again" =
+  let weekend d =
+    match Date.day_of_week d with
+    | Sat | Sun -> true
+    | _ -> false
+  in
+  let show s = print_s [%sexp (s : Calendar.Selection.t)] in
+  let r =
+    Calendar.Selection.Range
+      (Some { from = date "2025-06-17"; to_ = Some (date "2025-06-20") })
+  in
+  show (Calendar.select ~excluded:weekend r (date "2025-06-19"));
+  show (Calendar.select ~excluded:weekend r (date "2025-06-24"));
+  [%expect {|
+    (Range (((from 2025-06-17) (to_ (2025-06-19)))))
+    (Range (((from 2025-06-24) (to_ ()))))
+    |}]
+;;
+
+let%expect_test "locale, formatters, disabled navigation, initial month in bounds" =
+  let handle =
+    Render.handle ~classes:false (fun graph ->
+      let open Bonsai_web.Bonsai.Let_syntax in
+      let calendar =
+        Calendar.component
+          ~locale:Calendar.Locale.es
+          ~format_weekday_name:(fun d ->
+            (* 1 June 2025 is a Sunday. *)
+            Calendar.format "EEE" (Date.add_days (date "2025-06-01") (Day_of_week.to_int d)))
+          ~disable_navigation:true
+          ~start_month:(date "2025-06-01")
+          ~end_month:(date "2025-07-31")
+          ~number_of_months:2
+          ~today
+          ~default_month:(date "2026-11-01")
+          ~default:(Range None)
+          graph
+      in
+      let%arr calendar in
+      calendar.view)
+  in
+  Handle.recompute_view handle;
+  List.iter
+    [ ".rdp-nav"; ".rdp-caption_label"; "thead tr"; "td[data-day='2025-06-09'] button" ]
+    ~f:(fun selector ->
+      Render.html ~classes:false ~selector (Handle.last_result handle));
+  [%expect {|
+    <nav aria-label="Navigation bar">
+      <button type="button"
+              tabindex="-1"
+              aria-disabled="true"
+              aria-label="Go to the Previous Month"
+              @on_click>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="m15 18-6-6 6-6"> </path>
+        </svg>
+      </button>
+      <button type="button"
+              tabindex="-1"
+              aria-disabled="true"
+              aria-label="Go to the Next Month"
+              @on_click>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="m9 18 6-6-6-6"> </path>
+        </svg>
+      </button>
+    </nav>
+    <span role="status" aria-live="polite"> junio 2025 </span>
+    <span role="status" aria-live="polite"> julio 2025 </span>
+    <tr>
+      <th aria-label="lunes" scope="col"> Mon </th>
+      <th aria-label="martes" scope="col"> Tue </th>
+      <th aria-label="miércoles" scope="col"> Wed </th>
+      <th aria-label="jueves" scope="col"> Thu </th>
+      <th aria-label="viernes" scope="col"> Fri </th>
+      <th aria-label="sábado" scope="col"> Sat </th>
+      <th aria-label="domingo" scope="col"> Sun </th>
+    </tr>
+    <tr>
+      <th aria-label="lunes" scope="col"> Mon </th>
+      <th aria-label="martes" scope="col"> Tue </th>
+      <th aria-label="miércoles" scope="col"> Wed </th>
+      <th aria-label="jueves" scope="col"> Thu </th>
+      <th aria-label="viernes" scope="col"> Fri </th>
+      <th aria-label="sábado" scope="col"> Sat </th>
+      <th aria-label="domingo" scope="col"> Sun </th>
+    </tr>
+    <button type="button"
+            data-slot="button"
+            data-variant="ghost"
+            data-size="icon"
+            data-day="6/9/2025"
+            data-selected-single="false"
+            data-range-start="false"
+            data-range-end="false"
+            data-range-middle="false"
+            tabindex="-1"
+            aria-label="lunes, 9 de junio de 2025"
+            @on_blur
+            @on_click
+            @on_focus
+            @on_keydown> 9 </button>
+    |}]
+;;

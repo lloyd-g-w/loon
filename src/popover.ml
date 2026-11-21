@@ -2,27 +2,29 @@ open! Import
 
 type t =
   { id : string
+  ; trigger_id : string
   ; modal : bool
   ; open_ : bool
   ; on_open_change : bool -> unit Effect.t
   }
 
-let view ?(id = "popover") ?(modal = false) ~open_ ~on_open_change f =
-  Node.fragment (f { id; modal; open_; on_open_change })
+let view ?(id = "popover") ?trigger_id ?(modal = false) ~open_ ~on_open_change f =
+  let trigger_id = Option.value trigger_id ~default:(id ^ "-trigger") in
+  Node.fragment (f { id; trigger_id; modal; open_; on_open_change })
 ;;
 
-let component ?(default_open = false) ?modal f (local_ graph) =
+let component ?(default_open = false) ?trigger_id ?modal f (local_ graph) =
   let open Bonsai.Let_syntax in
   let open_, set_open = Bonsai.state default_open graph in
   let id = Bonsai.path_id graph in
   let%arr open_ and set_open and id and f in
-  view ~id ?modal ~open_ ~on_open_change:set_open f
+  view ~id ?trigger_id ?modal ~open_ ~on_open_change:set_open f
 ;;
 
 let is_open t = t.open_
 
 let set_open t o = if Bool.equal o t.open_ then Effect.Ignore else t.on_open_change o
-let trigger_id t = t.id ^ "-trigger"
+let trigger_id t = t.trigger_id
 let content_id t = t.id ^ "-content"
 let state t = data "state" (if t.open_ then "open" else "closed")
 

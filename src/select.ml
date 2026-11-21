@@ -75,6 +75,7 @@ module Trigger = struct
   type t =
     { attrs : Attr.t list
     ; class_ : string option
+    ; id : string option
     ; size : Size.t
     ; placeholder : string option
     ; value_class : string option
@@ -94,8 +95,17 @@ module Content = struct
     }
 end
 
-let trigger ?(attrs = []) ?class_ ?(size = Size.Default) ?placeholder ?value_class () : Trigger.t =
-  { attrs; class_; size; placeholder; value_class }
+let trigger
+  ?(attrs = [])
+  ?class_
+  ?id
+  ?(size = Size.Default)
+  ?placeholder
+  ?value_class
+  ()
+  : Trigger.t
+  =
+  { attrs; class_; id; size; placeholder; value_class }
 ;;
 
 let content
@@ -277,7 +287,7 @@ let view
   =
   let state : State.t = state in
   let value : string option = value in
-  let trigger_id = id ^ "-trigger" in
+  let trigger_id = Option.value trigger.id ~default:(id ^ "-trigger") in
   let content_id = id ^ "-content" in
   let items = items_of content.parts in
   let enabled =

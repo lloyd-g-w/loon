@@ -753,3 +753,46 @@ let%expect_test "disabled: the trigger does not open" =
     </div>
     |}]
 ;;
+
+let%expect_test "the trigger's own id, for a label" =
+  let node =
+    Select.view
+      ~id:"sel"
+      ~value:None
+      ~on_value_change:(fun _ -> Effect.Ignore)
+      ~state:Select.State.closed
+      ~on_state_change:(fun _ -> Effect.Ignore)
+      (Select.trigger ~id:"dropdown" ~placeholder:"Dropdown" ())
+      fruits
+  in
+  Render.html ~classes:false ~selector:"button" node;
+  [%expect {|
+    <button type="button"
+            role="combobox"
+            aria-controls="sel-content"
+            aria-expanded="false"
+            aria-autocomplete="none"
+            id="dropdown"
+            dir="ltr"
+            data-state="closed"
+            data-placeholder=""
+            data-slot="select-trigger"
+            data-size="default"
+            @on_click
+            @on_keydown>
+      <span data-slot="select-value" style={ pointer-events: none; }> Dropdown </span>
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="24"
+           height="24"
+           viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2"
+           stroke-linecap="round"
+           stroke-linejoin="round"
+           aria-hidden="true">
+        <path d="m6 9 6 6 6-6"> </path>
+      </svg>
+    </button>
+    |}]
+;;

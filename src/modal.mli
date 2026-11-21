@@ -11,6 +11,7 @@ open! Import
 
 type t =
   { id : string
+  ; trigger_id : string
   ; open_ : bool
   ; on_open_change : bool -> unit Effect.t
   }
@@ -31,6 +32,7 @@ val component
 
 val view
   :  ?id:string
+  -> ?trigger_id:string
   -> open_:bool
   -> on_open_change:(bool -> unit Effect.t)
   -> (t -> Node.t list)
@@ -58,7 +60,13 @@ val content
 (** The overlay: a [<div>] with the state, for [content]. *)
 val overlay : slot:string -> class_:string -> t -> Node.t
 
-val title : slot:string -> class_:string -> ?attrs:Attr.t list -> t -> Node.t list -> Node.t
+val title
+  :  slot:string
+  -> class_:string
+  -> ?attrs:Attr.t list
+  -> t
+  -> Node.t list
+  -> Node.t
 
 val description
   :  slot:string

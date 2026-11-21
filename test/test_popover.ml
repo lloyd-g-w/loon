@@ -278,3 +278,33 @@ let%expect_test "modal: focus guards around the content" =
     </div>
     |}]
 ;;
+
+let%expect_test "the trigger's own id, for a label" =
+  let node =
+    Popover.view
+      ~id:"pop"
+      ~trigger_id:"date"
+      ~open_:false
+      ~on_open_change:(fun _ -> Bonsai_web.Effect.Ignore)
+      (fun popover ->
+        [ Label.view ~for_:"date" [ Node.text "Date" ]
+        ; Popover.trigger popover (Button.view [ Node.text "Select date" ])
+        ])
+  in
+  Render.html ~classes:false node;
+  [%expect {|
+    <div>
+      <label data-slot="label" for="date" @on_mousedown> Date </label>
+      <button type="button"
+              data-slot="popover-trigger"
+              data-variant="default"
+              data-size="default"
+              id="date"
+              aria-haspopup="dialog"
+              aria-expanded="false"
+              aria-controls="pop-content"
+              data-state="closed"
+              @on_click> Select date </button>
+    </div>
+    |}]
+;;

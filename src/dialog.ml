@@ -2,7 +2,7 @@ open! Import
 
 type t = Modal.t
 
-let view ?id = Modal.view ?id
+let view ?id ~open_ ~on_open_change f = Modal.view ?id ~open_ ~on_open_change f
 let component = Modal.component
 let trigger ?attrs t node = Modal.trigger ~slot:"dialog-trigger" ?attrs t node
 let close ?attrs t node = Modal.close ~slot:"dialog-close" ?attrs t node

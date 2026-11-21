@@ -53,8 +53,16 @@ end
     mode the clicked day (clicked again: none, unless [required]); in
     multiple mode the day added or removed (at most [max], at least [min]
     days); in range mode the range extended to it ([min], [max]: its length
-    in nights). *)
-val select : ?required:bool -> ?min:int -> ?max:int -> Selection.t -> Date.t -> Selection.t
+    in nights; a range holding an [excluded] day starts again from
+    [date], react-day-picker's [excludeDisabled]). *)
+val select
+  :  ?required:bool
+  -> ?min:int
+  -> ?max:int
+  -> ?excluded:(Date.t -> bool)
+  -> Selection.t
+  -> Date.t
+  -> Selection.t
 
 (** The weeks shown for [month]'s month, from the week holding its first
     day to the one holding its last (six weeks with [fixed_weeks]). *)
@@ -79,6 +87,24 @@ val moved
     copied, as are other characters. *)
 val format : string -> Date.t -> string
 
+(** The language of the captions, weekdays and days' labels, and the first
+    day of the week (react-day-picker's [locale], from date-fns). *)
+module Locale : sig
+  type t
+
+  (** English (United States), the default: weeks start on Sunday. *)
+  val en_us : t
+
+  (** Spanish: weeks start on Monday. *)
+  val es : t
+
+  (** Its BCP 47 tag: ["en-US"], ["es"]. *)
+  val code : t -> string
+
+  (** The month's caption: "June 2025", "junio 2025". *)
+  val caption : t -> Date.t -> string
+end
+
 (** The browser's local date. *)
 val today : unit -> Date.t
 
@@ -90,11 +116,24 @@ val today : unit -> Date.t
     number (react-day-picker's [DayButton] children). [start_month] and
     [end_month] bound the navigation (with a year dropdown and no bounds:
     from 100 years ago to the end of this year). [id] (unique on the page,
-    ["calendar"] by default) lets the keyboard move the focus. *)
+    ["calendar"] by default) lets the keyboard move the focus.
+
+    [locale] names the months and days ({!Locale.en_us} by default) and
+    gives [week_starts_on]'s default; [format_weekday_name] (the weekdays'
+    headers: "Su" by default) and [format_month_dropdown] (the month
+    dropdown's options: "Jun") are react-day-picker's [formatters]. With
+    [disable_navigation] the months shown stay put (the navigation buttons
+    are disabled). With [exclude_disabled], a range cannot hold a disabled
+    day (see {!select}). *)
 val view
   :  ?attrs:Attr.t list
   -> ?class_:string
   -> ?id:string
+  -> ?locale:Locale.t
+  -> ?format_weekday_name:(Day_of_week.t -> string)
+  -> ?format_month_dropdown:(Month.t -> string)
+  -> ?disable_navigation:bool
+  -> ?exclude_disabled:bool
   -> ?caption_layout:Caption_layout.t
   -> ?button_variant:Button.Variant.t
   -> ?show_outside_days:bool
@@ -129,12 +168,18 @@ type t =
   }
 
 (** Keeps the selection ([default] at first, which also sets the mode), the
-    month shown ([default_month], or [today]'s, at first) and the focused
+    month shown ([default_month], or [today]'s, at first, within
+    [start_month] and [end_month]) and the focused
     day. [today] defaults to the browser's local date. [on_select] runs
     after a day is clicked, with the new selection. *)
 val component
   :  ?attrs:Attr.t list
   -> ?class_:string
+  -> ?locale:Locale.t
+  -> ?format_weekday_name:(Day_of_week.t -> string)
+  -> ?format_month_dropdown:(Month.t -> string)
+  -> ?disable_navigation:bool
+  -> ?exclude_disabled:bool
   -> ?caption_layout:Caption_layout.t
   -> ?button_variant:Button.Variant.t
   -> ?show_outside_days:bool
@@ -156,3 +201,9 @@ val component
   -> default:Selection.t
   -> local_ Bonsai.graph
   -> t Bonsai.t
+
+module For_testing : sig
+  (** Makes {!today} return this day (or the real one again, with [None]),
+      for tests of what starts from today. *)
+  val set_today : Date.t option -> unit
+end

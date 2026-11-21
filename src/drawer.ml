@@ -33,8 +33,8 @@ type t =
   ; direction : Direction.t
   }
 
-let view ?id ?(direction = Direction.Bottom) ~open_ ~on_open_change f =
-  Modal.view ?id ~open_ ~on_open_change (fun modal -> f { modal; direction })
+let view ?id ?trigger_id ?(direction = Direction.Bottom) ~open_ ~on_open_change f =
+  Modal.view ?id ?trigger_id ~open_ ~on_open_change (fun modal -> f { modal; direction })
 ;;
 
 let component ?(default_open = false) ?direction f (local_ graph) =
