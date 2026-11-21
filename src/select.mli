@@ -81,10 +81,12 @@ end
 
 (** The button showing the selected item's children, or [placeholder]
     (shadcn's [SelectTrigger] with its [SelectValue]; [value_class] is the
-    value's). *)
+    value's). [id] is its id (by default the select's, then [-trigger]),
+    for a {!Label}'s [for_]. *)
 val trigger
   :  ?attrs:Attr.t list
   -> ?class_:string
+  -> ?id:string
   -> ?size:Size.t
   -> ?placeholder:string
   -> ?value_class:string
