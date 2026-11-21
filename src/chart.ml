@@ -463,10 +463,8 @@ let tooltip_content
                                        else "")
                                     ])
                              ; (* [Attr.style] drops custom properties. *)
-                               Attr.__css_vars_no_kebabs
-                                 [ "--color-bg", indicator_color
-                                 ; "--color-border", indicator_color
-                                 ]
+                               Attr.css_var ~name:"color-bg" indicator_color
+                             ; Attr.css_var ~name:"color-border" indicator_color
                              ]
                            [])
                   ; Node.div
@@ -1655,17 +1653,19 @@ let measure name callback = Vdom.Attr.create_hook name (Measure.create callback)
 let local_point (ev : Dom_html.mouseEvent Js.t) =
   let x = Js.to_float (Js.Unsafe.coerce ev)##.clientX in
   let y = Js.to_float (Js.Unsafe.coerce ev)##.clientY in
-  let target : Dom_html.element Js.t Js.Opt.t Js.Optdef.t =
-    Js.Unsafe.get ev "currentTarget"
-  in
-  match Option.bind (Js.Optdef.to_option target) ~f:Js.Opt.to_option with
+  (* Tests' fake events have no [currentTarget] (reading it raises). *)
+  match
+    Option.try_with (fun () ->
+      let target : Dom_html.element Js.t Js.Opt.t Js.Optdef.t =
+        Js.Unsafe.get ev "currentTarget"
+      in
+      Option.bind (Js.Optdef.to_option target) ~f:Js.Opt.to_option)
+    |> Option.join
+  with
   | Some t ->
-    (try
-       let r = t##getBoundingClientRect in
-       x -. Js.to_float r##.left, y -. Js.to_float r##.top
-     with
-     | _ -> x, y)
-  | _ -> x, y
+    let r = t##getBoundingClientRect in
+    x -. Js.to_float r##.left, y -. Js.to_float r##.top
+  | None -> x, y
 ;;
 
 (* Rendering *)

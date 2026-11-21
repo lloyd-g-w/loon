@@ -317,10 +317,7 @@ let advanced (local_ graph) =
               [ Node.div
                   ~attrs:
                     [ Attr.class_ "h-2.5 w-2.5 shrink-0 rounded-[2px] bg-(--color-bg)"
-                    ; Attr.style
-                        (Css_gen.create
-                           ~field:"--color-bg"
-                           ~value:(sprintf "var(--color-%s)" item.name))
+                    ; Attr.css_var ~name:"color-bg" (sprintf "var(--color-%s)" item.name)
                     ]
                   []
               ; Node.text label
