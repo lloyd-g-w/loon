@@ -90,15 +90,20 @@ let stacked_areas =
 let interactive (local_ graph) =
   let select =
     Select.component
-      ~placeholder:"Last 3 months"
-      ~default:"90d"
+      ~default_value:"90d"
       (Bonsai.return
-         [ Select.Group.create
-             [ Select.Option_.create ~label:"Last 3 months" "90d"
-             ; Select.Option_.create ~label:"Last 30 days" "30d"
-             ; Select.Option_.create ~label:"Last 7 days" "7d"
-             ]
-         ])
+         (Select.trigger
+            ~class_:"hidden w-[160px] rounded-lg sm:ml-auto sm:flex"
+            ~attrs:[ Vdom.Attr.create "aria-label" "Select a value" ]
+            ~placeholder:"Last 3 months"
+            ()))
+      (Bonsai.return
+         (Select.content
+            ~class_:"rounded-xl"
+            [ Select.item ~class_:"rounded-lg" ~value:"90d" [ Node.text "Last 3 months" ]
+            ; Select.item ~class_:"rounded-lg" ~value:"30d" [ Node.text "Last 30 days" ]
+            ; Select.item ~class_:"rounded-lg" ~value:"7d" [ Node.text "Last 7 days" ]
+            ]))
       graph
   in
   let chart = Chart.component graph in
@@ -125,7 +130,7 @@ let interactive (local_ graph) =
             [ Card.title [ Node.text "Area Chart - Interactive" ]
             ; Card.description [ Node.text "Showing total visitors for the last 3 months" ]
             ]
-        ; Node.div ~attrs:[ Attr.class_ "hidden w-[160px] sm:ml-auto sm:flex" ] [ select ]
+        ; select
         ]
     ; Card.content
         ~class_:"px-2 pt-4 sm:px-6 sm:pt-6"

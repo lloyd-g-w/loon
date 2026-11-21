@@ -107,24 +107,42 @@ let interactive (local_ graph) =
   let id = "pie-interactive" in
   let select =
     Select.component
-      ~attrs:
-        [ Attr.style
-            (Css_gen.concat
-               [ Css_gen.min_width (`Px 0); Css_gen.width (`Percent Percent.one_hundred_percent) ])
-        ]
-      ~placeholder:"Select month"
-      ~default:"january"
+      ~default_value:"january"
       (Bonsai.return
-         [ Select.Group.create
-             (List.map
-                [ "january", "January"
-                ; "february", "February"
-                ; "march", "March"
-                ; "april", "April"
-                ; "may", "May"
-                ]
-                ~f:(fun (value, label) -> Select.Option_.create ~label value))
-         ])
+         (Select.trigger
+            ~class_:"ml-auto h-7 w-[130px] rounded-lg pl-2.5"
+            ~attrs:[ Vdom.Attr.create "aria-label" "Select a value" ]
+            ~placeholder:"Select month"
+            ()))
+      (Bonsai.return
+         (Select.content
+            ~align:End
+            ~class_:"rounded-xl"
+            (List.map
+               [ "january", "January"
+               ; "february", "February"
+               ; "march", "March"
+               ; "april", "April"
+               ; "may", "May"
+               ]
+               ~f:(fun (value, label) ->
+                 Select.item
+                   ~class_:"rounded-lg [&_span]:flex"
+                   ~value
+                   [ Node.div
+                       ~attrs:[ Vdom.Attr.class_ "flex items-center gap-2 text-xs" ]
+                       [ Node.span
+                           ~attrs:
+                             [ Vdom.Attr.class_ "flex h-3 w-3 shrink-0 rounded-xs"
+                             ; Vdom.Attr.style
+                                 (Css_gen.create
+                                    ~field:"background-color"
+                                    ~value:("var(--color-" ^ value ^ ")"))
+                             ]
+                           []
+                       ; Node.text label
+                       ]
+                   ]))))
       graph
   in
   let chart = Chart.component graph in
@@ -161,7 +179,7 @@ let interactive (local_ graph) =
             [ Card.title [ Node.text "Pie Chart - Interactive" ]
             ; Card.description [ Node.text "January - June 2024" ]
             ]
-        ; Node.div ~attrs:[ Attr.class_ "ml-auto w-[130px]" ] [ select ]
+        ; select
         ]
     ; Card.content
         ~class_:"flex flex-1 justify-center pb-0"
