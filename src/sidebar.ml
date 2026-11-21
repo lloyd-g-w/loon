@@ -659,7 +659,7 @@ let place_tooltip (ev : #Dom_html.event Js.t) =
                        /. 2.)))))
 ;;
 
-let tooltip_view text =
+let tooltip_view ~hidden text =
   Node.div
     ~attrs:
       [ Attr.role "tooltip"
@@ -676,9 +676,15 @@ let tooltip_view text =
                 data-[side=top]:slide-in-from-bottom-2 \
                 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 \
                 data-[state=closed]:zoom-out-95"
-             ; "pointer-events-none fixed hidden -translate-y-1/2 \
-                group-data-[collapsible=icon]:peer-hover/menu-button:block \
-                group-data-[collapsible=icon]:peer-focus-visible/menu-button:block"
+             ; (match hidden with
+                | `Unless_collapsed ->
+                  "pointer-events-none fixed hidden -translate-y-1/2 \
+                   group-data-[collapsible=icon]:peer-hover/menu-button:block \
+                   group-data-[collapsible=icon]:peer-focus-visible/menu-button:block"
+                | `Never ->
+                  "pointer-events-none fixed hidden -translate-y-1/2 \
+                   peer-hover/menu-button:block \
+                   peer-focus-visible/menu-button:block")
              ])
       ]
     [ Node.text text
@@ -700,6 +706,7 @@ let menu_button
       ?(size = Menu_button_size.Default)
       ?(is_active = false)
       ?tooltip
+      ?(tooltip_hidden = true)
       ?href
       ?on_click
       children
@@ -724,7 +731,9 @@ let menu_button
   in
   match tooltip with
   | None -> button
-  | Some text -> Node.fragment [ button; tooltip_view text ]
+  | Some text ->
+    let hidden = if tooltip_hidden then `Unless_collapsed else `Never in
+    Node.fragment [ button; tooltip_view ~hidden text ]
 ;;
 
 let menu_action
