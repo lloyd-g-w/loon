@@ -1,611 +1,650 @@
 open! Core
 open Loon
+module Node = Virtual_dom.Vdom.Node
 module Handle = Bonsai_web_test.Handle
 
 let date = Date.of_string
+let today = date "2025-06-12"
 
-let%expect_test "weeks" =
-  Calendar.weeks ~week_start:Mon (date "2026-11-20")
-  |> List.iter ~f:(fun week ->
-    List.map week ~f:(fun d -> sprintf "%2d" (Date.day d))
-    |> String.concat ~sep:" "
-    |> print_endline);
-  [%expect
-    {|
-    26 27 28 29 30 31  1
-     2  3  4  5  6  7  8
-     9 10 11 12 13 14 15
-    16 17 18 19 20 21 22
-    23 24 25 26 27 28 29
-    30  1  2  3  4  5  6
+let%expect_test "shadcn's classes" =
+  (* February 2026 starts on a Sunday and fills four weeks. *)
+  let node =
+    Calendar.view
+      ~today
+      ~month:(date "2026-02-01")
+      ~on_month_change:(fun _ -> Bonsai_web.Effect.Ignore)
+      ~focused:None
+      ~on_focus:(fun _ -> Bonsai_web.Effect.Ignore)
+      ~selected:(Single (Some (date "2026-02-03")))
+      ~on_select:(fun _ -> Bonsai_web.Effect.Ignore)
+      ~disabled:(fun d -> Date.equal d (date "2026-02-04"))
+      ()
+  in
+  (* The root's own attributes, then a part of each kind (the first lines
+     of those whose children follow). *)
+  let module H = Virtual_dom_test_helpers.Node_helpers in
+  let tree = H.unsafe_convert_exn node in
+  List.iter
+    [ "[data-slot=calendar]", 4
+    ; ".rdp-months", 1
+    ; ".rdp-nav", 100
+    ; ".rdp-month", 1
+    ; ".rdp-month_caption", 100
+    ; "table", 4
+    ; "thead", 1
+    ; "tr.rdp-weekdays", 1
+    ; "th[aria-label=Sunday]", 100
+    ; "tbody", 1
+    ; "tr.rdp-week", 1
+    ; "td[data-day='2026-02-03']", 100
+    ; "td[data-day='2026-02-04']", 100
+    ]
+    ~f:(fun (selector, n) ->
+      let element = List.hd_exn (H.select tree ~selector) in
+      H.to_string_html element
+      |> String.split_lines
+      |> Fn.flip List.take n
+      |> List.iter ~f:print_endline);
+  [%expect {|
+    <div data-slot="calendar"
+         id="calendar"
+         data-mode="single"
+         class="[--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent bg-background group/calendar p-3 rdp-root rtl:**:[.rdp-button\_next>svg]:rotate-180 rtl:**:[.rdp-button\_previous>svg]:rotate-180 w-fit">
+    <div class="flex flex-col gap-4 md:flex-row rdp-months relative">
+    <nav aria-label="Navigation bar"
+         class="absolute flex gap-1 inset-x-0 items-center justify-between rdp-nav top-0 w-full">
+      <button type="button"
+              aria-label="Go to the Previous Month"
+              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none p-0 rdp-button_previous rounded-md select-none shrink-0 size-(--cell-size) text-sm transition-all whitespace-nowrap"
+              @on_click>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true"
+             class="lucide lucide-chevron-left rdp-chevron size-4">
+          <path d="m15 18-6-6 6-6"> </path>
+        </svg>
+      </button>
+      <button type="button"
+              aria-label="Go to the Next Month"
+              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none p-0 rdp-button_next rounded-md select-none shrink-0 size-(--cell-size) text-sm transition-all whitespace-nowrap"
+              @on_click>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true"
+             class="lucide lucide-chevron-right rdp-chevron size-4">
+          <path d="m9 18 6-6-6-6"> </path>
+        </svg>
+      </button>
+    </nav>
+    <div class="flex flex-col gap-4 rdp-month w-full">
+    <div class="flex h-(--cell-size) items-center justify-center px-(--cell-size) rdp-month_caption w-full">
+      <span role="status" aria-live="polite" class="font-medium rdp-caption_label select-none text-sm"> February 2026 </span>
+    </div>
+    <table role="grid"
+           aria-multiselectable="false"
+           aria-label="February 2026"
+           class="border-collapse rdp-month_grid w-full">
+    <thead aria-hidden="true">
+    <tr class="flex rdp-weekdays">
+    <th aria-label="Sunday"
+        scope="col"
+        class="flex-1 font-normal rdp-weekday rounded-md select-none text-[0.8rem] text-muted-foreground"> Su </th>
+    <tbody class="rdp-weeks">
+    <tr class="flex mt-2 rdp-week w-full">
+    <td role="gridcell"
+        aria-selected="true"
+        data-day="2026-02-03"
+        data-selected="true"
+        class="[&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md aspect-square group/day h-full p-0 rdp-day rdp-selected relative select-none text-center w-full">
+      <button type="button"
+              data-slot="button"
+              data-variant="ghost"
+              data-size="icon"
+              data-day="2/3/2026"
+              data-selected-single="true"
+              data-range-start="false"
+              data-range-end="false"
+              data-range-middle="false"
+              tabindex="0"
+              aria-label="Tuesday, February 3rd, 2026, selected"
+              class="[&>span]:opacity-70 [&>span]:text-xs [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 aspect-square dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 dark:hover:text-accent-foreground data-[range-end=true]:bg-primary data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-end=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:rounded-none data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:rounded-l-md data-[range-start=true]:rounded-md data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground disabled:opacity-50 disabled:pointer-events-none flex flex-col focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-normal gap-1 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:relative group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 group-data-[focused=true]/day:z-10 hover:bg-accent hover:text-accent-foreground items-center justify-center leading-none min-w-(--cell-size) outline-none rdp-day rdp-day_button rounded-md shrink-0 size-auto text-sm transition-all w-full whitespace-nowrap"
+              @on_blur
+              @on_click
+              @on_focus
+              @on_keydown> 3 </button>
+    </td>
+    <td role="gridcell"
+        data-day="2026-02-04"
+        data-disabled="true"
+        class="[&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md aspect-square group/day h-full opacity-50 p-0 rdp-day rdp-disabled relative select-none text-center text-muted-foreground w-full">
+      <button type="button"
+              data-slot="button"
+              data-variant="ghost"
+              data-size="icon"
+              disabled=""
+              data-day="2/4/2026"
+              data-selected-single="false"
+              data-range-start="false"
+              data-range-end="false"
+              data-range-middle="false"
+              tabindex="-1"
+              aria-label="Wednesday, February 4th, 2026"
+              class="[&>span]:opacity-70 [&>span]:text-xs [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 aspect-square dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 dark:hover:text-accent-foreground data-[range-end=true]:bg-primary data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-end=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:rounded-none data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:rounded-l-md data-[range-start=true]:rounded-md data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground disabled:opacity-50 disabled:pointer-events-none flex flex-col focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-normal gap-1 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:relative group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 group-data-[focused=true]/day:z-10 hover:bg-accent hover:text-accent-foreground items-center justify-center leading-none min-w-(--cell-size) outline-none rdp-day rdp-day_button rounded-md shrink-0 size-auto text-sm transition-all w-full whitespace-nowrap"
+              @on_blur
+              @on_click
+              @on_focus
+              @on_keydown> 4 </button>
+    </td>
+    |}]
+;;
+
+let%expect_test "weeks and week numbers" =
+  let show ?fixed_weeks ?week_starts_on month =
+    Calendar.weeks ?fixed_weeks ?week_starts_on (date month)
+    |> List.iter ~f:(fun week ->
+      printf "%02d |" (Calendar.week_number (List.hd_exn week));
+      List.iter week ~f:(fun d -> printf " %2d" (Date.day d));
+      print_endline "")
+  in
+  show "2025-06-09";
+  [%expect {|
+    23 |  1  2  3  4  5  6  7
+    24 |  8  9 10 11 12 13 14
+    25 | 15 16 17 18 19 20 21
+    26 | 22 23 24 25 26 27 28
+    27 | 29 30  1  2  3  4  5
     |}];
-  Calendar.weeks ~week_start:Sun (date "2026-02-01")
-  |> List.hd_exn
-  |> List.hd_exn
-  |> Date.to_string
-  |> print_endline;
-  [%expect {| 2026-02-01 |}]
+  show ~fixed_weeks:true "2026-02-01";
+  [%expect {|
+    06 |  1  2  3  4  5  6  7
+    07 |  8  9 10 11 12 13 14
+    08 | 15 16 17 18 19 20 21
+    09 | 22 23 24 25 26 27 28
+    10 |  1  2  3  4  5  6  7
+    11 |  8  9 10 11 12 13 14
+    |}];
+  show ~week_starts_on:Mon "2025-12-01";
+  [%expect {|
+    49 |  1  2  3  4  5  6  7
+    50 |  8  9 10 11 12 13 14
+    51 | 15 16 17 18 19 20 21
+    52 | 22 23 24 25 26 27 28
+    01 | 29 30 31  1  2  3  4
+    |}]
+;;
+
+let%expect_test "format" =
+  List.iter
+    [ "PPPP"; "PPP"; "PP"; "P"; "LLL dd, y"; "LLLL y"; "EEE do 'of' MMMM"; "yyyy-MM-dd" ]
+    ~f:(fun pattern -> print_endline (Calendar.format pattern (date "2025-06-09")));
+  [%expect {|
+    Monday, June 9th, 2025
+    June 9th, 2025
+    Jun 9, 2025
+    06/09/2025
+    Jun 09, 2025
+    June 2025
+    Mon 9th of June
+    2025-06-09
+    |}];
+  List.iter [ 1; 2; 3; 4; 11; 12; 13; 21; 22; 23; 31 ] ~f:(fun d ->
+    printf "%s " (Calendar.format "do" (Date.create_exn ~y:2025 ~m:Jan ~d)));
+  [%expect {| 1st 2nd 3rd 4th 11th 12th 13th 21st 22nd 23rd 31st |}]
+;;
+
+let%expect_test "select, as react-day-picker" =
+  let show s = print_s [%sexp (s : Calendar.Selection.t)] in
+  let d = date in
+  show (Calendar.select (Single None) (d "2025-06-09"));
+  show (Calendar.select (Single (Some (d "2025-06-09"))) (d "2025-06-09"));
+  show (Calendar.select ~required:true (Single (Some (d "2025-06-09"))) (d "2025-06-09"));
+  [%expect {|
+    (Single (2025-06-09))
+    (Single ())
+    (Single (2025-06-09))
+    |}];
+  show (Calendar.select (Multiple [ d "2025-06-01" ]) (d "2025-06-09"));
+  show (Calendar.select (Multiple [ d "2025-06-01"; d "2025-06-09" ]) (d "2025-06-01"));
+  show (Calendar.select ~max:1 (Multiple [ d "2025-06-01" ]) (d "2025-06-09"));
+  [%expect {|
+    (Multiple (2025-06-01 2025-06-09))
+    (Multiple (2025-06-09))
+    (Multiple (2025-06-01))
+    |}];
+  (* Range: a first click picks one day, the next extends it either way. *)
+  let r = Calendar.select (Range None) (d "2025-06-09") in
+  show r;
+  let r = Calendar.select r (d "2025-06-12") in
+  show r;
+  show (Calendar.select r (d "2025-06-02"));
+  show (Calendar.select r (d "2025-06-20"));
+  show (Calendar.select r (d "2025-06-09"));
+  show (Calendar.select ~max:5 r (d "2025-06-20"));
+  [%expect {|
+    (Range (((from 2025-06-09) (to_ (2025-06-09)))))
+    (Range (((from 2025-06-09) (to_ (2025-06-12)))))
+    (Range (((from 2025-06-02) (to_ (2025-06-12)))))
+    (Range (((from 2025-06-09) (to_ (2025-06-20)))))
+    (Range (((from 2025-06-09) (to_ (2025-06-09)))))
+    (Range (((from 2025-06-20) (to_ ()))))
+    |}]
 ;;
 
 let%expect_test "moved" =
-  let d = date "2026-01-31" in
+  let d = date "2025-01-31" in
   List.iter
     Js_of_ocaml.Dom_html.Keyboard_code.
-      [ "left", ArrowLeft
-      ; "right", ArrowRight
-      ; "up", ArrowUp
-      ; "down", ArrowDown
-      ; "home", Home
-      ; "end", End
-      ; "pageup", PageUp
-      ; "pagedown", PageDown
-      ; "a", KeyA
+      [ "left", ArrowLeft, false
+      ; "right", ArrowRight, false
+      ; "up", ArrowUp, false
+      ; "down", ArrowDown, false
+      ; "home", Home, false
+      ; "end", End, false
+      ; "pageup", PageUp, false
+      ; "pagedown", PageDown, false
+      ; "shift+pagedown", PageDown, true
       ]
-    ~f:(fun (name, key) ->
-      print_s
-        [%message
-          name
-            ~_:
-              (Calendar.moved ~week_start:Mon ~shift:false ~key d
-               : Date.t option)]);
-  print_s
-    [%sexp
-      (Calendar.moved ~week_start:Mon ~shift:true ~key:PageDown d
-       : Date.t option)];
-  [%expect
-    {|
-    (left (2026-01-30))
-    (right (2026-02-01))
-    (up (2026-01-24))
-    (down (2026-02-07))
-    (home (2026-01-26))
-    (end (2026-02-01))
-    (pageup (2025-12-31))
-    (pagedown (2026-02-28))
-    (a ())
-    (2027-01-31)
+    ~f:(fun (name, key, shift) ->
+      printf
+        "%s: %s\n"
+        name
+        (Option.value_map (Calendar.moved ~shift ~key d) ~default:"-" ~f:Date.to_string));
+  [%expect {|
+    left: 2025-01-30
+    right: 2025-02-01
+    up: 2025-01-24
+    down: 2025-02-07
+    home: 2025-01-26
+    end: 2025-02-01
+    pageup: 2024-12-31
+    pagedown: 2025-02-28
+    shift+pagedown: 2026-01-31
     |}]
 ;;
 
-let get_vdom (t : Calendar.t) = t.view
-
-let component () =
-  Calendar.component
-    ~today:(date "2026-11-20")
-    ~min:(date "2026-10-15")
-    ~is_disabled:(fun d ->
-      match Date.day_of_week d with
-      | Sat | Sun -> true
-      | _ -> false)
+let component ?caption_layout ?show_week_number ?number_of_months ?disabled ~default () =
+  Render.handle ~classes:false (fun graph ->
+    let calendar =
+      Calendar.component
+        ?caption_layout
+        ?show_week_number
+        ?number_of_months
+        ?disabled
+        ~today
+        ~default
+        graph
+    in
+    let open Bonsai_web.Bonsai.Let_syntax in
+    let%arr calendar in
+    Node.div
+      [ calendar.view
+      ; Node.p
+          [ Node.text
+              (Sexp.to_string_hum [%sexp (calendar.selected : Calendar.Selection.t)])
+          ]
+      ])
 ;;
 
-let%expect_test "the month" =
+(* The parts of the calendar a test looks at. *)
+let show
+  ?(selectors =
+    [ ".rdp-caption_label"; "td[data-focused]"; "p" ])
+  handle
+  =
+  Handle.recompute_view handle;
+  List.iter selectors ~f:(fun selector ->
+    Render.html ~classes:false ~selector (Handle.last_result handle))
+;;
+
+let%expect_test "clicking a day selects it; keys move the focus, across months" =
+  let handle = component ~default:(Single None) () in
+  (* Today is the focus target at first. *)
+  show handle;
+  [%expect {|
+    <span role="status" aria-live="polite"> June 2025 </span>
+    <p> (Single ()) </p>
+    |}];
+  Handle.click_on handle ~get_vdom:Fn.id ~selector:"td[data-day='2025-06-09'] button";
+  show handle;
+  [%expect {|
+    <span role="status" aria-live="polite"> June 2025 </span>
+    <td role="gridcell"
+        aria-selected="true"
+        data-day="2025-06-09"
+        data-selected="true"
+        data-focused="true">
+      <button type="button"
+              data-slot="button"
+              data-variant="ghost"
+              data-size="icon"
+              data-day="6/9/2025"
+              data-selected-single="true"
+              data-range-start="false"
+              data-range-end="false"
+              data-range-middle="false"
+              tabindex="0"
+              aria-label="Monday, June 9th, 2025, selected"
+              @on_blur
+              @on_click
+              @on_focus
+              @on_keydown> 9 </button>
+    </td>
+    <p> (Single (2025-06-09)) </p>
+    |}];
+  Handle.keydown
+    handle
+    ~get_vdom:Fn.id
+    ~selector:"td[data-day='2025-06-09'] button"
+    ~key:PageDown;
+  show handle;
+  [%expect {|
+    ("default prevented" (key PageDown))
+    <span role="status" aria-live="polite"> July 2025 </span>
+    <td role="gridcell" data-day="2025-07-09" data-focused="true">
+      <button type="button"
+              data-slot="button"
+              data-variant="ghost"
+              data-size="icon"
+              data-day="7/9/2025"
+              data-selected-single="false"
+              data-range-start="false"
+              data-range-end="false"
+              data-range-middle="false"
+              tabindex="0"
+              aria-label="Wednesday, July 9th, 2025"
+              @on_blur
+              @on_click
+              @on_focus
+              @on_keydown> 9 </button>
+    </td>
+    <p> (Single (2025-06-09)) </p>
+    |}];
+  Handle.keydown
+    handle
+    ~get_vdom:Fn.id
+    ~selector:"td[data-day='2025-07-09'] button"
+    ~key:ArrowUp;
+  show handle ~selectors:[ ".rdp-caption_label"; "td[data-focused]" ];
+  [%expect {|
+    ("default prevented" (key ArrowUp))
+    <span role="status" aria-live="polite"> July 2025 </span>
+    <td role="gridcell" data-day="2025-07-02" data-focused="true">
+      <button type="button"
+              data-slot="button"
+              data-variant="ghost"
+              data-size="icon"
+              data-day="7/2/2025"
+              data-selected-single="false"
+              data-range-start="false"
+              data-range-end="false"
+              data-range-middle="false"
+              tabindex="0"
+              aria-label="Wednesday, July 2nd, 2025"
+              @on_blur
+              @on_click
+              @on_focus
+              @on_keydown> 2 </button>
+    </td>
+    |}];
+  Handle.click_on
+    handle
+    ~get_vdom:Fn.id
+    ~selector:"button[aria-label='Go to the Previous Month']";
+  show handle ~selectors:[ ".rdp-caption_label" ];
+  [%expect {| <span role="status" aria-live="polite"> June 2025 </span> |}]
+;;
+
+let%expect_test "keys skip disabled days" =
   let handle =
-    Bonsai_web_test.Handle.create
-      (Bonsai_web_test.Result_spec.vdom get_vdom)
-      (component ())
+    component
+      ~disabled:(fun d ->
+        match Date.day_of_week d with
+        | Sat | Sun -> true
+        | _ -> false)
+      ~default:(Single (Some (date "2025-06-13")))
+      ()
   in
-  Handle.show handle;
-  [%expect
-    {|
-    <div class="loon-calendar">
-      <div class="loon-calendar-header">
-        <button type="button" aria-label="Previous month" class="loon-calendar-nav" @on_click>
-          <svg xmlns="http://www.w3.org/2000/svg"
-               width="24"
-               height="24"
-               viewBox="0 0 24 24"
-               fill="none"
-               stroke="currentColor"
-               stroke-width="2"
-               stroke-linecap="round"
-               stroke-linejoin="round"
-               aria-hidden="true"
-               class="lucide lucide-chevron-left">
-            <path d="m15 18-6-6 6-6"> </path>
-          </svg>
-        </button>
-        <div id="loonbonsai_path_replaced_in_test-caption"
-             aria-live="polite"
-             class="loon-calendar-caption"> November 2026 </div>
-        <button type="button" aria-label="Next month" class="loon-calendar-nav" @on_click>
-          <svg xmlns="http://www.w3.org/2000/svg"
-               width="24"
-               height="24"
-               viewBox="0 0 24 24"
-               fill="none"
-               stroke="currentColor"
-               stroke-width="2"
-               stroke-linecap="round"
-               stroke-linejoin="round"
-               aria-hidden="true"
-               class="lucide lucide-chevron-right">
-            <path d="m9 18 6-6-6-6"> </path>
-          </svg>
-        </button>
-      </div>
-      <table id="loonbonsai_path_replaced_in_test-grid"
-             role="grid"
-             aria-labelledby="loonbonsai_path_replaced_in_test-caption"
-             class="loon-calendar-grid"
-             @on_keydown>
-        <thead>
-          <tr>
-            <th scope="col" abbr="Monday" class="loon-calendar-weekday"> Mo </th>
-            <th scope="col" abbr="Tuesday" class="loon-calendar-weekday"> Tu </th>
-            <th scope="col" abbr="Wednesday" class="loon-calendar-weekday"> We </th>
-            <th scope="col" abbr="Thursday" class="loon-calendar-weekday"> Th </th>
-            <th scope="col" abbr="Friday" class="loon-calendar-weekday"> Fr </th>
-            <th scope="col" abbr="Saturday" class="loon-calendar-weekday"> Sa </th>
-            <th scope="col" abbr="Sunday" class="loon-calendar-weekday"> Su </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-10-26"
-                      aria-label="Monday, 26 October 2026"
-                      tabindex="-1"
-                      data-outside=""
-                      class="loon-calendar-day"
-                      @on_click> 26 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-10-27"
-                      aria-label="Tuesday, 27 October 2026"
-                      tabindex="-1"
-                      data-outside=""
-                      class="loon-calendar-day"
-                      @on_click> 27 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-10-28"
-                      aria-label="Wednesday, 28 October 2026"
-                      tabindex="-1"
-                      data-outside=""
-                      class="loon-calendar-day"
-                      @on_click> 28 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-10-29"
-                      aria-label="Thursday, 29 October 2026"
-                      tabindex="-1"
-                      data-outside=""
-                      class="loon-calendar-day"
-                      @on_click> 29 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-10-30"
-                      aria-label="Friday, 30 October 2026"
-                      tabindex="-1"
-                      data-outside=""
-                      class="loon-calendar-day"
-                      @on_click> 30 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" aria-disabled="true" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-10-31"
-                      aria-label="Saturday, 31 October 2026"
-                      tabindex="-1"
-                      data-outside=""
-                      aria-disabled="true"
-                      class="loon-calendar-day"> 31 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" aria-disabled="true" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-01"
-                      aria-label="Sunday, 1 November 2026"
-                      tabindex="-1"
-                      aria-disabled="true"
-                      class="loon-calendar-day"> 1 </button>
-            </td>
-          </tr>
-          <tr>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-02"
-                      aria-label="Monday, 2 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 2 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-03"
-                      aria-label="Tuesday, 3 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 3 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-04"
-                      aria-label="Wednesday, 4 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 4 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-05"
-                      aria-label="Thursday, 5 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 5 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-06"
-                      aria-label="Friday, 6 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 6 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" aria-disabled="true" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-07"
-                      aria-label="Saturday, 7 November 2026"
-                      tabindex="-1"
-                      aria-disabled="true"
-                      class="loon-calendar-day"> 7 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" aria-disabled="true" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-08"
-                      aria-label="Sunday, 8 November 2026"
-                      tabindex="-1"
-                      aria-disabled="true"
-                      class="loon-calendar-day"> 8 </button>
-            </td>
-          </tr>
-          <tr>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-09"
-                      aria-label="Monday, 9 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 9 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-10"
-                      aria-label="Tuesday, 10 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 10 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-11"
-                      aria-label="Wednesday, 11 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 11 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-12"
-                      aria-label="Thursday, 12 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 12 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-13"
-                      aria-label="Friday, 13 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 13 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" aria-disabled="true" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-14"
-                      aria-label="Saturday, 14 November 2026"
-                      tabindex="-1"
-                      aria-disabled="true"
-                      class="loon-calendar-day"> 14 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" aria-disabled="true" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-15"
-                      aria-label="Sunday, 15 November 2026"
-                      tabindex="-1"
-                      aria-disabled="true"
-                      class="loon-calendar-day"> 15 </button>
-            </td>
-          </tr>
-          <tr>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-16"
-                      aria-label="Monday, 16 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 16 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-17"
-                      aria-label="Tuesday, 17 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 17 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-18"
-                      aria-label="Wednesday, 18 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 18 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-19"
-                      aria-label="Thursday, 19 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 19 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-20"
-                      aria-label="Friday, 20 November 2026"
-                      tabindex="0"
-                      aria-current="date"
-                      class="loon-calendar-day"
-                      @on_click> 20 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" aria-disabled="true" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-21"
-                      aria-label="Saturday, 21 November 2026"
-                      tabindex="-1"
-                      aria-disabled="true"
-                      class="loon-calendar-day"> 21 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" aria-disabled="true" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-22"
-                      aria-label="Sunday, 22 November 2026"
-                      tabindex="-1"
-                      aria-disabled="true"
-                      class="loon-calendar-day"> 22 </button>
-            </td>
-          </tr>
-          <tr>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-23"
-                      aria-label="Monday, 23 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 23 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-24"
-                      aria-label="Tuesday, 24 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 24 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-25"
-                      aria-label="Wednesday, 25 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 25 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-26"
-                      aria-label="Thursday, 26 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 26 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-27"
-                      aria-label="Friday, 27 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 27 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" aria-disabled="true" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-28"
-                      aria-label="Saturday, 28 November 2026"
-                      tabindex="-1"
-                      aria-disabled="true"
-                      class="loon-calendar-day"> 28 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" aria-disabled="true" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-29"
-                      aria-label="Sunday, 29 November 2026"
-                      tabindex="-1"
-                      aria-disabled="true"
-                      class="loon-calendar-day"> 29 </button>
-            </td>
-          </tr>
-          <tr>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-11-30"
-                      aria-label="Monday, 30 November 2026"
-                      tabindex="-1"
-                      class="loon-calendar-day"
-                      @on_click> 30 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-12-01"
-                      aria-label="Tuesday, 1 December 2026"
-                      tabindex="-1"
-                      data-outside=""
-                      class="loon-calendar-day"
-                      @on_click> 1 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-12-02"
-                      aria-label="Wednesday, 2 December 2026"
-                      tabindex="-1"
-                      data-outside=""
-                      class="loon-calendar-day"
-                      @on_click> 2 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-12-03"
-                      aria-label="Thursday, 3 December 2026"
-                      tabindex="-1"
-                      data-outside=""
-                      class="loon-calendar-day"
-                      @on_click> 3 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-12-04"
-                      aria-label="Friday, 4 December 2026"
-                      tabindex="-1"
-                      data-outside=""
-                      class="loon-calendar-day"
-                      @on_click> 4 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" aria-disabled="true" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-12-05"
-                      aria-label="Saturday, 5 December 2026"
-                      tabindex="-1"
-                      data-outside=""
-                      aria-disabled="true"
-                      class="loon-calendar-day"> 5 </button>
-            </td>
-            <td role="gridcell" aria-selected="false" aria-disabled="true" class="loon-calendar-cell">
-              <button type="button"
-                      id="loonbonsai_path_replaced_in_test-day-2026-12-06"
-                      aria-label="Sunday, 6 December 2026"
-                      tabindex="-1"
-                      data-outside=""
-                      aria-disabled="true"
-                      class="loon-calendar-day"> 6 </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  Handle.keydown
+    handle
+    ~get_vdom:Fn.id
+    ~selector:"td[data-day='2025-06-13'] button"
+    ~key:ArrowRight;
+  show handle ~selectors:[ "td[data-focused]"; "td[data-day='2025-06-14']" ];
+  [%expect {|
+    ("default prevented" (key ArrowRight))
+    <td role="gridcell" data-day="2025-06-16" data-focused="true">
+      <button type="button"
+              data-slot="button"
+              data-variant="ghost"
+              data-size="icon"
+              data-day="6/16/2025"
+              data-selected-single="false"
+              data-range-start="false"
+              data-range-end="false"
+              data-range-middle="false"
+              tabindex="0"
+              aria-label="Monday, June 16th, 2025"
+              @on_blur
+              @on_click
+              @on_focus
+              @on_keydown> 16 </button>
+    </td>
+    <td role="gridcell" data-day="2025-06-14" data-disabled="true">
+      <button type="button"
+              data-slot="button"
+              data-variant="ghost"
+              data-size="icon"
+              disabled=""
+              data-day="6/14/2025"
+              data-selected-single="false"
+              data-range-start="false"
+              data-range-end="false"
+              data-range-middle="false"
+              tabindex="-1"
+              aria-label="Saturday, June 14th, 2025"
+              @on_blur
+              @on_click
+              @on_focus
+              @on_keydown> 14 </button>
+    </td>
     |}]
 ;;
 
-let%expect_test "picking, keys and months" =
-  let handle =
-    Bonsai_web_test.Handle.create
-      (Bonsai_web_test.Result_spec.vdom get_vdom)
-      (component ())
-  in
-  let selected () =
-    Handle.recompute_view handle;
-    print_s [%sexp ((Handle.last_result handle).selected : Date.t option)]
-  in
-  let caption () =
-    Handle.recompute_view handle;
-    Render.html
-      ~selector:".loon-calendar-caption"
-      (get_vdom (Handle.last_result handle))
-  in
-  Handle.click_on handle ~get_vdom ~selector:"[id$=day-2026-11-24]";
-  selected ();
-  [%expect {| (2026-11-24) |}];
-  (* weekends can't be picked *)
-  Render.html
-    ~selector:"[id$=day-2026-11-22]"
-    (get_vdom (Handle.last_result handle));
-  [%expect
-    {|
+let%expect_test "range over two months" =
+  let handle = component ~number_of_months:2 ~default:(Range None) () in
+  Handle.click_on
+    handle
+    ~get_vdom:Fn.id
+    ~selector:"td[data-day='2025-06-29']:not([data-outside]) button";
+  Handle.recompute_view handle;
+  Handle.click_on
+    handle
+    ~get_vdom:Fn.id
+    ~selector:"td[data-day='2025-07-02']:not([data-outside]) button";
+  show
+    handle
+    ~selectors:
+      [ "[data-slot=calendar]>div>.rdp-month .rdp-caption_label"
+      ; "td[data-selected]:not([data-outside]) button[data-range-start=true]"
+      ; "td[data-selected]:not([data-outside]) button[data-range-middle=true]"
+      ; "td[data-selected]:not([data-outside]) button[data-range-end=true]"
+      ; "p"
+      ];
+  [%expect {|
+    <span role="status" aria-live="polite"> June 2025 </span>
+    <span role="status" aria-live="polite"> July 2025 </span>
     <button type="button"
-            id="loonbonsai_path_replaced_in_test-day-2026-11-22"
-            aria-label="Sunday, 22 November 2026"
+            data-slot="button"
+            data-variant="ghost"
+            data-size="icon"
+            data-day="6/29/2025"
+            data-selected-single="false"
+            data-range-start="true"
+            data-range-end="false"
+            data-range-middle="false"
             tabindex="-1"
-            aria-disabled="true"
-            class="loon-calendar-day"> 22 </button>
-    |}];
-  Handle.keydown handle ~get_vdom ~selector:".loon-calendar-grid" ~key:ArrowDown;
-  Handle.keydown handle ~get_vdom ~selector:".loon-calendar-grid" ~key:ArrowDown;
-  caption ();
-  Handle.recompute_view handle;
-  Render.html ~selector:"[tabindex='0']" (get_vdom (Handle.last_result handle));
-  [%expect
-    {|
-    ("default prevented" (key ArrowDown))
-    ("default prevented" (key ArrowDown))
-    <div id="loonbonsai_path_replaced_in_test-caption"
-         aria-live="polite"
-         class="loon-calendar-caption"> December 2026 </div>
+            aria-label="Sunday, June 29th, 2025, selected"
+            @on_blur
+            @on_click
+            @on_focus
+            @on_keydown> 29 </button>
     <button type="button"
-            id="loonbonsai_path_replaced_in_test-day-2026-12-08"
-            aria-label="Tuesday, 8 December 2026"
-            tabindex="0"
-            class="loon-calendar-day"
-            @on_click> 8 </button>
-    |}];
-  Handle.click_on handle ~get_vdom ~selector:"[aria-label='Previous month']";
-  Handle.click_on handle ~get_vdom ~selector:"[aria-label='Previous month']";
-  caption ();
-  (* not before [min] *)
-  Render.html
-    ~selector:"[aria-label='Previous month']"
-    (get_vdom (Handle.last_result handle));
-  Handle.recompute_view handle;
-  Render.html ~selector:"[tabindex='0']" (get_vdom (Handle.last_result handle));
-  [%expect
-    {|
-    <div id="loonbonsai_path_replaced_in_test-caption"
-         aria-live="polite"
-         class="loon-calendar-caption"> October 2026 </div>
-    <button type="button" aria-label="Previous month" disabled="" class="loon-calendar-nav">
-      <svg xmlns="http://www.w3.org/2000/svg"
-           width="24"
-           height="24"
-           viewBox="0 0 24 24"
-           fill="none"
-           stroke="currentColor"
-           stroke-width="2"
-           stroke-linecap="round"
-           stroke-linejoin="round"
-           aria-hidden="true"
-           class="lucide lucide-chevron-left">
-        <path d="m15 18-6-6 6-6"> </path>
-      </svg>
-    </button>
+            data-slot="button"
+            data-variant="ghost"
+            data-size="icon"
+            data-day="6/30/2025"
+            data-selected-single="false"
+            data-range-start="false"
+            data-range-end="false"
+            data-range-middle="true"
+            tabindex="-1"
+            aria-label="Monday, June 30th, 2025, selected"
+            @on_blur
+            @on_click
+            @on_focus
+            @on_keydown> 30 </button>
     <button type="button"
-            id="loonbonsai_path_replaced_in_test-day-2026-10-15"
-            aria-label="Thursday, 15 October 2026"
-            tabindex="0"
-            class="loon-calendar-day"
-            @on_click> 15 </button>
-    |}];
-  Handle.keydown handle ~get_vdom ~selector:".loon-calendar-grid" ~key:PageUp;
-  Handle.recompute_view handle;
-  Render.html ~selector:"[tabindex='0']" (get_vdom (Handle.last_result handle));
-  [%expect
-    {|
-    ("default prevented" (key PageUp))
+            data-slot="button"
+            data-variant="ghost"
+            data-size="icon"
+            data-day="7/1/2025"
+            data-selected-single="false"
+            data-range-start="false"
+            data-range-end="false"
+            data-range-middle="true"
+            tabindex="-1"
+            aria-label="Tuesday, July 1st, 2025, selected"
+            @on_blur
+            @on_click
+            @on_focus
+            @on_keydown> 1 </button>
     <button type="button"
-            id="loonbonsai_path_replaced_in_test-day-2026-10-15"
-            aria-label="Thursday, 15 October 2026"
+            data-slot="button"
+            data-variant="ghost"
+            data-size="icon"
+            data-day="7/2/2025"
+            data-selected-single="false"
+            data-range-start="false"
+            data-range-end="true"
+            data-range-middle="false"
             tabindex="0"
-            class="loon-calendar-day"
-            @on_click> 15 </button>
+            aria-label="Wednesday, July 2nd, 2025, selected"
+            @on_blur
+            @on_click
+            @on_focus
+            @on_keydown> 2 </button>
+    <p> (Range (((from 2025-06-29) (to_ (2025-07-02))))) </p>
+    |}]
+;;
+
+let%expect_test "dropdown caption and week numbers" =
+  let handle =
+    component ~caption_layout:Dropdown ~show_week_number:true ~default:(Single None) ()
+  in
+  Handle.recompute_view handle;
+  let module H = Virtual_dom_test_helpers.Node_helpers in
+  let tree = H.unsafe_convert_exn (Handle.last_result handle) in
+  List.concat_map
+    [ ".rdp-dropdowns"; "thead tr"; ".rdp-week:first-child>td:first-child" ]
+    ~f:(fun selector ->
+      List.concat_map (H.select tree ~selector) ~f:(fun node ->
+        String.split_lines
+          (H.to_string_html
+             ~filter_printed_attributes:(fun ~key ~data:_ -> not (String.equal key "class"))
+             node)))
+  (* Ten decades of years: only the first and last few. *)
+  |> List.filter ~f:(fun line ->
+    not
+      (String.is_substring line ~substring:"<option"
+       && not
+            (List.exists [ "1925"; "1926"; "2024"; "2025"; "value=\"0\""; "value=\"11\"" ]
+               ~f:(fun substring -> String.is_substring line ~substring))))
+  |> List.iter ~f:print_endline;
+  [%expect {|
+    <div>
+      <span>
+        <select aria-label="Choose the Month" @on_change>
+          <option #value="0" #selected="false"> Jan </option>
+          <option #value="11" #selected="false"> Dec </option>
+        </select>
+        <span aria-hidden="true">
+          Jun
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true">
+            <path d="m6 9 6 6 6-6"> </path>
+          </svg>
+        </span>
+      </span>
+      <span>
+        <select aria-label="Choose the Year" @on_change>
+          <option #value="1925" #selected="false"> 1925 </option>
+          <option #value="1926" #selected="false"> 1926 </option>
+          <option #value="2024" #selected="false"> 2024 </option>
+          <option #value="2025" #selected="true"> 2025 </option>
+        </select>
+        <span aria-hidden="true">
+          2025
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true">
+            <path d="m6 9 6 6 6-6"> </path>
+          </svg>
+        </span>
+      </span>
+      <span role="status"
+            aria-live="polite"
+            style="border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal"> June 2025 </span>
+    </div>
+    <tr>
+      <th aria-label="Week Number" scope="col"> </th>
+      <th aria-label="Sunday" scope="col"> Su </th>
+      <th aria-label="Monday" scope="col"> Mo </th>
+      <th aria-label="Tuesday" scope="col"> Tu </th>
+      <th aria-label="Wednesday" scope="col"> We </th>
+      <th aria-label="Thursday" scope="col"> Th </th>
+      <th aria-label="Friday" scope="col"> Fr </th>
+      <th aria-label="Saturday" scope="col"> Sa </th>
+    </tr>
+    <td aria-label="Week 23" role="rowheader" scope="row">
+      <div> 23 </div>
+    </td>
+    |}];
+  Handle.change handle ~get_vdom:Fn.id ~selector:".rdp-years_dropdown" ~value:"2001";
+  Handle.recompute_view handle;
+  Handle.change handle ~get_vdom:Fn.id ~selector:".rdp-months_dropdown" ~value:"1";
+  show handle ~selectors:[ ".rdp-dropdowns [role=status]" ];
+  [%expect {|
+    <span role="status"
+          aria-live="polite"
+          style="border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal"> February 2001 </span>
     |}]
 ;;

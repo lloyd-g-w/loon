@@ -6,34 +6,36 @@ module Orientation = struct
     | Vertical
   [@@deriving enumerate, sexp_of, compare, equal]
 
-  let name t = String.lowercase (Sexp.to_string (sexp_of_t t))
+  let name = function
+    | Horizontal -> "horizontal"
+    | Vertical -> "vertical"
+  ;;
 end
 
-let view
-      ?attrs:extra
-      ?(orientation = Orientation.Horizontal)
-      ?(semantic = false)
-      ?label
-      ()
+let view ?(attrs = []) ?class_ ?(orientation = Orientation.Horizontal) ?(decorative = true) ()
   =
   let role =
-    if semantic
-    then
-      [ Attr.role "separator"
-      ; aria "orientation" (Orientation.name orientation)
-      ]
-    else [ Attr.role "none" ]
+    if decorative
+    then [ Attr.role "none" ]
+    else
+      Attr.role "separator"
+      ::
+      (match orientation with
+       | Vertical -> [ aria "orientation" "vertical" ]
+       | Horizontal -> [])
   in
-  let classes =
-    [ "loon-separator"; "loon-separator-" ^ Orientation.name orientation ]
-  in
-  match label with
-  | None -> Node.div ~attrs:(attrs ?attrs:extra classes @ role) []
-  | Some label ->
-    Node.div
-      ~attrs:(attrs ?attrs:extra ("loon-separator-labelled" :: classes) @ role)
-      [ Node.span
-          ~attrs:[ Attr.class_ "loon-separator-label" ]
-          [ Node.text label ]
-      ]
+  Node.div
+    ~attrs:
+      ([ data "slot" "separator" ]
+       @ role
+       @ [ data "orientation" (Orientation.name orientation)
+         ; Cn.with_class
+             ?class_
+             [ "shrink-0 bg-border data-[orientation=horizontal]:h-px \
+                data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full \
+                data-[orientation=vertical]:w-px"
+             ]
+         ]
+       @ attrs)
+    []
 ;;

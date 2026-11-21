@@ -1,41 +1,35 @@
 open! Core
 open Bonsai_web
 open Loon
-open! Bonsai.Let_syntax
 module Node = Vdom.Node
 module Attr = Vdom.Attr
 
 let page = "skeleton"
 
-(*$ A card loading *)
-let card =
+(*$ Demo *)
+let demo =
   Node.div
-    ~attrs:
-      [ Attr.class_ "docs-row"
-      ; Attr.create "style" "align-items: flex-start; flex-wrap: nowrap; width: 100%; max-width: 24rem"
-      ]
-    [ Skeleton.view ~shape:Circle ~width:"3rem" ~height:"3rem" ()
+    ~attrs:[ Attr.class_ "flex items-center space-x-4" ]
+    [ Skeleton.view ~class_:"h-12 w-12 rounded-full" []
     ; Node.div
-        ~attrs:
-          [ Attr.class_ "docs-stack"
-          ; Attr.create "style" "flex: 1; max-width: 20rem"
-          ]
-        [ Skeleton.view ~shape:Text ~width:"45%" (); Skeleton.text ~lines:3 () ]
+        ~attrs:[ Attr.class_ "space-y-2" ]
+        [ Skeleton.view ~class_:"h-4 w-[250px]" []
+        ; Skeleton.view ~class_:"h-4 w-[200px]" []
+        ]
     ]
-;;
-
 (*$*)
 
-(*$ A picture and a paragraph *)
-let media =
+(*$ Card *)
+let card =
   Node.div
-    ~attrs:[ Attr.class_ "docs-stack"; Attr.create "style" "width: 100%; max-width: 22rem" ]
-    [ Skeleton.view ~height:"10rem" ()
-    ; Skeleton.view ~shape:Text ~width:"70%" ()
-    ; Skeleton.view ~shape:Text ~width:"40%" ()
+    ~attrs:[ Attr.class_ "flex flex-col space-y-3" ]
+    [ Skeleton.view ~class_:"h-[125px] w-[250px] rounded-xl" []
+    ; Node.div
+        ~attrs:[ Attr.class_ "space-y-2" ]
+        [ Skeleton.view ~class_:"h-4 w-[250px]" []
+        ; Skeleton.view ~class_:"h-4 w-[200px]" []
+        ]
     ]
-;;
-
 (*$*)
 
 let page =
@@ -43,19 +37,16 @@ let page =
     ~slug:page
     ~title:"Skeleton"
     ~group:Feedback
-    ~description:"A shimmering placeholder where content is loading."
-    ~usage:{|Skeleton.view ~shape:Circle ~width:"3rem" ~height:"3rem" ()|}
+    ~description:"Use to show a placeholder while content is loading."
+    ~usage:{|Skeleton.view ~class_:"h-[20px] w-[100px] rounded-full" []|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ ( "shape"
-            , "Skeleton.Shape.t"
-            , "Rect (default), Circle or Text (a rounded line)." )
-          ; "width, height", "string", "CSS lengths."
-          ; "Skeleton.text ~lines", "int", "Lines of text, the last shorter."
+          [ ( "class_"
+            , "string"
+            , "Its size and shape ([h-4 w-[250px]], [rounded-full]), merged last." )
+          ; "attrs", "Vdom.Attr.t list", "Extra attributes."
           ]
       ]
-    [ Doc.static ~page "A card loading" card
-    ; Doc.static ~page "A picture and a paragraph" media
-    ]
+    [ Doc.static ~page "Demo" demo; Doc.static ~page "Card" card ]
 ;;

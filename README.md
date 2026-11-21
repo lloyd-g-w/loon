@@ -76,7 +76,7 @@ let () =
 | Overlays | Popover, Tooltip, Dropdown menu, Dialog, Alert dialog, Sheet, Command palette |
 | Display | Card, Badge, Avatar, Table, Data table (sort, filter, select, paginate), Accordion, Collapsible, Separator, Kbd |
 | Navigation | Tabs, Breadcrumb, Pagination |
-| Feedback | Alert, Toast, Progress, Spinner, Skeleton, Empty |
+| Feedback | Alert, Sonner, Progress, Spinner, Skeleton, Empty |
 
 Plus `Icon` (Lucide), `Cn` (shadcn's `cn`: class names, with a
 tailwind-merge), `Theme` and `Stylesheet`, and the helpers the components

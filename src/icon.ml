@@ -49,6 +49,7 @@ type t =
   | Circle_x
   | Clipboard
   | Clock
+  | Cloud
   | Code
   | Code_xml
   | Command
@@ -68,6 +69,7 @@ type t =
   | File_code
   | File_text
   | Folder
+  | Folder_code
   | Footprints
   | Forward
   | Frame
@@ -216,6 +218,7 @@ let name = function
   | Circle_x -> "circle-x"
   | Clipboard -> "clipboard"
   | Clock -> "clock"
+  | Cloud -> "cloud"
   | Code -> "code"
   | Code_xml -> "code-xml"
   | Command -> "command"
@@ -235,6 +238,7 @@ let name = function
   | File_code -> "file-code"
   | File_text -> "file-text"
   | Folder -> "folder"
+  | Folder_code -> "folder-code"
   | Footprints -> "footprints"
   | Forward -> "forward"
   | Frame -> "frame"
@@ -383,6 +387,7 @@ let of_name = function
   | "circle-x" -> Some Circle_x
   | "clipboard" -> Some Clipboard
   | "clock" -> Some Clock
+  | "cloud" -> Some Cloud
   | "code" -> Some Code
   | "code-xml" -> Some Code_xml
   | "command" -> Some Command
@@ -402,6 +407,7 @@ let of_name = function
   | "file-code" -> Some File_code
   | "file-text" -> Some File_text
   | "folder" -> Some Folder
+  | "folder-code" -> Some Folder_code
   | "footprints" -> Some Footprints
   | "forward" -> Some Forward
   | "frame" -> Some Frame
@@ -551,6 +557,7 @@ let shapes = function
   | Circle_x -> [ ("circle", [ "cx", "12"; "cy", "12"; "r", "10" ]); ("path", [ "d", "m15 9-6 6" ]); ("path", [ "d", "m9 9 6 6" ]) ]
   | Clipboard -> [ ("rect", [ "width", "8"; "height", "4"; "x", "8"; "y", "2"; "rx", "1"; "ry", "1" ]); ("path", [ "d", "M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" ]) ]
   | Clock -> [ ("circle", [ "cx", "12"; "cy", "12"; "r", "10" ]); ("path", [ "d", "M12 6v6l4 2" ]) ]
+  | Cloud -> [ ("path", [ "d", "M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" ]) ]
   | Code -> [ ("path", [ "d", "m16 18 6-6-6-6" ]); ("path", [ "d", "m8 6-6 6 6 6" ]) ]
   | Code_xml -> [ ("path", [ "d", "m18 16 4-4-4-4" ]); ("path", [ "d", "m6 8-4 4 4 4" ]); ("path", [ "d", "m14.5 4-5 16" ]) ]
   | Command -> [ ("path", [ "d", "M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" ]) ]
@@ -570,6 +577,7 @@ let shapes = function
   | File_code -> [ ("path", [ "d", "M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" ]); ("path", [ "d", "M14 2v5a1 1 0 0 0 1 1h5" ]); ("path", [ "d", "M10 12.5 8 15l2 2.5" ]); ("path", [ "d", "m14 12.5 2 2.5-2 2.5" ]) ]
   | File_text -> [ ("path", [ "d", "M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" ]); ("path", [ "d", "M14 2v5a1 1 0 0 0 1 1h5" ]); ("path", [ "d", "M10 9H8" ]); ("path", [ "d", "M16 13H8" ]); ("path", [ "d", "M16 17H8" ]) ]
   | Folder -> [ ("path", [ "d", "M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" ]) ]
+  | Folder_code -> [ ("path", [ "d", "M10 10.5 8 13l2 2.5" ]); ("path", [ "d", "m14 10.5 2 2.5-2 2.5" ]); ("path", [ "d", "M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z" ]) ]
   | Footprints -> [ ("path", [ "d", "M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z" ]); ("path", [ "d", "M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z" ]); ("path", [ "d", "M16 17h4" ]); ("path", [ "d", "M4 13h4" ]) ]
   | Forward -> [ ("path", [ "d", "m15 17 5-5-5-5" ]); ("path", [ "d", "M4 18v-2a4 4 0 0 1 4-4h12" ]) ]
   | Frame -> [ ("line", [ "x1", "22"; "x2", "2"; "y1", "6"; "y2", "6" ]); ("line", [ "x1", "22"; "x2", "2"; "y1", "18"; "y2", "18" ]); ("line", [ "x1", "6"; "x2", "6"; "y1", "2"; "y2", "22" ]); ("line", [ "x1", "18"; "x2", "18"; "y1", "2"; "y2", "22" ]) ]

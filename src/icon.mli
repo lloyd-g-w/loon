@@ -54,6 +54,7 @@ type t =
   | Circle_x
   | Clipboard
   | Clock
+  | Cloud
   | Code
   | Code_xml
   | Command
@@ -73,6 +74,7 @@ type t =
   | File_code
   | File_text
   | Folder
+  | Folder_code
   | Footprints
   | Forward
   | Frame

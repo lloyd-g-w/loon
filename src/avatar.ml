@@ -1,144 +1,141 @@
 open! Import
-open Js_of_ocaml
 
 module Size = struct
   type t =
-    | Xs
+    | Default
     | Sm
-    | Md
     | Lg
-    | Xl
   [@@deriving enumerate, sexp_of, compare, equal]
 
-  let name t = String.lowercase (Sexp.to_string (sexp_of_t t))
+  let name = function
+    | Default -> "default"
+    | Sm -> "sm"
+    | Lg -> "lg"
+  ;;
 end
 
-module Shape = struct
+module Status = struct
   type t =
-    | Circle
-    | Square
+    | Loading
+    | Loaded
+    | Error
   [@@deriving enumerate, sexp_of, compare, equal]
 end
 
-let initials name =
-  let words =
-    String.split_on_chars name ~on:[ ' '; '\t'; '-'; '_'; '.' ]
-    |> List.filter ~f:(fun w -> not (String.is_empty w))
-  in
-  (* The first character, with its UTF-8 continuation bytes. *)
-  let first w =
-    let n =
-      1
-      + (String.drop_prefix w 1
-         |> String.take_while ~f:(fun c -> Char.to_int c land 0xC0 = 0x80)
-         |> String.length)
-    in
-    String.uppercase (String.prefix w n)
-  in
-  match words with
-  | [] -> ""
-  | [ w ] -> first w
-  | w :: rest -> first w ^ first (List.last_exn rest)
-;;
+type t =
+  { status : Status.t
+  ; on_status_change : Status.t -> unit Effect.t
+  }
 
-(* A stable hue per name, so that fallbacks are told apart. *)
-let hue name = String.hash name % 360
-
-(* A picture that fails to load is hidden, uncovering the initials. *)
-let hide_failed (ev : Js_of_ocaml.Dom_html.event Js.t) =
-  Effect.of_thunk (fun () ->
-    Js.Opt.iter ev##.target (fun target ->
-      target##setAttribute (Js.string "data-state") (Js.string "error")))
-;;
-
-let view
-      ?attrs:extra
-      ?(size = Size.Md)
-      ?(shape = Shape.Circle)
-      ?src
-      ?status
-      name
-  =
+let view ?(attrs = []) ?class_ ?(size = Size.Default) ~status ~on_status_change children =
   Node.span
     ~attrs:
-      (attrs
-         ?attrs:extra
-         [ "loon-avatar"
-         ; "loon-avatar-" ^ Size.name size
-         ; (match shape with
-            | Circle -> "loon-avatar-circle"
-            | Square -> "loon-avatar-square")
-         ]
-       @ [ Attr.css_var ~name:"loon-avatar-hue" (Int.to_string (hue name)) ])
-    (List.filter_opt
-       [ Some
-           (Node.span
-              ~attrs:
-                [ Attr.class_ "loon-avatar-fallback"; aria "hidden" "true" ]
-              [ Node.text (initials name) ])
-       ; Option.map src ~f:(fun src ->
-           Node.img
-             ~attrs:
-               [ Attr.class_ "loon-avatar-image"
-               ; Attr.src src
-               ; Attr.alt name
-               ; Attr.create "loading" "lazy"
-               ; Attr.on_error hide_failed
-               ]
-             ())
-       ; (match src with
-          | None ->
-            Some
-              (Node.span
-                 ~attrs:[ Attr.class_ "loon-sr-only" ]
-                 [ Node.text name ])
-          | Some _ -> None)
-       ; Option.map status ~f:(fun status ->
-           let status =
-             match status with
-             | `Online -> "online"
-             | `Busy -> "busy"
-             | `Away -> "away"
-             | `Offline -> "offline"
-           in
-           Node.span
-             ~attrs:
-               [ Attr.classes
-                   [ "loon-avatar-status"; "loon-avatar-status-" ^ status ]
-               ; Attr.title status
-               ]
-             [])
-       ])
+      ([ data "slot" "avatar"
+       ; data "size" (Size.name size)
+       ; Cn.with_class
+           ?class_
+           [ "group/avatar relative flex size-8 shrink-0 overflow-hidden rounded-full \
+              select-none data-[size=lg]:size-10 data-[size=sm]:size-6"
+           ]
+       ]
+       @ attrs)
+    (children { status; on_status_change })
 ;;
 
-let group ?attrs:extra ?(size = Size.Md) ?max avatars =
-  let shown, hidden =
-    match max with
-    | Some max when List.length avatars > max ->
-      List.take avatars max, List.drop avatars max
-    | _ -> avatars, []
-  in
+let component ?attrs ?class_ ?size children (local_ graph) =
+  let open Bonsai.Let_syntax in
+  let status, set_status = Bonsai.state Status.Loading graph in
+  let%arr status and set_status and children in
+  view ?attrs ?class_ ?size ~status ~on_status_change:set_status children
+;;
+
+let image ?(attrs = []) ?class_ ?alt t ~src () =
+  match t.status with
+  | Error -> Node.none
+  | Loading | Loaded ->
+    let report status _ =
+      if Status.equal t.status status then Effect.Ignore else t.on_status_change status
+    in
+    Node.img
+      ~attrs:
+        ([ data "slot" "avatar-image"
+         ; Cn.with_class ?class_ [ "aspect-square size-full" ]
+         ; Attr.src src
+         ; Attr.on_load (report Loaded)
+         ; Attr.on_error (report Error)
+         ]
+         @ Option.value_map alt ~default:[] ~f:(fun alt -> [ Attr.alt alt ])
+         @ (match t.status with
+            | Loading -> [ Attr.hidden ]
+            | Loaded | Error -> [])
+         @ attrs)
+      ()
+;;
+
+let fallback ?(attrs = []) ?class_ t children =
+  match t.status with
+  | Loaded -> Node.none
+  | Loading | Error ->
+    Node.span
+      ~attrs:
+        ([ data "slot" "avatar-fallback"
+         ; Cn.with_class
+             ?class_
+             [ "flex size-full items-center justify-center rounded-full bg-muted text-sm \
+                text-muted-foreground group-data-[size=sm]/avatar:text-xs"
+             ]
+         ]
+         @ attrs)
+      children
+;;
+
+let badge ?(attrs = []) ?class_ children =
+  Node.span
+    ~attrs:
+      ([ data "slot" "avatar-badge"
+       ; Cn.with_class
+           ?class_
+           [ "absolute right-0 bottom-0 z-10 inline-flex items-center justify-center \
+              rounded-full bg-primary text-primary-foreground ring-2 ring-background \
+              select-none"
+           ; "group-data-[size=sm]/avatar:size-2 group-data-[size=sm]/avatar:[&>svg]:hidden"
+           ; "group-data-[size=default]/avatar:size-2.5 \
+              group-data-[size=default]/avatar:[&>svg]:size-2"
+           ; "group-data-[size=lg]/avatar:size-3 group-data-[size=lg]/avatar:[&>svg]:size-2"
+           ]
+       ]
+       @ attrs)
+    children
+;;
+
+let group ?(attrs = []) ?class_ children =
   Node.div
     ~attrs:
-      (attrs
-         ?attrs:extra
-         [ "loon-avatar-group"; "loon-avatar-group-" ^ Size.name size ]
-       @ [ Attr.role "group" ])
-    (shown
-     @
-     match hidden with
-     | [] -> []
-     | hidden ->
-       [ Node.span
-           ~attrs:
-             [ Attr.classes
-                 [ "loon-avatar"
-                 ; "loon-avatar-" ^ Size.name size
-                 ; "loon-avatar-circle"
-                 ; "loon-avatar-more"
-                 ]
-             ; aria "label" (sprintf "%d more" (List.length hidden))
-             ]
-           [ Node.textf "+%d" (List.length hidden) ]
-       ])
+      ([ data "slot" "avatar-group"
+       ; Cn.with_class
+           ?class_
+           [ "group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2 \
+              *:data-[slot=avatar]:ring-background"
+           ]
+       ]
+       @ attrs)
+    children
+;;
+
+let group_count ?(attrs = []) ?class_ children =
+  Node.div
+    ~attrs:
+      ([ data "slot" "avatar-group-count"
+       ; Cn.with_class
+           ?class_
+           [ "relative flex size-8 shrink-0 items-center justify-center rounded-full \
+              bg-muted text-sm text-muted-foreground ring-2 ring-background \
+              group-has-data-[size=lg]/avatar-group:size-10 \
+              group-has-data-[size=sm]/avatar-group:size-6 [&>svg]:size-4 \
+              group-has-data-[size=lg]/avatar-group:[&>svg]:size-5 \
+              group-has-data-[size=sm]/avatar-group:[&>svg]:size-3"
+           ]
+       ]
+       @ attrs)
+    children
 ;;

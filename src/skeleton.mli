@@ -1,23 +1,7 @@
-(** A placeholder that pulses where content is loading. Size it with
-    [width] and [height] (CSS lengths) or with attributes. *)
+(** Use to show a placeholder while content is loading. Port of shadcn/ui's
+    [Skeleton]: size and shape it with [class_] ([h-4 w-[250px]],
+    [rounded-full]). *)
 
 open! Import
 
-module Shape : sig
-  type t =
-    | Rect
-    | Circle
-    | Text
-  [@@deriving enumerate, sexp_of, compare, equal]
-end
-
-val view
-  :  ?attrs:Attr.t list
-  -> ?shape:Shape.t
-  -> ?width:string
-  -> ?height:string
-  -> unit
-  -> Node.t
-
-(** [lines] lines of text, the last one shorter. *)
-val text : ?attrs:Attr.t list -> ?lines:int -> unit -> Node.t
+val view : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t

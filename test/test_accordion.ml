@@ -3,59 +3,64 @@ open Loon
 module Node = Virtual_dom.Vdom.Node
 module Handle = Bonsai_web_test.Handle
 
-let items =
-  [ Accordion.Item.create ~id:"a" ~title:"Is it accessible?" (Node.text "Yes.")
-  ; Accordion.Item.create ~id:"b" ~title:"Is it styled?" (Node.text "Yes.")
-  ; Accordion.Item.create
+let items acc =
+  [ Accordion.item
+      acc
+      ~value:"a"
+      [ Accordion.trigger [ Node.text "A" ]
+      ; Accordion.content [ Node.text "Alpha" ]
+      ]
+  ; Accordion.item
+      acc
+      ~value:"b"
+      [ Accordion.trigger [ Node.text "B" ]
+      ; Accordion.content [ Node.text "Beta" ]
+      ]
+  ; Accordion.item
+      acc
       ~disabled:true
-      ~id:"c"
-      ~title:"Is it animated?"
-      (Node.text "Yes.")
+      ~value:"c"
+      [ Accordion.trigger [ Node.text "C" ]
+      ; Accordion.content [ Node.text "Gamma" ]
+      ]
   ]
 ;;
 
-let%expect_test "toggled" =
-  let single = Accordion.Kind.Single { collapsible = true } in
-  let fixed = Accordion.Kind.Single { collapsible = false } in
-  print_s
-    [%message
-      ""
-        ~open_single:(Accordion.toggled single ~open_:[] "a" : string list)
-        ~switch_single:
-          (Accordion.toggled single ~open_:[ "a" ] "b" : string list)
-        ~close_single:
-          (Accordion.toggled single ~open_:[ "a" ] "a" : string list)
-        ~close_fixed:(Accordion.toggled fixed ~open_:[ "a" ] "a" : string list)
-        ~add_multiple:
-          (Accordion.toggled Multiple ~open_:[ "a" ] "b" : string list)
-        ~remove_multiple:
-          (Accordion.toggled Multiple ~open_:[ "a"; "b" ] "a" : string list)];
+let%expect_test "shadcn's classes" =
+  Render.html
+    (Accordion.view
+       ~type_:Single
+       ~value:[ "a" ]
+       ~on_change:(fun _ -> Bonsai_web.Effect.Ignore)
+       (fun acc ->
+          [ Accordion.item
+              acc
+              ~value:"a"
+              [ Accordion.trigger [ Node.text "A" ]
+              ; Accordion.content [ Node.text "Alpha" ]
+              ]
+          ]));
   [%expect
     {|
-    ((open_single (a)) (switch_single (b)) (close_single ()) (close_fixed (a))
-     (add_multiple (a b)) (remove_multiple (b)))
-    |}]
-;;
-
-let%expect_test "opening and closing" =
-  let handle =
-    Render.handle (Accordion.component (Bonsai_web.Bonsai.return items))
-  in
-  Handle.show handle;
-  [%expect
-    {|
-    <div class="loon-accordion">
-      <div @key=a data-state="closed" class="loon-accordion-item">
-        <h3 class="loon-accordion-heading">
+    <div data-orientation="vertical" data-slot="accordion">
+      <div @key=a
+           data-state="open"
+           data-orientation="vertical"
+           data-slot="accordion-item"
+           class="border-b last:border-b-0">
+        <h3 data-orientation="vertical" data-state="open" class="flex">
           <button type="button"
-                  id="loonbonsai_path_replaced_in_test-trigger-a"
-                  aria-expanded="false"
-                  aria-controls="loonbonsai_path_replaced_in_test-content-a"
-                  data-state="closed"
-                  class="loon-accordion-trigger"
+                  aria-controls="accordion-content-a"
+                  aria-expanded="true"
+                  data-state="open"
+                  aria-disabled="true"
+                  data-orientation="vertical"
+                  id="accordion-trigger-a"
+                  data-slot="accordion-trigger"
+                  class="[&[data-state=open]>svg]:rotate-180 disabled:opacity-50 disabled:pointer-events-none flex flex-1 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-4 hover:underline items-start justify-between outline-none py-4 rounded-md text-left text-sm transition-all"
                   @on_click
                   @on_keydown>
-            <span class="loon-accordion-title"> Is it accessible? </span>
+            A
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="24"
                  height="24"
@@ -66,539 +71,782 @@ let%expect_test "opening and closing" =
                  stroke-linecap="round"
                  stroke-linejoin="round"
                  aria-hidden="true"
-                 class="loon-accordion-chevron lucide lucide-chevron-down">
+                 class="duration-200 lucide lucide-chevron-down pointer-events-none shrink-0 size-4 text-muted-foreground transition-transform translate-y-0.5">
               <path d="m6 9 6 6 6-6"> </path>
             </svg>
           </button>
         </h3>
-        <div id="loonbonsai_path_replaced_in_test-content-a"
+        <div data-state="open"
+             id="accordion-content-a"
              role="region"
-             aria-labelledby="loonbonsai_path_replaced_in_test-trigger-a"
-             data-state="closed"
-             inert=""
-             class="loon-accordion-content">
-          <div class="loon-accordion-inner">
-            <div class="loon-accordion-body"> Yes. </div>
-          </div>
-        </div>
-      </div>
-      <div @key=b data-state="closed" class="loon-accordion-item">
-        <h3 class="loon-accordion-heading">
-          <button type="button"
-                  id="loonbonsai_path_replaced_in_test-trigger-b"
-                  aria-expanded="false"
-                  aria-controls="loonbonsai_path_replaced_in_test-content-b"
-                  data-state="closed"
-                  class="loon-accordion-trigger"
-                  @on_click
-                  @on_keydown>
-            <span class="loon-accordion-title"> Is it styled? </span>
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="24"
-                 height="24"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true"
-                 class="loon-accordion-chevron lucide lucide-chevron-down">
-              <path d="m6 9 6 6 6-6"> </path>
-            </svg>
-          </button>
-        </h3>
-        <div id="loonbonsai_path_replaced_in_test-content-b"
-             role="region"
-             aria-labelledby="loonbonsai_path_replaced_in_test-trigger-b"
-             data-state="closed"
-             inert=""
-             class="loon-accordion-content">
-          <div class="loon-accordion-inner">
-            <div class="loon-accordion-body"> Yes. </div>
-          </div>
-        </div>
-      </div>
-      <div @key=c data-state="closed" class="loon-accordion-item">
-        <h3 class="loon-accordion-heading">
-          <button type="button"
-                  id="loonbonsai_path_replaced_in_test-trigger-c"
-                  aria-expanded="false"
-                  aria-controls="loonbonsai_path_replaced_in_test-content-c"
-                  data-state="closed"
-                  disabled=""
-                  class="loon-accordion-trigger"
-                  @on_click
-                  @on_keydown>
-            <span class="loon-accordion-title"> Is it animated? </span>
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="24"
-                 height="24"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true"
-                 class="loon-accordion-chevron lucide lucide-chevron-down">
-              <path d="m6 9 6 6 6-6"> </path>
-            </svg>
-          </button>
-        </h3>
-        <div id="loonbonsai_path_replaced_in_test-content-c"
-             role="region"
-             aria-labelledby="loonbonsai_path_replaced_in_test-trigger-c"
-             data-state="closed"
-             inert=""
-             class="loon-accordion-content">
-          <div class="loon-accordion-inner">
-            <div class="loon-accordion-body"> Yes. </div>
-          </div>
+             aria-labelledby="accordion-trigger-a"
+             data-orientation="vertical"
+             data-slot="accordion-content"
+             class="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm"
+             loon-collapsible-presence=((open_ true)(accordion true))>
+          <div class="pb-4 pt-0"> Alpha </div>
         </div>
       </div>
     </div>
-    |}];
-  Handle.click_on handle ~get_vdom:Fn.id ~selector:"[id$=trigger-a]";
-  Handle.show_diff handle;
-  [%expect
-    {|
-      <div class="loon-accordion">
-    -|  <div @key=a data-state="closed" class="loon-accordion-item">
-    +|  <div @key=a data-state="open" class="loon-accordion-item">
-          <h3 class="loon-accordion-heading">
-            <button type="button"
-                    id="loonbonsai_path_replaced_in_test-trigger-a"
-    -|              aria-expanded="false"
-    +|              aria-expanded="true"
-                    aria-controls="loonbonsai_path_replaced_in_test-content-a"
-    -|              data-state="closed"
-    +|              data-state="open"
-                    class="loon-accordion-trigger"
-                    @on_click
-                    @on_keydown>
-              <span class="loon-accordion-title"> Is it accessible? </span>
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   width="24"
-                   height="24"
-                   viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="2"
-                   stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true"
-                   class="loon-accordion-chevron lucide lucide-chevron-down">
-                <path d="m6 9 6 6 6-6"> </path>
-              </svg>
-            </button>
-          </h3>
-          <div id="loonbonsai_path_replaced_in_test-content-a"
-               role="region"
-               aria-labelledby="loonbonsai_path_replaced_in_test-trigger-a"
-    -|         data-state="closed"
-    -|         inert=""
-    +|         data-state="open"
-               class="loon-accordion-content">
-            <div class="loon-accordion-inner">
-              <div class="loon-accordion-body"> Yes. </div>
-            </div>
-          </div>
-        </div>
-        <div @key=b data-state="closed" class="loon-accordion-item">
-          <h3 class="loon-accordion-heading">
-            <button type="button"
-                    id="loonbonsai_path_replaced_in_test-trigger-b"
-                    aria-expanded="false"
-                    aria-controls="loonbonsai_path_replaced_in_test-content-b"
-                    data-state="closed"
-                    class="loon-accordion-trigger"
-                    @on_click
-                    @on_keydown>
-    |}];
-  Handle.click_on handle ~get_vdom:Fn.id ~selector:"[id$=trigger-b]";
-  Handle.show_diff handle;
-  [%expect
-    {|
-      <div class="loon-accordion">
-    -|  <div @key=a data-state="open" class="loon-accordion-item">
-    +|  <div @key=a data-state="closed" class="loon-accordion-item">
-          <h3 class="loon-accordion-heading">
-            <button type="button"
-                    id="loonbonsai_path_replaced_in_test-trigger-a"
-    -|              aria-expanded="true"
-    +|              aria-expanded="false"
-                    aria-controls="loonbonsai_path_replaced_in_test-content-a"
-    -|              data-state="open"
-    +|              data-state="closed"
-                    class="loon-accordion-trigger"
-                    @on_click
-                    @on_keydown>
-              <span class="loon-accordion-title"> Is it accessible? </span>
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   width="24"
-                   height="24"
-                   viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="2"
-                   stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true"
-                   class="loon-accordion-chevron lucide lucide-chevron-down">
-                <path d="m6 9 6 6 6-6"> </path>
-              </svg>
-            </button>
-          </h3>
-          <div id="loonbonsai_path_replaced_in_test-content-a"
-               role="region"
-               aria-labelledby="loonbonsai_path_replaced_in_test-trigger-a"
-    -|         data-state="open"
-    +|         data-state="closed"
-    +|         inert=""
-               class="loon-accordion-content">
-            <div class="loon-accordion-inner">
-              <div class="loon-accordion-body"> Yes. </div>
-            </div>
-          </div>
-        </div>
-    -|  <div @key=b data-state="closed" class="loon-accordion-item">
-    +|  <div @key=b data-state="open" class="loon-accordion-item">
-          <h3 class="loon-accordion-heading">
-            <button type="button"
-                    id="loonbonsai_path_replaced_in_test-trigger-b"
-    -|              aria-expanded="false"
-    +|              aria-expanded="true"
-                    aria-controls="loonbonsai_path_replaced_in_test-content-b"
-    -|              data-state="closed"
-    +|              data-state="open"
-                    class="loon-accordion-trigger"
-                    @on_click
-                    @on_keydown>
-              <span class="loon-accordion-title"> Is it styled? </span>
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   width="24"
-                   height="24"
-                   viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="2"
-                   stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true"
-                   class="loon-accordion-chevron lucide lucide-chevron-down">
-                <path d="m6 9 6 6 6-6"> </path>
-              </svg>
-            </button>
-          </h3>
-          <div id="loonbonsai_path_replaced_in_test-content-b"
-               role="region"
-               aria-labelledby="loonbonsai_path_replaced_in_test-trigger-b"
-    -|         data-state="closed"
-    -|         inert=""
-    +|         data-state="open"
-               class="loon-accordion-content">
-            <div class="loon-accordion-inner">
-              <div class="loon-accordion-body"> Yes. </div>
-            </div>
-          </div>
-        </div>
-        <div @key=c data-state="closed" class="loon-accordion-item">
-          <h3 class="loon-accordion-heading">
-            <button type="button"
-                    id="loonbonsai_path_replaced_in_test-trigger-c"
-                    aria-expanded="false"
-                    aria-controls="loonbonsai_path_replaced_in_test-content-c"
-                    data-state="closed"
-                    disabled=""
-                    class="loon-accordion-trigger"
-                    @on_click
-    |}];
-  Handle.click_on handle ~get_vdom:Fn.id ~selector:"[id$=trigger-b]";
-  Handle.show_diff handle;
-  [%expect
-    {|
-                   class="loon-accordion-chevron lucide lucide-chevron-down">
-                <path d="m6 9 6 6 6-6"> </path>
-              </svg>
-            </button>
-          </h3>
-          <div id="loonbonsai_path_replaced_in_test-content-a"
-               role="region"
-               aria-labelledby="loonbonsai_path_replaced_in_test-trigger-a"
-               data-state="closed"
-               inert=""
-               class="loon-accordion-content">
-            <div class="loon-accordion-inner">
-              <div class="loon-accordion-body"> Yes. </div>
-            </div>
-          </div>
-        </div>
-    -|  <div @key=b data-state="open" class="loon-accordion-item">
-    +|  <div @key=b data-state="closed" class="loon-accordion-item">
-          <h3 class="loon-accordion-heading">
-            <button type="button"
-                    id="loonbonsai_path_replaced_in_test-trigger-b"
-    -|              aria-expanded="true"
-    +|              aria-expanded="false"
-                    aria-controls="loonbonsai_path_replaced_in_test-content-b"
-    -|              data-state="open"
-    +|              data-state="closed"
-                    class="loon-accordion-trigger"
-                    @on_click
-                    @on_keydown>
-              <span class="loon-accordion-title"> Is it styled? </span>
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   width="24"
-                   height="24"
-                   viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="2"
-                   stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true"
-                   class="loon-accordion-chevron lucide lucide-chevron-down">
-                <path d="m6 9 6 6 6-6"> </path>
-              </svg>
-            </button>
-          </h3>
-          <div id="loonbonsai_path_replaced_in_test-content-b"
-               role="region"
-               aria-labelledby="loonbonsai_path_replaced_in_test-trigger-b"
-    -|         data-state="open"
-    +|         data-state="closed"
-    +|         inert=""
-               class="loon-accordion-content">
-            <div class="loon-accordion-inner">
-              <div class="loon-accordion-body"> Yes. </div>
-            </div>
-          </div>
-        </div>
-        <div @key=c data-state="closed" class="loon-accordion-item">
-          <h3 class="loon-accordion-heading">
-            <button type="button"
-                    id="loonbonsai_path_replaced_in_test-trigger-c"
-                    aria-expanded="false"
-                    aria-controls="loonbonsai_path_replaced_in_test-content-c"
-                    data-state="closed"
-                    disabled=""
-                    class="loon-accordion-trigger"
-                    @on_click
     |}]
 ;;
 
-let%expect_test "multiple" =
-  let handle =
-    Render.handle
-      (Accordion.component ~kind:Multiple (Bonsai_web.Bonsai.return items))
-  in
-  Handle.click_on handle ~get_vdom:Fn.id ~selector:"[id$=trigger-a]";
-  Handle.click_on handle ~get_vdom:Fn.id ~selector:"[id$=trigger-b]";
-  Handle.show handle;
-  [%expect
-    {|
-    <div class="loon-accordion">
-      <div @key=a data-state="open" class="loon-accordion-item">
-        <h3 class="loon-accordion-heading">
-          <button type="button"
-                  id="loonbonsai_path_replaced_in_test-trigger-a"
-                  aria-expanded="true"
-                  aria-controls="loonbonsai_path_replaced_in_test-content-a"
-                  data-state="open"
-                  class="loon-accordion-trigger"
-                  @on_click
-                  @on_keydown>
-            <span class="loon-accordion-title"> Is it accessible? </span>
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="24"
-                 height="24"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true"
-                 class="loon-accordion-chevron lucide lucide-chevron-down">
-              <path d="m6 9 6 6 6-6"> </path>
-            </svg>
-          </button>
-        </h3>
-        <div id="loonbonsai_path_replaced_in_test-content-a"
-             role="region"
-             aria-labelledby="loonbonsai_path_replaced_in_test-trigger-a"
-             data-state="open"
-             class="loon-accordion-content">
-          <div class="loon-accordion-inner">
-            <div class="loon-accordion-body"> Yes. </div>
-          </div>
-        </div>
-      </div>
-      <div @key=b data-state="open" class="loon-accordion-item">
-        <h3 class="loon-accordion-heading">
-          <button type="button"
-                  id="loonbonsai_path_replaced_in_test-trigger-b"
-                  aria-expanded="true"
-                  aria-controls="loonbonsai_path_replaced_in_test-content-b"
-                  data-state="open"
-                  class="loon-accordion-trigger"
-                  @on_click
-                  @on_keydown>
-            <span class="loon-accordion-title"> Is it styled? </span>
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="24"
-                 height="24"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true"
-                 class="loon-accordion-chevron lucide lucide-chevron-down">
-              <path d="m6 9 6 6 6-6"> </path>
-            </svg>
-          </button>
-        </h3>
-        <div id="loonbonsai_path_replaced_in_test-content-b"
-             role="region"
-             aria-labelledby="loonbonsai_path_replaced_in_test-trigger-b"
-             data-state="open"
-             class="loon-accordion-content">
-          <div class="loon-accordion-inner">
-            <div class="loon-accordion-body"> Yes. </div>
-          </div>
-        </div>
-      </div>
-      <div @key=c data-state="closed" class="loon-accordion-item">
-        <h3 class="loon-accordion-heading">
-          <button type="button"
-                  id="loonbonsai_path_replaced_in_test-trigger-c"
-                  aria-expanded="false"
-                  aria-controls="loonbonsai_path_replaced_in_test-content-c"
-                  data-state="closed"
-                  disabled=""
-                  class="loon-accordion-trigger"
-                  @on_click
-                  @on_keydown>
-            <span class="loon-accordion-title"> Is it animated? </span>
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="24"
-                 height="24"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true"
-                 class="loon-accordion-chevron lucide lucide-chevron-down">
-              <path d="m6 9 6 6 6-6"> </path>
-            </svg>
-          </button>
-        </h3>
-        <div id="loonbonsai_path_replaced_in_test-content-c"
-             role="region"
-             aria-labelledby="loonbonsai_path_replaced_in_test-trigger-c"
-             data-state="closed"
-             inert=""
-             class="loon-accordion-content">
-          <div class="loon-accordion-inner">
-            <div class="loon-accordion-body"> Yes. </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    |}];
-  (* Arrow keys only move the focus. *)
-  Handle.keydown
-    handle
-    ~get_vdom:Fn.id
-    ~selector:"[id$=trigger-a]"
-    ~key:ArrowDown;
-  Handle.show_diff handle;
-  [%expect {| ("default prevented" (key ArrowDown)) |}]
-;;
+let show_states handle = Handle.show handle
 
-let%expect_test "collapsible" =
+let%expect_test "single: one open at a time; not collapsible keeps it open" =
   let handle =
     Render.handle
-      (Collapsible.component
-         ~trigger:(Bonsai_web.Bonsai.return [ Node.text "3 more" ])
-         (Bonsai_web.Bonsai.return [ Node.text "hidden things" ]))
+      ~classes:false
+      (Accordion.component
+         ~type_:Single
+         ~default_value:[ "a" ]
+         (Bonsai_web.Bonsai.return items))
   in
-  Handle.show handle;
+  show_states handle;
   [%expect
     {|
-    <div data-state="closed" class="loon-collapsible">
-      <button type="button"
-              id="loonbonsai_path_replaced_in_test-trigger"
-              aria-expanded="false"
-              aria-controls="loonbonsai_path_replaced_in_test-content"
-              data-state="closed"
-              class="loon-collapsible-trigger"
-              @on_click>
-        3 more
-        <svg xmlns="http://www.w3.org/2000/svg"
-             width="24"
-             height="24"
-             viewBox="0 0 24 24"
-             fill="none"
-             stroke="currentColor"
-             stroke-width="2"
-             stroke-linecap="round"
-             stroke-linejoin="round"
-             aria-hidden="true"
-             class="loon-collapsible-chevron lucide lucide-chevron-down">
-          <path d="m6 9 6 6 6-6"> </path>
-        </svg>
-      </button>
-      <div id="loonbonsai_path_replaced_in_test-content"
+    <div data-orientation="vertical" data-slot="accordion">
+      <div @key=a data-state="open" data-orientation="vertical" data-slot="accordion-item">
+        <h3 data-orientation="vertical" data-state="open">
+          <button type="button"
+                  aria-controls="bonsai_path_replaced_in_test-content-a"
+                  aria-expanded="true"
+                  data-state="open"
+                  aria-disabled="true"
+                  data-orientation="vertical"
+                  id="bonsai_path_replaced_in_test-trigger-a"
+                  data-slot="accordion-trigger"
+                  @on_click
+                  @on_keydown>
+            A
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+              <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+          </button>
+        </h3>
+        <div data-state="open"
+             id="bonsai_path_replaced_in_test-content-a"
+             role="region"
+             aria-labelledby="bonsai_path_replaced_in_test-trigger-a"
+             data-orientation="vertical"
+             data-slot="accordion-content"
+             loon-collapsible-presence=((open_ true)(accordion true))>
+          <div> Alpha </div>
+        </div>
+      </div>
+      <div @key=b data-state="closed" data-orientation="vertical" data-slot="accordion-item">
+        <h3 data-orientation="vertical" data-state="closed">
+          <button type="button"
+                  aria-controls="bonsai_path_replaced_in_test-content-b"
+                  aria-expanded="false"
+                  data-state="closed"
+                  data-orientation="vertical"
+                  id="bonsai_path_replaced_in_test-trigger-b"
+                  data-slot="accordion-trigger"
+                  @on_click
+                  @on_keydown>
+            B
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+              <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+          </button>
+        </h3>
+        <div data-state="closed"
+             id="bonsai_path_replaced_in_test-content-b"
+             hidden=""
+             role="region"
+             aria-labelledby="bonsai_path_replaced_in_test-trigger-b"
+             data-orientation="vertical"
+             data-slot="accordion-content"
+             loon-collapsible-presence=((open_ false)(accordion true))>
+          <div> Beta </div>
+        </div>
+      </div>
+      <div @key=c
            data-state="closed"
-           inert=""
-           class="loon-collapsible-content">
-        <div class="loon-collapsible-inner"> hidden things </div>
+           data-disabled=""
+           data-orientation="vertical"
+           data-slot="accordion-item">
+        <h3 data-orientation="vertical" data-state="closed" data-disabled="">
+          <button type="button"
+                  aria-controls="bonsai_path_replaced_in_test-content-c"
+                  aria-expanded="false"
+                  data-state="closed"
+                  data-disabled=""
+                  disabled=""
+                  data-orientation="vertical"
+                  id="bonsai_path_replaced_in_test-trigger-c"
+                  data-slot="accordion-trigger"
+                  @on_keydown>
+            C
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+              <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+          </button>
+        </h3>
+        <div data-state="closed"
+             id="bonsai_path_replaced_in_test-content-c"
+             hidden=""
+             data-disabled=""
+             role="region"
+             aria-labelledby="bonsai_path_replaced_in_test-trigger-c"
+             data-orientation="vertical"
+             data-slot="accordion-content"
+             loon-collapsible-presence=((open_ false)(accordion true))>
+          <div> Gamma </div>
+        </div>
       </div>
     </div>
     |}];
-  Handle.click_on handle ~get_vdom:Fn.id ~selector:".loon-collapsible-trigger";
+  Drive.click handle "[id$=trigger-b]";
   Handle.show_diff handle;
   [%expect
     {|
-    -|<div data-state="closed" class="loon-collapsible">
-    +|<div data-state="open" class="loon-collapsible">
-        <button type="button"
-                id="loonbonsai_path_replaced_in_test-trigger"
-    -|          aria-expanded="false"
-    +|          aria-expanded="true"
-                aria-controls="loonbonsai_path_replaced_in_test-content"
-    -|          data-state="closed"
-    +|          data-state="open"
-                class="loon-collapsible-trigger"
-                @on_click>
-          3 more
-          <svg xmlns="http://www.w3.org/2000/svg"
-               width="24"
-               height="24"
-               viewBox="0 0 24 24"
-               fill="none"
-               stroke="currentColor"
-               stroke-width="2"
-               stroke-linecap="round"
-               stroke-linejoin="round"
-               aria-hidden="true"
-               class="loon-collapsible-chevron lucide lucide-chevron-down">
-            <path d="m6 9 6 6 6-6"> </path>
-          </svg>
-        </button>
-        <div id="loonbonsai_path_replaced_in_test-content"
-    -|       data-state="closed"
-    -|       inert=""
-    +|       data-state="open"
-             class="loon-collapsible-content">
-          <div class="loon-collapsible-inner"> hidden things </div>
+      <div data-orientation="vertical" data-slot="accordion">
+    -|  <div @key=a data-state="open" data-orientation="vertical" data-slot="accordion-item">
+    +|  <div @key=a data-state="closed" data-orientation="vertical" data-slot="accordion-item">
+    -|    <h3 data-orientation="vertical" data-state="open">
+    +|    <h3 data-orientation="vertical" data-state="closed">
+            <button type="button"
+                    aria-controls="bonsai_path_replaced_in_test-content-a"
+    -|              aria-expanded="true"
+    +|              aria-expanded="false"
+    -|              data-state="open"
+    -|              aria-disabled="true"
+    +|              data-state="closed"
+                    data-orientation="vertical"
+                    id="bonsai_path_replaced_in_test-trigger-a"
+                    data-slot="accordion-trigger"
+                    @on_click
+                    @on_keydown>
+              A
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   aria-hidden="true">
+                <path d="m6 9 6 6 6-6"> </path>
+              </svg>
+            </button>
+          </h3>
+    -|    <div data-state="open"
+    +|    <div data-state="closed"
+               id="bonsai_path_replaced_in_test-content-a"
+    +|         hidden=""
+               role="region"
+               aria-labelledby="bonsai_path_replaced_in_test-trigger-a"
+               data-orientation="vertical"
+               data-slot="accordion-content"
+    -|         loon-collapsible-presence=((open_ true)(accordion true))>
+    +|         loon-collapsible-presence=((open_ false)(accordion true))>
+            <div> Alpha </div>
+          </div>
+        </div>
+    -|  <div @key=b data-state="closed" data-orientation="vertical" data-slot="accordion-item">
+    +|  <div @key=b data-state="open" data-orientation="vertical" data-slot="accordion-item">
+    -|    <h3 data-orientation="vertical" data-state="closed">
+    +|    <h3 data-orientation="vertical" data-state="open">
+            <button type="button"
+                    aria-controls="bonsai_path_replaced_in_test-content-b"
+    -|              aria-expanded="false"
+    +|              aria-expanded="true"
+    -|              data-state="closed"
+    +|              data-state="open"
+    +|              aria-disabled="true"
+                    data-orientation="vertical"
+                    id="bonsai_path_replaced_in_test-trigger-b"
+                    data-slot="accordion-trigger"
+                    @on_click
+                    @on_keydown>
+              B
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   aria-hidden="true">
+                <path d="m6 9 6 6 6-6"> </path>
+              </svg>
+            </button>
+          </h3>
+    -|    <div data-state="closed"
+    +|    <div data-state="open"
+               id="bonsai_path_replaced_in_test-content-b"
+    -|         hidden=""
+               role="region"
+               aria-labelledby="bonsai_path_replaced_in_test-trigger-b"
+               data-orientation="vertical"
+               data-slot="accordion-content"
+    -|         loon-collapsible-presence=((open_ false)(accordion true))>
+    +|         loon-collapsible-presence=((open_ true)(accordion true))>
+            <div> Beta </div>
+          </div>
+        </div>
+        <div @key=c
+             data-state="closed"
+             data-disabled=""
+             data-orientation="vertical"
+             data-slot="accordion-item">
+          <h3 data-orientation="vertical" data-state="closed" data-disabled="">
+            <button type="button"
+                    aria-controls="bonsai_path_replaced_in_test-content-c"
+                    aria-expanded="false"
+                    data-state="closed"
+                    data-disabled=""
+                    disabled=""
+                    data-orientation="vertical"
+    |}];
+  (* Pressing the open item does nothing unless collapsible. *)
+  Drive.click handle "[id$=trigger-b]";
+  Handle.show_diff handle;
+  [%expect {| |}]
+;;
+
+let%expect_test "single, collapsible: the open item closes" =
+  let handle =
+    Render.handle
+      ~classes:false
+      (Accordion.component
+         ~type_:Single
+         ~collapsible:true
+         ~default_value:[ "a" ]
+         (Bonsai_web.Bonsai.return items))
+  in
+  Handle.show handle;
+  Drive.click handle "[id$=trigger-a]";
+  Handle.show_diff handle;
+  [%expect
+    {|
+    <div data-orientation="vertical" data-slot="accordion">
+      <div @key=a data-state="open" data-orientation="vertical" data-slot="accordion-item">
+        <h3 data-orientation="vertical" data-state="open">
+          <button type="button"
+                  aria-controls="bonsai_path_replaced_in_test-content-a"
+                  aria-expanded="true"
+                  data-state="open"
+                  data-orientation="vertical"
+                  id="bonsai_path_replaced_in_test-trigger-a"
+                  data-slot="accordion-trigger"
+                  @on_click
+                  @on_keydown>
+            A
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+              <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+          </button>
+        </h3>
+        <div data-state="open"
+             id="bonsai_path_replaced_in_test-content-a"
+             role="region"
+             aria-labelledby="bonsai_path_replaced_in_test-trigger-a"
+             data-orientation="vertical"
+             data-slot="accordion-content"
+             loon-collapsible-presence=((open_ true)(accordion true))>
+          <div> Alpha </div>
         </div>
       </div>
+      <div @key=b data-state="closed" data-orientation="vertical" data-slot="accordion-item">
+        <h3 data-orientation="vertical" data-state="closed">
+          <button type="button"
+                  aria-controls="bonsai_path_replaced_in_test-content-b"
+                  aria-expanded="false"
+                  data-state="closed"
+                  data-orientation="vertical"
+                  id="bonsai_path_replaced_in_test-trigger-b"
+                  data-slot="accordion-trigger"
+                  @on_click
+                  @on_keydown>
+            B
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+              <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+          </button>
+        </h3>
+        <div data-state="closed"
+             id="bonsai_path_replaced_in_test-content-b"
+             hidden=""
+             role="region"
+             aria-labelledby="bonsai_path_replaced_in_test-trigger-b"
+             data-orientation="vertical"
+             data-slot="accordion-content"
+             loon-collapsible-presence=((open_ false)(accordion true))>
+          <div> Beta </div>
+        </div>
+      </div>
+      <div @key=c
+           data-state="closed"
+           data-disabled=""
+           data-orientation="vertical"
+           data-slot="accordion-item">
+        <h3 data-orientation="vertical" data-state="closed" data-disabled="">
+          <button type="button"
+                  aria-controls="bonsai_path_replaced_in_test-content-c"
+                  aria-expanded="false"
+                  data-state="closed"
+                  data-disabled=""
+                  disabled=""
+                  data-orientation="vertical"
+                  id="bonsai_path_replaced_in_test-trigger-c"
+                  data-slot="accordion-trigger"
+                  @on_keydown>
+            C
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+              <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+          </button>
+        </h3>
+        <div data-state="closed"
+             id="bonsai_path_replaced_in_test-content-c"
+             hidden=""
+             data-disabled=""
+             role="region"
+             aria-labelledby="bonsai_path_replaced_in_test-trigger-c"
+             data-orientation="vertical"
+             data-slot="accordion-content"
+             loon-collapsible-presence=((open_ false)(accordion true))>
+          <div> Gamma </div>
+        </div>
+      </div>
+    </div>
+
+      <div data-orientation="vertical" data-slot="accordion">
+    -|  <div @key=a data-state="open" data-orientation="vertical" data-slot="accordion-item">
+    +|  <div @key=a data-state="closed" data-orientation="vertical" data-slot="accordion-item">
+    -|    <h3 data-orientation="vertical" data-state="open">
+    +|    <h3 data-orientation="vertical" data-state="closed">
+            <button type="button"
+                    aria-controls="bonsai_path_replaced_in_test-content-a"
+    -|              aria-expanded="true"
+    +|              aria-expanded="false"
+    -|              data-state="open"
+    +|              data-state="closed"
+                    data-orientation="vertical"
+                    id="bonsai_path_replaced_in_test-trigger-a"
+                    data-slot="accordion-trigger"
+                    @on_click
+                    @on_keydown>
+              A
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   aria-hidden="true">
+                <path d="m6 9 6 6 6-6"> </path>
+              </svg>
+            </button>
+          </h3>
+    -|    <div data-state="open"
+    +|    <div data-state="closed"
+               id="bonsai_path_replaced_in_test-content-a"
+    +|         hidden=""
+               role="region"
+               aria-labelledby="bonsai_path_replaced_in_test-trigger-a"
+               data-orientation="vertical"
+               data-slot="accordion-content"
+    -|         loon-collapsible-presence=((open_ true)(accordion true))>
+    +|         loon-collapsible-presence=((open_ false)(accordion true))>
+            <div> Alpha </div>
+          </div>
+        </div>
+        <div @key=b data-state="closed" data-orientation="vertical" data-slot="accordion-item">
+          <h3 data-orientation="vertical" data-state="closed">
+            <button type="button"
+                    aria-controls="bonsai_path_replaced_in_test-content-b"
+                    aria-expanded="false"
+                    data-state="closed"
+                    data-orientation="vertical"
+                    id="bonsai_path_replaced_in_test-trigger-b"
+                    data-slot="accordion-trigger"
+                    @on_click
+                    @on_keydown>
+              B
+              <svg xmlns="http://www.w3.org/2000/svg"
+    |}]
+;;
+
+let%expect_test "multiple: several open" =
+  let handle =
+    Render.handle
+      ~classes:false
+      (Accordion.component ~type_:Multiple (Bonsai_web.Bonsai.return items))
+  in
+  Handle.show handle;
+  Drive.click handle "[id$=trigger-a]";
+  Drive.click handle "[id$=trigger-b]";
+  Handle.show_diff handle;
+  [%expect
+    {|
+    <div data-orientation="vertical" data-slot="accordion">
+      <div @key=a data-state="closed" data-orientation="vertical" data-slot="accordion-item">
+        <h3 data-orientation="vertical" data-state="closed">
+          <button type="button"
+                  aria-controls="bonsai_path_replaced_in_test-content-a"
+                  aria-expanded="false"
+                  data-state="closed"
+                  data-orientation="vertical"
+                  id="bonsai_path_replaced_in_test-trigger-a"
+                  data-slot="accordion-trigger"
+                  @on_click
+                  @on_keydown>
+            A
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+              <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+          </button>
+        </h3>
+        <div data-state="closed"
+             id="bonsai_path_replaced_in_test-content-a"
+             hidden=""
+             role="region"
+             aria-labelledby="bonsai_path_replaced_in_test-trigger-a"
+             data-orientation="vertical"
+             data-slot="accordion-content"
+             loon-collapsible-presence=((open_ false)(accordion true))>
+          <div> Alpha </div>
+        </div>
+      </div>
+      <div @key=b data-state="closed" data-orientation="vertical" data-slot="accordion-item">
+        <h3 data-orientation="vertical" data-state="closed">
+          <button type="button"
+                  aria-controls="bonsai_path_replaced_in_test-content-b"
+                  aria-expanded="false"
+                  data-state="closed"
+                  data-orientation="vertical"
+                  id="bonsai_path_replaced_in_test-trigger-b"
+                  data-slot="accordion-trigger"
+                  @on_click
+                  @on_keydown>
+            B
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+              <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+          </button>
+        </h3>
+        <div data-state="closed"
+             id="bonsai_path_replaced_in_test-content-b"
+             hidden=""
+             role="region"
+             aria-labelledby="bonsai_path_replaced_in_test-trigger-b"
+             data-orientation="vertical"
+             data-slot="accordion-content"
+             loon-collapsible-presence=((open_ false)(accordion true))>
+          <div> Beta </div>
+        </div>
+      </div>
+      <div @key=c
+           data-state="closed"
+           data-disabled=""
+           data-orientation="vertical"
+           data-slot="accordion-item">
+        <h3 data-orientation="vertical" data-state="closed" data-disabled="">
+          <button type="button"
+                  aria-controls="bonsai_path_replaced_in_test-content-c"
+                  aria-expanded="false"
+                  data-state="closed"
+                  data-disabled=""
+                  disabled=""
+                  data-orientation="vertical"
+                  id="bonsai_path_replaced_in_test-trigger-c"
+                  data-slot="accordion-trigger"
+                  @on_keydown>
+            C
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+              <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+          </button>
+        </h3>
+        <div data-state="closed"
+             id="bonsai_path_replaced_in_test-content-c"
+             hidden=""
+             data-disabled=""
+             role="region"
+             aria-labelledby="bonsai_path_replaced_in_test-trigger-c"
+             data-orientation="vertical"
+             data-slot="accordion-content"
+             loon-collapsible-presence=((open_ false)(accordion true))>
+          <div> Gamma </div>
+        </div>
+      </div>
+    </div>
+
+      <div data-orientation="vertical" data-slot="accordion">
+    -|  <div @key=a data-state="closed" data-orientation="vertical" data-slot="accordion-item">
+    +|  <div @key=a data-state="open" data-orientation="vertical" data-slot="accordion-item">
+    -|    <h3 data-orientation="vertical" data-state="closed">
+    +|    <h3 data-orientation="vertical" data-state="open">
+            <button type="button"
+                    aria-controls="bonsai_path_replaced_in_test-content-a"
+    -|              aria-expanded="false"
+    +|              aria-expanded="true"
+    -|              data-state="closed"
+    +|              data-state="open"
+                    data-orientation="vertical"
+                    id="bonsai_path_replaced_in_test-trigger-a"
+                    data-slot="accordion-trigger"
+                    @on_click
+                    @on_keydown>
+              A
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   aria-hidden="true">
+                <path d="m6 9 6 6 6-6"> </path>
+              </svg>
+            </button>
+          </h3>
+    -|    <div data-state="closed"
+    +|    <div data-state="open"
+               id="bonsai_path_replaced_in_test-content-a"
+    -|         hidden=""
+               role="region"
+               aria-labelledby="bonsai_path_replaced_in_test-trigger-a"
+               data-orientation="vertical"
+               data-slot="accordion-content"
+    -|         loon-collapsible-presence=((open_ false)(accordion true))>
+    +|         loon-collapsible-presence=((open_ true)(accordion true))>
+            <div> Alpha </div>
+          </div>
+        </div>
+    -|  <div @key=b data-state="closed" data-orientation="vertical" data-slot="accordion-item">
+    +|  <div @key=b data-state="open" data-orientation="vertical" data-slot="accordion-item">
+    -|    <h3 data-orientation="vertical" data-state="closed">
+    +|    <h3 data-orientation="vertical" data-state="open">
+            <button type="button"
+                    aria-controls="bonsai_path_replaced_in_test-content-b"
+    -|              aria-expanded="false"
+    +|              aria-expanded="true"
+    -|              data-state="closed"
+    +|              data-state="open"
+                    data-orientation="vertical"
+                    id="bonsai_path_replaced_in_test-trigger-b"
+                    data-slot="accordion-trigger"
+                    @on_click
+                    @on_keydown>
+              B
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   aria-hidden="true">
+                <path d="m6 9 6 6 6-6"> </path>
+              </svg>
+            </button>
+          </h3>
+    -|    <div data-state="closed"
+    +|    <div data-state="open"
+               id="bonsai_path_replaced_in_test-content-b"
+    -|         hidden=""
+               role="region"
+               aria-labelledby="bonsai_path_replaced_in_test-trigger-b"
+               data-orientation="vertical"
+               data-slot="accordion-content"
+    -|         loon-collapsible-presence=((open_ false)(accordion true))>
+    +|         loon-collapsible-presence=((open_ true)(accordion true))>
+            <div> Beta </div>
+          </div>
+        </div>
+        <div @key=c
+             data-state="closed"
+             data-disabled=""
+             data-orientation="vertical"
+             data-slot="accordion-item">
+          <h3 data-orientation="vertical" data-state="closed" data-disabled="">
+            <button type="button"
+                    aria-controls="bonsai_path_replaced_in_test-content-c"
+                    aria-expanded="false"
+                    data-state="closed"
+                    data-disabled=""
+                    disabled=""
+                    data-orientation="vertical"
+    |}];
+  Drive.click handle "[id$=trigger-a]";
+  Handle.show_diff handle;
+  [%expect
+    {|
+      <div data-orientation="vertical" data-slot="accordion">
+    -|  <div @key=a data-state="open" data-orientation="vertical" data-slot="accordion-item">
+    +|  <div @key=a data-state="closed" data-orientation="vertical" data-slot="accordion-item">
+    -|    <h3 data-orientation="vertical" data-state="open">
+    +|    <h3 data-orientation="vertical" data-state="closed">
+            <button type="button"
+                    aria-controls="bonsai_path_replaced_in_test-content-a"
+    -|              aria-expanded="true"
+    +|              aria-expanded="false"
+    -|              data-state="open"
+    +|              data-state="closed"
+                    data-orientation="vertical"
+                    id="bonsai_path_replaced_in_test-trigger-a"
+                    data-slot="accordion-trigger"
+                    @on_click
+                    @on_keydown>
+              A
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   aria-hidden="true">
+                <path d="m6 9 6 6 6-6"> </path>
+              </svg>
+            </button>
+          </h3>
+    -|    <div data-state="open"
+    +|    <div data-state="closed"
+               id="bonsai_path_replaced_in_test-content-a"
+    +|         hidden=""
+               role="region"
+               aria-labelledby="bonsai_path_replaced_in_test-trigger-a"
+               data-orientation="vertical"
+               data-slot="accordion-content"
+    -|         loon-collapsible-presence=((open_ true)(accordion true))>
+    +|         loon-collapsible-presence=((open_ false)(accordion true))>
+            <div> Alpha </div>
+          </div>
+        </div>
+        <div @key=b data-state="open" data-orientation="vertical" data-slot="accordion-item">
+          <h3 data-orientation="vertical" data-state="open">
+            <button type="button"
+                    aria-controls="bonsai_path_replaced_in_test-content-b"
+                    aria-expanded="true"
+                    data-state="open"
+                    data-orientation="vertical"
+                    id="bonsai_path_replaced_in_test-trigger-b"
+                    data-slot="accordion-trigger"
+                    @on_click
+                    @on_keydown>
+              B
+              <svg xmlns="http://www.w3.org/2000/svg"
+    |}]
+;;
+
+let%expect_test "toggled" =
+  let show type_ collapsible open_ value =
+    print_s
+      [%sexp (Accordion.toggled type_ ~collapsible ~open_ value : string list)]
+  in
+  show Single false [] "a";
+  show Single false [ "a" ] "a";
+  show Single true [ "a" ] "a";
+  show Single false [ "a" ] "b";
+  show Multiple false [ "a" ] "b";
+  show Multiple false [ "a"; "b" ] "a";
+  [%expect
+    {|
+    (a)
+    (a)
+    ()
+    (b)
+    (a b)
+    (b)
     |}]
 ;;

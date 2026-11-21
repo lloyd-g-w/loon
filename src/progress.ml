@@ -1,83 +1,51 @@
 open! Import
 
-module Tone = struct
-  type t =
-    | Primary
-    | Accent
-    | Success
-    | Warning
-    | Danger
-  [@@deriving enumerate, sexp_of, compare, equal]
+let number f =
+  if Float.is_integer f then Int.to_string (Float.to_int f) else Float.to_string f
+;;
 
-  let name t = String.lowercase (Sexp.to_string (sexp_of_t t))
-end
-
-module Size = struct
-  type t =
-    | Sm
-    | Md
-    | Lg
-  [@@deriving enumerate, sexp_of, compare, equal]
-
-  let name t = String.lowercase (Sexp.to_string (sexp_of_t t))
-end
-
-let view
-      ?attrs:extra
-      ?(tone = Tone.Primary)
-      ?(size = Size.Md)
-      ?max:(maximum = 100.)
-      ?label
-      ?value
-      ()
-  =
-  let fraction =
-    Option.map value ~f:(fun v ->
-      if Float.(maximum <= 0.)
-      then 0.
-      else Float.clamp_exn (v /. maximum) ~min:0. ~max:1.)
-  in
+let view ?(attrs = []) ?class_ ?(max = 100.) ?value () =
+  let max = if Float.( > ) max 0. then max else 100. in
+  let value = Option.filter value ~f:(fun v -> Float.( >= ) v 0. && Float.( <= ) v max) in
   let state =
-    match fraction with
+    match value with
     | None -> "indeterminate"
-    | Some f when Float.(f >= 1.) -> "complete"
+    | Some v when Float.equal v max -> "complete"
     | Some _ -> "loading"
+  in
+  let data_attrs =
+    [ data "state" state ]
+    @ Option.value_map value ~default:[] ~f:(fun v -> [ data "value" (number v) ])
+    @ [ data "max" (number max) ]
   in
   Node.div
     ~attrs:
-      (attrs
-         ?attrs:extra
-         [ "loon-progress"
-         ; "loon-progress-" ^ Tone.name tone
-         ; "loon-progress-" ^ Size.name size
+      ([ aria "valuemax" (number max); aria "valuemin" "0" ]
+       @ Option.value_map value ~default:[] ~f:(fun v ->
+         [ aria "valuenow" (number v)
+         ; aria "valuetext" (sprintf "%d%%" (Float.iround_nearest_exn (v /. max *. 100.)))
+         ])
+       @ [ Attr.role "progressbar" ]
+       @ data_attrs
+       @ [ data "slot" "progress"
+         ; Cn.with_class
+             ?class_
+             [ "relative h-2 w-full overflow-hidden rounded-full bg-primary/20" ]
          ]
-       @ [ Attr.role "progressbar"
-         ; aria "valuemin" "0"
-         ; aria "valuemax" (Float.to_string_hum ~strip_zero:true maximum)
-         ; data "state" state
-         ]
-       @ (match value with
-          | None -> []
-          | Some v ->
-            [ aria
-                "valuenow"
-                (Float.to_string_hum
-                   ~strip_zero:true
-                   (Float.clamp_exn v ~min:0. ~max:maximum))
-            ])
-       @ Option.value_map label ~default:[] ~f:(fun l -> [ aria "label" l ]))
+       @ attrs)
     [ Node.div
         ~attrs:
-          (Attr.class_ "loon-progress-indicator"
-           ::
-           (match fraction with
-            | None -> []
-            | Some f ->
-              [ Attr.style
-                  (Css_gen.create
-                     ~field:"transform"
-                     ~value:(sprintf "translateX(-%.2f%%)" (100. *. (1. -. f))))
-              ]))
+          (data_attrs
+           @ [ data "slot" "progress-indicator"
+             ; Attr.class_ "h-full w-full flex-1 bg-primary transition-all"
+             ; Attr.style
+                 (Css_gen.create
+                    ~field:"transform"
+                    ~value:
+                      (sprintf
+                         "translateX(-%s%%)"
+                         (number (100. -. Option.value value ~default:0.))))
+             ])
         []
     ]
 ;;

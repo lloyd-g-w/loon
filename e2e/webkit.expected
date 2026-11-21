@@ -4,9 +4,9 @@ current: Introduction
 sidebar Getting started: Introduction, Installation, Theming, CLI
 sidebar Forms: Button, Button Group, Calendar, Checkbox, Combobox, Field, Forms, Input, Input Group, Input OTP, Label, Native Select, Radio Group, Select, Slider, Switch, Textarea, Toggle, Toggle Group
 sidebar Overlays: Alert dialog, Command palette, Dialog, Dropdown menu, Popover, Sheet, Tooltip
-sidebar Display: Accordion, Avatar, Badge, Card, Collapsible, Data table, Kbd, Separator, Table
+sidebar Display: Accordion, Aspect ratio, Avatar, Badge, Card, Collapsible, Data table, Item, Kbd, Scroll area, Separator, Table
 sidebar Navigation: Breadcrumb, Pagination, Tabs
-sidebar Feedback: Alert, Empty, Progress, Skeleton, Spinner, Toast
+sidebar Feedback: Alert, Empty, Progress, Skeleton, Sonner, Spinner
 guides: Introduction, Installation, Theming, CLI
 every page: ok (h1, current link, title, previews, outline, no overflow or errors)
 back: Theming

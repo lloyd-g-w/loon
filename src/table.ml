@@ -1,115 +1,72 @@
 open! Import
 
-module Align = struct
-  type t =
-    | Left
-    | Center
-    | Right
-  [@@deriving enumerate, sexp_of, compare, equal]
+let part tag slot classes ?(attrs = []) ?class_ children =
+  Node.create
+    tag
+    ~attrs:([ data "slot" slot; Cn.with_class ?class_ [ classes ] ] @ attrs)
+    children
+;;
 
-  let attr t = data "align" (String.lowercase (Sexp.to_string (sexp_of_t t)))
-end
-
-let flag cond cls = if cond then [ cls ] else []
-
-let table
-      ?attrs:extra
-      ?(striped = false)
-      ?(hover = true)
-      ?(dense = false)
-      ?caption
-      parts
-  =
+let root ?(attrs = []) ?class_ children =
   Node.div
-    ~attrs:[ Attr.class_ "loon-table-container" ]
+    ~attrs:
+      [ data "slot" "table-container"
+      ; Attr.class_ "relative w-full overflow-x-auto"
+      ]
     [ Node.table
         ~attrs:
-          (attrs
-             ?attrs:extra
-             (("loon-table" :: flag striped "loon-table-striped")
-              @ flag hover "loon-table-hover"
-              @ flag dense "loon-table-dense"))
-        (Option.value_map caption ~default:[] ~f:(fun c ->
-           [ Node.create
-               "caption"
-               ~attrs:[ Attr.class_ "loon-table-caption" ]
-               [ Node.text c ]
-           ])
-         @ parts)
+          ([ data "slot" "table"
+           ; Cn.with_class ?class_ [ "w-full caption-bottom text-sm" ]
+           ]
+           @ attrs)
+        children
     ]
 ;;
 
-let header ?attrs:extra rows =
-  Node.thead ~attrs:(attrs ?attrs:extra [ "loon-table-header" ]) rows
+let header = part "thead" "table-header" "[&_tr]:border-b"
+let body = part "tbody" "table-body" "[&_tr:last-child]:border-0"
+
+let footer =
+  part
+    "tfoot"
+    "table-footer"
+    "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0"
 ;;
 
-let body ?attrs:extra rows =
-  Node.tbody ~attrs:(attrs ?attrs:extra [ "loon-table-body" ]) rows
-;;
-
-let footer ?attrs:extra rows =
-  Node.tfoot ~attrs:(attrs ?attrs:extra [ "loon-table-footer" ]) rows
-;;
-
-let row ?attrs:extra ?key ?(selected = false) cells =
-  Node.tr
-    ?key
-    ~attrs:
-      (attrs ?attrs:extra [ "loon-table-row" ]
-       @
-       if selected
-       then [ data "state" "selected"; aria "selected" "true" ]
-       else [])
-    cells
-;;
-
-let head ?attrs:extra ?(align = Align.Left) children =
-  Node.th
-    ~attrs:
-      (attrs ?attrs:extra [ "loon-table-head" ]
-       @ [ Attr.create "scope" "col"; Align.attr align ])
+let row ?(attrs = []) ?class_ ?(selected = false) children =
+  part
+    "tr"
+    "table-row"
+    "border-b transition-colors hover:bg-muted/50 \
+     has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted"
+    ~attrs:((if selected then [ data "state" "selected" ] else []) @ attrs)
+    ?class_
     children
 ;;
 
-let cell ?attrs:extra ?(align = Align.Left) ?colspan children =
-  Node.td
+let head =
+  part
+    "th"
+    "table-head"
+    "h-10 px-2 text-left align-middle font-medium whitespace-nowrap \
+     text-foreground [&:has([role=checkbox])]:pr-0 \
+     [&>[role=checkbox]]:translate-y-[2px]"
+;;
+
+let cell ?(attrs = []) ?class_ ?col_span children =
+  part
+    "td"
+    "table-cell"
+    "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 \
+     [&>[role=checkbox]]:translate-y-[2px]"
     ~attrs:
-      (attrs ?attrs:extra [ "loon-table-cell" ]
-       @ (Align.attr align
-          :: Option.value_map colspan ~default:[] ~f:(fun c ->
-            [ Attr.colspan c ])))
+      (Option.value_map col_span ~default:[] ~f:(fun n ->
+         [ Attr.create "colspan" (Int.to_string n) ])
+       @ attrs)
+    ?class_
     children
 ;;
 
-module Column = struct
-  type 'row t =
-    { header : string
-    ; align : Align.t
-    ; cell : 'row -> Node.t
-    }
-
-  let create ?(align = Align.Left) header cell = { header; align; cell }
-  let text ?align header f = create ?align header (fun r -> Node.text (f r))
-end
-
-let view ?attrs ?striped ?hover ?dense ?caption ?footer:foot ~columns rows =
-  table
-    ?attrs
-    ?striped
-    ?hover
-    ?dense
-    ?caption
-    ([ header
-         [ row
-             (List.map columns ~f:(fun (c : _ Column.t) ->
-                head ~align:c.align [ Node.text c.header ]))
-         ]
-     ; body
-         (List.map rows ~f:(fun r ->
-            row
-              (List.map columns ~f:(fun (c : _ Column.t) ->
-                 cell ~align:c.align [ c.cell r ]))))
-     ]
-     @ Option.value_map foot ~default:[] ~f:(fun cells ->
-       [ footer [ row cells ] ]))
+let caption =
+  part "caption" "table-caption" "mt-4 text-sm text-muted-foreground"
 ;;

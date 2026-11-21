@@ -1,14 +1,14 @@
-(** Keyboard keys, as in "press [Ctrl] [K]". *)
+(** Used to display textual user input from keyboard. Port of shadcn/ui's
+    [Kbd] and [KbdGroup].
+
+    {[
+      Kbd.group [ Kbd.view [ Node.text "Ctrl" ]; Kbd.view [ Node.text "B" ] ]
+    ]} *)
 
 open! Import
 
-(** One key. *)
-val view : ?attrs:Attr.t list -> string -> Node.t
+(** A [<kbd>]: one key. *)
+val view : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
 
-(** Keys pressed together: [combo ["Ctrl"; "Shift"; "P"]]. Modifier names
-    ("Ctrl", "Shift", "Alt", "Cmd", "Enter", ...) show as their symbols
-    where [symbols] (default [true]), keeping the name for screen readers. *)
-val combo : ?attrs:Attr.t list -> ?symbols:bool -> string list -> Node.t
-
-(** The symbol a key name shows as, if it has one ("Cmd" is "⌘"). *)
-val symbol : string -> string option
+(** Keys shown together (a [<kbd>] too). *)
+val group : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t

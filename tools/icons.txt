@@ -255,3 +255,7 @@ github
 git-branch
 RefreshCwIcon
 FileCodeIcon
+# display (alert, avatar, empty, item, kbd, spinner ...); tabler icons in their examples as Lucide ones:
+FolderCode
+Cloud
+octagon-x
