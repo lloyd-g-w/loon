@@ -275,13 +275,11 @@ let view
                 data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto \
                 data-[orientation=vertical]:flex-col"
              ]
-         ; Attr.style
-             (Css_gen.create
-                ~field:"--radix-slider-thumb-transform"
-                ~value:
-                  (match orientation with
-                   | Horizontal -> "translateX(-50%)"
-                   | Vertical -> "translateY(50%)"))
+         ; Attr.css_var
+             ~name:"radix-slider-thumb-transform"
+             (match orientation with
+              | Horizontal -> "translateX(-50%)"
+              | Vertical -> "translateY(50%)")
          ; Attr.on_pointerdown on_pointerdown
          ; Attr.on_pointermove on_pointermove
          ; Attr.on_pointerup on_pointerup

@@ -16,12 +16,10 @@ let%expect_test "shadcn's classes" =
           aria-disabled="false"
           data-slot="slider"
           class="data-[disabled]:opacity-50 data-[orientation=vertical]:flex-col data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto flex items-center relative select-none touch-none w-[60%]"
+          custom-css-vars=((--radix-slider-thumb-transform"translateX(-50%)"))
           @on_pointerdown
           @on_pointermove
-          @on_pointerup
-          style={
-            --radix-slider-thumb-transform: translateX(-50%);
-          }>
+          @on_pointerup>
       <span data-orientation="horizontal"
             data-slot="slider-track"
             class="bg-muted data-[orientation=horizontal]:h-1.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5 grow overflow-hidden relative rounded-full">
@@ -88,12 +86,10 @@ let%expect_test "one thumb, no classes" =
             data-orientation="horizontal"
             aria-disabled="false"
             data-slot="slider"
+            custom-css-vars=((--radix-slider-thumb-transform"translateX(-50%)"))
             @on_pointerdown
             @on_pointermove
-            @on_pointerup
-            style={
-              --radix-slider-thumb-transform: translateX(-50%);
-            }>
+            @on_pointerup>
         <span data-orientation="horizontal" data-slot="slider-track">
           <span data-orientation="horizontal" data-slot="slider-range" style={ left: 0%; right: 50%; }> </span>
         </span>
@@ -185,12 +181,10 @@ let%expect_test "a range: thumbs are labelled, and the range spans them" =
             data-orientation="horizontal"
             aria-disabled="false"
             data-slot="slider"
+            custom-css-vars=((--radix-slider-thumb-transform"translateX(-50%)"))
             @on_pointerdown
             @on_pointermove
-            @on_pointerup
-            style={
-              --radix-slider-thumb-transform: translateX(-50%);
-            }>
+            @on_pointerup>
         <span data-orientation="horizontal" data-slot="slider-track">
           <span data-orientation="horizontal"
                 data-slot="slider-range"
@@ -376,12 +370,10 @@ let%expect_test "vertical, with a min and max" =
             data-orientation="vertical"
             aria-disabled="false"
             data-slot="slider"
+            custom-css-vars=((--radix-slider-thumb-transform"translateY(50%)"))
             @on_pointerdown
             @on_pointermove
-            @on_pointerup
-            style={
-              --radix-slider-thumb-transform: translateY(50%);
-            }>
+            @on_pointerup>
         <span data-orientation="vertical" data-slot="slider-track">
           <span data-orientation="vertical" data-slot="slider-range" style={ bottom: 0%; top: 50%; }> </span>
         </span>
@@ -425,12 +417,10 @@ let%expect_test "disabled: no tab stop, keys ignored" =
             aria-disabled="true"
             data-disabled=""
             data-slot="slider"
+            custom-css-vars=((--radix-slider-thumb-transform"translateX(-50%)"))
             @on_pointerdown
             @on_pointermove
-            @on_pointerup
-            style={
-              --radix-slider-thumb-transform: translateX(-50%);
-            }>
+            @on_pointerup>
         <span data-orientation="horizontal" data-slot="slider-track" data-disabled="">
           <span data-orientation="horizontal"
                 data-disabled=""

@@ -31,9 +31,7 @@ let%expect_test "shadcn's classes" =
          data-variant="outline"
          data-spacing="0"
          class="data-[spacing=default]:data-[variant=outline]:shadow-xs flex gap-[--spacing(var(--gap))] group/toggle-group items-center rounded-md w-fit"
-         style={
-           --gap: 0;
-         }>
+         custom-css-vars=((--gap 0))>
       <button type="button"
               data-state="on"
               aria-pressed="true"
@@ -78,9 +76,7 @@ let%expect_test "spacing, size and vertical orientation" =
          data-size="sm"
          data-spacing="2"
          data-orientation="vertical"
-         style={
-           --gap: 2;
-         }>
+         custom-css-vars=((--gap 2))>
       <button type="button"
               data-state="off"
               role="radio"
@@ -109,7 +105,11 @@ let%expect_test
   [%expect
     {|
     <div>
-      <div role="group" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
+      <div role="group"
+           dir="ltr"
+           data-slot="toggle-group"
+           data-spacing="0"
+           custom-css-vars=((--gap 0))>
         <button type="button"
                 data-state="off"
                 role="radio"
@@ -160,7 +160,11 @@ let%expect_test
   [%expect
     {|
       <div>
-        <div role="group" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
+        <div role="group"
+             dir="ltr"
+             data-slot="toggle-group"
+             data-spacing="0"
+             custom-css-vars=((--gap 0))>
           <button type="button"
                   data-state="off"
                   role="radio"
@@ -217,7 +221,11 @@ let%expect_test
   [%expect
     {|
       <div>
-        <div role="group" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
+        <div role="group"
+             dir="ltr"
+             data-slot="toggle-group"
+             data-spacing="0"
+             custom-css-vars=((--gap 0))>
     -|    <button type="button"
     -|            data-state="off"
     -|            role="radio"
@@ -279,7 +287,11 @@ let%expect_test
   [%expect
     {|
       <div>
-        <div role="group" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
+        <div role="group"
+             dir="ltr"
+             data-slot="toggle-group"
+             data-spacing="0"
+             custom-css-vars=((--gap 0))>
           <button type="button"
     -|            data-state="on"
     +|            data-state="off"
@@ -351,7 +363,11 @@ let%expect_test
   [%expect
     {|
     <div>
-      <div role="group" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
+      <div role="group"
+           dir="ltr"
+           data-slot="toggle-group"
+           data-spacing="0"
+           custom-css-vars=((--gap 0))>
         <button type="button"
                 data-state="off"
                 aria-pressed="false"
@@ -398,7 +414,11 @@ let%expect_test
   [%expect
     {|
       <div>
-        <div role="group" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
+        <div role="group"
+             dir="ltr"
+             data-slot="toggle-group"
+             data-spacing="0"
+             custom-css-vars=((--gap 0))>
           <button type="button"
     -|            data-state="off"
     +|            data-state="on"
@@ -447,7 +467,11 @@ let%expect_test
   [%expect
     {|
       <div>
-        <div role="group" dir="ltr" data-slot="toggle-group" data-spacing="0" style={ --gap: 0; }>
+        <div role="group"
+             dir="ltr"
+             data-slot="toggle-group"
+             data-spacing="0"
+             custom-css-vars=((--gap 0))>
           <button type="button"
                   data-state="on"
                   aria-pressed="true"

@@ -410,13 +410,13 @@ let nav_actions ~sidebar (local_ graph) =
          ; Popover.content
              popover
              ~class_:"w-56 overflow-hidden rounded-lg p-0"
-             (* shadcn's popover is portalled out of the SidebarProvider,
-                so its sidebar's [w-(--sidebar-width)] has no width to use
-                and fills the popover; ours stays in the provider's DOM. *)
-             ~attrs:[ Attr.style (Css_gen.create ~field:"--sidebar-width" ~value:"initial") ]
              ~align:End
              [ Sidebar.root
                  ~collapsible:None
+                 (* shadcn's popover is portalled out of the SidebarProvider,
+                    so this sidebar's [w-(--sidebar-width)] has no width and
+                    it fills the popover; ours stays in the provider's DOM. *)
+                 ~attrs:[ Attr.css_var ~name:"sidebar-width" "initial" ]
                  ~class_:"bg-transparent"
                  sidebar
                  [ Sidebar.content

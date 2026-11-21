@@ -51,7 +51,7 @@ let root ?(attrs = []) ?class_ ?variant ?size ?(spacing = 0) ?orientation ?(disa
          [ data "variant" (Toggle.Variant.name v) ])
        @ Option.value_map size ~default:[] ~f:(fun s -> [ data "size" (Toggle.Size.name s) ])
        @ [ data "spacing" (Int.to_string spacing)
-         ; Attr.style (Css_gen.create ~field:"--gap" ~value:(Int.to_string spacing))
+         ; Attr.css_var ~name:"gap" (Int.to_string spacing)
          ; Cn.with_class
              ?class_
              [ "group/toggle-group flex w-fit items-center gap-[--spacing(var(--gap))] \
