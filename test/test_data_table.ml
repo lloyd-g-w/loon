@@ -476,60 +476,28 @@ let%expect_test "pages" =
   Render.html
     ~selector:".loon-data-table-footer"
     (get_vdom (Handle.last_result handle));
-  Handle.click_on handle ~get_vdom ~selector:"[aria-label='Next page']";
+  Handle.click_on handle ~get_vdom ~selector:".loon-data-table-footer button:last-child";
   rows handle;
   [%expect
     {|
     Ada Grace Alan
     <div class="loon-data-table-footer">
       <div aria-live="polite" class="loon-data-table-status"> 0 of 4 rows selected </div>
-      <nav aria-label="Pagination" class="loon-pagination">
-        <ul class="loon-pagination-list">
-          <li>
-            <button type="button"
-                    aria-label="Previous page"
-                    disabled=""
-                    class="loon-pagination-link loon-pagination-step">
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   width="24"
-                   height="24"
-                   viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="2"
-                   stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true"
-                   class="lucide lucide-chevron-left">
-                <path d="m15 18-6-6 6-6"> </path>
-              </svg>
-              <span class="loon-pagination-step-text"> Previous </span>
-            </button>
-          </li>
-          <li aria-live="polite" class="loon-pagination-compact"> Page 1 of 2 </li>
-          <li>
-            <button type="button"
-                    aria-label="Next page"
-                    class="loon-pagination-link loon-pagination-step"
-                    @on_click>
-              <span class="loon-pagination-step-text"> Next </span>
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   width="24"
-                   height="24"
-                   viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="2"
-                   stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true"
-                   class="lucide lucide-chevron-right">
-                <path d="m9 18 6-6-6-6"> </path>
-              </svg>
-            </button>
-          </li>
-        </ul>
-      </nav>
+      <div class="flex gap-2 items-center">
+        <button type="button"
+                data-slot="button"
+                data-variant="outline"
+                data-size="sm"
+                disabled=""
+                class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-1.5 h-8 has-[>svg]:px-2.5 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-3 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"
+                @on_click> Previous </button>
+        <button type="button"
+                data-slot="button"
+                data-variant="outline"
+                data-size="sm"
+                class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-1.5 h-8 has-[>svg]:px-2.5 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-3 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"
+                @on_click> Next </button>
+      </div>
     </div>
     Edsger
     |}]

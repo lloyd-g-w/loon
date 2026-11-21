@@ -26,85 +26,93 @@ let entries ?(siblings = 1) ~page ~pages () : Entry.t list =
     | _ -> (Entry.Page 1 :: Ellipsis :: range left right) @ [ Ellipsis; Page pages ])
 ;;
 
-let view ?attrs:extra ?siblings ?(compact = false) ~page ~pages ~on_change () =
-  let pages = Int.max 1 pages in
-  let page = Int.clamp_exn page ~min:1 ~max:pages in
-  let go p ev = Effect.Many [ Dom_util.prevent_default ev; on_change p ] in
-  let step ~label ~icon ~target ~text ~disabled =
-    Node.li
-      [ Node.button
-          ~attrs:
-            ([ Attr.classes [ "loon-pagination-link"; "loon-pagination-step" ]
-             ; Attr.type_ "button"
-             ; aria "label" label
-             ]
-             @ if disabled then [ Attr.disabled ] else [ Attr.on_click (go target) ])
-          (match icon with
-           | `Before i ->
-             [ Icon.view i; Node.span ~attrs:[ Attr.class_ "loon-pagination-step-text" ] [ Node.text text ] ]
-           | `After i ->
-             [ Node.span ~attrs:[ Attr.class_ "loon-pagination-step-text" ] [ Node.text text ]; Icon.view i ])
-      ]
-  in
-  let numbers =
-    if compact
-    then
-      [ Node.li
-          ~attrs:[ Attr.class_ "loon-pagination-compact"; aria "live" "polite" ]
-          [ Node.textf "Page %d of %d" page pages ]
-      ]
-    else
-      List.map (entries ?siblings ~page ~pages ()) ~f:(function
-        | Ellipsis ->
-          Node.li
-            [ Node.span
-                ~attrs:[ Attr.class_ "loon-pagination-ellipsis"; aria "hidden" "true" ]
-                [ Icon.view Ellipsis ]
-            ]
-        | Page p ->
-          let current = p = page in
-          Node.li
-            [ Node.button
-                ~attrs:
-                  ([ Attr.class_ "loon-pagination-link"
-                   ; Attr.type_ "button"
-                   ; aria "label" (sprintf "Page %d" p)
-                   ; Attr.on_click (go p)
-                   ]
-                   @ if current then [ aria "current" "page"; data "state" "active" ] else [])
-                [ Node.text (Int.to_string p) ]
-            ])
-  in
-  Node.nav
-    ~attrs:(attrs ?attrs:extra [ "loon-pagination" ] @ [ aria "label" "Pagination" ])
-    [ Node.ul
-        ~attrs:[ Attr.class_ "loon-pagination-list" ]
-        ((step
-            ~label:"Previous page"
-            ~icon:(`Before Icon.Chevron_left)
-            ~text:"Previous"
-            ~target:(page - 1)
-            ~disabled:(page <= 1)
-          :: numbers)
-         @ [ step
-               ~label:"Next page"
-               ~icon:(`After Icon.Chevron_right)
-               ~text:"Next"
-               ~target:(page + 1)
-               ~disabled:(page >= pages)
-           ])
+let root ?(attrs = []) ?class_ children =
+  Node.create
+    "nav"
+    ~attrs:
+      ([ Attr.role "navigation"
+       ; aria "label" "pagination"
+       ; data "slot" "pagination"
+       ; Cn.with_class ?class_ [ "mx-auto flex w-full justify-center" ]
+       ]
+       @ attrs)
+    children
+;;
+
+let content ?(attrs = []) ?class_ children =
+  Node.ul
+    ~attrs:
+      ([ data "slot" "pagination-content"
+       ; Cn.with_class ?class_ [ "flex flex-row items-center gap-1" ]
+       ]
+       @ attrs)
+    children
+;;
+
+let item ?(attrs = []) ?class_ children =
+  Node.li
+    ~attrs:
+      ([ data "slot" "pagination-item" ]
+       @ Option.value_map class_ ~default:[] ~f:(fun c -> [ Cn.attr [ c ] ])
+       @ attrs)
+    children
+;;
+
+let link ?(attrs = []) ?class_ ?(is_active = false) ?(size = Button.Size.Icon) ?href
+  ?on_click children
+  =
+  Node.a
+    ~attrs:
+      ((if is_active then [ aria "current" "page" ] else [])
+       @ [ data "slot" "pagination-link" ]
+       @ (if is_active then [ data "active" "true" ] else [])
+       @ [ Attr.class_
+             (Button.classes
+                ~variant:(if is_active then Outline else Ghost)
+                ~size
+                ?class_
+                ())
+         ]
+       @ Option.value_map href ~default:[] ~f:(fun h -> [ Attr.href h ])
+       @ Option.value_map on_click ~default:[] ~f:(fun effect ->
+         [ Attr.on_click (fun ev -> Effect.Many [ Dom_util.prevent_default ev; effect ]) ])
+       @ attrs)
+    children
+;;
+
+let previous ?(attrs = []) ?class_ ?href ?on_click () =
+  link
+    ~attrs:([ aria "label" "Go to previous page" ] @ attrs)
+    ~size:Default
+    ~class_:(Cn.cn ([ "gap-1 px-2.5 sm:pl-2.5" ] @ Option.to_list class_))
+    ?href
+    ?on_click
+    [ Icon.view Chevron_left
+    ; Node.span ~attrs:[ Attr.class_ "hidden sm:block" ] [ Node.text "Previous" ]
     ]
 ;;
 
-type t =
-  { page : int
-  ; view : Node.t
-  }
+let next ?(attrs = []) ?class_ ?href ?on_click () =
+  link
+    ~attrs:([ aria "label" "Go to next page" ] @ attrs)
+    ~size:Default
+    ~class_:(Cn.cn ([ "gap-1 px-2.5 sm:pr-2.5" ] @ Option.to_list class_))
+    ?href
+    ?on_click
+    [ Node.span ~attrs:[ Attr.class_ "hidden sm:block" ] [ Node.text "Next" ]
+    ; Icon.view Chevron_right
+    ]
+;;
 
-let component ?attrs ?siblings ?compact ?(default = 1) ~pages (local_ graph) =
-  let page, set_page = Bonsai.state default graph in
-  let open Bonsai.Let_syntax in
-  let%arr page and set_page and pages in
-  let page = Int.clamp_exn page ~min:1 ~max:(Int.max 1 pages) in
-  { page; view = view ?attrs ?siblings ?compact ~page ~pages ~on_change:set_page () }
+let ellipsis ?(attrs = []) ?class_ () =
+  Node.span
+    ~attrs:
+      ([ aria "hidden" "true"
+       ; data "slot" "pagination-ellipsis"
+       ; Cn.with_class ?class_ [ "flex size-9 items-center justify-center" ]
+       ]
+       @ attrs)
+    [ Icon.view ~class_:"size-4" Ellipsis
+    ; Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "More pages" ]
+    ]
 ;;

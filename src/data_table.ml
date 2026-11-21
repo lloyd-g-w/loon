@@ -281,7 +281,23 @@ let component
               ~attrs:[ Attr.class_ "loon-data-table-status"; aria "live" "polite" ]
               [ Node.text status ]
           ; (if pages > 1
-             then Pagination.view ~compact:true ~page ~pages ~on_change:set_page ()
+             then
+               (* shadcn's data table: Previous and Next buttons. *)
+               Node.div
+                 ~attrs:[ Attr.class_ "flex items-center gap-2" ]
+                 [ Button.view
+                     ~variant:Outline
+                     ~size:Sm
+                     ~disabled:(page <= 1)
+                     ~on_click:(set_page (page - 1))
+                     [ Node.text "Previous" ]
+                 ; Button.view
+                     ~variant:Outline
+                     ~size:Sm
+                     ~disabled:(page >= pages)
+                     ~on_click:(set_page (page + 1))
+                     [ Node.text "Next" ]
+                 ]
              else Node.none)
           ]
       ]
