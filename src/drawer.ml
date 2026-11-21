@@ -176,6 +176,7 @@ module Drag = Vdom.Attr.Hooks.Make (struct
 let content ?(attrs = []) ?class_ t children =
   let m = t.modal in
   Modal.content
+    ~auto_focus:false
     ~overlay:(Modal.overlay ~slot:"drawer-overlay" ~class_:overlay_class m)
     ~content_attrs:
       ([ data "slot" "drawer-content"

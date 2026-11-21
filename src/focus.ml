@@ -81,10 +81,12 @@ let focus_inside (el : Dom_html.element Js.t) mode =
     in
     if not focused then focus_no_scroll el
   in
-  match first "[data-highlighted]" with
-  | Some h -> focus_no_scroll h
-  | None ->
+  match mode, first "[data-highlighted]" with
+  | `Keep, _ -> ()
+  | _, Some h -> focus_no_scroll h
+  | _, None ->
     (match mode with
+     | `Keep -> ()
      | `First_tabbable -> focus_first_tabbable ()
      | `Selector s ->
        (match first s with
@@ -101,6 +103,7 @@ module Mount_hook = Vdom.Attr.Hooks.Make (struct
     module Input = struct
       type t =
         [ `First_tabbable
+        | `Keep
         | `Self
         | `Selector of string
         ]

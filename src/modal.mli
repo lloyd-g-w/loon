@@ -46,9 +46,11 @@ val close : ?slot:string -> ?attrs:Attr.t list -> t -> Node.t -> Node.t
 
 (** Nothing while closed. [content_attrs] are the content's (its slot and
     classes, the caller's attributes), [role] ["dialog"] or
-    ["alertdialog"]. *)
+    ["alertdialog"]. Without [auto_focus] (default true) opening leaves the
+    focus where it is, as Vaul's drawer. *)
 val content
   :  ?dismissible:bool
+  -> ?auto_focus:bool
   -> ?initial_focus:string
   -> ?role:string
   -> overlay:Node.t

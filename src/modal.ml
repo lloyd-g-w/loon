@@ -55,7 +55,11 @@ let overlay ~slot ~class_ t =
   Node.div ~attrs:[ data "slot" slot; Attr.class_ class_; state_attr t; pointer_events_auto ] []
 ;;
 
-let content ?(dismissible = true) ?initial_focus ?(role = "dialog") ~overlay ~content_attrs t children =
+let content
+      ?(dismissible = true)
+      ?(auto_focus = true)
+      ?initial_focus
+      ?(role = "dialog") ~overlay ~content_attrs t children =
   if not t.open_
   then Node.none
   else (
@@ -79,6 +83,7 @@ let content ?(dismissible = true) ?initial_focus ?(role = "dialog") ~overlay ~co
            ; Scroll.lock
            ; Focus.on_mount
                (match initial_focus with
+                | _ when not auto_focus -> `Keep
                 | Some s -> `Selector s
                 | None -> `First_tabbable)
            ; Attr.on_keydown (fun ev ->
