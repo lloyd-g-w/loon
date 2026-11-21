@@ -63,7 +63,10 @@ val select
   -> Vdom.Node.t Bonsai.t
 
 (** A [Slider]'s state, for a slider the card also reads. *)
-val slider_state : float -> local_ Bonsai.graph -> (float * (float -> unit Effect.t)) Bonsai.t
+val slider_state
+  :  float
+  -> local_ Bonsai.graph
+  -> (float * (float -> unit Effect.t)) Bonsai.t
 
 (** A [DropdownMenu] of plain items (an item [None] is a separator) on a
     [trigger] button. *)

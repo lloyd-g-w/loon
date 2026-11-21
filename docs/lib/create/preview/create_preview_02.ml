@@ -68,7 +68,12 @@ let component (local_ graph) =
       ]
       graph
   in
-  let%arr col1 and col2 and col3 and col4 and col5 and col6 in
+  let%arr col1
+  and col2
+  and col3
+  and col4
+  and col5
+  and col6 in
   let col3 =
     match col3 with
     | [ savings; recent; sidebar; faq; payments; front_door; release ] ->

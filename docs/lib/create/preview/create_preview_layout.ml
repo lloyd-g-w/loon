@@ -5,10 +5,9 @@ open Create_preview_util
 let frame columns =
   div
     ~class_:
-      "overflow-x-auto overflow-y-hidden bg-muted contain-[paint] \
-       [--gap:--spacing(4)] 3xl:[--gap:--spacing(12)] md:[--gap:--spacing(10)] \
-       dark:bg-background style-lyra:md:[--gap:--spacing(6)] \
-       style-mira:md:[--gap:--spacing(6)]"
+      "overflow-x-auto overflow-y-hidden bg-muted contain-[paint] [--gap:--spacing(4)] \
+       3xl:[--gap:--spacing(12)] md:[--gap:--spacing(10)] dark:bg-background \
+       style-lyra:md:[--gap:--spacing(6)] style-mira:md:[--gap:--spacing(6)]"
     [ div
         ~class_:"flex w-full min-w-max justify-center"
         [ div

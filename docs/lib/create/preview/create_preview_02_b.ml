@@ -110,7 +110,8 @@ let savings_targets (local_ graph) =
             [ Button.view ~class_:"w-full" [ text "Review Order" ]
             ; Card.description
                 ~class_:"text-center"
-                [ text "Trades are typically executed within minutes during market hours." ]
+                [ text "Trades are typically executed within minutes during market hours."
+                ]
             ]
         ]
     ]
@@ -275,12 +276,12 @@ let sidebar_nav =
 
 let general_questions =
   [ ( "How secure is my financial data with Ledger?"
-    , "We use bank-level AES-256 encryption, SOC 2 Type II certified infrastructure, \
-       and never store your credentials. All connections use read-only access tokens. \
-       We are a SEC registered investment advisor." )
+    , "We use bank-level AES-256 encryption, SOC 2 Type II certified infrastructure, and \
+       never store your credentials. All connections use read-only access tokens. We are \
+       a SEC registered investment advisor." )
   ; ( "How do I connect my bank or investment accounts?"
-    , "Go to Settings > Linked Accounts and search for your institution. We support \
-       over 12,000 banks and brokerages via Plaid and MX." )
+    , "Go to Settings > Linked Accounts and search for your institution. We support over \
+       12,000 banks and brokerages via Plaid and MX." )
   ; ( "Can I export my data for tax purposes?"
     , "Yes. Navigate to Reports > Tax Export to download a CSV or PDF summary of your \
        transactions, dividends, and capital gains for any tax year." )
@@ -333,7 +334,9 @@ let faq (local_ graph) =
   let tabs =
     Tabs.component
       ~default_value:"general"
-      (let%arr general and billing and goals in
+      (let%arr general
+       and billing
+       and goals in
        fun tabs ->
          [ Tabs.list
              ~class_:"w-full"
@@ -429,10 +432,14 @@ let front_door =
        ; Card.content
            [ div
                ~class_:
-                 "relative flex aspect-video items-center justify-center \
-                  overflow-hidden rounded-lg bg-muted \
+                 "relative flex aspect-video items-center justify-center overflow-hidden \
+                  rounded-lg bg-muted \
                   bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,var(--border)_10px,var(--border)_11px)]"
-               [ Badge.view ~variant:Destructive ~class_:"absolute top-2 right-2" [ text "Live" ] ]
+               [ Badge.view
+                   ~variant:Destructive
+                   ~class_:"absolute top-2 right-2"
+                   [ text "Live" ]
+               ]
            ]
        ])
 ;;
@@ -473,32 +480,36 @@ let release_catalog (local_ graph) =
         ]
     ; Card.content
         [ Item.group
-            (List.map release_holdings ~f:(fun (ticker, name, type_, added, shares, value) ->
-               Item.view
-                 ~variant:Muted
-                 [ Item.media
-                     [ div
-                         ~class_:
-                           "flex size-12 items-center justify-center rounded-lg border \
-                            text-sm font-semibold"
-                         [ text ticker ]
-                     ]
-                 ; Item.content
-                     [ Item.title [ text name ]
-                     ; Item.description
-                         ~class_:"text-xs tracking-wider uppercase"
-                         [ text (sprintf "%s Shares · %s" shares added) ]
-                     ]
-                 ; div
-                     ~class_:"flex shrink-0 items-center gap-6"
-                     [ Badge.view ~variant:Outline [ text type_ ]
-                     ; div
-                         ~class_:"flex flex-col items-end gap-0.5"
-                         [ tspan "text-xs tracking-wider text-muted-foreground uppercase" "Value"
-                         ; tspan "font-medium tabular-nums" value
-                         ]
-                     ]
-                 ]))
+            (List.map
+               release_holdings
+               ~f:(fun (ticker, name, type_, added, shares, value) ->
+                 Item.view
+                   ~variant:Muted
+                   [ Item.media
+                       [ div
+                           ~class_:
+                             "flex size-12 items-center justify-center rounded-lg border \
+                              text-sm font-semibold"
+                           [ text ticker ]
+                       ]
+                   ; Item.content
+                       [ Item.title [ text name ]
+                       ; Item.description
+                           ~class_:"text-xs tracking-wider uppercase"
+                           [ text (sprintf "%s Shares · %s" shares added) ]
+                       ]
+                   ; div
+                       ~class_:"flex shrink-0 items-center gap-6"
+                       [ Badge.view ~variant:Outline [ text type_ ]
+                       ; div
+                           ~class_:"flex flex-col items-end gap-0.5"
+                           [ tspan
+                               "text-xs tracking-wider text-muted-foreground uppercase"
+                               "Value"
+                           ; tspan "font-medium tabular-nums" value
+                           ]
+                       ]
+                   ]))
         ]
     ]
 ;;

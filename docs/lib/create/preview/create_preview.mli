@@ -10,5 +10,23 @@ open Bonsai_web
     [("preview-02", "01"); ("preview", "02")]. *)
 val items : (string * string) list
 
-(** The item named [item] (one of [items]; the first for any other). *)
-val component : string Bonsai.t -> local_ Bonsai.graph -> Vdom.Node.t Bonsai.t
+(** What the [preview] block's overview cards name: the style's title and
+    the fonts' names ([font_heading] equal to [font] when it inherits). *)
+module Info : sig
+  type t = Create_preview_01_a.Info.t =
+    { style : string
+    ; font : string
+    ; font_heading : string
+    }
+
+  (** New York, Geist. *)
+  val default : t
+end
+
+(** The item named [item] (one of [items]; the first for any other); [info]
+    is [Info.default] by default. *)
+val component
+  :  ?info:Info.t Bonsai.t
+  -> string Bonsai.t
+  -> local_ Bonsai.graph
+  -> Vdom.Node.t Bonsai.t

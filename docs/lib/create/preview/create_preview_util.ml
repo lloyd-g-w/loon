@@ -41,13 +41,15 @@ let empty_card ?(media_in_header = false) ~media ~title ~description ~button () 
 ;;
 
 let default_value v = Attr.create "value" v
-
 let select_trigger_id id = id ^ "-trigger"
 
 let select ?class_ ?content_class ?placeholder ~id ~default_value items (local_ graph) =
   let value, set_value = Bonsai.state default_value graph in
   let state, set_state = Bonsai.state Select.State.closed graph in
-  let%arr value and set_value and state and set_state in
+  let%arr value
+  and set_value
+  and state
+  and set_state in
   Select.view
     ~id
     ~value:(Some value)
@@ -58,13 +60,15 @@ let select ?class_ ?content_class ?placeholder ~id ~default_value items (local_ 
     (Select.content
        ?class_:content_class
        [ Select.group
-           (List.map items ~f:(fun (value, label) -> Select.item ~value [ Node.text label ]))
+           (List.map items ~f:(fun (value, label) ->
+              Select.item ~value [ Node.text label ]))
        ])
 ;;
 
 let slider_state default (local_ graph) =
   let value, set = Bonsai.state default graph in
-  let%arr value and set in
+  let%arr value
+  and set in
   value, set
 ;;
 

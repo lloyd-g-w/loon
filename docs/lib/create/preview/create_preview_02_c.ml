@@ -36,8 +36,8 @@ let account_access =
                            ~attrs:
                              [ Attr.href "#"
                              ; Attr.class_
-                                 "text-xs font-medium tracking-wider text-muted-foreground \
-                                  uppercase hover:text-foreground"
+                                 "text-xs font-medium tracking-wider \
+                                  text-muted-foreground uppercase hover:text-foreground"
                              ]
                            [ text "Forgot?" ]
                        ]
@@ -69,7 +69,9 @@ let account_access =
 let card_overview (local_ graph) =
   let chart = chart graph in
   let%arr chart in
-  let config = [ "amount", Chart.Config.item ~label:"Activity" ~color:"var(--chart-2)" () ] in
+  let config =
+    [ "amount", Chart.Config.item ~label:"Activity" ~color:"var(--chart-2)" () ]
+  in
   let data =
     List.map
       [ "Jan", 40.
@@ -150,8 +152,7 @@ let card_overview (local_ graph) =
     ]
 ;;
 
-let summary_row ?(label_class = "text-sm text-muted-foreground") ~value_class label value
-  =
+let summary_row ?(label_class = "text-sm text-muted-foreground") ~value_class label value =
   div
     ~class_:"flex items-center justify-between"
     [ tspan label_class label; tspan value_class value ]
@@ -178,7 +179,8 @@ let transfer_funds (local_ graph) =
       ]
       graph
   in
-  let%arr from_ and to_ in
+  let%arr from_
+  and to_ in
   Card.root
     [ Card.header
         [ Card.title [ text "Transfer Funds" ]
@@ -197,8 +199,16 @@ let transfer_funds (local_ graph) =
                         ()
                     ]
                 ]
-            ; Field.root [ Field.label ~for_:(select_trigger_id "from-account") [ text "From Account" ]; from_ ]
-            ; Field.root [ Field.label ~for_:(select_trigger_id "to-account") [ text "To Account" ]; to_ ]
+            ; Field.root
+                [ Field.label
+                    ~for_:(select_trigger_id "from-account")
+                    [ text "From Account" ]
+                ; from_
+                ]
+            ; Field.root
+                [ Field.label ~for_:(select_trigger_id "to-account") [ text "To Account" ]
+                ; to_
+                ]
             ; Item.view
                 ~variant:Muted
                 ~class_:"flex-col items-stretch"
@@ -244,7 +254,8 @@ let cover_art =
                [ Node.label
                    ~attrs:
                      [ Attr.for_ "cover-art"
-                     ; Attr.class_ "flex size-full cursor-pointer items-center justify-center"
+                     ; Attr.class_
+                         "flex size-full cursor-pointer items-center justify-center"
                      ]
                    [ icon ~class_:"size-10 text-muted-foreground/50" Image ]
                ]
@@ -306,8 +317,7 @@ let receiving_method (local_ graph) =
   let method_ =
     Radio_group.component
       ~default_value:"bank"
-      ~class_:
-        "grid grid-cols-1 items-start gap-3 md:grid-cols-2 style-sera:grid-cols-1"
+      ~class_:"grid grid-cols-1 items-start gap-3 md:grid-cols-2 style-sera:grid-cols-1"
       (Bonsai.return (fun group ->
          let option ~value ~id ~title ?description_class description =
            Field.label
@@ -362,10 +372,20 @@ let receiving_method (local_ graph) =
 let power_usage (local_ graph) =
   let chart = chart graph in
   let%arr chart in
-  let config = [ "usage", Chart.Config.item ~label:"Usage (kW)" ~color:"var(--chart-2)" () ] in
+  let config =
+    [ "usage", Chart.Config.item ~label:"Usage (kW)" ~color:"var(--chart-2)" () ]
+  in
   let data =
     List.map
-      [ "6a", 1.2; "8a", 2.8; "10a", 3.1; "12p", 2.4; "2p", 3.4; "4p", 2.9; "6p", 3.8; "8p", 3.2 ]
+      [ "6a", 1.2
+      ; "8a", 2.8
+      ; "10a", 3.1
+      ; "12p", 2.4
+      ; "2p", 3.4
+      ; "4p", 2.9
+      ; "6p", 3.8
+      ; "8p", 3.2
+      ]
       ~f:(fun (h, v) -> [ "hour", `Text h; "usage", `Num v ])
   in
   let stat ?(value_class = "text-lg font-semibold tabular-nums") label value =
@@ -385,7 +405,12 @@ let power_usage (local_ graph) =
             (Chart.bar_chart
                ~margin:(Chart.margin ~left:0. ~right:0. ~top:4. ~bottom:0. ())
                ~data
-               [ Chart.x_axis ~data_key:"hour" ~tick_line:false ~tick_margin:6. ~axis_line:false ()
+               [ Chart.x_axis
+                   ~data_key:"hour"
+                   ~tick_line:false
+                   ~tick_margin:6.
+                   ~axis_line:false
+                   ()
                ; Chart.tooltip
                    ~cursor:false
                    ~content:(Chart.tooltip_content ~hide_label:true ())
@@ -471,11 +496,18 @@ let upcoming_payments (local_ graph) =
 
 let roller_shades (local_ graph) =
   let position, set_position = Bonsai.state 50. graph in
-  let%arr position and set_position in
+  let%arr position
+  and set_position in
   let preset =
-    if Float.(position <= 10.) then "open" else if Float.(position >= 90.) then "closed" else "half"
+    if Float.(position <= 10.)
+    then "open"
+    else if Float.(position >= 90.)
+    then "closed"
+    else "half"
   in
-  let label s = tspan "text-xs font-medium tracking-wider text-muted-foreground uppercase" s in
+  let label s =
+    tspan "text-xs font-medium tracking-wider text-muted-foreground uppercase" s
+  in
   Card.root
     [ Card.header
         [ Card.title [ text "Living Room" ]; Card.description [ text "Roller Shades" ] ]
@@ -485,7 +517,10 @@ let roller_shades (local_ graph) =
             ~class_:"flex h-32 flex-col overflow-hidden rounded-lg border bg-muted"
             [ div
                 ~class_:"bg-muted-foreground transition-all duration-300"
-                ~attrs:[ Attr.style (Css_gen.create ~field:"height" ~value:(num position ^ "%")) ]
+                ~attrs:
+                  [ Attr.style
+                      (Css_gen.create ~field:"height" ~value:(num position ^ "%"))
+                  ]
                 []
             ]
         ; div
@@ -512,10 +547,14 @@ let roller_shades (local_ graph) =
             ~spacing:1
             ~class_:"w-full"
             (fun group ->
-              [ Toggle_group.item group ~value:"open" ~class_:"flex-1" [ text "Open" ]
-              ; Toggle_group.item group ~value:"half" ~class_:"flex-1" [ text "Half" ]
-              ; Toggle_group.item group ~value:"closed" ~class_:"flex-1" [ text "Closed" ]
-              ])
+               [ Toggle_group.item group ~value:"open" ~class_:"flex-1" [ text "Open" ]
+               ; Toggle_group.item group ~value:"half" ~class_:"flex-1" [ text "Half" ]
+               ; Toggle_group.item
+                   group
+                   ~value:"closed"
+                   ~class_:"flex-1"
+                   [ text "Closed" ]
+               ])
         ]
     ]
 ;;
@@ -541,7 +580,8 @@ let stock_performance (local_ graph) =
       graph
   in
   let chart = chart graph in
-  let%arr value, combobox = ticker and chart in
+  let%arr value, combobox = ticker
+  and chart in
   let config = [ "price", Chart.Config.item ~label:"Price" ~color:"var(--chart-1)" () ] in
   let data =
     List.map2_exn
@@ -568,7 +608,8 @@ let stock_performance (local_ graph) =
     ; Card.content
         ~class_:"flex flex-col gap-4"
         [ Field.group
-            [ Field.root [ Field.label ~for_:"ticker-select" [ text "Ticker" ]; combobox ] ]
+            [ Field.root [ Field.label ~for_:"ticker-select" [ text "Ticker" ]; combobox ]
+            ]
         ; Separator.view ~class_:"style-sera:hidden" ()
         ; Chart.container
             ~config
@@ -627,15 +668,17 @@ let new_milestone =
        [ Card.header
            [ Card.title [ text "Set a new milestone" ]
            ; Card.description
-               [ text
-                   "Define your financial target and we'll help you pace your savings."
+               [ text "Define your financial target and we'll help you pace your savings."
                ]
            ]
        ; Card.content
            [ Field.group
                [ Field.root
                    [ Field.label ~for_:"goal-name" [ text "Goal Name" ]
-                   ; input ~id:"goal-name" ~placeholder:"e.g. New Car, Home Downpayment" ()
+                   ; input
+                       ~id:"goal-name"
+                       ~placeholder:"e.g. New Car, Home Downpayment"
+                       ()
                    ]
                ; div
                    ~class_:"grid grid-cols-2 gap-3"
@@ -725,7 +768,8 @@ let notification_settings (local_ graph) =
       (String.Map.of_alist_exn (List.map notifications ~f:(fun (id, _, _, d) -> id, d)))
       graph
   in
-  let%arr checked and set_checked in
+  let%arr checked
+  and set_checked in
   let all = Map.for_all checked ~f:Fn.id in
   let some = Map.exists checked ~f:Fn.id && not all in
   let state : Checkbox.State.t =
@@ -743,8 +787,7 @@ let notification_settings (local_ graph) =
                [ Checkbox.view
                    ~id:"notify-all"
                    ~checked:state
-                   ~on_change:(fun v ->
-                     set_checked (Map.map checked ~f:(fun _ -> v)))
+                   ~on_change:(fun v -> set_checked (Map.map checked ~f:(fun _ -> v)))
                    ()
                ; Field.content [ Field.label ~for_:"notify-all" [ text "Select all" ] ]
                ]

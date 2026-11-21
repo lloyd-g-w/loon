@@ -6,9 +6,7 @@ open Create_preview_util
 module Node = Vdom.Node
 module Attr = Vdom.Attr
 
-let bar_data ~x ~y rows =
-  List.map rows ~f:(fun (k, v) -> [ x, `Text k; y, `Num v ])
-;;
+let bar_data ~x ~y rows = List.map rows ~f:(fun (k, v) -> [ x, `Text k; y, `Num v ])
 
 let upcoming_item ~label ~value ~detail =
   Item.view
@@ -28,7 +26,9 @@ let upcoming_item ~label ~value ~detail =
 let contribution_history (local_ graph) =
   let chart = chart graph in
   let%arr chart in
-  let config = [ "amount", Chart.Config.item ~label:"Contribution" ~color:"var(--chart-2)" () ] in
+  let config =
+    [ "amount", Chart.Config.item ~label:"Contribution" ~color:"var(--chart-2)" () ]
+  in
   Card.root
     [ Card.header
         [ Card.title [ text "Contribution History" ]
@@ -45,8 +45,19 @@ let contribution_history (local_ graph) =
                  (bar_data
                     ~x:"month"
                     ~y:"amount"
-                    [ "Dec", 800.; "Jan", 1100.; "Feb", 900.; "Mar", 1300.; "Apr", 750.; "May", 1400. ])
-               [ Chart.x_axis ~data_key:"month" ~tick_line:false ~tick_margin:8. ~axis_line:false ()
+                    [ "Dec", 800.
+                    ; "Jan", 1100.
+                    ; "Feb", 900.
+                    ; "Mar", 1300.
+                    ; "Apr", 750.
+                    ; "May", 1400.
+                    ])
+               [ Chart.x_axis
+                   ~data_key:"month"
+                   ~tick_line:false
+                   ~tick_margin:8.
+                   ~axis_line:false
+                   ()
                ; Chart.tooltip
                    ~cursor:false
                    ~content:(Chart.tooltip_content ~hide_label:true ~class_:"min-w-40" ())
@@ -62,7 +73,10 @@ let contribution_history (local_ graph) =
     ; Card.content
         [ div
             ~class_:"grid w-full grid-cols-1 gap-3 md:grid-cols-2"
-            [ upcoming_item ~label:"Upcoming" ~value:"May 25, 2024" ~detail:"$1,000 scheduled"
+            [ upcoming_item
+                ~label:"Upcoming"
+                ~value:"May 25, 2024"
+                ~detail:"$1,000 scheduled"
             ; upcoming_item
                 ~label:"Auto-Save Plan"
                 ~value:"Accelerated"
@@ -81,7 +95,8 @@ let empty_distribute_track =
                ~media:(icon Plus)
                ~title:"Distribute Track"
                ~description:
-                 "Upload your first master to start reaching listeners on Spotify, Apple                   Music, and more."
+                 "Upload your first master to start reaching listeners on Spotify, \
+                  Apple Music, and more."
                ~button:(Button.view [ text "Create Release" ])
                ()
            ]
@@ -91,7 +106,40 @@ let empty_distribute_track =
 (* react-qr-code's SVG for "https://ledger.app/connect/jd-4829" at level M
    (29 modules). *)
 let qr_path =
-  "M0 0h7v1h-7zM9 0h2v1h-2zM12 0h4v1h-4zM17 0h4v1h-4zM22 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM9 1h3v1h-3zM13 1h5v1h-5zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM8 2h3v1h-3zM13 2h1v1h-1zM15 2h1v1h-1zM18 2h3v1h-3zM22 2h1v1h-1zM24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM8 3h2v1h-2zM11 3h2v1h-2zM14 3h2v1h-2zM17 3h1v1h-1zM19 3h1v1h-1zM22 3h1v1h-1zM24 3h3v1h-3zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM8 4h1v1h-1zM11 4h2v1h-2zM15 4h2v1h-2zM18 4h3v1h-3zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM10 5h3v1h-3zM20 5h1v1h-1zM22 5h1v1h-1zM28 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM8 7h3v1h-3zM14 7h1v1h-1zM16 7h1v1h-1zM19 7h2v1h-2zM0 8h1v1h-1zM2 8h5v1h-5zM10 8h1v1h-1zM17 8h1v1h-1zM19 8h1v1h-1zM22 8h5v1h-5zM3 9h3v1h-3zM7 9h4v1h-4zM13 9h3v1h-3zM18 9h7v1h-7zM28 9h1v1h-1zM0 10h1v1h-1zM4 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM10 10h1v1h-1zM13 10h6v1h-6zM20 10h1v1h-1zM23 10h1v1h-1zM1 11h1v1h-1zM3 11h2v1h-2zM7 11h4v1h-4zM13 11h1v1h-1zM15 11h1v1h-1zM19 11h1v1h-1zM23 11h3v1h-3zM27 11h1v1h-1zM1 12h1v1h-1zM6 12h2v1h-2zM10 12h1v1h-1zM12 12h1v1h-1zM14 12h1v1h-1zM16 12h2v1h-2zM25 12h2v1h-2zM0 13h1v1h-1zM2 13h1v1h-1zM9 13h1v1h-1zM19 13h2v1h-2zM22 13h3v1h-3zM28 13h1v1h-1zM0 14h1v1h-1zM5 14h2v1h-2zM8 14h4v1h-4zM15 14h1v1h-1zM20 14h2v1h-2zM24 14h3v1h-3zM1 15h3v1h-3zM5 15h1v1h-1zM7 15h1v1h-1zM12 15h1v1h-1zM14 15h1v1h-1zM18 15h7v1h-7zM27 15h1v1h-1zM3 16h8v1h-8zM15 16h5v1h-5zM21 16h1v1h-1zM25 16h2v1h-2zM0 17h3v1h-3zM7 17h2v1h-2zM11 17h4v1h-4zM17 17h3v1h-3zM21 17h4v1h-4zM26 17h1v1h-1zM28 17h1v1h-1zM0 18h1v1h-1zM2 18h1v1h-1zM6 18h5v1h-5zM13 18h3v1h-3zM17 18h1v1h-1zM22 18h3v1h-3zM26 18h1v1h-1zM0 19h1v1h-1zM5 19h1v1h-1zM9 19h1v1h-1zM11 19h1v1h-1zM13 19h1v1h-1zM15 19h1v1h-1zM21 19h4v1h-4zM27 19h1v1h-1zM0 20h1v1h-1zM2 20h3v1h-3zM6 20h2v1h-2zM9 20h2v1h-2zM14 20h1v1h-1zM16 20h2v1h-2zM20 20h5v1h-5zM26 20h3v1h-3zM8 21h3v1h-3zM12 21h1v1h-1zM17 21h4v1h-4zM24 21h5v1h-5zM0 22h7v1h-7zM9 22h1v1h-1zM15 22h1v1h-1zM17 22h4v1h-4zM22 22h1v1h-1zM24 22h3v1h-3zM0 23h1v1h-1zM6 23h1v1h-1zM8 23h2v1h-2zM11 23h2v1h-2zM14 23h3v1h-3zM18 23h3v1h-3zM24 23h1v1h-1zM27 23h2v1h-2zM0 24h1v1h-1zM2 24h3v1h-3zM6 24h1v1h-1zM8 24h3v1h-3zM15 24h3v1h-3zM20 24h5v1h-5zM26 24h2v1h-2zM0 25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM8 25h2v1h-2zM11 25h1v1h-1zM14 25h1v1h-1zM18 25h1v1h-1zM25 25h4v1h-4zM0 26h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM8 26h1v1h-1zM10 26h3v1h-3zM15 26h2v1h-2zM21 26h7v1h-7zM0 27h1v1h-1zM6 27h1v1h-1zM10 27h1v1h-1zM12 27h2v1h-2zM15 27h2v1h-2zM18 27h4v1h-4zM24 27h2v1h-2zM27 27h1v1h-1zM0 28h7v1h-7zM8 28h2v1h-2zM12 28h1v1h-1zM14 28h1v1h-1zM17 28h3v1h-3zM23 28h1v1h-1zM26 28h1v1h-1z"
+  "M0 0h7v1h-7zM9 0h2v1h-2zM12 0h4v1h-4zM17 0h4v1h-4zM22 0h7v1h-7zM0 1h1v1h-1zM6 \
+   1h1v1h-1zM9 1h3v1h-3zM13 1h5v1h-5zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 \
+   2h3v1h-3zM6 2h1v1h-1zM8 2h3v1h-3zM13 2h1v1h-1zM15 2h1v1h-1zM18 2h3v1h-3zM22 \
+   2h1v1h-1zM24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM8 \
+   3h2v1h-2zM11 3h2v1h-2zM14 3h2v1h-2zM17 3h1v1h-1zM19 3h1v1h-1zM22 3h1v1h-1zM24 \
+   3h3v1h-3zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM8 4h1v1h-1zM11 \
+   4h2v1h-2zM15 4h2v1h-2zM18 4h3v1h-3zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 \
+   5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM10 5h3v1h-3zM20 5h1v1h-1zM22 5h1v1h-1zM28 \
+   5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 \
+   6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM8 7h3v1h-3zM14 7h1v1h-1zM16 \
+   7h1v1h-1zM19 7h2v1h-2zM0 8h1v1h-1zM2 8h5v1h-5zM10 8h1v1h-1zM17 8h1v1h-1zM19 \
+   8h1v1h-1zM22 8h5v1h-5zM3 9h3v1h-3zM7 9h4v1h-4zM13 9h3v1h-3zM18 9h7v1h-7zM28 \
+   9h1v1h-1zM0 10h1v1h-1zM4 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM10 10h1v1h-1zM13 \
+   10h6v1h-6zM20 10h1v1h-1zM23 10h1v1h-1zM1 11h1v1h-1zM3 11h2v1h-2zM7 11h4v1h-4zM13 \
+   11h1v1h-1zM15 11h1v1h-1zM19 11h1v1h-1zM23 11h3v1h-3zM27 11h1v1h-1zM1 12h1v1h-1zM6 \
+   12h2v1h-2zM10 12h1v1h-1zM12 12h1v1h-1zM14 12h1v1h-1zM16 12h2v1h-2zM25 12h2v1h-2zM0 \
+   13h1v1h-1zM2 13h1v1h-1zM9 13h1v1h-1zM19 13h2v1h-2zM22 13h3v1h-3zM28 13h1v1h-1zM0 \
+   14h1v1h-1zM5 14h2v1h-2zM8 14h4v1h-4zM15 14h1v1h-1zM20 14h2v1h-2zM24 14h3v1h-3zM1 \
+   15h3v1h-3zM5 15h1v1h-1zM7 15h1v1h-1zM12 15h1v1h-1zM14 15h1v1h-1zM18 15h7v1h-7zM27 \
+   15h1v1h-1zM3 16h8v1h-8zM15 16h5v1h-5zM21 16h1v1h-1zM25 16h2v1h-2zM0 17h3v1h-3zM7 \
+   17h2v1h-2zM11 17h4v1h-4zM17 17h3v1h-3zM21 17h4v1h-4zM26 17h1v1h-1zM28 17h1v1h-1zM0 \
+   18h1v1h-1zM2 18h1v1h-1zM6 18h5v1h-5zM13 18h3v1h-3zM17 18h1v1h-1zM22 18h3v1h-3zM26 \
+   18h1v1h-1zM0 19h1v1h-1zM5 19h1v1h-1zM9 19h1v1h-1zM11 19h1v1h-1zM13 19h1v1h-1zM15 \
+   19h1v1h-1zM21 19h4v1h-4zM27 19h1v1h-1zM0 20h1v1h-1zM2 20h3v1h-3zM6 20h2v1h-2zM9 \
+   20h2v1h-2zM14 20h1v1h-1zM16 20h2v1h-2zM20 20h5v1h-5zM26 20h3v1h-3zM8 21h3v1h-3zM12 \
+   21h1v1h-1zM17 21h4v1h-4zM24 21h5v1h-5zM0 22h7v1h-7zM9 22h1v1h-1zM15 22h1v1h-1zM17 \
+   22h4v1h-4zM22 22h1v1h-1zM24 22h3v1h-3zM0 23h1v1h-1zM6 23h1v1h-1zM8 23h2v1h-2zM11 \
+   23h2v1h-2zM14 23h3v1h-3zM18 23h3v1h-3zM24 23h1v1h-1zM27 23h2v1h-2zM0 24h1v1h-1zM2 \
+   24h3v1h-3zM6 24h1v1h-1zM8 24h3v1h-3zM15 24h3v1h-3zM20 24h5v1h-5zM26 24h2v1h-2zM0 \
+   25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM8 25h2v1h-2zM11 25h1v1h-1zM14 25h1v1h-1zM18 \
+   25h1v1h-1zM25 25h4v1h-4zM0 26h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM8 26h1v1h-1zM10 \
+   26h3v1h-3zM15 26h2v1h-2zM21 26h7v1h-7zM0 27h1v1h-1zM6 27h1v1h-1zM10 27h1v1h-1zM12 \
+   27h2v1h-2zM15 27h2v1h-2zM18 27h4v1h-4zM24 27h2v1h-2zM27 27h1v1h-1zM0 28h7v1h-7zM8 \
+   28h2v1h-2zM12 28h1v1h-1zM14 28h1v1h-1zM17 28h3v1h-3zM23 28h1v1h-1zM26 28h1v1h-1z"
 ;;
 
 let qr_code () =
@@ -103,7 +151,10 @@ let qr_code () =
       ; Attr.create "width" "160"
       ; Attr.create "viewBox" "0 0 29 29"
       ]
-    [ svg "path" ~attrs:[ Attr.create "fill" "#FFFFFF"; Attr.create "d" "M0,0 h29v29H0z" ] []
+    [ svg
+        "path"
+        ~attrs:[ Attr.create "fill" "#FFFFFF"; Attr.create "d" "M0,0 h29v29H0z" ]
+        []
     ; svg "path" ~attrs:[ Attr.create "fill" "#000000"; Attr.create "d" qr_path ] []
     ]
 ;;
@@ -118,10 +169,10 @@ let qr_connect =
            ~class_:"text-center"
            [ Card.title [ text "Scan to connect your mobile device" ]
            ; Card.description
-               [ text "Open the Ledger mobile app and scan this code to link your device." ]
+               [ text "Open the Ledger mobile app and scan this code to link your device."
+               ]
            ]
-       ; Card.footer
-           [ Button.view ~variant:Secondary ~class_:"w-full" [ text "Got it" ] ]
+       ; Card.footer [ Button.view ~variant:Secondary ~class_:"w-full" [ text "Got it" ] ]
        ])
 ;;
 
@@ -134,11 +185,11 @@ let holdings =
 ;;
 
 let dividend_income (local_ graph) =
-  let charts =
-    List.map holdings ~f:(fun _ -> chart graph) |> Bonsai.all
-  in
+  let charts = List.map holdings ~f:(fun _ -> chart graph) |> Bonsai.all in
   let%arr charts in
-  let config = [ "value", Chart.Config.item ~label:"Dividend" ~color:"var(--chart-2)" () ] in
+  let config =
+    [ "value", Chart.Config.item ~label:"Dividend" ~color:"var(--chart-2)" () ]
+  in
   Card.root
     [ Card.header
         [ Card.title [ text "Q2 Dividend Income" ]
@@ -197,7 +248,11 @@ let index_investing =
                      ]
                    [ text "Over time" ]
                ; text
-                   ", this smooths out the average cost of your investments. When prices                     drop, your fixed amount buys more shares. When prices rise, you buy                     fewer. The result is a lower average cost per share compared to                     lump-sum investing during volatile periods."
+                   ", this smooths out the average cost of your investments. When \
+                    prices                     drop, your fixed amount buys more shares. \
+                    When prices rise, you buy                     fewer. The result is a \
+                    lower average cost per share compared to                     \
+                    lump-sum investing during volatile periods."
                ]
            ]
        ])
@@ -213,7 +268,8 @@ let syncing_state =
                ~media:(Spinner.view ())
                ~title:"Syncing your accounts"
                ~description:
-                 "We're pulling in your latest transactions. This usually takes a few                   seconds."
+                 "We're pulling in your latest transactions. This usually takes a \
+                  few                   seconds."
                ~button:(Button.view ~variant:Outline [ text "Cancel" ])
                ()
            ]
@@ -240,7 +296,9 @@ let payout_threshold (local_ graph) =
       ~class_:"min-h-[100px]"
       graph
   in
-  let%arr currency and amount, set_amount = amount and notes in
+  let%arr currency
+  and amount, set_amount = amount
+  and notes in
   Card.root
     [ Card.header
         [ Card.title [ text "Payout Threshold" ]
@@ -251,7 +309,9 @@ let payout_threshold (local_ graph) =
     ; Card.content
         [ Field.group
             [ Field.root
-                [ Field.label ~for_:(select_trigger_id "preferred-currency") [ text "Preferred Currency" ]
+                [ Field.label
+                    ~for_:(select_trigger_id "preferred-currency")
+                    [ text "Preferred Currency" ]
                 ; currency
                 ]
             ; Field.root
@@ -274,8 +334,7 @@ let payout_threshold (local_ graph) =
                     ; Field.description [ text "$10,000 (MAX)" ]
                     ]
                 ]
-            ; Field.root
-                [ Field.label ~for_:"payout-notes" [ text "Notes" ]; notes.view ]
+            ; Field.root [ Field.label ~for_:"payout-notes" [ text "Notes" ]; notes.view ]
             ]
         ]
     ; Card.footer [ Button.view ~class_:"w-full" [ text "Save Threshold" ] ]
@@ -320,7 +379,9 @@ let claimable_balance =
        ; Card.footer
            [ Card.description
                [ text
-                   "Once your bank is connected, balances over $10.00 are automatically                     eligible for monthly distribution on the 15th of each month."
+                   "Once your bank is connected, balances over $10.00 are \
+                    automatically                     eligible for monthly distribution \
+                    on the 15th of each month."
                ]
            ]
        ])
@@ -341,7 +402,9 @@ let preferences (local_ graph) =
   in
   let public_ = Switch.component ~id:"public-statistics" ~default_checked:true graph in
   let email = Switch.component ~id:"email-notifications" ~default_checked:true graph in
-  let%arr currency and public_ and email in
+  let%arr currency
+  and public_
+  and email in
   Card.root
     [ Card.header
         [ Card.title [ text "Preferences" ]
@@ -351,7 +414,9 @@ let preferences (local_ graph) =
     ; Card.content
         [ Field.group
             [ Field.root
-                [ Field.label ~for_:(select_trigger_id "default-currency") [ text "Default Currency" ]
+                [ Field.label
+                    ~for_:(select_trigger_id "default-currency")
+                    [ text "Default Currency" ]
                 ; currency
                 ]
             ; Field.separator ~class_:"-my-4 style-sera:hidden" []
@@ -487,7 +552,12 @@ let kitchen_island (local_ graph) =
   let enabled, set_enabled = Bonsai.state true graph in
   let scene, set_scene = Bonsai.state "cooking" graph in
   let levels, set_levels = Bonsai.state (Scene.of_name "cooking") graph in
-  let%arr enabled and set_enabled and scene and set_scene and levels and set_levels in
+  let%arr enabled
+  and set_enabled
+  and scene
+  and set_scene
+  and levels
+  and set_levels in
   let slider ?class_ value set =
     Slider.view
       ?class_
@@ -529,14 +599,18 @@ let kitchen_island (local_ graph) =
                 ~spacing:1
                 ~class_:"flex-wrap"
                 (fun group ->
-                  List.map
-                    [ "cooking", "Cooking"
-                    ; "dining", "Dining"
-                    ; "nightlight", "Nightlight"
-                    ; "focus", "Focus"
-                    ]
-                    ~f:(fun (value, label) ->
-                      Toggle_group.item group ~value ~disabled:(not enabled) [ text label ]))
+                   List.map
+                     [ "cooking", "Cooking"
+                     ; "dining", "Dining"
+                     ; "nightlight", "Nightlight"
+                     ; "focus", "Focus"
+                     ]
+                     ~f:(fun (value, label) ->
+                       Toggle_group.item
+                         group
+                         ~value
+                         ~disabled:(not enabled)
+                         [ text label ]))
             ]
         ; Item.group
             [ item
