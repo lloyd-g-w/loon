@@ -101,7 +101,11 @@ let view ?lang ?(line_numbers = false) ?class_ source =
        | None -> []
        | Some c -> [ Attr.class_ c ])
     [ Node.pre
-        ~attrs:[ Attr.create "data-not-typeset" ""; Attr.class_ pre_classes ]
+        ~attrs:
+          [ Attr.create "data-not-typeset" ""
+            (* pr-12: the copy button covers no code (at rest) *)
+          ; Attr.class_ (Loon.Cn.cn [ pre_classes; "pr-12" ])
+          ]
         [ copy_button source; Highlight.view ?lang ~line_numbers source ]
     ]
 ;;

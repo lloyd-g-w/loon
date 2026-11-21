@@ -98,10 +98,15 @@ export async function screenshot(page, name) {
 
 // The pages the sidebar links to, in its order.
 export async function pages(page) {
-  return page.$$eval("[data-docs-sidebar-content] a[data-slug]", (links) =>
+  const all = await page.$$eval("[data-docs-sidebar-content] a[data-slug]", (links) =>
     links.map((a) => ({ slug: a.dataset.slug, title: a.textContent.trim(), href: a.getAttribute("href") })),
   );
+  const seen = new Set();
+  return all.filter((p) => !seen.has(p.slug) && seen.add(p.slug));
 }
+
+// A sidebar link (the first, as a page may be under two groups).
+export const sidebarLink = (slug) => `[data-docs-sidebar-content] a[data-slug="${slug}"] >> nth=0`;
 
 export const text = (page, selector) =>
   page.$eval(selector, (el) => el.textContent.replace(/\s+/g, " ").trim());

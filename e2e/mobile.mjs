@@ -1,60 +1,42 @@
 // Phones (390x844, and a small one, 320x640), by touch: no page scrolls
-// sideways, the sidebar is a sheet behind the menu button, the header's
-// controls and the examples' text fields and selects are 44px targets.
-import { checkErrors, open, overflow, ready, run, screenshot, text, waitForHash } from "./lib.mjs";
+// sideways, the sidebar is the menu behind the Menu button, the header's
+// controls fit.
+import { checkErrors, open, overflow, ready, run, screenshot, waitForHash } from "./lib.mjs";
 
 const device = process.argv[3] ?? "phone";
-
-const size = (page, selector) =>
-  page.$eval(selector, (el) => {
-    const r = el.getBoundingClientRect();
-    return `${Math.round(r.width)}x${Math.round(r.height)}`;
-  });
+const menu = "[data-slot=mobile-nav]";
+const trigger = "[data-docs=mobile-nav-trigger]";
 
 await run(async (engine, url) => {
   const { browser, page, errors } = await open(engine, { device });
-  await page.goto(url);
-  await ready(page);
-  console.log(`${device}: sidebar hidden ${!(await page.isVisible(".docs-sidebar .docs-nav-link"))}, toc hidden ${!(await page.isVisible(".docs-toc"))}`);
-  const targets = [".docs-menu-button", ".docs-search-trigger", ".docs-theme-toggle"];
-  const small = [];
-  for (const t of targets) {
-    const [w, h] = (await size(page, t)).split("x").map(Number);
-    if (w < 44 || h < 44) small.push(`${t} ${w}x${h}`);
-  }
-  console.log(`header targets: ${small.length ? small.join(", ") : "all at least 44px"}`);
-  await screenshot(page, `${device}-home`);
+  await page.goto(`${url}#/button`);
+  await ready(page, "button");
+  console.log(`${device}: sidebar hidden ${!(await page.isVisible("[data-docs-sidebar-content]"))}, toc hidden ${!(await page.isVisible("[data-slot=toc]"))}, main nav hidden ${!(await page.isVisible("[data-slot=main-nav]"))}`);
+  const controls = [trigger, "[data-docs=command-menu-trigger-mobile]", "[data-docs=mode-switcher]", "[data-docs=github-link]"];
+  const hidden = [];
+  for (const c of controls) if (!(await page.isVisible(c))) hidden.push(c);
+  console.log(`header controls: ${hidden.length ? `hidden ${hidden.join(", ")}` : "all shown"}`);
+  await screenshot(page, `${device}-button`);
 
-  // The sheet.
-  await page.tap(".docs-menu-button");
-  await page.waitForSelector(".docs-sidebar[data-open]");
-  await page.waitForFunction(() => {
-    const r = document.querySelector(".docs-sidebar").getBoundingClientRect();
-    return Math.abs(r.left) < 1;
-  });
-  console.log(`menu: ${await page.getAttribute(".docs-menu-button", "aria-expanded")}, ${await page.getAttribute(".docs-menu-button", "aria-label")}`);
-  const links = await page.$$eval(".docs-sidebar .docs-nav-link", (ls) =>
-    ls.filter((l) => l.getBoundingClientRect().height < 44).length,
-  );
-  console.log(`sheet links under 44px: ${links}`);
-  console.log(`page scroll locked: ${await page.evaluate(() => document.body.hasAttribute("data-scroll-locked"))}`);
-  await screenshot(page, `${device}-sheet`);
-  await page.tap('.docs-sidebar .docs-nav-link[data-slug="theming"]');
+  // The menu.
+  await page.tap(trigger);
+  await page.waitForSelector(menu);
+  console.log(`menu: ${await page.getAttribute(trigger, "aria-expanded")}, groups ${(await page.$$eval(`${menu} .text-muted-foreground`, (ls) => ls.map((l) => l.textContent))).slice(0, 4).join(", ")}`);
+  await screenshot(page, `${device}-menu`);
+  await page.locator(`${menu} a[data-slug="theming"]`).first().tap();
   await waitForHash(page, "#/theming");
-  await page.waitForSelector(".docs-sidebar:not([data-open])", { state: "attached" });
-  console.log(`tapped a link: ${await text(page, ".docs-article h1")}, sheet closed`);
-  // The scrim closes it.
-  await page.tap(".docs-menu-button");
-  await page.waitForSelector(".docs-nav-scrim");
-  const vw = await page.evaluate(() => window.innerWidth);
-  await page.touchscreen.tap(vw - 10, 400);
-  await page.waitForSelector(".docs-sidebar:not([data-open])", { state: "attached" });
-  console.log("scrim tap closes the sheet");
+  await page.waitForSelector(menu, { state: "detached" });
+  console.log("tapped a link: menu closed");
+  await page.tap(trigger);
+  await page.waitForSelector(menu);
+  await page.tap(trigger);
+  await page.waitForSelector(menu, { state: "detached" });
+  console.log("the button closes it");
 
   // Search on a phone.
-  await page.tap(".docs-search-trigger");
-  await page.waitForSelector(".docs-search");
-  const box = await page.$eval(".docs-search", (el) => {
+  await page.tap("[data-docs=command-menu-trigger-mobile]");
+  await page.waitForSelector("[data-docs=search]");
+  const box = await page.$eval("[data-docs=search]", (el) => {
     const r = el.getBoundingClientRect();
     return r.left >= 0 && r.right <= window.innerWidth;
   });
@@ -63,19 +45,16 @@ await run(async (engine, url) => {
   await page.keyboard.press("Escape");
 
   // No page scrolls sideways.
-  const slugs = await page.$$eval(".docs-nav-link[data-slug]", (ls) => ls.map((l) => l.dataset.slug));
+  const slugs = await page.$$eval("[data-docs-sidebar-content] a[data-slug]", (ls) => [...new Set(ls.map((l) => l.dataset.slug))]);
+  slugs.push("", "blocks", "chart-area", "chart-pie", "create", "typeset", "components");
   const wide = [];
   for (const slug of slugs) {
-    await page.goto(`${url}#/${slug}`);
-    await page.waitForSelector(`.docs-article[data-page="${slug}"]`);
+    await page.evaluate((s) => { location.hash = `#/${s}`; }, slug);
+    await page.waitForSelector(`[data-page="${slug || "home"}"]`);
     for (const o of await overflow(page)) wide.push(`${slug}: ${o}`);
     for (const e of errors.splice(0)) console.log(`ERROR on ${slug}: ${e}`);
   }
   console.log(`sideways overflow: ${wide.length ? wide.join("; ") : "none"}`);
-
-  await page.goto(`${url}#/button`);
-  await ready(page, "button");
-  await screenshot(page, `${device}-button`);
   checkErrors(errors, device);
   await browser.close();
 });

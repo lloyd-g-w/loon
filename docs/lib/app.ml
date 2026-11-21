@@ -1137,9 +1137,9 @@ module Result = struct
     }
 end
 
-(* shadcn's CommandMenu's groups: the header's pages, the sidebar's
-   sections, the other sections' pages and (while searching) the
-   examples. *)
+(* shadcn's CommandMenu's groups: the header's pages, the docs' sections'
+   pages (the sidebar's "Sections" would repeat them), the other sections'
+   pages and (while searching) the examples. *)
 let search_groups : (string * Result.t list) list =
   let page_group title ps =
     ( title
@@ -1162,9 +1162,6 @@ let search_groups : (string * Result.t list) list =
        ; install = None
        ; context = None
        }) )
-   :: page_group
-        "Sections"
-        (List.filter_map top_level_sections ~f:(fun (_, s) -> find_page s))
    :: List.map docs_groups ~f:(fun (s, ps) -> page_group (Doc.Section.title s) ps))
   @ List.filter_map Doc.Section.all ~f:(fun s ->
     match Doc.Section.is_docs s, in_section s with
