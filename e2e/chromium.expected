@@ -51,11 +51,11 @@ page links: View source on GitHub, View the shadcn/ui docs, View this page on Gi
 installation guide: 7 code blocks, loon add snippet false
 dune highlighted: (executable
 copied dune: (executable
-select: top layer true, hit-tested on top true
-dropdown_menu: top layer true, hit-tested on top true
-popover: top layer true, hit-tested on top true
-dialog: top layer true, hit-tested on top true
-sheet: top layer true, hit-tested on top true, over the header
+select: top layer true, hit-tested on top true, scroll locked 1
+dropdown_menu: top layer true, hit-tested on top true, scroll locked 1
+popover: top layer true, hit-tested on top true, scroll locked null
+dialog: top layer true, hit-tested on top true, scroll locked 1
+sheet: top layer true, hit-tested on top true, over the header, scroll locked 1
 == search
 opened by the button, input focused; first results: >Docs, Components, Blocks, Charts
 groups: Pages, Get Started, Components, Forms, Blocks, Charts
