@@ -113,12 +113,7 @@ let%expect_test "shadcn's classes" =
           <path d="m6 9 6 6 6-6"> </path>
         </svg>
       </button>
-      <div loon-dismiss=((s-trigger)false true)
-           loon-presence=()
-           loon-scroll-lock=()
-           style={
-             display: contents;
-           }>
+      <div loon-dismiss=((s-trigger)false true) loon-scroll-lock=() style={ display: contents; }>
         <div data-radix-popper-content-wrapper=""
              popover="manual"
              loon-popper=(Popper((side Bottom)(side_offset 0)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 10)(anchor(Element s-trigger))(name select)))
@@ -344,7 +339,6 @@ let%expect_test "open: the structure, groups, labels and the separator" =
         </svg>
       </button>
       <div loon-dismiss=((bonsai_path_replaced_in_test-trigger)false true)
-           loon-presence=()
            loon-scroll-lock=()
            style={
              display: contents;

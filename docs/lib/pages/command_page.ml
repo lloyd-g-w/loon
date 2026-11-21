@@ -53,7 +53,6 @@ let dialog (local_ graph) =
   let item ?shortcut icon text =
     Command.item
       ~value:text
-      ~on_select:(set_open false)
       ([ Icon.view icon; Node.span [ Node.text text ] ]
        @ Option.value_map shortcut ~default:[] ~f:(fun s ->
          [ Command.shortcut [ Node.text s ] ]))

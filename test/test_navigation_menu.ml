@@ -96,7 +96,6 @@ let%expect_test "shadcn's classes" =
                     type="button"
                     data-state="closed"
                     aria-expanded="false"
-                    aria-controls="navigation-menu-content-components"
                     data-slot="navigation-menu-trigger"
                     class="bg-background data-[state=open]:bg-accent/50 data-[state=open]:focus:bg-accent data-[state=open]:hover:bg-accent data-[state=open]:text-accent-foreground disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-1 focus-visible:ring-[3px] focus-visible:ring-ring/50 focus:bg-accent focus:text-accent-foreground font-medium group h-9 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md text-sm transition-[color,box-shadow] w-max"
                     @on_click
@@ -192,7 +191,6 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
                     type="button"
                     data-state="closed"
                     aria-expanded="false"
-                    aria-controls="bonsai_path_replaced_in_test-content-home"
                     data-slot="navigation-menu-trigger"
                     @on_click
                     @on_keydown
@@ -220,7 +218,6 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
                     type="button"
                     data-state="closed"
                     aria-expanded="false"
-                    aria-controls="bonsai_path_replaced_in_test-content-components"
                     data-slot="navigation-menu-trigger"
                     @on_click
                     @on_keydown
@@ -275,7 +272,7 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
     +|                data-state="open"
     -|                aria-expanded="false"
     +|                aria-expanded="true"
-                      aria-controls="bonsai_path_replaced_in_test-content-home"
+    +|                aria-controls="bonsai_path_replaced_in_test-content-home"
                       data-slot="navigation-menu-trigger"
                       @on_click
                       @on_keydown
@@ -291,6 +288,7 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
                      stroke="currentColor"
                      stroke-width="2"
                      stroke-linecap="round"
+                     stroke-linejoin="round"
 
                      fill="none"
                      stroke="currentColor"
@@ -364,8 +362,8 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
     -|                data-state="open"
     +|                data-state="closed"
     -|                aria-expanded="true"
+    -|                aria-controls="bonsai_path_replaced_in_test-content-home"
     +|                aria-expanded="false"
-                      aria-controls="bonsai_path_replaced_in_test-content-home"
                       data-slot="navigation-menu-trigger"
                       @on_click
                       @on_keydown
@@ -395,7 +393,7 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
     +|                data-state="open"
     -|                aria-expanded="false"
     +|                aria-expanded="true"
-                      aria-controls="bonsai_path_replaced_in_test-content-components"
+    +|                aria-controls="bonsai_path_replaced_in_test-content-components"
                       data-slot="navigation-menu-trigger"
                       @on_click
                       @on_keydown
@@ -411,6 +409,7 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
                      stroke="currentColor"
                      stroke-width="2"
                      stroke-linecap="round"
+                     stroke-linejoin="round"
 
                data-slot="navigation-menu-indicator"
                loon-after-render-navigation-menu-indicator=<opaque>
@@ -466,13 +465,13 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
                       type="button"
                       data-state="closed"
                       aria-expanded="false"
-                      aria-controls="bonsai_path_replaced_in_test-content-home"
                       data-slot="navigation-menu-trigger"
                       @on_click
                       @on_keydown
                       @on_pointerenter
                       @on_pointerleave>
                 Home
+
 
                      height="24"
                      viewBox="0 0 24 24"
@@ -493,8 +492,8 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
     -|                data-state="open"
     +|                data-state="closed"
     -|                aria-expanded="true"
+    -|                aria-controls="bonsai_path_replaced_in_test-content-components"
     +|                aria-expanded="false"
-                      aria-controls="bonsai_path_replaced_in_test-content-components"
                       data-slot="navigation-menu-trigger"
                       @on_click
                       @on_keydown
@@ -591,7 +590,6 @@ let%expect_test "without a viewport, the content drops down in its item" =
                     type="button"
                     data-state="closed"
                     aria-expanded="false"
-                    aria-controls="bonsai_path_replaced_in_test-content-home"
                     data-slot="navigation-menu-trigger"
                     @on_click
                     @on_keydown

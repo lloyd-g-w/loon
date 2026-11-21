@@ -34,10 +34,12 @@ let trigger ?(attrs = []) t node =
     ([ Attr.id (trigger_id t)
      ; aria "haspopup" "dialog"
      ; aria_bool "expanded" t.open_
-     ; aria "controls" (content_id t)
-     ; state t
-     ; Attr.on_click (fun _ -> t.on_open_change (not t.open_))
      ]
+     (* Radix names the content only while it is there. *)
+     @ (if t.open_ then [ aria "controls" (content_id t) ] else [])
+     @ [ state t
+       ; Attr.on_click (fun _ -> t.on_open_change (not t.open_))
+       ]
      @ attrs)
     node
 ;;
@@ -69,7 +71,12 @@ let content
     let close (reason : Dismiss.Reason.t) =
       match reason with
       | Escape -> Effect.Many [ t.on_open_change false; Focus.restore (trigger_id t) ]
-      | Pointer_outside | Focus_outside -> t.on_open_change false
+      | Pointer_outside | Focus_outside ->
+        (* Radix: a non-modal popover closed from outside leaves the focus
+           where that put it. *)
+        if t.modal
+        then t.on_open_change false
+        else Effect.Many [ Focus.no_restore; t.on_open_change false ]
     in
     let id = content_id t in
     let content =
@@ -93,15 +100,16 @@ let content
     in
     Node.div
       ~attrs:
-        [ Attr.style (Css_gen.create ~field:"display" ~value:"contents")
-        ; Presence.attr
-        ; Dismiss.attr
-            ~inside:[ trigger_id t ]
-            ~focus_outside:(not t.modal)
-            ~modal:t.modal
-            ~on_dismiss:close
-            ()
-        ]
+        ([ Attr.style (Css_gen.create ~field:"display" ~value:"contents")
+         ; Presence.attr
+         ; Dismiss.attr
+             ~inside:[ trigger_id t ]
+             ~focus_outside:(not t.modal)
+             ~modal:t.modal
+             ~on_dismiss:close
+             ()
+         ]
+         @ if t.modal then [ Scroll.lock ] else [])
       ((if t.modal then [ Focus.guard ~id `Start ] else [])
        @ [ Popper.wrapper
              ~name:"popover"

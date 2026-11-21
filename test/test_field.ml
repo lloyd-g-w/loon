@@ -71,7 +71,6 @@ let%expect_test "shadcn's classes" =
           <button type="button"
                   role="checkbox"
                   aria-checked="false"
-                  aria-required="false"
                   data-state="unchecked"
                   data-slot="checkbox"
                   id="news"
