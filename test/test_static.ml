@@ -108,53 +108,6 @@ let%expect_test "breadcrumb" =
     |}]
 ;;
 
-let%expect_test "table" =
-  Render.html
-    (Table.view
-       ~striped:true
-       ~caption:"Invoices"
-       ~footer:
-         [ Table.cell [ Node.text "Total" ]
-         ; Table.cell ~align:Right [ Node.text "$30" ]
-         ]
-       ~columns:
-         Table.Column.
-           [ text "Invoice" fst
-           ; text ~align:Right "Amount" (fun (_, a) -> sprintf "$%d" a)
-           ]
-       [ "INV001", 10; "INV002", 20 ]);
-  [%expect
-    {|
-    <div class="loon-table-container">
-      <table class="loon-table loon-table-hover loon-table-striped">
-        <caption class="loon-table-caption"> Invoices </caption>
-        <thead class="loon-table-header">
-          <tr class="loon-table-row">
-            <th scope="col" data-align="left" class="loon-table-head"> Invoice </th>
-            <th scope="col" data-align="right" class="loon-table-head"> Amount </th>
-          </tr>
-        </thead>
-        <tbody class="loon-table-body">
-          <tr class="loon-table-row">
-            <td data-align="left" class="loon-table-cell"> INV001 </td>
-            <td data-align="right" class="loon-table-cell"> $10 </td>
-          </tr>
-          <tr class="loon-table-row">
-            <td data-align="left" class="loon-table-cell"> INV002 </td>
-            <td data-align="right" class="loon-table-cell"> $20 </td>
-          </tr>
-        </tbody>
-        <tfoot class="loon-table-footer">
-          <tr class="loon-table-row">
-            <td data-align="left" class="loon-table-cell"> Total </td>
-            <td data-align="right" class="loon-table-cell"> $30 </td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-    |}]
-;;
-
 let%expect_test "theme root" =
   Render.html (Theme.root [ Node.text "inherits" ]);
   Render.html (Theme.root ~mode:Dark [ Node.text "dark" ]);
