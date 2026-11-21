@@ -1,0 +1,11 @@
+; shadcn/ui's blocks (dashboard-01, sidebar-01..16, login-01..05,
+; signup-01..05, calendar-01..32), one module each, built from loon's
+; components. Not components: `loon add` does not copy them, and
+; loon.css leaves their classes out (the docs' stylesheet scans them).
+
+(library
+ (name loon_blocks)
+ (public_name loon.blocks)
+ (preprocess
+  (pps ppx_jane js_of_ocaml-ppx bonsai.ppx_bonsai))
+ (libraries core bonsai bonsai_web virtual_dom js_of_ocaml loon))

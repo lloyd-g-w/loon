@@ -198,7 +198,11 @@ let example_view ~(page : Doc.Page.t) index (example : Doc.Example.t) (local_ gr
 ;;
 
 let page_header (page : Doc.Page.t) =
-  let is_component = not (Doc.Group.equal page.group Guide) in
+  let is_component =
+    match page.group with
+    | Guide | Blocks -> false
+    | _ -> true
+  in
   let module_ = String.tr page.slug ~target:'-' ~replacement:'_' in
   Node.header
     ~attrs:[ Attr.class_ "docs-page-header" ]
@@ -294,19 +298,29 @@ let pager ~slug =
 
 let page_view (page : Doc.Page.t) (local_ graph) =
   let examples =
-    List.mapi page.examples ~f:(fun i e -> example_view ~page i e graph) |> Bonsai.all
+    match page.view with
+    | Some view -> view graph >>| List.return
+    | None ->
+      List.mapi page.examples ~f:(fun i e -> example_view ~page i e graph) |> Bonsai.all
   in
   let%arr examples in
   let is_home = String.equal page.slug Route.home_slug in
   Node.article
-    ~attrs:[ Attr.class_ "docs-article"; Attr.create "data-page" page.slug ]
+    ~attrs:
+      [ Attr.classes
+          ("docs-article" :: (if Option.is_some page.view then [ "max-w-none!" ] else []))
+      ; Attr.create "data-page" page.slug
+      ]
     ([ (if is_home then hero else page_header page) ]
      @ (match page.usage with
         | None -> []
         | Some usage -> [ Doc.h2 "Usage"; Code_block.view usage ])
      @ (match examples with
         | [] -> []
-        | examples -> if is_home then examples else Doc.h2 "Examples" :: examples)
+        | examples ->
+          if is_home || Option.is_some page.view
+          then examples
+          else Doc.h2 "Examples" :: examples)
      @ page.body
      @ [ pager ~slug:page.slug ])
 ;;
@@ -479,11 +493,8 @@ let anchor_of_hash hash =
   | _ -> None
 ;;
 
-let component (local_ graph) =
-  let hash_var = Bonsai.Expert.Var.create (Browser.hash ()) in
-  Browser.on_hash_change (fun h -> Bonsai.Expert.Var.set hash_var h);
+let docs ~hash (local_ graph) =
   Browser.install_scroll_spy ();
-  let hash = Bonsai.Expert.Var.value hash_var in
   let shown = Bonsai.map hash ~f:shown_of_hash in
   let initial_mode =
     match Browser.get_item "loon-docs-mode" with
@@ -633,12 +644,19 @@ let component (local_ graph) =
       | _ -> Effect.Ignore)
   in
   let mod_key = if Browser.is_mac () then "⌘" else "Ctrl" in
+  (* The blocks' gallery takes the outline's column too. *)
+  let wide =
+    Option.value_map (find_page current) ~default:false ~f:(fun p ->
+      Option.is_some p.view)
+  in
   let section_active label =
     match find_page current with
     | Some p ->
-      if String.equal label "Docs"
-      then Doc.Group.equal p.group Guide
-      else not (Doc.Group.equal p.group Guide)
+      (match label, p.group with
+       | "Docs", Guide | "Blocks", Blocks -> true
+       | "Components", (Guide | Blocks) -> false
+       | "Components", _ -> true
+       | _ -> false)
     | None -> false
   in
   Theme.root
@@ -672,7 +690,10 @@ let component (local_ graph) =
             ; Node.nav
                 ~attrs:[ Attr.class_ "docs-topnav"; Attr.create "aria-label" "Main" ]
                 (List.map
-                   [ "Docs", "installation"; "Components", first_component ]
+                   [ "Docs", "installation"
+                   ; "Components", first_component
+                   ; "Blocks", "blocks"
+                   ]
                    ~f:(fun (label, slug) ->
                      Node.a
                        ~attrs:
@@ -748,7 +769,13 @@ let component (local_ graph) =
                []
            else Node.none)
         ; Node.main
-            ~attrs:[ Attr.id "main"; Attr.class_ "docs-main"; Attr.tabindex (-1) ]
+            ~attrs:
+              [ Attr.id "main"
+              ; Attr.classes
+                  ("docs-main"
+                   :: (if wide then [ "min-[1075px]:col-span-2" ] else []))
+              ; Attr.tabindex (-1)
+              ]
             [ article
             ; Node.footer
                 ~attrs:[ Attr.class_ "docs-footer" ]
@@ -759,7 +786,12 @@ let component (local_ graph) =
                 ; Node.text "."
                 ]
             ]
-        ; Node.aside ~attrs:[ Attr.class_ "docs-toc-column" ] [ toc ~slug:current outline ]
+        ; (if wide
+           then Node.none
+           else
+             Node.aside
+               ~attrs:[ Attr.class_ "docs-toc-column" ]
+               [ toc ~slug:current outline ])
         ]
     ; (if search_open
        then
@@ -773,4 +805,30 @@ let component (local_ graph) =
            ~go
        else Node.none)
     ]
+;;
+
+(* A block alone ([#/blocks/<name>], as in the gallery's frames), or the
+   docs. *)
+module Block_name = struct
+  type t = string [@@deriving compare, equal, sexp_of]
+
+  let all = List.map Loon_blocks.Block.all ~f:(fun b -> b.name)
+end
+
+let component (local_ graph) =
+  let hash_var = Bonsai.Expert.Var.create (Browser.hash ()) in
+  Browser.on_hash_change (fun h -> Bonsai.Expert.Var.set hash_var h);
+  let hash = Bonsai.Expert.Var.value hash_var in
+  let block =
+    hash >>| fun h -> Option.map (Block_viewer.block_of_hash h) ~f:(fun b -> b.name)
+  in
+  match%sub block with
+  | Some name ->
+    Bonsai.enum
+      (module Block_name)
+      ~match_:name
+      ~with_:(fun name (local_ graph) ->
+        Block_viewer.full_page (Option.value_exn (Loon_blocks.Block.find name)) graph)
+      graph
+  | None -> docs ~hash graph
 ;;

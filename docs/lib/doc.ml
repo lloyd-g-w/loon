@@ -12,6 +12,7 @@ module Group = struct
     | Navigation
     | Feedback
     | Charts
+    | Blocks
   [@@deriving enumerate, sexp_of, compare, equal]
 
   let title = function
@@ -22,6 +23,7 @@ module Group = struct
     | Navigation -> "Navigation"
     | Feedback -> "Feedback"
     | Charts -> "Charts"
+    | Blocks -> "Blocks"
   ;;
 end
 
@@ -44,6 +46,7 @@ module Page = struct
     ; body : Vdom.Node.t list
     ; examples : Example.t list
     ; order : int
+    ; view : (local_ Bonsai.graph -> Vdom.Node.t Bonsai.t) option
     }
 end
 
@@ -62,8 +65,9 @@ let example ~page title view =
 
 let static ~page title node = example ~page title (fun _ -> Bonsai.return node)
 
-let page ?(order = 100) ?usage ?(body = []) ~slug ~title ~group ~description examples =
-  { Page.slug; title; group; description; usage; body; examples; order }
+let page ?(order = 100) ?usage ?(body = []) ?view ~slug ~title ~group ~description examples
+  =
+  { Page.slug; title; group; description; usage; body; examples; order; view }
 ;;
 
 let anchor text =

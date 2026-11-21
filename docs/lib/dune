@@ -7,7 +7,14 @@
  (name loon_docs)
  (preprocess
   (pps ppx_jane js_of_ocaml-ppx bonsai.ppx_bonsai))
- (libraries core bonsai bonsai_web virtual_dom js_of_ocaml loon))
+ (libraries
+  core
+  bonsai
+  bonsai_web
+  virtual_dom
+  js_of_ocaml
+  loon
+  loon_blocks))
 
 (rule
  (target pages.ml)
@@ -26,3 +33,12 @@
   (with-stdout-to
    example_sources.ml
    (run ../gen/gen.exe sources %{deps}))))
+
+(rule
+ (target block_sources.ml)
+ (deps
+  (glob_files ../../blocks/*.ml))
+ (action
+  (with-stdout-to
+   block_sources.ml
+   (run ../gen/gen.exe blocks %{deps}))))

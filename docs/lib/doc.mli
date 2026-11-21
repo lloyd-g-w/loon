@@ -12,6 +12,7 @@ module Group : sig
     | Navigation
     | Feedback
     | Charts
+    | Blocks
   [@@deriving enumerate, sexp_of, compare, equal]
 
   val title : t -> string
@@ -21,7 +22,7 @@ module Example : sig
   type t =
     { title : string
     ; description : string option
-        (** the rest of the example's marker comment, after the title *)
+      (** the rest of the example's marker comment, after the title *)
     ; source : string
     ; view : local_ Bonsai.graph -> Vdom.Node.t Bonsai.t
     }
@@ -37,6 +38,8 @@ module Page : sig
     ; body : Vdom.Node.t list (** prose and tables after the examples *)
     ; examples : Example.t list
     ; order : int (** within its group (then by title); 100 by default *)
+    ; view : (local_ Bonsai.graph -> Vdom.Node.t Bonsai.t) option
+      (** shown instead of the examples (the blocks' gallery) *)
     }
 end
 
@@ -56,6 +59,7 @@ val page
   :  ?order:int
   -> ?usage:string
   -> ?body:Vdom.Node.t list
+  -> ?view:(local_ Bonsai.graph -> Vdom.Node.t Bonsai.t)
   -> slug:string
   -> title:string
   -> group:Group.t
