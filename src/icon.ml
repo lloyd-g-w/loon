@@ -2,6 +2,7 @@
 open! Import
 
 type t =
+  | A_large_small
   | Activity
   | App_window
   | Archive
@@ -104,6 +105,7 @@ type t =
   | Loader
   | Loader_circle
   | Lock
+  | Lock_open
   | Log_out
   | Mail
   | Mail_check
@@ -115,6 +117,7 @@ type t =
   | Monitor
   | Moon
   | Mouse_pointer_2
+  | Move_horizontal
   | Move_right
   | Octagon_x
   | Paintbrush
@@ -122,6 +125,7 @@ type t =
   | Panel_left_close
   | Panel_left_open
   | Pencil
+  | Pilcrow
   | Plus
   | Popcorn
   | Radar
@@ -171,6 +175,7 @@ type t =
 [@@deriving enumerate, sexp_of, compare, equal]
 
 let name = function
+  | A_large_small -> "a-large-small"
   | Activity -> "activity"
   | App_window -> "app-window"
   | Archive -> "archive"
@@ -273,6 +278,7 @@ let name = function
   | Loader -> "loader"
   | Loader_circle -> "loader-circle"
   | Lock -> "lock"
+  | Lock_open -> "lock-open"
   | Log_out -> "log-out"
   | Mail -> "mail"
   | Mail_check -> "mail-check"
@@ -284,6 +290,7 @@ let name = function
   | Monitor -> "monitor"
   | Moon -> "moon"
   | Mouse_pointer_2 -> "mouse-pointer-2"
+  | Move_horizontal -> "move-horizontal"
   | Move_right -> "move-right"
   | Octagon_x -> "octagon-x"
   | Paintbrush -> "paintbrush"
@@ -291,6 +298,7 @@ let name = function
   | Panel_left_close -> "panel-left-close"
   | Panel_left_open -> "panel-left-open"
   | Pencil -> "pencil"
+  | Pilcrow -> "pilcrow"
   | Plus -> "plus"
   | Popcorn -> "popcorn"
   | Radar -> "radar"
@@ -340,6 +348,7 @@ let name = function
 ;;
 
 let of_name = function
+  | "a-large-small" -> Some A_large_small
   | "activity" -> Some Activity
   | "app-window" -> Some App_window
   | "archive" -> Some Archive
@@ -442,6 +451,7 @@ let of_name = function
   | "loader" -> Some Loader
   | "loader-circle" -> Some Loader_circle
   | "lock" -> Some Lock
+  | "lock-open" -> Some Lock_open
   | "log-out" -> Some Log_out
   | "mail" -> Some Mail
   | "mail-check" -> Some Mail_check
@@ -453,6 +463,7 @@ let of_name = function
   | "monitor" -> Some Monitor
   | "moon" -> Some Moon
   | "mouse-pointer-2" -> Some Mouse_pointer_2
+  | "move-horizontal" -> Some Move_horizontal
   | "move-right" -> Some Move_right
   | "octagon-x" -> Some Octagon_x
   | "paintbrush" -> Some Paintbrush
@@ -460,6 +471,7 @@ let of_name = function
   | "panel-left-close" -> Some Panel_left_close
   | "panel-left-open" -> Some Panel_left_open
   | "pencil" -> Some Pencil
+  | "pilcrow" -> Some Pilcrow
   | "plus" -> Some Plus
   | "popcorn" -> Some Popcorn
   | "radar" -> Some Radar
@@ -510,6 +522,7 @@ let of_name = function
 ;;
 
 let shapes = function
+  | A_large_small -> [ ("path", [ "d", "m15 16 2.536-7.328a1.02 1.02 1 0 1 1.928 0L22 16" ]); ("path", [ "d", "M15.697 14h5.606" ]); ("path", [ "d", "m2 16 4.039-9.69a.5.5 0 0 1 .923 0L11 16" ]); ("path", [ "d", "M3.304 13h6.392" ]) ]
   | Activity -> [ ("path", [ "d", "M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" ]) ]
   | App_window -> [ ("rect", [ "x", "2"; "y", "4"; "width", "20"; "height", "16"; "rx", "2" ]); ("path", [ "d", "M10 4v4" ]); ("path", [ "d", "M2 8h20" ]); ("path", [ "d", "M6 4v4" ]) ]
   | Archive -> [ ("rect", [ "width", "20"; "height", "5"; "x", "2"; "y", "3"; "rx", "1" ]); ("path", [ "d", "M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" ]); ("path", [ "d", "M10 12h4" ]) ]
@@ -612,6 +625,7 @@ let shapes = function
   | Loader -> [ ("path", [ "d", "M12 2v4" ]); ("path", [ "d", "m16.2 7.8 2.9-2.9" ]); ("path", [ "d", "M18 12h4" ]); ("path", [ "d", "m16.2 16.2 2.9 2.9" ]); ("path", [ "d", "M12 18v4" ]); ("path", [ "d", "m4.9 19.1 2.9-2.9" ]); ("path", [ "d", "M2 12h4" ]); ("path", [ "d", "m4.9 4.9 2.9 2.9" ]) ]
   | Loader_circle -> [ ("path", [ "d", "M21 12a9 9 0 1 1-6.219-8.56" ]) ]
   | Lock -> [ ("rect", [ "width", "18"; "height", "11"; "x", "3"; "y", "11"; "rx", "2"; "ry", "2" ]); ("path", [ "d", "M7 11V7a5 5 0 0 1 10 0v4" ]) ]
+  | Lock_open -> [ ("rect", [ "width", "18"; "height", "11"; "x", "3"; "y", "11"; "rx", "2"; "ry", "2" ]); ("path", [ "d", "M7 11V7a5 5 0 0 1 9.9-1" ]) ]
   | Log_out -> [ ("path", [ "d", "m16 17 5-5-5-5" ]); ("path", [ "d", "M21 12H9" ]); ("path", [ "d", "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" ]) ]
   | Mail -> [ ("path", [ "d", "m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" ]); ("rect", [ "x", "2"; "y", "4"; "width", "20"; "height", "16"; "rx", "2" ]) ]
   | Mail_check -> [ ("path", [ "d", "M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8" ]); ("path", [ "d", "m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" ]); ("path", [ "d", "m16 19 2 2 4-4" ]) ]
@@ -623,6 +637,7 @@ let shapes = function
   | Monitor -> [ ("rect", [ "width", "20"; "height", "14"; "x", "2"; "y", "3"; "rx", "2" ]); ("line", [ "x1", "8"; "x2", "16"; "y1", "21"; "y2", "21" ]); ("line", [ "x1", "12"; "x2", "12"; "y1", "17"; "y2", "21" ]) ]
   | Moon -> [ ("path", [ "d", "M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" ]) ]
   | Mouse_pointer_2 -> [ ("path", [ "d", "M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z" ]) ]
+  | Move_horizontal -> [ ("path", [ "d", "m18 8 4 4-4 4" ]); ("path", [ "d", "M2 12h20" ]); ("path", [ "d", "m6 8-4 4 4 4" ]) ]
   | Move_right -> [ ("path", [ "d", "M18 8L22 12L18 16" ]); ("path", [ "d", "M2 12H22" ]) ]
   | Octagon_x -> [ ("path", [ "d", "m15 9-6 6" ]); ("path", [ "d", "M2.586 16.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586z" ]); ("path", [ "d", "m9 9 6 6" ]) ]
   | Paintbrush -> [ ("path", [ "d", "m14.622 17.897-10.68-2.913" ]); ("path", [ "d", "M18.376 2.622a1 1 0 1 1 3.002 3.002L17.36 9.643a.5.5 0 0 0 0 .707l.944.944a2.41 2.41 0 0 1 0 3.408l-.944.944a.5.5 0 0 1-.707 0L8.354 7.348a.5.5 0 0 1 0-.707l.944-.944a2.41 2.41 0 0 1 3.408 0l.944.944a.5.5 0 0 0 .707 0z" ]); ("path", [ "d", "M9 8c-1.804 2.71-3.97 3.46-6.583 3.948a.507.507 0 0 0-.302.819l7.32 8.883a1 1 0 0 0 1.185.204C12.735 20.405 16 16.792 16 15" ]) ]
@@ -630,6 +645,7 @@ let shapes = function
   | Panel_left_close -> [ ("rect", [ "width", "18"; "height", "18"; "x", "3"; "y", "3"; "rx", "2" ]); ("path", [ "d", "M9 3v18" ]); ("path", [ "d", "m16 15-3-3 3-3" ]) ]
   | Panel_left_open -> [ ("rect", [ "width", "18"; "height", "18"; "x", "3"; "y", "3"; "rx", "2" ]); ("path", [ "d", "M9 3v18" ]); ("path", [ "d", "m14 9 3 3-3 3" ]) ]
   | Pencil -> [ ("path", [ "d", "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" ]); ("path", [ "d", "m15 5 4 4" ]) ]
+  | Pilcrow -> [ ("path", [ "d", "M13 4v16" ]); ("path", [ "d", "M17 4v16" ]); ("path", [ "d", "M19 4H9.5a4.5 4.5 0 0 0 0 9H13" ]) ]
   | Plus -> [ ("path", [ "d", "M5 12h14" ]); ("path", [ "d", "M12 5v14" ]) ]
   | Popcorn -> [ ("path", [ "d", "M18 8a2 2 0 0 0 0-4 2 2 0 0 0-4 0 2 2 0 0 0-4 0 2 2 0 0 0-4 0 2 2 0 0 0 0 4" ]); ("path", [ "d", "M10 22 9 8" ]); ("path", [ "d", "m14 22 1-14" ]); ("path", [ "d", "M20 8c.5 0 .9.4.8 1l-2.6 12c-.1.5-.7 1-1.2 1H7c-.6 0-1.1-.4-1.2-1L3.2 9c-.1-.6.3-1 .8-1Z" ]) ]
   | Radar -> [ ("path", [ "d", "M19.07 4.93A10 10 0 0 0 6.99 3.34" ]); ("path", [ "d", "M4 6h.01" ]); ("path", [ "d", "M2.29 9.62A10 10 0 1 0 21.31 8.35" ]); ("path", [ "d", "M16.24 7.76A6 6 0 1 0 8.23 16.67" ]); ("path", [ "d", "M12 18h.01" ]); ("path", [ "d", "M17.99 11.66A6 6 0 0 1 15.77 16.67" ]); ("circle", [ "cx", "12"; "cy", "12"; "r", "2" ]); ("path", [ "d", "m13.41 10.59 5.66-5.66" ]) ]

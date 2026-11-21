@@ -7,6 +7,7 @@
 open! Import
 
 type t =
+  | A_large_small
   | Activity
   | App_window
   | Archive
@@ -109,6 +110,7 @@ type t =
   | Loader
   | Loader_circle
   | Lock
+  | Lock_open
   | Log_out
   | Mail
   | Mail_check
@@ -120,6 +122,7 @@ type t =
   | Monitor
   | Moon
   | Mouse_pointer_2
+  | Move_horizontal
   | Move_right
   | Octagon_x
   | Paintbrush
@@ -127,6 +130,7 @@ type t =
   | Panel_left_close
   | Panel_left_open
   | Pencil
+  | Pilcrow
   | Plus
   | Popcorn
   | Radar

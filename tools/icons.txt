@@ -259,3 +259,8 @@ FileCodeIcon
 FolderCode
 Cloud
 octagon-x
+# The docs' Typeset customiser:
+move-horizontal
+a-large-small
+pilcrow
+lock-open
