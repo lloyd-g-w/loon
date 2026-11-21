@@ -462,11 +462,11 @@ let tooltip_content
                                        then "my-0.5"
                                        else "")
                                     ])
-                             ; Attr.style
-                                 (Css_gen.concat
-                                    [ Css_gen.create ~field:"--color-bg" ~value:indicator_color
-                                    ; Css_gen.create ~field:"--color-border" ~value:indicator_color
-                                    ])
+                             ; (* [Attr.style] drops custom properties. *)
+                               Attr.__css_vars_no_kebabs
+                                 [ "--color-bg", indicator_color
+                                 ; "--color-border", indicator_color
+                                 ]
                              ]
                            [])
                   ; Node.div
