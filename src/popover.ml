@@ -93,15 +93,16 @@ let content
     in
     Node.div
       ~attrs:
-        [ Attr.style (Css_gen.create ~field:"display" ~value:"contents")
-        ; Presence.attr
-        ; Dismiss.attr
-            ~inside:[ trigger_id t ]
-            ~focus_outside:(not t.modal)
-            ~modal:t.modal
-            ~on_dismiss:close
-            ()
-        ]
+        ([ Attr.style (Css_gen.create ~field:"display" ~value:"contents")
+         ; Presence.attr
+         ; Dismiss.attr
+             ~inside:[ trigger_id t ]
+             ~focus_outside:(not t.modal)
+             ~modal:t.modal
+             ~on_dismiss:close
+             ()
+         ]
+         @ if t.modal then [ Scroll.lock ] else [])
       ((if t.modal then [ Focus.guard ~id `Start ] else [])
        @ [ Popper.wrapper
              ~name:"popover"

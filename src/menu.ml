@@ -597,9 +597,11 @@ let content
   in
   Node.div
     ~attrs:
-      [ Attr.style (Css_gen.create ~field:"display" ~value:"contents")
-      ; Presence.attr
-      ; Dismiss.attr ~inside ~modal ~on_dismiss:(fun (_ : Dismiss.Reason.t) -> t.close) ()
-      ]
+      ([ Attr.style (Css_gen.create ~field:"display" ~value:"contents")
+       ; Presence.attr
+       ; Dismiss.attr ~inside ~modal ~on_dismiss:(fun (_ : Dismiss.Reason.t) -> t.close) ()
+       ]
+     (* Radix's modal menus lock the page's scroll (RemoveScroll). *)
+     @ if modal then [ Scroll.lock ] else [])
     (top :: !subs)
 ;;

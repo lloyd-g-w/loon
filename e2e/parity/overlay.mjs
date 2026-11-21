@@ -64,7 +64,7 @@ export const animationsDone = (b, sel) =>
     p.evaluate(
       (s) =>
         Promise.all(
-          [...document.querySelectorAll(s)].flatMap((el) => el.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {}))),
+          [...document.querySelectorAll(s)].flatMap((el) => el.getAnimations({ subtree: true }).filter((a) => a.effect?.getComputedTiming().endTime !== Infinity).map((a) => a.finished.catch(() => {}))),
         ),
       sel,
     ),
@@ -201,7 +201,7 @@ export async function modalChecks(b, { trigger, content, overlay, dismissOutside
 // Waits for the animations on the page to end (the sheets slide for 500ms).
 const settled = async (b) => {
   await wait(b, 50);
-  await each(b, (p) => p.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => {})))));
+  await each(b, (p) => p.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect?.getComputedTiming().endTime !== Infinity).map((a) => a.finished.catch(() => {})))));
   await wait(b, 50);
 };
 

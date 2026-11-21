@@ -104,11 +104,15 @@ await run(async (engine, url) => {
         top: el.matches(":popover-open, :modal") || !!el.closest(":popover-open, dialog[open]"),
         onTop: el.contains(hit),
         overHeader: b.top < header.bottom,
+        // Radix's RemoveScroll under modal overlays (not a popover).
+        locked: document.body.getAttribute("data-scroll-locked"),
       };
     }, content);
-    console.log(`${slug}: top layer ${r.top}, hit-tested on top ${r.onTop}${r.overHeader ? ", over the header" : ""}`);
+    console.log(`${slug}: top layer ${r.top}, hit-tested on top ${r.onTop}${r.overHeader ? ", over the header" : ""}, scroll locked ${r.locked}`);
     await page.keyboard.press("Escape");
     await page.waitForSelector(content, { state: "detached" });
+    const unlocked = await page.evaluate(() => !document.body.hasAttribute("data-scroll-locked") && !document.getElementById("loon-scroll-lock"));
+    if (!unlocked) console.log(`${slug}: still scroll-locked after closing`);
   }
   checkErrors(errors, "examples");
   await browser.close();
