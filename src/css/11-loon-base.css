@@ -2,7 +2,7 @@
 @layer components {
 /* The root of a loon page (Loon.Theme.root or class="loon"). */
 .loon {
-  font-family: var(--loon-font);
+  font-family: var(--font-sans, var(--loon-font));
   font-size: 0.875rem;
   line-height: 1.5;
   color: var(--loon-foreground);
