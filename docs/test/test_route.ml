@@ -15,6 +15,7 @@ let%expect_test "of_hash" =
     (#/theming/variables ("Route.of_hash h" (Page theming)))
     (#/tabs?x=1 ("Route.of_hash h" (Page tabs)))
     (#// ("Route.of_hash h" Home))
+    (#/introduction ("Route.of_hash h" (Page introduction)))
     |}]
 ;;
 
@@ -26,8 +27,8 @@ let%expect_test "round trip" =
         h ~round_trips:(Route.equal r (Route.of_hash h) : bool)]);
   [%expect
     {|
-    (#/ introduction (round_trips true))
-    (#/button button (round_trips true))
-    (#/data-table data-table (round_trips true))
+    (#/ (round_trips true))
+    (#/button (round_trips true))
+    (#/data-table (round_trips true))
     |}]
 ;;

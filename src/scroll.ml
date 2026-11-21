@@ -23,3 +23,36 @@ let into_view selector =
       in
       ()))
 ;;
+
+let locks = ref 0
+let saved_overflow = ref ""
+
+module Lock_hook = Vdom.Attr.Hooks.Make (struct
+    module State = Unit
+
+    module Input = struct
+      type t = unit [@@deriving sexp_of]
+
+      let combine () () = ()
+    end
+
+    let body () = Dom_html.document##.body
+
+    let init () _ =
+      if !locks = 0
+      then (
+        saved_overflow := Js.to_string (body ())##.style##.overflow;
+        (body ())##.style##.overflow := Js.string "hidden");
+      incr locks
+    ;;
+
+    let on_mount = `Do_nothing
+    let update ~old_input:() ~new_input:() () _ = ()
+
+    let destroy () () _ =
+      decr locks;
+      if !locks = 0 then (body ())##.style##.overflow := Js.string !saved_overflow
+    ;;
+  end)
+
+let lock = Vdom.Attr.create_hook "loon-scroll-lock" (Lock_hook.create ())

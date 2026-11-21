@@ -73,14 +73,14 @@ let () =
 | Group | Components |
 |---|---|
 | Forms | Button, Input, Textarea, Label, Field, Checkbox, Switch, Radio group, Native select, Select, Combobox, Slider, Toggle, Toggle group, Calendar |
-| Overlays | Popover, Tooltip, Dropdown menu, Dialog, Alert dialog, Sheet, Command palette |
+| Overlays | Alert dialog, Command, Context menu, Dialog, Drawer, Dropdown menu, Hover card, Menubar, Popover, Sheet, Tooltip |
 | Display | Card, Badge, Avatar, Table, Data table (sort, filter, select, paginate), Accordion, Collapsible, Separator, Kbd |
 | Navigation | Tabs, Breadcrumb, Pagination |
 | Feedback | Alert, Sonner, Progress, Spinner, Skeleton, Empty |
 
 Plus `Icon` (Lucide), `Cn` (shadcn's `cn`: class names, with a
 tailwind-merge), `Theme` and `Stylesheet`, and the helpers the components
-share (`Floating`, `Modal`, `List_nav`, `Roving`, `Fuzzy`, …).
+share (`Popper`, `Portal`, `Presence`, `Dismiss`, `Menu`, `Modal`, `List_nav`, `Roving`, `Fuzzy`, …).
 
 ## Theming
 

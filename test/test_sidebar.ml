@@ -473,7 +473,16 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     -|  <Vdom.Node.none-widget> </Vdom.Node.none-widget>
     +|  <div>
     +|    <div data-state="open" data-slot="sheet-overlay" @on_click> </div>
-    +|    <div tabindex="0" aria-hidden="true" @on_focus> </div>
+    +|    <div data-focus-guard=""
+    +|         tabindex="0"
+    +|         aria-hidden="true"
+    +|         @on_focus
+    +|         style={
+    +|           position: fixed;
+    +|           opacity: 0;
+    +|           outline: none;
+    +|           pointer-events: none;
+    +|         }> </div>
     +|    <div id="sidebar-mobile"
     +|         role="dialog"
     +|         aria-modal="true"
@@ -554,7 +563,16 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     +|                @on_click> </button>
     +|      </div>
     +|    </div>
-    +|    <div tabindex="0" aria-hidden="true" @on_focus> </div>
+    +|    <div data-focus-guard=""
+    +|         tabindex="0"
+    +|         aria-hidden="true"
+    +|         @on_focus
+    +|         style={
+    +|           position: fixed;
+    +|           opacity: 0;
+    +|           outline: none;
+    +|           pointer-events: none;
+    +|         }> </div>
     +|  </div>
         <main data-slot="sidebar-inset">
           <button type="button"
@@ -583,7 +601,16 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
            @on_keydown_global>
     -|  <div>
     -|    <div data-state="open" data-slot="sheet-overlay" @on_click> </div>
-    -|    <div tabindex="0" aria-hidden="true" @on_focus> </div>
+    -|    <div data-focus-guard=""
+    -|         tabindex="0"
+    -|         aria-hidden="true"
+    -|         @on_focus
+    -|         style={
+    -|           position: fixed;
+    -|           opacity: 0;
+    -|           outline: none;
+    -|           pointer-events: none;
+    -|         }> </div>
     -|    <div id="sidebar-mobile"
     -|         role="dialog"
     -|         aria-modal="true"
@@ -664,7 +691,16 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     -|                @on_click> </button>
     -|      </div>
     -|    </div>
-    -|    <div tabindex="0" aria-hidden="true" @on_focus> </div>
+    -|    <div data-focus-guard=""
+    -|         tabindex="0"
+    -|         aria-hidden="true"
+    -|         @on_focus
+    -|         style={
+    -|           position: fixed;
+    -|           opacity: 0;
+    -|           outline: none;
+    -|           pointer-events: none;
+    -|         }> </div>
     -|  </div>
     +|  <Vdom.Node.none-widget> </Vdom.Node.none-widget>
         <main data-slot="sidebar-inset">

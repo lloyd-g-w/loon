@@ -60,8 +60,10 @@ Read `ui/<name>.tsx` and the Radix primitive it wraps, then write
 - **Radix behaviour.** Keyboard (arrows, Home/End, typeahead, Enter/Space,
   Esc), focus (into the content on open, back to the trigger on close,
   trapped in modals), dismissing on outside click. Reuse the helpers already
-  in `src/` (`Dom_util`, `Floating`, `Modal`, `List_nav`, `Roving`,
-  `Fuzzy`, `Keep_in_view`), restyled or rewritten as needed. Animations come
+  in `src/` (`Dom_util`, `Popper` (positioning, in the top layer by
+  `Portal`), `Presence` (exit animations), `Dismiss`, `Menu`, `Modal`,
+  `Focus`, `List_nav`, `Roving`,
+  `Fuzzy`), restyled or rewritten as needed. Animations come
   from shadcn's `data-[state=open]:animate-in` classes (tw-animate-css); an
   exit animation needs the element kept for its duration (or drop it).
 - **API shaped like shadcn's composition.** One function per shadcn part,

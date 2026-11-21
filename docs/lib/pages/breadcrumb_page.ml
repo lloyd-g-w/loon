@@ -11,23 +11,22 @@ let page = "breadcrumb"
 let demo (local_ graph) =
   let menu =
     Dropdown_menu.component
-      ~align:Start
-      ~trigger:(fun attrs ->
-        Node.button
-          ~attrs:
-            ([ Attr.type_ "button"; Attr.class_ "flex items-center gap-1" ]
-             @ attrs)
-          [ Breadcrumb.ellipsis ~class_:"size-4" ()
-          ; Node.span
-              ~attrs:[ Attr.class_ "sr-only" ]
-              [ Node.text "Toggle menu" ]
-          ])
-      (Bonsai.return
-         Dropdown_menu.Item.
-           [ action ~on_select:Effect.Ignore "Documentation"
-           ; action ~on_select:Effect.Ignore "Themes"
-           ; action ~on_select:Effect.Ignore "GitHub"
-           ])
+      (Bonsai.return (fun menu ->
+         [ Dropdown_menu.trigger
+             menu
+             (Node.button
+                ~attrs:[ Attr.class_ "flex items-center gap-1" ]
+                [ Breadcrumb.ellipsis ~class_:"size-4" ()
+                ; Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "Toggle menu" ]
+                ])
+         ; Dropdown_menu.content
+             menu
+             ~align:Start
+             [ Dropdown_menu.item [ Node.text "Documentation" ]
+             ; Dropdown_menu.item [ Node.text "Themes" ]
+             ; Dropdown_menu.item [ Node.text "GitHub" ]
+             ]
+         ]))
       graph
   in
   let%arr menu in
@@ -71,23 +70,24 @@ let custom_separator =
 let dropdown (local_ graph) =
   let menu =
     Dropdown_menu.component
-      ~align:Start
-      ~trigger:(fun attrs ->
-        Node.button
-          ~attrs:
-            ([ Attr.type_ "button"
-             ; Attr.class_
-                 "flex items-center gap-1 [&_svg]:pointer-events-none \
-                  [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-3.5"
+      (Bonsai.return (fun menu ->
+         [ Dropdown_menu.trigger
+             menu
+             (Node.button
+                ~attrs:
+                  [ Attr.class_
+                      "flex items-center gap-1 [&_svg]:pointer-events-none \
+                       [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-3.5"
+                  ]
+                [ Node.text "Components"; Icon.view Chevron_down ])
+         ; Dropdown_menu.content
+             menu
+             ~align:Start
+             [ Dropdown_menu.item [ Node.text "Documentation" ]
+             ; Dropdown_menu.item [ Node.text "Themes" ]
+             ; Dropdown_menu.item [ Node.text "GitHub" ]
              ]
-             @ attrs)
-          [ Node.text "Components"; Icon.view Chevron_down ])
-      (Bonsai.return
-         Dropdown_menu.Item.
-           [ action ~on_select:Effect.Ignore "Documentation"
-           ; action ~on_select:Effect.Ignore "Themes"
-           ; action ~on_select:Effect.Ignore "GitHub"
-           ])
+         ]))
       graph
   in
   let%arr menu in
@@ -165,20 +165,21 @@ let responsive (local_ graph) =
   let items_to_display = 3 in
   let menu =
     Dropdown_menu.component
-      ~align:Start
-      ~trigger:(fun attrs ->
-        Node.button
-          ~attrs:
-            ([ Attr.type_ "button"
-             ; Attr.class_ "flex items-center gap-1"
-             ; Attr.create "aria-label" "Toggle menu"
-             ]
-             @ attrs)
-          [ Breadcrumb.ellipsis ~class_:"size-4" () ])
-      (Bonsai.return
-         (List.sub items ~pos:1 ~len:(List.length items - 3)
-          |> List.map ~f:(fun (_, label) ->
-            Dropdown_menu.Item.action ~on_select:Effect.Ignore label)))
+      (Bonsai.return (fun menu ->
+         [ Dropdown_menu.trigger
+             menu
+             (Node.button
+                ~attrs:
+                  [ Attr.class_ "flex items-center gap-1"
+                  ; Attr.create "aria-label" "Toggle menu"
+                  ]
+                [ Breadcrumb.ellipsis ~class_:"size-4" () ])
+         ; Dropdown_menu.content
+             menu
+             ~align:Start
+             (List.sub items ~pos:1 ~len:(List.length items - 3)
+              |> List.map ~f:(fun (_, label) -> Dropdown_menu.item [ Node.text label ]))
+         ]))
       graph
   in
   let%arr menu in

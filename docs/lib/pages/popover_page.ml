@@ -7,88 +7,115 @@ module Attr = Vdom.Attr
 
 let page = "popover"
 
-(*$ Share a link
-   The content is given an effect that closes the popover. *)
-let share (local_ graph) =
+(*$ Demo *)
+let demo (local_ graph) =
+  let field id label value =
+    Node.div
+      ~attrs:[ Attr.class_ "grid grid-cols-3 items-center gap-4" ]
+      [ Node.label
+          ~attrs:
+            [ Attr.for_ id
+            ; Attr.class_ "flex items-center gap-2 text-sm leading-none font-medium select-none"
+            ]
+          [ Node.text label ]
+      ; Node.input
+          ~attrs:
+            [ Attr.id id
+            ; Attr.value value
+            ; Attr.class_
+                "col-span-2 h-8 w-full min-w-0 rounded-md border border-input \
+                 bg-transparent px-3 py-1 text-base shadow-xs outline-none \
+                 focus-visible:border-ring focus-visible:ring-[3px] \
+                 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"
+            ]
+          ()
+      ]
+  in
   Popover.component
-    ~trigger:(fun attrs -> Button.view ~attrs ~variant:Outline [ Node.text "Share" ])
-    (Bonsai.return (fun ~close ->
-       [ Popover.header
-           ~description:"Anyone with the link can view this document."
-           "Share link"
-       ; Node.code [ Node.text "loon.dev/s/k3j9x" ]
-       ; Popover.footer
-           [ Button.view ~size:Sm ~variant:Ghost ~on_click:close [ Node.text "Done" ]
-           ; Button.view ~size:Sm ~on_click:close [ Icon.view Copy; Node.text "Copy link" ]
+    (Bonsai.return (fun popover ->
+       [ Popover.trigger popover (Button.view ~variant:Outline [ Node.text "Open popover" ])
+       ; Popover.content
+           popover
+           ~class_:"w-80"
+           [ Node.div
+               ~attrs:[ Attr.class_ "grid gap-4" ]
+               [ Node.div
+                   ~attrs:[ Attr.class_ "space-y-2" ]
+                   [ Node.h4
+                       ~attrs:[ Attr.class_ "leading-none font-medium" ]
+                       [ Node.text "Dimensions" ]
+                   ; Node.p
+                       ~attrs:[ Attr.class_ "text-sm text-muted-foreground" ]
+                       [ Node.text "Set the dimensions for the layer." ]
+                   ]
+               ; Node.div
+                   ~attrs:[ Attr.class_ "grid gap-2" ]
+                   [ field "width" "Width" "100%"
+                   ; field "maxWidth" "Max. width" "300px"
+                   ; field "height" "Height" "25px"
+                   ; field "maxHeight" "Max. height" "none"
+                   ]
+               ]
            ]
        ]))
     graph
 (*$*)
 
-(*$ Sides and alignment *)
-let sides (local_ graph) =
-  let popover side align (local_ graph) =
-    Popover.component
-      ~side
-      ~align
-      ~trigger:(fun attrs ->
-        Button.view
-          ~attrs
-          ~variant:Outline
-          [ Node.text
-              (String.capitalize (Floating.Side.name side)
-               ^ ", "
-               ^ Floating.Align.name align)
-          ])
-      (Bonsai.return (fun ~close:_ ->
-         [ Popover.header
-             ~description:"Placed beside its trigger by CSS alone."
-             (String.capitalize (Floating.Side.name side))
-         ]))
-      graph
-  in
-  let views =
-    List.map
-      [ Floating.Side.Bottom, Floating.Align.Start
-      ; Top, Center
-      ; Right, Start
-      ; Bottom, End
-      ]
-      ~f:(fun (side, align) -> popover side align graph)
-    |> Bonsai.all
-  in
-  let%arr views in
-  Node.div ~attrs:[ Attr.class_ "flex flex-wrap items-center justify-center gap-3" ] views
+(*$ Header and side
+   [Popover.header], [title] and [description]; [~side] and [~align] place
+   the content. *)
+let header (local_ graph) =
+  Popover.component
+    (Bonsai.return (fun popover ->
+       [ Popover.trigger popover (Button.view ~variant:Outline [ Node.text "Open on the right" ])
+       ; Popover.content
+           popover
+           ~side:Right
+           ~align:Start
+           [ Popover.header
+               [ Popover.title [ Node.text "Title" ]
+               ; Popover.description [ Node.text "Description text here." ]
+               ]
+           ]
+       ]))
+    graph
 (*$*)
 
 let page =
   Doc.page
     ~slug:page
     ~title:"Popover"
-    ~description:"Rich content in a panel that opens beside its trigger."
+    ~description:"Displays rich content in a portal, triggered by a button."
     ~usage:
       {|Popover.component
-  ~trigger:(fun attrs -> Button.view ~attrs [ Node.text "Open" ])
-  (Bonsai.return (fun ~close -> [ ... ]))
+  (return (fun popover ->
+     [ Popover.trigger popover (Button.view ~variant:Outline [ Node.text "Open" ])
+     ; Popover.content popover [ Node.text "Place content for the popover here." ]
+     ]))
   graph|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ ( "trigger"
-            , "Attr.t list -> Node.t"
-            , "The element that opens it, given the attributes that make it a trigger \
-               (ids, aria-expanded, the click handler)." )
-          ; "side", "Floating.Side.t", "Bottom (default), Top, Left or Right."
-          ; "align", "Floating.Align.t", "Start (default), Center or End."
-          ; ( "content"
-            , "(close:unit Effect.t -> Node.t list) Bonsai.t"
-            , "What it shows, given an effect closing it." )
+          [ ( "open_, on_open_change"
+            , "bool, bool -> unit Effect.t"
+            , "[Popover.view]: controlled. [Popover.component] keeps it \
+               ([?default_open])." )
+          ; ( "modal"
+            , "bool"
+            , "Default [false]. While open, the page ignores the pointer and focus \
+               stays inside the content." )
+          ; ( "side, side_offset, align, align_offset"
+            , "Popper.Side.t, float, Popper.Align.t, float"
+            , "[content]: where it opens ([Bottom], 4px, [Center] by default); it flips \
+               and shifts to stay in view ([?avoid_collisions])." )
           ]
-      ; Doc.p
-          "Esc or a click outside closes it, and focus goes back to the trigger. \
-           [Popover.view] is the controlled form, for when you keep whether it is open."
+      ; Doc.h2 "Keyboard"
+      ; Doc.table
+          [ "Key"; "Does" ]
+          [ [ Doc.text "Enter / Space"; Doc.text "On the trigger: open or close it." ]
+          ; [ Doc.text "Tab"; Doc.text "Moves through the content (leaving it closes it)." ]
+          ; [ Doc.text "Esc"; Doc.text "Close, returning focus to the trigger." ]
+          ]
       ]
-    [ Doc.example ~page "Share a link" share
-    ; Doc.example ~page "Sides and alignment" sides
-    ]
+    [ Doc.example ~page "Demo" demo; Doc.example ~page "Header and side" header ]
 ;;

@@ -1,62 +1,119 @@
 open! Core
 open Bonsai_web
 open Loon
-open! Bonsai.Let_syntax
 module Node = Vdom.Node
 
 let page = "alert_dialog"
 
-(*$ Delete account *)
-let delete_account (local_ graph) =
-  let deleted, set_deleted = Bonsai.state false graph in
-  let dialog =
-    Alert_dialog.component
-      ~danger:true
-      ~confirm_label:"Delete account"
-      ~title:"Are you absolutely sure?"
-      ~description:
-        "This cannot be undone. It will permanently delete your account and remove your \
-         data from our servers."
-      ~trigger:(fun attrs ->
-        Button.view ~attrs ~variant:Destructive [ Icon.view Trash; Node.text "Delete account" ])
-      (let%arr set_deleted in
-       set_deleted true)
-      graph
-  in
-  let%arr dialog and deleted in
-  Node.div
-    ~attrs:[ Vdom.Attr.class_ "flex flex-wrap items-center justify-center gap-3" ]
-    [ dialog
-    ; (if deleted then Badge.view ~variant:Destructive [ Node.text "Deleted" ] else Node.none)
-    ]
+(*$ Demo *)
+let demo =
+  Alert_dialog.component
+    (Bonsai.return (fun dialog ->
+       [ Alert_dialog.trigger
+           dialog
+           (Button.view ~variant:Outline [ Node.text "Show Dialog" ])
+       ; Alert_dialog.content
+           dialog
+           [ Alert_dialog.header
+               [ Alert_dialog.title
+                   dialog
+                   [ Node.text "Are you absolutely sure?" ]
+               ; Alert_dialog.description
+                   dialog
+                   [ Node.text
+                       "This action cannot be undone. This will permanently \
+                        delete your account and remove your data from our \
+                        servers."
+                   ]
+               ]
+           ; Alert_dialog.footer
+               [ Alert_dialog.cancel dialog [ Node.text "Cancel" ]
+               ; Alert_dialog.action dialog [ Node.text "Continue" ]
+               ]
+           ]
+       ]))
+;;
+
+(*$*)
+
+(*$ Small, with media *)
+let small =
+  Alert_dialog.component
+    (Bonsai.return (fun dialog ->
+       [ Alert_dialog.trigger
+           dialog
+           (Button.view ~variant:Outline [ Node.text "Delete chat" ])
+       ; Alert_dialog.content
+           dialog
+           ~size:Sm
+           [ Alert_dialog.header
+               [ Alert_dialog.media
+                   ~class_:
+                     "bg-destructive/10 text-destructive dark:bg-destructive/20"
+                   [ Icon.view Trash ]
+               ; Alert_dialog.title dialog [ Node.text "Delete chat?" ]
+               ; Alert_dialog.description
+                   dialog
+                   [ Node.text
+                       "This will permanently delete this chat conversation."
+                   ]
+               ]
+           ; Alert_dialog.footer
+               [ Alert_dialog.cancel dialog [ Node.text "Cancel" ]
+               ; Alert_dialog.action
+                   dialog
+                   ~variant:Destructive
+                   [ Node.text "Delete" ]
+               ]
+           ]
+       ]))
+;;
+
 (*$*)
 
 let page =
   Doc.page
     ~slug:page
     ~title:"Alert dialog"
-    ~description:"Asks for confirmation before something important, often destructive."
+    ~description:
+      "A modal dialog that interrupts the user with important content and \
+       expects a response."
     ~usage:
       {|Alert_dialog.component
-  ~danger:true
-  ~title:"Discard changes?"
-  ~description:"Your edits will be lost."
-  ~trigger:(fun attrs -> Button.view ~attrs [ Node.text "Discard" ])
-  discard
+  (return (fun dialog ->
+     [ Alert_dialog.trigger dialog (Button.view ~variant:Outline [ Node.text "Open" ])
+     ; Alert_dialog.content dialog
+         [ Alert_dialog.header
+             [ Alert_dialog.title dialog [ Node.text "Are you absolutely sure?" ]
+             ; Alert_dialog.description dialog [ Node.text "This action cannot be undone." ]
+             ]
+         ; Alert_dialog.footer
+             [ Alert_dialog.cancel dialog [ Node.text "Cancel" ]
+             ; Alert_dialog.action dialog ~on_click:delete [ Node.text "Continue" ]
+             ]
+         ]
+     ]))
   graph|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ "title", "string", "The question."
-          ; "description", "string", "What happens if confirmed."
-          ; "confirm_label", "string", "Default \"Continue\"."
-          ; "cancel_label", "string", "Default \"Cancel\"."
-          ; "danger", "bool", "Makes the confirm button red."
-          ; "on_confirm", "unit Effect.t Bonsai.t", "What confirming does."
+          [ ( "open_, on_open_change"
+            , "bool, bool -> unit Effect.t"
+            , "[Alert_dialog.view]: controlled. [Alert_dialog.component] keeps \
+               it ([?default_open])." )
+          ; "size", "Alert_dialog.Size.t", "[content]: [Default] or [Sm]."
+          ; ( "on_click"
+            , "unit Effect.t"
+            , "[action]: what it does; the dialog closes after it." )
+          ; ( "variant, size"
+            , "Button.Variant.t, Button.Size.t"
+            , "[action] (default variant) and [cancel] (outline) are buttons." )
           ]
       ; Doc.p
-          "Unlike a dialog it is not closed by a click outside, and the cancel button has \
-           focus when it opens, so Enter does not confirm by accident."
+          "Unlike a dialog, a click outside does not close it; it opens with \
+           the focus on Cancel, and Esc closes it."
       ]
-    [ Doc.example ~page "Delete account" delete_account ]
+    [ Doc.example ~page "Demo" demo
+    ; Doc.example ~page "Small, with media" small
+    ]
 ;;

@@ -54,40 +54,60 @@ let ui_elements (local_ graph) =
   in
   let alert_dialog =
     Alert_dialog.component
-      ~confirm_label:"Allow"
-      ~cancel_label:"Don't allow"
-      ~title:"Allow accessory to connect?"
-      ~description:
-        "Do you want to allow the USB accessory to connect to this device and your data?"
-      ~trigger:(fun attrs ->
-        Button.view
-          ~attrs
-          ~variant:Outline
-          [ span "hidden md:flex style-sera:md:hidden" "Alert Dialog"
-          ; span "flex md:hidden style-sera:md:flex" "Dialog"
-          ])
-      (Bonsai.return Effect.Ignore)
+      (Bonsai.return (fun d ->
+         [ Alert_dialog.trigger
+             d
+             (Button.view
+                ~variant:Outline
+                [ span "hidden md:flex style-sera:md:hidden" "Alert Dialog"
+                ; span "flex md:hidden style-sera:md:flex" "Dialog"
+                ])
+         ; Alert_dialog.content
+             ~size:Sm
+             d
+             [ Alert_dialog.header
+                 [ Alert_dialog.title d [ text "Allow accessory to connect?" ]
+                 ; Alert_dialog.description
+                     d
+                     [ text
+                         "Do you want to allow the USB accessory to connect to this \
+                          device and your data?"
+                     ]
+                 ]
+             ; Alert_dialog.footer
+                 [ Alert_dialog.cancel d [ text "Don't allow" ]
+                 ; Alert_dialog.action d [ text "Allow" ]
+                 ]
+             ]
+         ]))
       graph
   in
   let menu =
     Dropdown_menu.component
-      ~side:Top
-      ~align:End
-      ~trigger:(fun attrs ->
-        Button.view
-          ~attrs:(aria_label "Open quick actions" :: attrs)
-          ~variant:Outline
-          ~size:Icon
-          [ Icon.view Chevron_up ])
-      (Bonsai.return
-         Dropdown_menu.Item.
-           [ label "Quick Actions"
-           ; action ~on_select:Effect.Ignore "Mute Conversation"
-           ; action ~on_select:Effect.Ignore "Mark as Read"
-           ; action ~on_select:Effect.Ignore "Block User"
-           ; separator
-           ; action ~danger:true ~on_select:Effect.Ignore "Delete Conversation"
-           ])
+      (Bonsai.return (fun menu ->
+         [ Dropdown_menu.trigger
+             menu
+             (Button.view
+                ~attrs:[ aria_label "Open quick actions" ]
+                ~variant:Outline
+                ~size:Icon
+                [ Icon.view Chevron_up ])
+         ; Dropdown_menu.content
+             ~align:End
+             ~side:Top
+             ~class_:"w-40"
+             menu
+             [ Dropdown_menu.group
+                 [ Dropdown_menu.label [ text "Quick Actions" ]
+                 ; Dropdown_menu.item [ text "Mute Conversation" ]
+                 ; Dropdown_menu.item [ text "Mark as Read" ]
+                 ; Dropdown_menu.item [ text "Block User" ]
+                 ]
+             ; Dropdown_menu.separator ()
+             ; Dropdown_menu.group
+                 [ Dropdown_menu.item ~variant:Destructive [ text "Delete Conversation" ] ]
+             ]
+         ]))
       graph
   in
   let%arr radio and email and push and compact and advanced and alert_dialog and menu in
@@ -695,19 +715,24 @@ let qr_connect =
 let payments (local_ graph) =
   let menu =
     Dropdown_menu.component
-      ~align:Start
-      ~trigger:(fun attrs ->
-        Button.view
-          ~attrs:(aria_label "Account options" :: attrs)
-          ~size:Icon_sm
-          ~variant:Ghost
-          [ Icon.view Ellipsis; span "sr-only" "Account options" ])
-      (Bonsai.return
-         Dropdown_menu.Item.
-           [ action ~on_select:Effect.Ignore "Profile"
-           ; action ~on_select:Effect.Ignore "Statements"
-           ; action ~on_select:Effect.Ignore "Documents"
-           ])
+      (Bonsai.return (fun menu ->
+         [ Dropdown_menu.trigger
+             menu
+             (Button.view
+                ~attrs:[ aria_label "Account options" ]
+                ~size:Icon_sm
+                ~variant:Ghost
+                [ Icon.view Ellipsis; span "sr-only" "Account options" ])
+         ; Dropdown_menu.content
+             ~align:Start
+             menu
+             [ Dropdown_menu.group
+                 [ Dropdown_menu.item [ text "Profile" ]
+                 ; Dropdown_menu.item [ text "Statements" ]
+                 ; Dropdown_menu.item [ text "Documents" ]
+                 ]
+             ]
+         ]))
       graph
   in
   let payment icon title description =

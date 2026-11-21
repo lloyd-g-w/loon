@@ -1,57 +1,42 @@
 open! Core
 open Bonsai_web
 open Loon
+open! Bonsai.Let_syntax
 module Node = Vdom.Node
+module Attr = Vdom.Attr
 
 let page = "tooltip"
 
-(*$ Icon buttons
-   Tooltips name buttons that only show an icon. *)
-let icon_buttons =
-  Node.div
-    ~attrs:
-      [ Vdom.Attr.class_ "flex flex-col gap-3"
-      ; Vdom.Attr.create "style" "align-items: center; text-align: center"
-      ]
-    [ Node.div
-        ~attrs:[ Vdom.Attr.class_ "flex flex-wrap items-center justify-center gap-3" ]
-        (List.map
-           [ "tip-edit", Icon.Pencil, "Edit"
-           ; "tip-copy", Copy, "Copy to clipboard"
-           ; "tip-delete", Trash, "Move to trash"
-           ]
-           ~f:(fun (id, icon, label) ->
-             Tooltip.view ~id ~content:label (fun attrs ->
-               Button.view
-                 ~attrs:(Vdom.Attr.create "aria-label" label :: attrs)
-                 ~variant:Outline
-                 ~size:Icon
-                 [ Icon.view icon ])))
-    ; Node.p
-        ~attrs:[ Vdom.Attr.class_ "loon-field-description" ]
-        [ Node.text "Hover over a button, or Tab to it." ]
-    ]
-;;
-
+(*$ Demo *)
+let demo (local_ graph) =
+  Tooltip.component
+    (Bonsai.return (fun tooltip ->
+       [ Tooltip.trigger tooltip (Button.view ~variant:Outline [ Node.text "Hover" ])
+       ; Tooltip.content tooltip [ Node.p [ Node.text "Add to library" ] ]
+       ]))
+    graph
 (*$*)
 
 (*$ Sides *)
-let sides =
-  Node.div
-    ~attrs:[ Vdom.Attr.class_ "flex flex-wrap items-center justify-center gap-3" ]
-    (List.map Floating.Side.all ~f:(fun side ->
-       let name = Floating.Side.name side in
-       Tooltip.view
-         ~side
-         ~id:("tip-side-" ^ name)
-         ~content:("On the " ^ name)
-         (fun attrs ->
-            Button.view
-              ~attrs
-              ~variant:Outline
-              [ Node.text (String.capitalize name) ])))
-;;
-
+let sides (local_ graph) =
+  let tooltip side (local_ graph) =
+    Tooltip.component
+      (Bonsai.return (fun tooltip ->
+         [ Tooltip.trigger
+             tooltip
+             (Button.view
+                ~variant:Outline
+                [ Node.text (String.capitalize (Popper.Side.name side)) ])
+         ; Tooltip.content tooltip ~side [ Node.p [ Node.text "Add to library" ] ]
+         ]))
+      graph
+  in
+  let top = tooltip Top graph in
+  let right = tooltip Right graph in
+  let bottom = tooltip Bottom graph in
+  let left = tooltip Left graph in
+  let%arr top and right and bottom and left in
+  Node.div ~attrs:[ Attr.class_ "flex flex-wrap gap-2" ] [ left; top; bottom; right ]
 (*$*)
 
 let page =
@@ -59,26 +44,32 @@ let page =
     ~slug:page
     ~title:"Tooltip"
     ~description:
-      "A short label shown when the pointer rests on, or the keyboard focuses, \
-       an element."
+      "A popup that displays information related to an element when the element \
+       receives keyboard focus or the mouse hovers over it."
     ~usage:
-      {|Tooltip.view ~id:"save-tip" ~content:"Save (Ctrl+S)" (fun attrs ->
-  Button.view ~attrs ~size:Icon [ Icon.view Check ])|}
+      {|Tooltip.component
+  (return (fun tooltip ->
+     [ Tooltip.trigger tooltip (Button.view ~variant:Outline [ Node.text "Hover" ])
+     ; Tooltip.content tooltip [ Node.p [ Node.text "Add to library" ] ]
+     ]))
+  graph|}
     ~body:
       [ Doc.h2 "Arguments"
       ; Doc.props
-          [ ( "id"
-            , "string"
-            , "Unique on the page; the trigger is described by it." )
-          ; "content", "string", "The label."
-          ; "side", "Floating.Side.t", "Top (default), Right, Bottom or Left."
+          [ ( "open_, on_open_change"
+            , "bool, bool -> unit Effect.t"
+            , "[Tooltip.view]: controlled. [Tooltip.component] keeps it \
+               ([?default_open])." )
+          ; ( "side, side_offset, align, align_offset"
+            , "Popper.Side.t, float, Popper.Align.t, float"
+            , "[content]: where it opens ([Top], 0px, [Center] by default); it flips \
+               when there is no room." )
           ]
       ; Doc.p
-          "Tooltips are pure CSS: they appear after a short delay on hover and \
-           on keyboard focus, and never on touch screens, so do not put \
-           anything only in a tooltip."
+          "As shadcn's, it opens at once (no delay): when the pointer moves over the \
+           trigger or the keyboard focuses it, and closes when the pointer leaves the \
+           trigger and the tooltip, on a press, on blur and on Esc. While open the \
+           trigger is described by the tooltip's text ([aria-describedby])."
       ]
-    [ Doc.static ~page "Icon buttons" icon_buttons
-    ; Doc.static ~page "Sides" sides
-    ]
+    [ Doc.example ~page "Demo" demo; Doc.example ~page "Sides" sides ]
 ;;

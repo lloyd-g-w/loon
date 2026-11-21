@@ -1,39 +1,69 @@
-(** What dialogs and sheets share: a scrim over the page, a panel that
-    takes focus and keeps it (Tab cycles inside), Esc to close, and focus
-    returned to the trigger afterwards. *)
+(** What Dialog, Alert_dialog, Sheet and Drawer share: Radix's Dialog
+    primitive. The trigger and close buttons, the ids that link the content
+    to its title and description, and the content itself: an overlay over
+    the page and the content, which takes the focus (its first focusable
+    element, or [initial_focus]), keeps it (Tab cycles inside), closes on
+    Esc (and a pointer down outside it, with [dismissible]), gives the focus
+    back when it closes, stops the page scrolling and ignoring the pointer
+    while open, and plays its exit animation. *)
 
 open! Import
 
-(** Ids of the parts of the modal [id]. *)
-val title_id : string -> string
+type t =
+  { id : string
+  ; open_ : bool
+  ; on_open_change : bool -> unit Effect.t
+  }
 
-val description_id : string -> string
+val trigger_id : t -> string
+val content_id : t -> string
+val title_id : t -> string
+val description_id : t -> string
+val state_attr : t -> Attr.t
 
-(** Closes with [on_close] then focuses the trigger of [id] (see
-    {!Floating.trigger_id}), if there is one. *)
-val close : id:string -> on_close:unit Effect.t -> unit Effect.t
+(** Opens and closes it: [Bonsai.state]'s value, made into a [t] by
+    [make]. *)
+val component
+  :  ?default_open:bool
+  -> (t -> Node.t list) Bonsai.t
+  -> local_ Bonsai.graph
+  -> Node.t Bonsai.t
 
-(** Nothing when closed. [role] is ["dialog"] or ["alertdialog"];
-    [dismiss_on_scrim] (default [true]) closes it on a click outside the
-    panel. [has_description] links the panel to [description_id id]. *)
 val view
-  :  ?panel_attrs:Attr.t list
-  -> ?dismiss_on_scrim:bool
-  -> ?has_description:bool
-  -> role:string
-  -> class_:string
-  -> id:string
+  :  ?id:string
   -> open_:bool
-  -> on_close:unit Effect.t
+  -> on_open_change:(bool -> unit Effect.t)
+  -> (t -> Node.t list)
+  -> Node.t
+
+(** [slot] is the [data-slot], e.g. ["dialog-trigger"]. *)
+val trigger : slot:string -> ?attrs:Attr.t list -> t -> Node.t -> Node.t
+
+(** An element that closes it (Radix's [Close asChild]). *)
+val close : ?slot:string -> ?attrs:Attr.t list -> t -> Node.t -> Node.t
+
+(** Nothing while closed. [content_attrs] are the content's (its slot and
+    classes, the caller's attributes), [role] ["dialog"] or
+    ["alertdialog"]. *)
+val content
+  :  ?dismissible:bool
+  -> ?initial_focus:string
+  -> ?role:string
+  -> overlay:Node.t
+  -> content_attrs:Attr.t list
+  -> t
   -> Node.t list
   -> Node.t
 
-(** The trigger made by [trigger] (given its attributes, or none), then the
-    modal. *)
-val with_trigger
-  :  ?trigger:(Attr.t list -> Node.t)
-  -> id:string
-  -> open_:bool
-  -> on_change:(bool -> unit Effect.t)
-  -> Node.t
+(** The overlay: a [<div>] with the state, for [content]. *)
+val overlay : slot:string -> class_:string -> t -> Node.t
+
+val title : slot:string -> class_:string -> ?attrs:Attr.t list -> t -> Node.t list -> Node.t
+
+val description
+  :  slot:string
+  -> class_:string
+  -> ?attrs:Attr.t list
+  -> t
+  -> Node.t list
   -> Node.t
