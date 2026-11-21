@@ -1,7 +1,7 @@
 (** The page's keyboard shortcuts, as shadcn's /create: R shuffles, Shift+R
     resets, D toggles light and dark, O opens a preset, Ctrl/⌘+P opens the
-    Navigate menu, Ctrl/⌘+Z undoes and Shift+Ctrl/⌘+Z (or Ctrl+Y) redoes. The letters only when focus is not in a text
-    field. *)
+    Navigate menu, Ctrl/⌘+Z undoes and Shift+Ctrl/⌘+Z (or Ctrl+Y) redoes.
+    The letters only when focus is not in a text field. *)
 
 open! Core
 

@@ -1022,7 +1022,8 @@ let navigate_dialog graph ~open_ ~set_open (env : Env.t Bonsai.t) =
   let state, set_state = Bonsai.state Loon.Command.State.empty graph in
   let%arr open_ and set_open and state and set_state and env in
   let on_open_change o =
-    Effect.Many [ set_open o; (if o then set_state Loon.Command.State.empty else Effect.Ignore) ]
+    Effect.Many
+      [ set_open o; (if o then set_state Loon.Command.State.empty else Effect.Ignore) ]
   in
   let item ~keywords (value, label) =
     Loon.Command.item

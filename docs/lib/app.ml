@@ -390,7 +390,8 @@ let site_footer =
     ~attrs:
       [ Attr.class_
           "group-has-[.section-soft]/body:bg-surface/40 \
-           group-has-[[data-slot=designer]]/body:hidden group-has-[[data-slot=docs]]/body:hidden dark:bg-transparent \
+           group-has-[[data-slot=designer]]/body:hidden \
+           group-has-[[data-slot=docs]]/body:hidden dark:bg-transparent \
            dark:group-has-[.section-soft]/body:bg-surface/40 3xl:fixed:bg-transparent"
       ]
     [ Node.div
@@ -1167,7 +1168,8 @@ module Result = struct
     { title : string
     ; value : string (* what the search matches; unique *)
     ; hash : string
-    ; kind : [ `Nav | `Page | `Component | `Example ]
+    ; kind :
+        [ `Nav | `Style of string (* its icon's SVG *) | `Page | `Component | `Example ]
     ; context : string option (* an example's page, shown after its title *)
     ; install : string option (* what ⌘C copies *)
     }
@@ -1198,6 +1200,26 @@ let search_groups : (string * Result.t list) list =
        ; install = None
        ; context = None
        }) )
+   :: ( "Styles"
+      , List.filter_map Create_config.styles ~f:(fun (style : Create_style.t) ->
+          if Option.is_some (Create_config.style_disabled style.name)
+          then None
+          else
+            Some
+              { Result.title = style.title
+              ; value = sprintf "Style %s %s" style.title style.description
+              ; hash =
+                  Customize_query.to_hash
+                    ~slug:"create"
+                    (Customize_query.to_string
+                       [ ( "preset"
+                         , Create_preset.encode
+                             { Create_config.reset_preset with style = style.name } )
+                       ])
+              ; kind = `Style style.icon
+              ; install = None
+              ; context = Some "Open style in Create"
+              }) )
    :: List.map docs_groups ~f:(fun (s, ps) -> page_group (Doc.Section.title s) ps))
   @ List.filter_map Doc.Section.all ~f:(fun s ->
     match Doc.Section.is_docs s, in_section s with
@@ -1250,6 +1272,12 @@ let search_item ~go (r : Result.t) =
              ]
            []
        | `Nav | `Page -> Icon.view Arrow_right
+       | `Style icon ->
+         Node.inner_html
+           ~tag:"span"
+           ~attrs:[ Attr.class_ "contents" ]
+           ~this_html_is_sanitized_and_is_totally_safe_trust_me:icon
+           ()
        | `Example -> Icon.view Square_dashed)
     ; Node.text r.title
     ; (match r.context with
