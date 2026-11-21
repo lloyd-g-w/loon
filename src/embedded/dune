@@ -1,0 +1,10 @@
+(rule
+ (target stylesheet_contents.ml)
+ (deps ../loon.css)
+ (action
+  (with-stdout-to
+   stylesheet_contents.ml
+   (progn
+    (echo "let css = {loon_css|")
+    (cat ../loon.css)
+    (echo "|loon_css}\n")))))

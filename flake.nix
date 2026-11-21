@@ -102,7 +102,12 @@
           } src query).overrideScope
             overlay;
 
+        # Tailwind v4 compiles the components' class strings into loon.css (as
+        # shadcn/ui is styled), in the build and the dev shell.
+        tailwind = pkgs.tailwindcss_4;
+
         loon = scope.loon.overrideAttrs (oa: {
+          nativeBuildInputs = (oa.nativeBuildInputs or [ ]) ++ [ tailwind ];
           meta = (oa.meta or { }) // {
             mainProgram = "loon";
           };
@@ -169,6 +174,7 @@
             pkgs.ocamlformat
             pkgs.ripgrep
             pkgs.nodejs
+            tailwind
           ];
           shellHook = ''
             PATH=$(printf '%s' "$PATH" | tr : '\n' | awk '!/-opam\/bin$/ || !seen++' | paste -sd : -)

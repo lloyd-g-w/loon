@@ -1,6 +1,9 @@
-; loon: the components. Each component is one module (and its stylesheet in
-; css/), depending only on Import and the components it names, so that
-; `loon add` can copy it into a project unchanged.
+; loon: the components, ported from shadcn/ui. Each component is one module
+; whose class strings are shadcn's Tailwind classes, so that `loon add` can
+; copy it into a project unchanged. embedded/ holds the stylesheet as an
+; OCaml string (a subdirectory, so the *.ml Tailwind scans leave it out).
+
+(include_subdirs unqualified)
 
 (library
  (name loon)
@@ -15,29 +18,29 @@
   virtual_dom.svg
   js_of_ocaml))
 
-; The stylesheet: the theme, the base styles, then each component's.
+; The stylesheet's Tailwind input: css/*.css in name order (Tailwind and its
+; plugins, the theme, then the stylesheets of components not yet ported),
+; written here, next to the sources it scans.
 
 (rule
- (target loon.css)
+ (target loon.input.css)
  (deps
   (glob_files css/*.css))
  (action
   (with-stdout-to
-   loon.css
+   loon.input.css
    (system "cat css/*.css"))))
 
 (rule
- (target stylesheet_contents.ml)
- (deps loon.css)
+ (target loon.css)
+ (deps
+  loon.input.css
+  (glob_files *.ml))
  (action
-  (with-stdout-to
-   stylesheet_contents.ml
-   (progn
-    (echo "let css = {loon_css|")
-    (cat loon.css)
-    (echo "|loon_css}\n")))))
+  (system
+   "tailwindcss --input loon.input.css --output loon.css 2>tailwind.log || { cat tailwind.log >&2; exit 1; }")))
 
 (install
  (section share)
  (package loon)
- (files loon.css))
+ (files loon.css loon.input.css))
