@@ -2,7 +2,7 @@
 home: loon — components for Bonsai | Calm, well-made components for Bonsai.
 current: Introduction
 sidebar Getting started: Introduction, Installation, Theming, CLI
-sidebar Forms: Button, Calendar, Checkbox, Combobox, Forms, Input, Native select, Radio group, Select, Slider, Switch, Toggle
+sidebar Forms: Button, Button Group, Calendar, Checkbox, Combobox, Field, Forms, Input, Input Group, Input OTP, Label, Native Select, Radio Group, Select, Slider, Switch, Textarea, Toggle, Toggle Group
 sidebar Overlays: Alert dialog, Command palette, Dialog, Dropdown menu, Popover, Sheet, Tooltip
 sidebar Display: Accordion, Avatar, Badge, Card, Collapsible, Data table, Kbd, Separator, Table
 sidebar Navigation: Breadcrumb, Pagination, Tabs
@@ -47,7 +47,7 @@ dune highlighted: (executable
 copied dune: (executable
 == search
 opened by the button, input focused; first results: >Introduction, Installation, Theming, CLI
-"intal": >Installation, With a label, Invalid and disabled
+"intal": >Installation, Invalid, Horizontal and vertical
 Escape closes it
 Ctrl+K opens it, empty: true
 "themng": >Theming, Light and dark
