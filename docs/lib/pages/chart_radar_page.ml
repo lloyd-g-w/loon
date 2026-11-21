@@ -477,7 +477,7 @@ let page =
   Doc.page
     ~slug:"chart-radar"
     ~title:"Radar Charts"
-    ~group:Charts
+    ~section:Charts
     ~order:5
     ~description:"Radar charts: dots, lines, grids (polygon, circle, filled), legends and axes."
     [ Doc.example ~page "Radar Chart" (Chart_data.frame default)

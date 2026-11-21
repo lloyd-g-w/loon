@@ -116,7 +116,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Slider"
-    ~group:Forms
     ~description:"An input where the user selects a value from within a given range."
     ~usage:{|Slider.component ~default_value:[ 33. ] ~max:100. ~step:1. graph|}
     ~body:

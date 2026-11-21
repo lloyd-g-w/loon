@@ -59,7 +59,7 @@ let page =
     ~order:2
     ~slug:page
     ~title:"Theming"
-    ~group:Guide
+    ~section:Get_started
     ~description:"Using CSS variables and Tailwind's colour utilities, as shadcn/ui does."
     ~body:
       [ Doc.h2 "CSS variables"

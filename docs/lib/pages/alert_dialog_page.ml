@@ -75,7 +75,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Alert dialog"
-    ~group:Overlays
     ~description:
       "A modal dialog that interrupts the user with important content and \
        expects a response."

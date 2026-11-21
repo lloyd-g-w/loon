@@ -213,7 +213,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Toggle Group"
-    ~group:Forms
     ~description:"A set of two-state buttons that can be toggled on or off."
     ~usage:
       {|Toggle_group.single ~value ~on_change:set_value (fun group ->

@@ -211,7 +211,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Radio Group"
-    ~group:Forms
     ~description:
       "A set of checkable buttons\u{2014}known as radio buttons\u{2014}where no more than \
        one of the buttons can be checked at a time."

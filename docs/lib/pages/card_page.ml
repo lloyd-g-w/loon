@@ -83,7 +83,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Card"
-    ~group:Display
     ~description:"Displays a card with header, content, and footer."
     ~usage:
       {|Card.root

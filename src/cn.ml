@@ -220,6 +220,8 @@ let group base : (string * string list) option =
               ; "animate", "animate"
               ; "order", "order"
               ; "line-clamp", "line-clamp"
+              ; "translate-x", "translate-x"
+              ; "translate-y", "translate-y"
               ; "inset-x", "inset-x"
               ; "inset-y", "inset-y"
               ; "top", "top"

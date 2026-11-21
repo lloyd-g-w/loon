@@ -1,4 +1,5 @@
-(** Where the docs are: a page, by its slug, in the URL's hash ([#/button]). *)
+(** Where the docs are: the home page, or a page by its slug, in the URL's
+    hash ([#/button]); [#/button/usage] is the heading [usage] on it. *)
 
 open! Core
 
@@ -13,7 +14,6 @@ val of_hash : string -> t
 
 val to_hash : t -> string
 
-(** The slug of the page shown: [Home] is the introduction. *)
-val slug : t -> string
-
-val home_slug : string
+(** The heading a hash points at: ["#/theming/variables"] is
+    [Some "variables"]. *)
+val anchor : string -> string option

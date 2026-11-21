@@ -26,7 +26,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Progress"
-    ~group:Feedback
     ~description:
       "Displays an indicator showing the completion progress of a task, typically \
        displayed as a progress bar."

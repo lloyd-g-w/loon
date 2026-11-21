@@ -85,7 +85,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Popover"
-    ~group:Overlays
     ~description:"Displays rich content in a portal, triggered by a button."
     ~usage:
       {|Popover.component

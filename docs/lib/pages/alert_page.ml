@@ -51,7 +51,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Alert"
-    ~group:Feedback
     ~description:"Displays a callout for user attention."
     ~usage:
       {|Alert.root

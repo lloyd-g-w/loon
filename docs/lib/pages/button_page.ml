@@ -117,7 +117,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Button"
-    ~group:Forms
     ~description:"Displays a button or a component that looks like a button."
     ~usage:{|Button.view ~variant:Outline ~on_click:save [ Node.text "Button" ]|}
     ~body:

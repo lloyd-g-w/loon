@@ -306,7 +306,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Navigation Menu"
-    ~group:Navigation
     ~description:"A collection of links for navigating websites."
     ~usage:
       {|Navigation_menu.component

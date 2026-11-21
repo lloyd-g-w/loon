@@ -350,7 +350,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Calendar"
-    ~group:Forms
     ~description:
       "A calendar component that allows users to select a date or a range of dates."
     ~usage:

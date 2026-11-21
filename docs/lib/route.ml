@@ -5,8 +5,6 @@ type t =
   | Page of string
 [@@deriving sexp_of, compare, equal]
 
-let home_slug = "introduction"
-
 let of_hash hash =
   let s = String.chop_prefix_if_exists hash ~prefix:"#" in
   let s = String.chop_prefix_if_exists s ~prefix:"/" in
@@ -15,7 +13,7 @@ let of_hash hash =
     |> String.strip
     |> String.lowercase
   in
-  if String.is_empty s || String.equal s home_slug then Home else Page s
+  if String.is_empty s then Home else Page s
 ;;
 
 let to_hash = function
@@ -23,7 +21,8 @@ let to_hash = function
   | Page slug -> "#/" ^ slug
 ;;
 
-let slug = function
-  | Home -> home_slug
-  | Page slug -> slug
+let anchor hash =
+  match String.split (String.chop_prefix_if_exists hash ~prefix:"#/") ~on:'/' with
+  | _ :: anchor :: _ when not (String.is_empty anchor) -> Some anchor
+  | _ -> None
 ;;

@@ -63,7 +63,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Textarea"
-    ~group:Forms
     ~description:"Displays a form textarea or a component that looks like a textarea."
     ~usage:{|Textarea.view ~placeholder:"Type your message here." ~value ~on_input:set ()|}
     ~body:

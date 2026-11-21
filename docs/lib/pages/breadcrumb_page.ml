@@ -222,7 +222,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Breadcrumb"
-    ~group:Navigation
     ~description:
       "Displays the path to the current resource using a hierarchy of links."
     ~usage:

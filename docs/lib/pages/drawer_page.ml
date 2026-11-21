@@ -159,7 +159,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Drawer"
-    ~group:Overlays
     ~description:"A drawer component for Bonsai."
     ~usage:
       {|Drawer.component

@@ -67,7 +67,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Accordion"
-    ~group:Display
     ~description:
       "A vertically stacked set of interactive headings that each reveal a \
        section of content."

@@ -142,7 +142,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Tabs"
-    ~group:Navigation
     ~description:
       "A set of layered sections of content—known as tab panels—that are displayed one \
        at a time."

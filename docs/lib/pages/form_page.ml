@@ -414,7 +414,7 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Forms"
-    ~group:Forms
+    ~section:Forms
     ~description:
       "Build forms from Field, the form controls and Bonsai state, with validation \
        shown where it is needed."

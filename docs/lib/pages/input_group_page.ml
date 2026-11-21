@@ -342,7 +342,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Input Group"
-    ~group:Forms
     ~description:"Display additional information or actions to an input or textarea."
     ~usage:
       {|Input_group.root

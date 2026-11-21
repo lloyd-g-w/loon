@@ -52,7 +52,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Kbd"
-    ~group:Display
     ~description:"Used to display textual user input from keyboard."
     ~usage:
       {|Kbd.group [ Kbd.view [ Node.text "Ctrl" ]; Kbd.view [ Node.text "B" ] ]|}

@@ -66,7 +66,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Pagination"
-    ~group:Navigation
     ~description:"Pagination with page navigation, next and previous links."
     ~usage:
       {|Pagination.root

@@ -258,11 +258,50 @@ let tokenize (lang : Lang.t) s =
   go 0 true []
 ;;
 
-let view ?(lang = Lang.Ocaml) s =
+let span (kind, text) =
+  match (kind : Kind.t) with
+  | Plain -> Node.text text
+  | kind -> Node.span ~attrs:[ Attr.class_ (Kind.class_ kind) ] [ Node.text text ]
+;;
+
+let tokens ?(lang = Lang.Ocaml) s =
+  Node.span ~attrs:[ Attr.class_ "hl" ] (List.map (tokenize lang s) ~f:span)
+;;
+
+(* The tokens of each line (a token over several lines is cut at their
+   ends). *)
+let lines tokens =
+  let finish line acc = List.rev line :: acc in
+  let line, acc =
+    List.fold tokens ~init:([], []) ~f:(fun (line, acc) (kind, text) ->
+      match String.split text ~on:'\n' with
+      | [] -> line, acc
+      | first :: rest ->
+        let add line t = if String.is_empty t then line else (kind, t) :: line in
+        let line = add line first in
+        List.fold rest ~init:(line, acc) ~f:(fun (line, acc) t ->
+          add [] t, finish line acc))
+  in
+  List.rev (finish line acc)
+;;
+
+let lang_name : Lang.t -> string = function
+  | Ocaml -> "ocaml"
+  | Dune -> "dune"
+  | Shell -> "bash"
+  | Css -> "css"
+  | Plain -> "text"
+;;
+
+let view ?(lang = Lang.Ocaml) ?(line_numbers = false) s =
+  let lines = lines (tokenize lang s) in
   Node.code
-    ~attrs:[ Attr.class_ "hl" ]
-    (List.map (tokenize lang s) ~f:(fun (kind, text) ->
-       match kind with
-       | Plain -> Node.text text
-       | kind -> Node.span ~attrs:[ Attr.class_ (Kind.class_ kind) ] [ Node.text text ]))
+    ~attrs:
+      ([ Attr.class_ "hl"; Attr.create "data-language" (lang_name lang) ]
+       @ if line_numbers then [ Attr.create "data-line-numbers" "" ] else [])
+    (List.concat_mapi lines ~f:(fun i line ->
+       let line =
+         Node.span ~attrs:[ Attr.create "data-line" "" ] (List.map line ~f:span)
+       in
+       if i = 0 then [ line ] else [ Node.text "\n"; line ]))
 ;;

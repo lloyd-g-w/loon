@@ -1,78 +1,86 @@
 == pages
-home: loon — components for Bonsai | Calm, well-made components for Bonsai.
+home: loon - The Foundation for your Design System | The Foundation for your Design System
+header: loon, Docs, Components, Blocks, Charts, Create, Typeset
 current: Introduction
-sidebar Getting started: Introduction, Installation, Theming, CLI
-sidebar Forms: Button, Button Group, Calendar, Checkbox, Combobox, Field, Forms, Input, Input Group, Input OTP, Label, Native Select, Radio Group, Select, Slider, Switch, Textarea, Toggle, Toggle Group
-sidebar Overlays: Alert dialog, Command, Context menu, Dialog, Drawer, Dropdown menu, Hover card, Menubar, Popover, Sheet, Tooltip
-sidebar Display: Accordion, Aspect ratio, Avatar, Badge, Card, Carousel, Collapsible, Data table, Item, Kbd, Resizable, Scroll area, Separator, Table
-sidebar Navigation: Breadcrumb, Navigation Menu, Pagination, Sidebar, Tabs
-sidebar Feedback: Alert, Empty, Progress, Skeleton, Sonner, Spinner
-sidebar Charts: Chart, Area Charts, Bar Charts, Line Charts, Pie Charts, Radar Charts, Radial Charts, Tooltips
-guides: Introduction, Installation, Theming, CLI
+sidebar Sections: Introduction, Components, Installation, Theming, CLI
+sidebar Get Started: Installation, Theming, CLI
+sidebar Components: Accordion, Alert, Alert dialog, Aspect ratio, Avatar, Badge, Breadcrumb, Button, Button Group, Calendar, Card, Carousel, Chart, Checkbox, Collapsible, Combobox, Command, Context menu, Data table, Dialog, Drawer, Dropdown menu, Empty, Field, Hover card, Input, Input Group, Input OTP, Item, Kbd, Label, Menubar, Native Select, Navigation Menu, Pagination, Popover, Progress, Radio Group, Resizable, Scroll area, Select, Separator, Sheet, Sidebar, Skeleton, Slider, Sonner, Spinner, Switch, Table, Tabs, Textarea, Toggle, Toggle Group, Tooltip
+sidebar Forms: Forms
 every page: ok (h1, current link, title, previews, outline, no overflow or errors)
+Blocks: #/blocks | Building Blocks for the Web | Building Blocks for the Web - loon
+Charts: #/chart-area | Beautiful Charts & Graphs | Area Charts - loon
+Create: #/create | Create | Create - loon
+Typeset: #/typeset | Typeset | Typeset - loon
+charts: 7 kinds, 9 charts on the last; installation snippet false
 back: Theming
 back: Installation
 forward: Theming
 scrolled to the top: true
-theming outline: Examples | Light and dark | CSS variables | Variables | Dark mode | Adding colours
+theming outline: Light and dark | CSS variables | Variables | Dark mode | Adding colours
 outline link: heading in view, hash #/theming/variables
 outline marks: Variables
-pager: PreviousIntroductionNextTheming
+pager: IntroductionTheming
 next: Theming
-missing: Page not found | Not found · loon
+previous: Installation
+missing: Page not found | Not found - loon
 back home: #/
-components: #/button
-topnav active: Components
+components: #/components, 55 links
+header active: Components
 sidebar shows the current link: true
 == theme
-default: html light, app light, background true
-toggle: Switch to dark theme
-toggled: html dark, app dark, background true
-toggle: Switch to light theme
-reloaded: html dark, app dark, background true
-light again, reloaded: html light, app light, background true
-system dark: html dark, app dark, background true
+default: html light, background oklch(1 0 0)
+toggle: Toggle theme
+toggled: html dark, background oklch(0.145 0 0)
+dark code: many surfaces, background luminance 0.01..0.02, tokens under 3:1: 0
+reloaded: html dark, background oklch(0.145 0 0)
+light again, reloaded: html light, background oklch(1 0 0)
+light code: many surfaces, background luminance 0.91..0.94, tokens under 3:1: 0
+system dark: html dark, background oklch(0.145 0 0)
+system dark code: many surfaces, background luminance 0.01..0.02, tokens under 3:1: 0
 == examples
-tabs: Preview Code; selected Preview
-preview: true, code: false
+preview: true, code collapsed: true
 code: let demo =
 highlighted: hl-constructor hl-keyword hl-label hl-module hl-operator hl-punctuation hl-string
-arrow left: Preview, focused Preview
+copy button covers code: false
 copied the source: true
 copy mark: gone after a moment
-header: Sourceloon add button
-source: https://github.com/lloyd-g-w/loon/blob/main/src/button.mli
-installation: 7 code blocks
+installation: loon add button
+copy page: # Button
+page links: View source on GitHub, View the shadcn/ui docs, View this page on GitHub
+installation guide: 7 code blocks, loon add snippet false
 dune highlighted: (executable
 copied dune: (executable
+select: top layer true, hit-tested on top true
+dropdown_menu: top layer true, hit-tested on top true
+popover: top layer true, hit-tested on top true
+dialog: top layer true, hit-tested on top true
+sheet: top layer true, hit-tested on top true, over the header
 == search
-opened by the button, input focused; first results: >Introduction, Installation, Theming, CLI
-"intal": >Installation, Invalid, Horizontal
+opened by the button, input focused; first results: >Docs, Components, Blocks, Charts
+groups: Pages, Get Started, Components, Forms, Blocks, Charts, Create, Typeset
+"intal": >Installation, Line Chart - Interactive, Area Chart - Interactive
 Escape closes it
 Ctrl+K opens it, empty: true
 "themng": >Theming, Light and dark
 Enter: #/theming, closed
-"/" opens it; arrows wrap: true
-no match: Nothing matches “qqqzz”.
+"dialog": >Dialog, Alert dialog, Dialog
+ArrowDown: >Alert dialog
+no match: No results found.
 click: #/cli
-scrim click closes it
+outside click closes it
 == mobile:phone
-phone: sidebar hidden true, toc hidden true
-header targets: all at least 44px
-menu: true, Menu
-sheet links under 44px: 0
-page scroll locked: true
-tapped a link: Theming, sheet closed
-scrim tap closes the sheet
+phone: sidebar hidden true, toc hidden true, main nav hidden true
+header controls: all shown
+menu: true, groups Menu, Sections, Get Started, Components
+tapped a link: menu closed
+the button closes it
 search fits: true
 sideways overflow: none
 == mobile:small
-small: sidebar hidden true, toc hidden true
-header targets: all at least 44px
-menu: true, Menu
-sheet links under 44px: 0
-page scroll locked: true
-tapped a link: Theming, sheet closed
-scrim tap closes the sheet
+small: sidebar hidden true, toc hidden true, main nav hidden true
+header controls: all shown
+menu: true, groups Menu, Sections, Get Started, Components
+tapped a link: menu closed
+the button closes it
 search fits: true
 sideways overflow: none

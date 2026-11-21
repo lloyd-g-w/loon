@@ -164,7 +164,6 @@ let page =
   Doc.page
     ~slug:page
     ~title:"Button Group"
-    ~group:Forms
     ~description:
       "A container that groups related buttons together with consistent styling."
     ~usage:
