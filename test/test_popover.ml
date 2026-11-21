@@ -223,7 +223,12 @@ let%expect_test "modal: focus guards around the content" =
   [%expect
     {|
     <div>
-      <div loon-dismiss=((p-trigger)false true) loon-presence=() style={ display: contents; }>
+      <div loon-dismiss=((p-trigger)false true)
+           loon-presence=()
+           loon-scroll-lock=()
+           style={
+             display: contents;
+           }>
         <div data-focus-guard=""
              tabindex="0"
              aria-hidden="true"

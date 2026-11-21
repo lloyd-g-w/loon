@@ -98,6 +98,7 @@ let%expect_test "shadcn's classes" =
               @on_keydown> Open </button>
       <div loon-dismiss=((bonsai_path_replaced_in_test-trigger)false true)
            loon-presence=()
+           loon-scroll-lock=()
            style={
              display: contents;
            }>
@@ -282,6 +283,7 @@ let%expect_test "a click opens it, without a highlight; Esc closes it" =
               @on_keydown> Open </button>
       <div loon-dismiss=((bonsai_path_replaced_in_test-trigger)false true)
            loon-presence=()
+           loon-scroll-lock=()
            style={
              display: contents;
            }>
@@ -691,6 +693,7 @@ let%expect_test "sub-menus: ArrowRight opens, ArrowLeft closes, the pointer open
               @on_keydown> Open </button>
       <div loon-dismiss=((bonsai_path_replaced_in_test-trigger)false true)
            loon-presence=()
+           loon-scroll-lock=()
            style={
              display: contents;
            }>
