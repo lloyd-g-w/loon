@@ -33,41 +33,41 @@ let demo (local_ graph) =
    to see. *)
 let timezones =
   [ ( "North America"
-    , [ "est", "Eastern Standard Time (EST)"
-      ; "cst", "Central Standard Time (CST)"
-      ; "mst", "Mountain Standard Time (MST)"
-      ; "pst", "Pacific Standard Time (PST)"
-      ; "akst", "Alaska Standard Time (AKST)"
-      ; "hst", "Hawaii Standard Time (HST)"
+    , [ "est", "Eastern Standard Time"
+      ; "cst", "Central Standard Time"
+      ; "mst", "Mountain Standard Time"
+      ; "pst", "Pacific Standard Time"
+      ; "akst", "Alaska Standard Time"
+      ; "hst", "Hawaii Standard Time"
       ] )
   ; ( "Europe & Africa"
-    , [ "gmt", "Greenwich Mean Time (GMT)"
-      ; "cet", "Central European Time (CET)"
-      ; "eet", "Eastern European Time (EET)"
-      ; "west", "Western European Summer Time (WEST)"
-      ; "cat", "Central Africa Time (CAT)"
-      ; "eat", "East Africa Time (EAT)"
+    , [ "gmt", "Greenwich Mean Time"
+      ; "cet", "Central European Time"
+      ; "eet", "Eastern European Time"
+      ; "west", "Western European Summer Time"
+      ; "cat", "Central Africa Time"
+      ; "eat", "East Africa Time"
       ] )
   ; ( "Asia"
-    , [ "msk", "Moscow Time (MSK)"
-      ; "ist", "India Standard Time (IST)"
-      ; "cst_china", "China Standard Time (CST)"
-      ; "jst", "Japan Standard Time (JST)"
-      ; "kst", "Korea Standard Time (KST)"
-      ; "ist_indonesia", "Indonesia Central Standard Time (WITA)"
+    , [ "msk", "Moscow Time"
+      ; "ist", "India Standard Time"
+      ; "cst_china", "China Standard Time"
+      ; "jst", "Japan Standard Time"
+      ; "kst", "Korea Standard Time"
+      ; "ist_indonesia", "Indonesia Central Standard Time"
       ] )
   ; ( "Australia & Pacific"
-    , [ "awst", "Australian Western Standard Time (AWST)"
-      ; "acst", "Australian Central Standard Time (ACST)"
-      ; "aest", "Australian Eastern Standard Time (AEST)"
-      ; "nzst", "New Zealand Standard Time (NZST)"
-      ; "fjt", "Fiji Time (FJT)"
+    , [ "awst", "Australian Western Standard Time"
+      ; "acst", "Australian Central Standard Time"
+      ; "aest", "Australian Eastern Standard Time"
+      ; "nzst", "New Zealand Standard Time"
+      ; "fjt", "Fiji Time"
       ] )
   ; ( "South America"
-    , [ "art", "Argentina Time (ART)"
-      ; "bot", "Bolivia Time (BOT)"
-      ; "brt", "Brasilia Time (BRT)"
-      ; "clt", "Chile Standard Time (CLT)"
+    , [ "art", "Argentina Time"
+      ; "bot", "Bolivia Time"
+      ; "brt", "Brasilia Time"
+      ; "clt", "Chile Standard Time"
       ] )
   ]
 ;;
@@ -75,7 +75,7 @@ let timezones =
 let scrollable (local_ graph) =
   let%arr _value, view =
     Select.component
-      (return (Select.trigger ~class_:"w-[280px]" ~placeholder:"Select a timezone" ()))
+      (return (Select.trigger ~class_:"w-full max-w-64" ~placeholder:"Select a timezone" ()))
       (return
          (Select.content
             (List.map timezones ~f:(fun (region, zones) ->
