@@ -29,7 +29,7 @@
   index.html)
  (action
   (system
-   "{ cat ../../../src/css/*.css ../../../src/css/styles/*.css ../site.css; printf '\\n@source \"../../../src/*.ml\";\\n@source \"../../lib/**/*.ml\";\\n@source \"../../../blocks/*.ml\";\\n'; cat ../../lib/typeset/typeset.css; } > docs.input.css && tailwindcss --silent --input docs.input.css --output loon.css")))
+   "{ cat ../../../src/css/*.css ../../../src/css/styles/*.css ../site.css; printf '\\n@source \"../../../src/*.ml\";\\n@source \"../../lib/**/*.ml\";\\n@source \"../../../blocks/*.ml\";\\n'; cat ../../lib/typeset/typeset.css; } > docs.input.css && tailwindcss --silent --optimize --input docs.input.css --output loon.css")))
 
 (copy_files
  (files

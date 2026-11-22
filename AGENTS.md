@@ -45,7 +45,9 @@ by `tools/icons.nix`. Radix's behaviour: https://www.radix-ui.com/primitives/doc
   full style recalculations: `:has()` over the whole page (`group-has-*`
   on `body`/a layout root), inherited properties or custom properties set
   on `body`, `<style>` elements added per open; each restyles every
-  element.
+  element. Keep `tailwindcss --optimize` in the builds: unflattened CSS
+  nesting (what `@apply` leaves in the styles' `@scope` blocks) made a full
+  restyle of a docs page about 5 times slower.
 
 ## Porting a component from shadcn
 

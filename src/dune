@@ -40,6 +40,10 @@
     (system "cat css/*.css css/styles/*.css")
     (echo "\n@source \"./*.ml\";\n@source \"./blocks/*.ml\";\n")))))
 
+;; --optimize: Lightning CSS flattens the nesting @apply leaves in the
+;; styles' @scope blocks (Tailwind does not without it); browsers match
+;; nested rules several times slower, and every full restyle (a dialog's
+;; scroll lock, a menu opening) paid for it.
 (rule
  (target loon.css)
  (deps
@@ -47,7 +51,7 @@
   (glob_files *.ml))
  (action
   (system
-   "tailwindcss --silent --input loon.input.css --output loon.css")))
+   "tailwindcss --silent --optimize --input loon.input.css --output loon.css")))
 
 (install
  (section share)

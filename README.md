@@ -63,12 +63,13 @@ Then, in dune:
 (rule
  (target main.css)
  (deps main.input.css %{lib:loon:loon.input.css} (glob_files *.ml))
- (action (run tailwindcss --silent --input main.input.css --output main.css)))
+ (action (run tailwindcss --silent --optimize --input main.input.css --output main.css)))
 ```
 
-and link `main.css` from your page. (If you use no Tailwind classes of your
-own, `share/loon/loon.css` is loon's alone, prebuilt, and
-`Loon.Stylesheet.install ()` puts it in the page.)
+and link `main.css` from your page (`--optimize` flattens the CSS nesting
+loon's styles carry, which browsers match several times slower). (If you
+use no Tailwind classes of your own, `share/loon/loon.css` is loon's alone,
+prebuilt, and `Loon.Stylesheet.install ()` puts it in the page.)
 
 ```ocaml
 open! Core

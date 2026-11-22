@@ -5,7 +5,7 @@ v4 over loon's installed input and its own sources.
 
 The app's own Tailwind classes, which no loon component uses:
 
-  $ grep -o '^  \.\(bg-linear-to-br\|from-sky-50\|to-indigo-100\) {' $css
+  $ grep -o '^  \.\(bg-linear-to-br\|from-sky-50\|to-indigo-100\) {' $css | uniq
     .bg-linear-to-br {
     .from-sky-50 {
     .to-indigo-100 {

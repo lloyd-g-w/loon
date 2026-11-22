@@ -26,4 +26,4 @@
   %{lib:loon:loon.input.css}
   (glob_files *.ml))
  (action
-  (run tailwindcss --silent --input main.input.css --output main.css)))
+  (run tailwindcss --silent --optimize --input main.input.css --output main.css)))
