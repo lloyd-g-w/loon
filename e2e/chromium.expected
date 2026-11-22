@@ -56,6 +56,8 @@ dropdown_menu: top layer true, hit-tested on top true, scroll locked 1
 popover: top layer true, hit-tested on top true, scroll locked null
 dialog: top layer true, hit-tested on top true, scroll locked 1
 sheet: top layer true, hit-tested on top true, over the header, scroll locked 1
+drawer: Tab after opening focuses Decrease
+drawer: dragged a third down (overlay at 0.67), closed
 == search
 opened by the button, input focused; first results: >Docs, Components, Blocks, Charts
 groups: Pages, Styles, Get Started, Components, Forms, Blocks, Charts
