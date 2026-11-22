@@ -85,8 +85,8 @@ let content
       ~attrs:
         [ Attr.style (Css_gen.create ~field:"display" ~value:"contents")
         ; Presence.attr
-        ; Dismiss.attr
-            ~inside:[ trigger_id t ]
+        ; (* As Radix's: a press on the trigger is outside too, and closes it. *)
+          Dismiss.attr
             ~on_dismiss:(fun _ ->
               Effect.Many [ Delay.cancel ~key:t.id; t.on_open_change false ])
             ()

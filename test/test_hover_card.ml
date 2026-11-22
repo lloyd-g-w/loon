@@ -39,7 +39,7 @@ let%expect_test "shadcn's classes" =
               @on_focus
               @on_mouseenter
               @on_mouseleave> @nextjs </button>
-      <div loon-dismiss=((h-trigger)false false) loon-presence=() style={ display: contents; }>
+      <div loon-dismiss=(()false false) loon-presence=() style={ display: contents; }>
         <div data-radix-popper-content-wrapper=""
              popover="manual"
              loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element h-trigger))(name hover-card)))
@@ -119,11 +119,7 @@ let%expect_test "the pointer on the trigger or focus opens it; blur closes it" =
               @on_focus
               @on_mouseenter
               @on_mouseleave> @nextjs </button>
-      <div loon-dismiss=((bonsai_path_replaced_in_test-trigger)false false)
-           loon-presence=()
-           style={
-             display: contents;
-           }>
+      <div loon-dismiss=(()false false) loon-presence=() style={ display: contents; }>
         <div data-radix-popper-content-wrapper=""
              popover="manual"
              loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name hover-card)))
@@ -175,11 +171,7 @@ let%expect_test "the pointer on the trigger or focus opens it; blur closes it" =
               @on_focus
               @on_mouseenter
               @on_mouseleave> @nextjs </button>
-      <div loon-dismiss=((bonsai_path_replaced_in_test-trigger)false false)
-           loon-presence=()
-           style={
-             display: contents;
-           }>
+      <div loon-dismiss=(()false false) loon-presence=() style={ display: contents; }>
         <div data-radix-popper-content-wrapper=""
              popover="manual"
              loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name hover-card)))
@@ -246,11 +238,68 @@ let%expect_test "the pointer on the trigger or focus opens it; blur closes it" =
               @on_focus
               @on_mouseenter
               @on_mouseleave> @nextjs </button>
-      <div loon-dismiss=((bonsai_path_replaced_in_test-trigger)false false)
-           loon-presence=()
-           style={
-             display: contents;
-           }>
+      <div loon-dismiss=(()false false) loon-presence=() style={ display: contents; }>
+        <div data-radix-popper-content-wrapper=""
+             popover="manual"
+             loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name hover-card)))
+             style={
+               inset: auto;
+               margin: 0;
+               border: 0;
+               padding: 0;
+               background: transparent;
+               color: inherit;
+               overflow: visible;
+               max-width: none;
+               max-height: none;
+               white-space: normal;
+               text-align: start;
+               font-weight: normal;
+               font-style: normal;
+               letter-spacing: normal;
+               text-transform: none;
+             }>
+          <div data-slot="hover-card-content"
+               data-state="open"
+               data-side="bottom"
+               data-align="center"
+               @on_mouseenter
+               @on_mouseleave>
+            <h4> @nextjs </h4>
+            <p> The React Framework – created and maintained by @vercel. </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    |}]
+;;
+
+let%expect_test "a press on the trigger is outside the card: it dismisses it, as Radix's" =
+  let handle =
+    Render.handle ~classes:false (fun graph ->
+      Hover_card.component ~open_delay:0. (Bonsai_web.Bonsai.return parts) graph)
+  in
+  Handle.mouseenter
+    handle
+    ~get_vdom:Fn.id
+    ~selector:"[data-slot=hover-card-trigger]";
+  Handle.recompute_view_until_stable handle;
+  (* The layer counts nothing but itself as inside (no trigger id): a
+     pointerdown on the trigger closes it. *)
+  Handle.show handle;
+  [%expect {|
+    <div>
+      <button type="button"
+              data-slot="hover-card-trigger"
+              data-variant="link"
+              data-size="default"
+              id="bonsai_path_replaced_in_test-trigger"
+              data-state="open"
+              @on_blur
+              @on_focus
+              @on_mouseenter
+              @on_mouseleave> @nextjs </button>
+      <div loon-dismiss=(()false false) loon-presence=() style={ display: contents; }>
         <div data-radix-popper-content-wrapper=""
              popover="manual"
              loon-popper=(Popper((side Bottom)(side_offset 4)(align Center)(align_offset 0)(avoid_collisions true)(collision_padding 0)(anchor(Element bonsai_path_replaced_in_test-trigger))(name hover-card)))
