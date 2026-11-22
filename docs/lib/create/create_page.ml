@@ -232,17 +232,9 @@ let style_picker graph env =
       match find_style v with
       | Some s -> svg_indicator s.icon
       | None -> Node.none)
-    ~extra:
-      [ Picker.separator ()
-      ; note
-          [ text "Other styles need different component markup; loon ports new-york-v4." ]
-      ]
     (fun _ ->
       [ List.map Create_config.styles ~f:(fun (s : Create_style.t) ->
-          Choice.v
-            ~disabled:(Option.is_some (Create_config.style_disabled s.name))
-            s.name
-            s.title)
+          Choice.v s.name s.title)
       ])
     graph
     env

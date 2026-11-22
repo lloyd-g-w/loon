@@ -27,7 +27,6 @@ let variables ~(mode : Loon.Theme.Mode.t) (p : Create_preset.t) =
 
 let attrs ~mode (p : Create_preset.t) =
   [ Attr.create "data-create-preview" ""
-  ; Attr.create "data-menu-color" p.menu_color
   (* An attribute, not [Attr.style] (which drops custom properties) nor a
      css-vars hook (which tests cannot see). *)
   ; Attr.create
@@ -36,69 +35,21 @@ let attrs ~mode (p : Create_preset.t) =
          Css_gen.create ~field ~value)
        |> Css_gen.concat
        |> Css_gen.to_string_css)
-  ; Attr.classes
-      ([ Customize_fonts.root_class ]
-       @
-       match mode with
-       | Dark -> [ "dark" ]
-       | Light -> [])
+  ; Attr.class_ Customize_fonts.root_class
   ]
+  @ Loon.Theme.attrs
+      ~mode
+      ?style:(Loon.Theme.Style.of_name p.style)
+      ?menu_color:(Loon.Theme.Menu_color.of_name p.menu_color)
+      ()
 ;;
 
-let menus =
-  [ "dropdown-menu-content"
-  ; "dropdown-menu-sub-content"
-  ; "context-menu-content"
-  ; "context-menu-sub-content"
-  ; "menubar-content"
-  ; "menubar-sub-content"
-  ; "select-content"
-  ; "combobox-content"
-  ]
-  |> List.map ~f:(sprintf "[data-slot=%s]")
-  |> String.concat ~sep:", "
-;;
-
-let titles =
-  [ "card-title"
-  ; "dialog-title"
-  ; "alert-dialog-title"
-  ; "sheet-title"
-  ; "drawer-title"
-  ; "empty-title"
-  ]
-  |> List.map ~f:(sprintf "[data-slot=%s]")
-  |> String.concat ~sep:", "
-;;
-
+(* The inverted menus take the preset's dark variables (the stylesheet's
+   are the default theme's). *)
 let css (p : Create_preset.t) =
-  let root = "[data-create-preview]" in
   let dark = (Create_theme_css.of_preset p).dark in
-  String.concat
-    ~sep:"\n"
-    [ sprintf "%s { font-family: var(--font-sans); }" root
-    ; sprintf "%s :is(%s) { font-family: var(--font-heading); }" root titles
-    ; sprintf
-        "%s:is([data-menu-color=inverted], [data-menu-color=inverted-translucent]) :is(%s) \
-         { color-scheme: dark; %s }"
-        root
-        menus
-        (String.concat
-           ~sep:" "
-           (List.map dark ~f:(fun (k, v) -> sprintf "--%s: %s;" k v)))
-    ; sprintf
-        "%s:is([data-menu-color=default-translucent], \
-         [data-menu-color=inverted-translucent]) :is(%s) { animation: none !important; \
-         background-color: color-mix(in oklab, var(--popover) 70%%, transparent); \
-         backdrop-filter: blur(40px) saturate(1.5); }"
-        root
-        menus
-    ; sprintf
-        "%s:is([data-menu-color=default-translucent], \
-         [data-menu-color=inverted-translucent]) :is(%s) :is([data-slot$=-item], \
-         [data-slot$=-trigger]):is(:focus, [data-highlighted]) { background-color: \
-         color-mix(in oklab, var(--foreground) 10%%, transparent); }"
-        root
-        menus
-    ]
+  sprintf
+    "[data-create-preview] .cn-menu-target:where(.menu-inverted *) { color-scheme: dark; \
+     %s }"
+    (String.concat ~sep:" " (List.map dark ~f:(fun (k, v) -> sprintf "--%s: %s;" k v)))
 ;;

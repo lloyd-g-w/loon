@@ -1,7 +1,7 @@
 (** What /create offers ([registry/config.ts], [bases.ts], shadcn's
     [iconLibraries], [(create)/lib/fonts.ts]), and which of it loon can
-    show: loon ports new-york-v4 on Radix with Lucide icons, so other
-    styles, bases and icon libraries are listed but disabled. *)
+    show: every style, on Radix with Lucide icons (other bases and icon
+    libraries are listed but disabled). *)
 
 open! Core
 
@@ -13,11 +13,10 @@ module Option_ : sig
     }
 end
 
-(** Vega, the style new-york-v4 is. *)
+(** Vega, shadcn's default style. *)
 val style : string
 
 val styles : Create_style.t list
-val style_disabled : string -> string option
 
 (** Radix. *)
 val base : string

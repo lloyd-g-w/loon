@@ -11,11 +11,6 @@ end
 let style = "vega"
 let styles = Create_styles.all
 
-let style_disabled name =
-  if String.equal name style
-  then None
-  else Some "Needs different component markup: loon ports new-york-v4 (Vega)."
-;;
 
 let base = "radix"
 

@@ -1248,25 +1248,21 @@ let search_groups : (string * Result.t list) list =
        ; context = None
        }) )
    :: ( "Styles"
-      , List.filter_map Create_config.styles ~f:(fun (style : Create_style.t) ->
-          if Option.is_some (Create_config.style_disabled style.name)
-          then None
-          else
-            Some
-              { Result.title = style.title
-              ; value = sprintf "Style %s %s" style.title style.description
-              ; hash =
-                  Customize_query.to_hash
-                    ~slug:"create"
-                    (Customize_query.to_string
-                       [ ( "preset"
-                         , Create_preset.encode
-                             { Create_config.reset_preset with style = style.name } )
-                       ])
-              ; kind = `Style style.icon
-              ; install = None
-              ; context = Some "Open style in Create"
-              }) )
+      , List.map Create_config.styles ~f:(fun (style : Create_style.t) ->
+          { Result.title = style.title
+          ; value = sprintf "Style %s %s" style.title style.description
+          ; hash =
+              Customize_query.to_hash
+                ~slug:"create"
+                (Customize_query.to_string
+                   [ ( "preset"
+                     , Create_preset.encode
+                         { Create_config.reset_preset with style = style.name } )
+                   ])
+          ; kind = `Style style.icon
+          ; install = None
+          ; context = Some "Open style in Create"
+          }) )
    :: List.map docs_groups ~f:(fun (s, ps) -> page_group (Doc.Section.title s) ps))
   @ List.filter_map Doc.Section.all ~f:(fun s ->
     match Doc.Section.is_docs s, in_section s with

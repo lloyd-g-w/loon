@@ -17,7 +17,10 @@ let is_translucent_menu_color = function
 let normalize (p : Create_preset.t) =
   let p =
     { p with
-      style = Create_config.style
+      style =
+        (if List.exists Create_config.styles ~f:(fun s -> String.equal s.name p.style)
+         then p.style
+         else Create_config.style)
     ; icon_library = Create_config.icon_library
     ; font_heading =
         (if String.equal p.font_heading p.font

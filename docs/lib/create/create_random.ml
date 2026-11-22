@@ -55,9 +55,7 @@ let true_random ~random ~locks (current : Create_preset.t) =
     then Create_field.get current field
     else Option.value (pick ~random options) ~default:(Create_field.get current field)
   in
-  (* Only Vega exists here, so the style biases (Lyra's mono font and no
-     radius, Rhea's no large radius) never apply. *)
-  let style = Create_config.style in
+  let style = choose Style (List.map Create_config.styles ~f:(fun s -> s.name)) in
   let base_color =
     choose Base_color (List.map Create_config.base_colors ~f:(fun t -> t.name))
   in
@@ -75,6 +73,13 @@ let true_random ~random ~locks (current : Create_preset.t) =
   in
   let chart_color = choose Chart_color chart_colors in
   let fonts = List.filter Create_config.fonts ~f:(fun f -> f.available) in
+  (* shadcn's biases: Lyra takes JetBrains Mono and no radius, Rhea no large
+     radius. *)
+  let fonts =
+    if String.equal style "lyra"
+    then List.filter fonts ~f:(fun f -> String.equal f.name "jetbrains-mono")
+    else fonts
+  in
   let font = choose Font (List.map fonts ~f:(fun f -> f.name)) in
   let font_heading =
     if locked Font_heading
@@ -93,7 +98,16 @@ let true_random ~random ~locks (current : Create_preset.t) =
       let from = if List.is_empty contrast then fonts else contrast in
       Option.value_map (pick ~random from) ~default:"inherit" ~f:(fun f -> f.name))
   in
-  let radius = choose Radius (List.map Create_config.radii ~f:(fun r -> r.name)) in
+  let radius =
+    choose
+      Radius
+      (List.map Create_config.radii ~f:(fun r -> r.name)
+       |> List.filter ~f:(fun r ->
+         match style with
+         | "lyra" -> String.equal r "none"
+         | "rhea" -> not (String.equal r "large")
+         | _ -> true))
+  in
   let menu_colors =
     let all = List.map Create_config.menu_colors ~f:fst in
     if (not (locked Menu_color)) && locked Menu_accent && String.equal current.menu_accent "bold"

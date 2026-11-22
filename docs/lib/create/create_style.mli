@@ -1,5 +1,5 @@
-(** A style of shadcn's /create ([registry/styles.tsx]). loon ports
-    new-york-v4, which is Vega's markup: the others need other components. *)
+(** A style of shadcn's /create ([registry/styles.tsx]): the class
+    [style-<name>] (Theme.Style) over the components. *)
 
 type t =
   { name : string (** ["vega"] *)
