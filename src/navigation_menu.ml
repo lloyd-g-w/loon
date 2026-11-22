@@ -338,7 +338,7 @@ let item ?(attrs = []) ?class_ children =
   Node.li
     ~attrs:
       ([ data "slot" "navigation-menu-item"
-       ; Cn.with_class ?class_ [ "relative" ]
+       ; Cn.with_class ?class_ [ "cn-navigation-menu-item relative" ]
        ]
        @ attrs)
     children

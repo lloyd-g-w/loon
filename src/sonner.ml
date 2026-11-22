@@ -550,9 +550,9 @@ let toast_view
   Node.li
     ~key:id
     ~attrs:
-      ([ Attr.tabindex 0 ]
-       @ Option.value_map toast.class_ ~default:[] ~f:(fun c ->
-         [ Attr.class_ c ])
+      ([ Attr.tabindex 0
+       ; Attr.classes ("cn-toast" :: Option.to_list toast.class_)
+       ]
        @ [ data "sonner-toast" ""
          ; data
              "rich-colors"

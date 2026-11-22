@@ -350,7 +350,10 @@ let visually_hidden =
 
 let chevron (orientation : [ `Left | `Right | `Down ]) =
   Icon.view
-    ~class_:"size-4 rdp-chevron"
+    ~class_:
+      (match orientation with
+       | `Left | `Right -> "cn-rtl-flip size-4 rdp-chevron"
+       | `Down -> "size-4 rdp-chevron")
     (match orientation with
      | `Left -> Chevron_left
      | `Right -> Chevron_right
@@ -516,12 +519,17 @@ let view
     let classes =
       List.filter_opt
         [ Some
-            ("group/day relative aspect-square h-full w-full p-0 text-center select-none \
-              [&:last-child[data-selected=true]_button]:rounded-r-md"
+            ("group/day relative aspect-square h-full w-full rounded-(--cell-radius) p-0 \
+              text-center select-none \
+              [&:last-child[data-selected=true]_button]:rounded-r-(--cell-radius)"
              ^
              if show_week_number
-             then " [&:nth-child(2)[data-selected=true]_button]:rounded-l-md rdp-day"
-             else " [&:first-child[data-selected=true]_button]:rounded-l-md rdp-day")
+             then
+               " [&:nth-child(2)[data-selected=true]_button]:rounded-l-(--cell-radius) \
+                rdp-day"
+             else
+               " [&:first-child[data-selected=true]_button]:rounded-l-(--cell-radius) \
+                rdp-day")
         ; Option.some_if is_focused "rdp-focused"
         ; Option.some_if is_disabled "text-muted-foreground opacity-50 rdp-disabled"
         ; Option.some_if hidden "invisible rdp-hidden"
@@ -530,11 +538,17 @@ let view
             "text-muted-foreground aria-selected:text-muted-foreground rdp-outside"
         ; Option.some_if
             is_today
-            "rounded-md bg-accent text-accent-foreground data-[selected=true]:rounded-none \
-             rdp-today"
-        ; Option.some_if range_end "rounded-r-md bg-accent rdp-range_end"
+            "rounded-(--cell-radius) bg-muted text-foreground \
+             data-[selected=true]:rounded-none rdp-today"
+        ; Option.some_if
+            range_end
+            "relative isolate z-0 rounded-r-(--cell-radius) bg-muted after:absolute \
+             after:inset-y-0 after:left-0 after:w-4 after:bg-muted rdp-range_end"
         ; Option.some_if range_middle "rounded-none rdp-range_middle"
-        ; Option.some_if range_start "rounded-l-md bg-accent rdp-range_start"
+        ; Option.some_if
+            range_start
+            "relative isolate z-0 rounded-l-(--cell-radius) bg-muted after:absolute \
+             after:inset-y-0 after:right-0 after:w-4 after:bg-muted rdp-range_start"
         ; Option.some_if sel "rdp-selected"
         ]
       @ List.filter_map modifiers ~f:(fun (matches, cls) -> Option.some_if (matches d) cls)
@@ -550,22 +564,24 @@ let view
         ~size:Icon
         ~disabled:is_disabled
         ~class_:
-          "flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 \
-           leading-none font-normal group-data-[focused=true]/day:relative \
-           group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring \
+          "cn-calendar-day-button relative isolate z-10 flex aspect-square size-auto \
+           w-full min-w-(--cell-size) flex-col gap-1 border-0 leading-none font-normal \
+           group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 \
+           group-data-[focused=true]/day:border-ring \
            group-data-[focused=true]/day:ring-[3px] \
-           group-data-[focused=true]/day:ring-ring/50 data-[range-end=true]:rounded-md \
-           data-[range-end=true]:rounded-r-md data-[range-end=true]:bg-primary \
+           group-data-[focused=true]/day:ring-ring/50 \
+           data-[range-end=true]:rounded-(--cell-radius) \
+           data-[range-end=true]:rounded-r-(--cell-radius) data-[range-end=true]:bg-primary \
            data-[range-end=true]:text-primary-foreground \
-           data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-accent \
-           data-[range-middle=true]:text-accent-foreground \
-           data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md \
+           data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-muted \
+           data-[range-middle=true]:text-foreground \
+           data-[range-start=true]:rounded-(--cell-radius) \
+           data-[range-start=true]:rounded-l-(--cell-radius) \
            data-[range-start=true]:bg-primary \
            data-[range-start=true]:text-primary-foreground \
            data-[selected-single=true]:bg-primary \
-           data-[selected-single=true]:text-primary-foreground \
-           dark:hover:text-accent-foreground [&>span]:text-xs [&>span]:opacity-70 \
-           rdp-day rdp-day_button"
+           data-[selected-single=true]:text-primary-foreground dark:hover:text-foreground \
+           [&>span]:text-xs [&>span]:opacity-70 rdp-day rdp-day_button"
         ~attrs:
           [ data
               "day"
@@ -624,8 +640,7 @@ let view
     Node.span
       ~attrs:
         [ Attr.class_
-            "relative rounded-md border border-input shadow-xs has-focus:border-ring \
-             has-focus:ring-[3px] has-focus:ring-ring/50 rdp-dropdown_root"
+            "cn-calendar-dropdown-root relative rounded-(--cell-radius) rdp-dropdown_root"
         ]
       [ Node.select
           ~attrs:
@@ -649,8 +664,9 @@ let view
       ; Node.span
           ~attrs:
             [ Attr.class_
-                "font-medium select-none flex h-8 items-center gap-1 rounded-md pr-1 pl-2 \
-                 text-sm [&>svg]:size-3.5 [&>svg]:text-muted-foreground rdp-caption_label"
+                "font-medium select-none cn-calendar-caption-label flex items-center gap-1 \
+                 rounded-(--cell-radius) text-sm [&>svg]:size-3.5 \
+                 [&>svg]:text-muted-foreground rdp-caption_label"
             ; aria "hidden" "true"
             ]
           [ Node.text caption; chevron `Down ]
@@ -705,7 +721,7 @@ let view
          | Label ->
            Node.span
              ~attrs:
-               [ Attr.class_ "font-medium select-none text-sm rdp-caption_label"
+               [ Attr.class_ "font-medium select-none cn-calendar-caption text-sm rdp-caption_label"
                ; Attr.role "status"
                ; aria "live" "polite"
                ]
@@ -773,7 +789,7 @@ let view
                        ~attrs:
                          [ aria "label" (Locale.day_name locale day)
                          ; Attr.class_
-                             "flex-1 rounded-md text-[0.8rem] font-normal \
+                             "flex-1 rounded-(--cell-radius) text-[0.8rem] font-normal \
                               text-muted-foreground select-none rdp-weekday"
                          ; Attr.create "scope" "col"
                          ]
@@ -835,9 +851,9 @@ let view
        ; Attr.id id
        ; Cn.attr
            ([ "w-fit rdp-root"
-            ; "group/calendar bg-background p-3 [--cell-size:--spacing(8)] \
-               [[data-slot=card-content]_&]:bg-transparent \
-               [[data-slot=popover-content]_&]:bg-transparent"
+            ; "cn-calendar group/calendar bg-background \
+               in-data-[slot=card-content]:bg-transparent \
+               in-data-[slot=popover-content]:bg-transparent"
             ; "rtl:**:[.rdp-button\\_next>svg]:rotate-180"
             ; "rtl:**:[.rdp-button\\_previous>svg]:rotate-180"
             ]

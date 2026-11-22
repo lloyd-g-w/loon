@@ -279,8 +279,7 @@ let root
           ~attrs:
             [ data "slot" "sidebar-gap"
             ; Cn.attr
-                [ "relative w-(--sidebar-width) bg-transparent \
-                   transition-[width] duration-200 ease-linear"
+                [ "cn-sidebar-gap relative w-(--sidebar-width) bg-transparent"
                 ; "group-data-[collapsible=offcanvas]:w-0"
                 ; "group-data-[side=right]:rotate-180"
                 ; (if floating_or_inset
@@ -293,17 +292,15 @@ let root
       ; Node.div
           ~attrs:
             ([ data "slot" "sidebar-container"
+             ; data "side" (Side.name side)
              ; Cn.attr
                  [ "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) \
                     transition-[left,right,width] duration-200 ease-linear \
+                    data-[side=left]:left-0 \
+                    data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] \
+                    data-[side=right]:right-0 \
+                    data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)] \
                     md:flex"
-                 ; (match side with
-                    | Left ->
-                      "left-0 \
-                       group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
-                    | Right ->
-                      "right-0 \
-                       group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]")
                  ; (if floating_or_inset
                     then
                       "p-2 \
@@ -321,11 +318,7 @@ let root
                 [ data "sidebar" "sidebar"
                 ; data "slot" "sidebar-inner"
                 ; Attr.class_
-                    "flex h-full w-full flex-col bg-sidebar \
-                     group-data-[variant=floating]:rounded-lg \
-                     group-data-[variant=floating]:border \
-                     group-data-[variant=floating]:border-sidebar-border \
-                     group-data-[variant=floating]:shadow-sm"
+                    "cn-sidebar-inner flex size-full flex-col"
                 ]
               children
           ]
@@ -337,20 +330,20 @@ let trigger ?(attrs = []) ?class_ ?on_click t =
     ~attrs:
       ([ Attr.type_ "button"
        ; data "variant" "ghost"
-       ; data "size" "icon"
+       ; data "size" "icon-sm"
        ; data "sidebar" "trigger"
        ; data "slot" "sidebar-trigger"
        ; Attr.class_
            (Button.classes
               ~variant:Ghost
-              ~size:Icon
-              ~class_:(Cn.cn [ "size-7"; Option.value class_ ~default:"" ])
+              ~size:Icon_sm
+              ~class_:(Cn.cn [ "cn-sidebar-trigger"; Option.value class_ ~default:"" ])
               ())
        ; Attr.on_click (fun _ ->
            Effect.Many (Option.to_list on_click @ [ toggle t ]))
        ]
        @ attrs)
-    [ Icon.view Panel_left
+    [ Icon.view ~class_:"cn-rtl-flip" Panel_left
     ; Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "Toggle Sidebar" ]
     ]
 ;;
@@ -367,11 +360,10 @@ let rail ?(attrs = []) ?class_ t =
        ; Attr.title "Toggle Sidebar"
        ; Cn.with_class
            ?class_
-           [ "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 \
-              transition-all ease-linear group-data-[side=left]:-right-4 \
-              group-data-[side=right]:left-0 after:absolute after:inset-y-0 \
-              after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border \
-              sm:flex"
+           [ "cn-sidebar-rail absolute inset-y-0 z-20 hidden w-4 transition-all \
+              ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 \
+              after:absolute after:inset-y-0 after:start-1/2 after:w-[2px] sm:flex \
+              ltr:-translate-x-1/2 rtl:-translate-x-1/2"
            ; "in-data-[side=left]:cursor-w-resize \
               in-data-[side=right]:cursor-e-resize"
            ; "[[data-side=left][data-state=collapsed]_&]:cursor-e-resize \
@@ -393,13 +385,7 @@ let inset ?(attrs = []) ?class_ children =
       ([ data "slot" "sidebar-inset"
        ; Cn.with_class
            ?class_
-           [ "relative flex w-full flex-1 flex-col bg-background"
-           ; "md:peer-data-[variant=inset]:m-2 \
-              md:peer-data-[variant=inset]:ml-0 \
-              md:peer-data-[variant=inset]:rounded-xl \
-              md:peer-data-[variant=inset]:shadow-sm \
-              md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2"
-           ]
+           [ "cn-sidebar-inset relative flex w-full flex-1 flex-col" ]
        ]
        @ attrs)
     children
@@ -407,7 +393,7 @@ let inset ?(attrs = []) ?class_ children =
 
 let input ?(attrs = []) ?class_ ?type_ ?id ?placeholder ?value ?on_input () =
   Input.view
-    ~class_:(Cn.cn ("h-8 w-full bg-background shadow-none" :: Option.to_list class_))
+    ~class_:(Cn.cn ("cn-sidebar-input" :: Option.to_list class_))
     ~attrs:(data "sidebar" "input" :: attrs)
     ?type_
     ?id
@@ -423,12 +409,12 @@ let div name base ?(attrs = []) ?class_ children =
     children
 ;;
 
-let header = div "header" "flex flex-col gap-2 p-2"
-let footer = div "footer" "flex flex-col gap-2 p-2"
+let header = div "header" "cn-sidebar-header flex flex-col"
+let footer = div "footer" "cn-sidebar-footer flex flex-col"
 
 let separator ?(attrs = []) ?class_ () =
   Separator.view
-    ~class_:(Cn.cn ("mx-2 w-auto bg-sidebar-border" :: Option.to_list class_))
+    ~class_:(Cn.cn ("cn-sidebar-separator w-auto" :: Option.to_list class_))
     ~attrs:(data "sidebar" "separator" :: attrs)
     ()
 ;;
@@ -436,20 +422,15 @@ let separator ?(attrs = []) ?class_ () =
 let content =
   div
     "content"
-    "flex min-h-0 flex-1 flex-col gap-2 overflow-auto \
+    "cn-sidebar-content flex min-h-0 flex-1 flex-col overflow-auto \
      group-data-[collapsible=icon]:overflow-hidden"
 ;;
 
-let group = div "group" "relative flex w-full min-w-0 flex-col p-2"
+let group = div "group" "cn-sidebar-group relative flex w-full min-w-0 flex-col"
 
 let group_label_classes ?class_ () =
   Cn.cn
-    [ "flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium \
-       text-sidebar-foreground/70 ring-sidebar-ring outline-hidden \
-       transition-[margin,opacity] duration-200 ease-linear \
-       focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0"
-    ; "group-data-[collapsible=icon]:-mt-8 \
-       group-data-[collapsible=icon]:opacity-0"
+    [ "cn-sidebar-group-label flex shrink-0 items-center outline-hidden [&>svg]:shrink-0"
     ; Option.value class_ ~default:""
     ]
 ;;
@@ -465,11 +446,9 @@ let group_label ?(attrs = []) ?class_ children =
 
 let group_action_classes ?class_ () =
   Cn.cn
-    [ "absolute top-3.5 right-3 flex aspect-square w-5 items-center \
-       justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring \
-       outline-hidden transition-transform hover:bg-sidebar-accent \
-       hover:text-sidebar-accent-foreground focus-visible:ring-2 \
-       [&>svg]:size-4 [&>svg]:shrink-0"
+    [ "cn-sidebar-group-action flex aspect-square items-center justify-center \
+       outline-hidden transition-transform group-data-[collapsible=icon]:hidden \
+       after:absolute after:-inset-2 md:after:hidden [&>svg]:shrink-0"
     ; "after:absolute after:-inset-2 md:after:hidden"
     ; "group-data-[collapsible=icon]:hidden"
     ; Option.value class_ ~default:""
@@ -491,13 +470,13 @@ let group_action ?(attrs = []) ?class_ ?on_click children =
     children
 ;;
 
-let group_content = div "group-content" "w-full text-sm"
+let group_content = div "group-content" "cn-sidebar-group-content w-full"
 
 let menu ?(attrs = []) ?class_ children =
   Node.ul
     ~attrs:
       (slot "menu"
-       @ [ Cn.with_class ?class_ [ "flex w-full min-w-0 flex-col gap-1" ] ]
+       @ [ Cn.with_class ?class_ [ "cn-sidebar-menu flex w-full min-w-0 flex-col" ] ]
        @ attrs)
     children
 ;;
@@ -523,11 +502,9 @@ module Menu_button_variant = struct
   ;;
 
   let classes = function
-    | Default -> "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+    | Default -> "cn-sidebar-menu-button-variant-default"
     | Outline ->
-      "bg-background shadow-[0_0_0_1px_var(--sidebar-border)] \
-       hover:bg-sidebar-accent hover:text-sidebar-accent-foreground \
-       hover:shadow-[0_0_0_1px_var(--sidebar-accent)]"
+      "cn-sidebar-menu-button-variant-outline"
   ;;
 end
 
@@ -545,9 +522,9 @@ module Menu_button_size = struct
   ;;
 
   let classes = function
-    | Default -> "h-8 text-sm"
-    | Sm -> "h-7 text-xs"
-    | Lg -> "h-12 text-sm group-data-[collapsible=icon]:p-0!"
+    | Default -> "cn-sidebar-menu-button-size-default"
+    | Sm -> "cn-sidebar-menu-button-size-sm"
+    | Lg -> "cn-sidebar-menu-button-size-lg"
   ;;
 end
 
@@ -558,21 +535,10 @@ let menu_button_classes
       ()
   =
   Cn.cn
-    [ "peer/menu-button flex w-full items-center gap-2 overflow-hidden \
-       rounded-md p-2 text-left text-sm ring-sidebar-ring outline-hidden \
-       transition-[width,height,padding] \
-       group-has-data-[sidebar=menu-action]/menu-item:pr-8 \
-       group-data-[collapsible=icon]:size-8! \
-       group-data-[collapsible=icon]:p-2! hover:bg-sidebar-accent \
-       hover:text-sidebar-accent-foreground focus-visible:ring-2 \
-       active:bg-sidebar-accent active:text-sidebar-accent-foreground \
-       disabled:pointer-events-none disabled:opacity-50 \
-       aria-disabled:pointer-events-none aria-disabled:opacity-50 \
-       data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium \
-       data-[active=true]:text-sidebar-accent-foreground \
-       data-[state=open]:hover:bg-sidebar-accent \
-       data-[state=open]:hover:text-sidebar-accent-foreground \
-       [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0"
+    [ "cn-sidebar-menu-button peer/menu-button group/menu-button flex w-full items-center \
+       overflow-hidden outline-hidden disabled:pointer-events-none disabled:opacity-50 \
+       aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:size-4 \
+       [&_svg]:shrink-0 [&>span:last-child]:truncate"
     ; Menu_button_variant.classes variant
     ; Menu_button_size.classes size
     ; Option.value class_ ~default:""
@@ -674,23 +640,15 @@ let menu_action
       ((Attr.type_ "button" :: slot "menu-action")
        @ [ Cn.with_class
              ?class_
-             [ "absolute top-1.5 right-1 flex aspect-square w-5 items-center \
-                justify-center rounded-md p-0 text-sidebar-foreground \
-                ring-sidebar-ring outline-hidden transition-transform \
-                peer-hover/menu-button:text-sidebar-accent-foreground \
-                hover:bg-sidebar-accent hover:text-sidebar-accent-foreground \
-                focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0"
-             ; "after:absolute after:-inset-2 md:after:hidden"
-             ; "peer-data-[size=sm]/menu-button:top-1"
-             ; "peer-data-[size=default]/menu-button:top-1.5"
-             ; "peer-data-[size=lg]/menu-button:top-2.5"
-             ; "group-data-[collapsible=icon]:hidden"
+             [ "cn-sidebar-menu-action flex items-center justify-center outline-hidden \
+                transition-transform group-data-[collapsible=icon]:hidden after:absolute \
+                after:-inset-2 md:after:hidden [&>svg]:shrink-0"
              ; (if show_on_hover
                 then
                   "group-focus-within/menu-item:opacity-100 \
                    group-hover/menu-item:opacity-100 \
-                   peer-data-[active=true]/menu-button:text-sidebar-accent-foreground \
-                   data-[state=open]:opacity-100 md:opacity-0"
+                   peer-data-active/menu-button:text-sidebar-accent-foreground \
+                   aria-expanded:opacity-100 md:opacity-0"
                 else "")
              ]
          ]
@@ -705,15 +663,8 @@ let menu_badge ?(attrs = []) ?class_ children =
       (slot "menu-badge"
        @ [ Cn.with_class
              ?class_
-             [ "pointer-events-none absolute right-1 flex h-5 min-w-5 \
-                items-center justify-center rounded-md px-1 text-xs \
-                font-medium text-sidebar-foreground tabular-nums select-none"
-             ; "peer-hover/menu-button:text-sidebar-accent-foreground \
-                peer-data-[active=true]/menu-button:text-sidebar-accent-foreground"
-             ; "peer-data-[size=sm]/menu-button:top-1"
-             ; "peer-data-[size=default]/menu-button:top-1.5"
-             ; "peer-data-[size=lg]/menu-button:top-2.5"
-             ; "group-data-[collapsible=icon]:hidden"
+             [ "cn-sidebar-menu-badge flex items-center justify-center tabular-nums \
+                select-none group-data-[collapsible=icon]:hidden"
              ]
          ]
        @ attrs)
@@ -727,19 +678,19 @@ let menu_skeleton ?(attrs = []) ?class_ ?(show_icon = false) ?(width = "70%") ()
       (slot "menu-skeleton"
        @ [ Cn.with_class
              ?class_
-             [ "flex h-8 items-center gap-2 rounded-md px-2" ]
+             [ "cn-sidebar-menu-skeleton flex items-center" ]
          ]
        @ attrs)
     ((if show_icon
       then
         [ Skeleton.view
-            ~class_:"size-4 rounded-md"
+            ~class_:"cn-sidebar-menu-skeleton-icon"
             ~attrs:[ data "sidebar" "menu-skeleton-icon" ]
             []
         ]
       else [])
      @ [ Skeleton.view
-           ~class_:"h-4 max-w-(--skeleton-width) flex-1"
+           ~class_:"cn-sidebar-menu-skeleton-text max-w-(--skeleton-width) flex-1"
            ~attrs:
              [ data "sidebar" "menu-skeleton-text"
              ; Attr.__css_vars_no_kebabs [ "--skeleton-width", width ]
@@ -754,8 +705,7 @@ let menu_sub ?(attrs = []) ?class_ children =
       (slot "menu-sub"
        @ [ Cn.with_class
              ?class_
-             [ "mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l \
-                border-sidebar-border px-2.5 py-0.5"
+             [ "cn-sidebar-menu-sub flex min-w-0 flex-col"
              ; "group-data-[collapsible=icon]:hidden"
              ]
          ]
@@ -783,10 +733,6 @@ module Menu_sub_button_size = struct
     | Md -> "md"
   ;;
 
-  let classes = function
-    | Sm -> "text-xs"
-    | Md -> "text-sm"
-  ;;
 end
 
 let menu_sub_button
@@ -806,19 +752,11 @@ let menu_sub_button
        @ Option.value_map href ~default:[] ~f:(fun href -> [ Attr.href href ])
        @ [ Cn.with_class
              ?class_
-             [ "flex h-7 min-w-0 -translate-x-px items-center gap-2 \
-                overflow-hidden rounded-md px-2 text-sidebar-foreground \
-                ring-sidebar-ring outline-hidden hover:bg-sidebar-accent \
-                hover:text-sidebar-accent-foreground focus-visible:ring-2 \
-                active:bg-sidebar-accent active:text-sidebar-accent-foreground \
+             [ "cn-sidebar-menu-sub-button flex min-w-0 -translate-x-px items-center \
+                overflow-hidden outline-hidden group-data-[collapsible=icon]:hidden \
                 disabled:pointer-events-none disabled:opacity-50 \
                 aria-disabled:pointer-events-none aria-disabled:opacity-50 \
-                [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 \
-                [&>svg]:text-sidebar-accent-foreground"
-             ; "data-[active=true]:bg-sidebar-accent \
-                data-[active=true]:text-sidebar-accent-foreground"
-             ; Menu_sub_button_size.classes size
-             ; "group-data-[collapsible=icon]:hidden"
+                [&>span:last-child]:truncate [&>svg]:shrink-0"
              ]
          ]
        @ attrs)

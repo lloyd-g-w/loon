@@ -64,9 +64,8 @@ let separator ?(attrs = []) ?class_ ?(orientation = Orientation.Vertical) () =
        ; data "orientation" (Orientation.name orientation)
        ; Cn.with_class
            ?class_
-           [ "shrink-0 bg-border data-[orientation=horizontal]:h-px \
-              data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full \
-              data-[orientation=vertical]:w-px"
+           [ "shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full \
+              data-vertical:w-px data-vertical:self-stretch"
            ; "cn-button-group-separator relative self-stretch data-horizontal:mx-px \
               data-horizontal:w-auto data-vertical:my-px data-vertical:h-auto"
            ]
