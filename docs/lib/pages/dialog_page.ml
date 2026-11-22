@@ -17,7 +17,7 @@ let demo =
            (Button.view ~variant:Outline [ Node.text "Open Dialog" ])
        ; Dialog.content
            dialog
-           ~class_:"sm:max-w-[425px]"
+           ~class_:"sm:max-w-sm"
            [ Dialog.header
                [ Dialog.title dialog [ Node.text "Edit profile" ]
                ; Dialog.description
@@ -27,15 +27,9 @@ let demo =
                         you're done."
                    ]
                ]
-           ; Node.div
-               ~attrs:[ Attr.class_ "grid gap-4" ]
-               [ Node.div
-                   ~attrs:[ Attr.class_ "grid gap-3" ]
-                   [ label ~for_:"name-1" "Name"
-                   ; input ~id:"name-1" "Pedro Duarte"
-                   ]
-               ; Node.div
-                   ~attrs:[ Attr.class_ "grid gap-3" ]
+           ; Field.group
+               [ Field.root [ label ~for_:"name-1" "Name"; input ~id:"name-1" "Pedro Duarte" ]
+               ; Field.root
                    [ label ~for_:"username-1" "Username"
                    ; input ~id:"username-1" "@peduarte"
                    ]

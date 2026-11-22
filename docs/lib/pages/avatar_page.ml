@@ -9,19 +9,21 @@ let page = "avatar"
 
 (*$ Demo *)
 let demo (local_ graph) =
-  let avatar ?class_ ~src ~alt initials =
+  let avatar ?image_class ?(extra = []) ~src ~alt initials =
     Avatar.component
-      ?class_
       (Bonsai.return (fun avatar ->
-         [ Avatar.image avatar ~src ~alt ()
+         [ Avatar.image avatar ?class_:image_class ~src ~alt ()
          ; Avatar.fallback avatar [ Node.text initials ]
-         ]))
+         ]
+         @ extra))
       graph
   in
-  let shadcn = avatar ~src:"https://github.com/shadcn.png" ~alt:"@shadcn" "CN" in
+  let shadcn =
+    avatar ~image_class:"grayscale" ~src:"https://github.com/shadcn.png" ~alt:"@shadcn" "CN"
+  in
   let evilrabbit =
     avatar
-      ~class_:"rounded-lg"
+      ~extra:[ Avatar.badge ~class_:"bg-green-600 dark:bg-green-800" [] ]
       ~src:"https://github.com/evilrabbit.png"
       ~alt:"@evilrabbit"
       "ER"
@@ -35,16 +37,12 @@ let demo (local_ graph) =
   in
   let%arr shadcn and evilrabbit and group in
   Node.div
-    ~attrs:[ Attr.class_ "flex flex-row flex-wrap items-center gap-12" ]
+    ~attrs:[ Attr.class_ "flex flex-row flex-wrap items-center gap-6 md:gap-12" ]
     [ shadcn
     ; evilrabbit
-    ; Node.div
-        ~attrs:
-          [ Attr.class_
-              "flex -space-x-2 *:data-[slot=avatar]:ring-2 \
-               *:data-[slot=avatar]:ring-background *:data-[slot=avatar]:grayscale"
-          ]
-        group
+    ; Avatar.group
+        ~class_:"grayscale"
+        (group @ [ Avatar.group_count [ Node.text "+3" ] ])
     ]
 (*$*)
 

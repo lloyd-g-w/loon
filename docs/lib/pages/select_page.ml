@@ -11,7 +11,7 @@ let page = "select"
 let demo (local_ graph) =
   let%arr _value, view =
     Select.component
-      (return (Select.trigger ~class_:"w-[180px]" ~placeholder:"Select a fruit" ()))
+      (return (Select.trigger ~class_:"w-full max-w-48" ~placeholder:"Select a fruit" ()))
       (return
          (Select.content
             [ Select.group

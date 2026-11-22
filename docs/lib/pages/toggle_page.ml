@@ -14,10 +14,9 @@ let demo (local_ graph) =
       ~attrs:[ Attr.create "aria-label" "Toggle bookmark" ]
       ~size:Sm
       ~variant:Outline
-      ~class_:
-        "data-[state=on]:bg-transparent data-[state=on]:*:[svg]:fill-blue-500 \
-         data-[state=on]:*:[svg]:stroke-blue-500"
-      [ Icon.view Bookmark; Node.text "Bookmark" ]
+      [ Icon.view ~class_:"group-data-[state=on]/toggle:fill-foreground" Bookmark
+      ; Node.text "Bookmark"
+      ]
       graph
   in
   toggle.view

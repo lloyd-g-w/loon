@@ -8,18 +8,21 @@ let page = "aspect_ratio"
 
 (*$ Demo *)
 let demo =
-  Aspect_ratio.view
-    ~ratio:(16. /. 9.)
-    ~class_:"rounded-lg bg-muted"
-    [ Node.img
-        ~attrs:
-          [ Attr.src
-              "https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&dpr=2&q=80"
-          ; Attr.alt "Photo by Drew Beamer"
-          ; Attr.class_
-              "h-full w-full rounded-lg object-cover dark:brightness-[0.2] dark:grayscale"
-          ]
-        ()
+  Node.div
+    ~attrs:[ Attr.class_ "w-full max-w-sm" ]
+    [ Aspect_ratio.view
+        ~ratio:(16. /. 9.)
+        ~class_:"rounded-lg bg-muted"
+        [ Node.img
+            ~attrs:
+              [ Attr.src "https://avatar.vercel.sh/shadcn1"
+              ; Attr.alt "Photo"
+              ; Attr.class_
+                  "absolute inset-0 h-full w-full rounded-lg object-cover grayscale \
+                   dark:brightness-20"
+              ]
+            ()
+        ]
     ]
 (*$*)
 

@@ -28,43 +28,57 @@ let demo (local_ graph) =
        [ Context_menu.trigger
            menu
            ~class_:
-             "flex h-[150px] w-[300px] items-center justify-center rounded-md border \
-              border-dashed text-sm"
-           [ Node.text "Right click here" ]
+             "flex aspect-video w-full max-w-xs items-center justify-center rounded-xl \
+              border border-dashed text-sm"
+           [ Node.span
+               ~attrs:[ Attr.class_ "hidden pointer-fine:inline-block" ]
+               [ Node.text "Right click here" ]
+           ; Node.span
+               ~attrs:[ Attr.class_ "hidden pointer-coarse:inline-block" ]
+               [ Node.text "Long press here" ]
+           ]
        ; Context_menu.content
            menu
-           ~class_:"w-52"
-           [ item ~inset:true "Back" ~shortcut:"⌘["
-           ; item ~inset:true ~disabled:true "Forward" ~shortcut:"⌘]"
-           ; item ~inset:true "Reload" ~shortcut:"⌘R"
-           ; Context_menu.sub
-               (Context_menu.sub_trigger ~inset:true [ Node.text "More Tools" ])
-               (Context_menu.sub_content
-                  ~class_:"w-44"
-                  [ item "Save Page..."
-                  ; item "Create Shortcut..."
-                  ; item "Name Window..."
-                  ; Context_menu.separator ()
-                  ; item "Developer Tools"
-                  ; Context_menu.separator ()
-                  ; item ~variant:Destructive "Delete"
-                  ])
+           ~class_:"w-48"
+           [ Context_menu.group
+               [ item "Back" ~shortcut:"⌘["
+               ; item ~disabled:true "Forward" ~shortcut:"⌘]"
+               ; item "Reload" ~shortcut:"⌘R"
+               ; Context_menu.sub
+                   (Context_menu.sub_trigger [ Node.text "More Tools" ])
+                   (Context_menu.sub_content
+                      ~class_:"w-44"
+                      [ Context_menu.group
+                          [ item "Save Page..."
+                          ; item "Create Shortcut..."
+                          ; item "Name Window..."
+                          ]
+                      ; Context_menu.separator ()
+                      ; Context_menu.group [ item "Developer Tools" ]
+                      ; Context_menu.separator ()
+                      ; Context_menu.group [ item ~variant:Destructive "Delete" ]
+                      ])
+               ]
            ; Context_menu.separator ()
-           ; Context_menu.checkbox_item
-               ~checked:bookmarks
-               ~on_checked_change:set_bookmarks
-               [ Node.text "Show Bookmarks" ]
-           ; Context_menu.checkbox_item
-               ~checked:full_urls
-               ~on_checked_change:set_full_urls
-               [ Node.text "Show Full URLs" ]
+           ; Context_menu.group
+               [ Context_menu.checkbox_item
+                   ~checked:bookmarks
+                   ~on_checked_change:set_bookmarks
+                   [ Node.text "Show Bookmarks" ]
+               ; Context_menu.checkbox_item
+                   ~checked:full_urls
+                   ~on_checked_change:set_full_urls
+                   [ Node.text "Show Full URLs" ]
+               ]
            ; Context_menu.separator ()
-           ; Context_menu.radio_group
-               ~value:person
-               ~on_value_change:set_person
-               [ Context_menu.label ~inset:true [ Node.text "People" ]
-               ; Context_menu.radio_item ~value:"pedro" [ Node.text "Pedro Duarte" ]
-               ; Context_menu.radio_item ~value:"colm" [ Node.text "Colm Tuite" ]
+           ; Context_menu.group
+               [ Context_menu.radio_group
+                   ~value:person
+                   ~on_value_change:set_person
+                   [ Context_menu.label [ Node.text "People" ]
+                   ; Context_menu.radio_item ~value:"pedro" [ Node.text "Pedro Duarte" ]
+                   ; Context_menu.radio_item ~value:"colm" [ Node.text "Colm Tuite" ]
+                   ]
                ]
            ]
        ])

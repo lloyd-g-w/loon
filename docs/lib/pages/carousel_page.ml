@@ -13,7 +13,7 @@ let demo (local_ graph) =
   let%arr carousel in
   Carousel.root
     carousel
-    ~class_:"w-full max-w-xs"
+    ~class_:"w-full max-w-[12rem] sm:max-w-xs"
     [ Carousel.content
         carousel
         (List.init 5 ~f:(fun index ->

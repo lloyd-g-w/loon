@@ -11,7 +11,7 @@ let page = "calendar"
 let demo (local_ graph) =
   let calendar =
     Calendar.component
-      ~class_:"rounded-md border shadow-sm"
+      ~class_:"rounded-lg border"
       ~caption_layout:Dropdown
       ~default:(Single (Some (Calendar.today ())))
       graph

@@ -9,72 +9,66 @@ let page = "tabs"
 
 (*$ Demo *)
 let demo (local_ graph) =
-  let name = Input.component ~id:"tabs-demo-name" ~default_value:"Pedro Duarte" graph in
-  let username =
-    Input.component ~id:"tabs-demo-username" ~default_value:"@peduarte" graph
+  let panel tabs ~value ~title ~description content =
+    Tabs.content
+      tabs
+      ~value
+      [ Card.root
+          [ Card.header
+              [ Card.title [ Node.text title ]
+              ; Card.description [ Node.text description ]
+              ]
+          ; Card.content ~class_:"text-sm text-muted-foreground" [ Node.text content ]
+          ]
+      ]
   in
-  let current = Input.component ~id:"tabs-demo-current" ~type_:Password graph in
-  let new_ = Input.component ~id:"tabs-demo-new" ~type_:Password graph in
-  let field ~id ~label (control : string Control.t) =
-    Node.div
-      ~attrs:[ Attr.class_ "grid gap-3" ]
-      [ Label.view ~for_:id [ Node.text label ]; control.view ]
-  in
-  let tabs =
-    Tabs.component
-      ~default_value:"account"
-      (let%arr name and username and current and new_ in
-       fun tabs ->
-         [ Tabs.list
-             tabs
-             [ Tabs.trigger ~value:"account" [ Node.text "Account" ]
-             ; Tabs.trigger ~value:"password" [ Node.text "Password" ]
-             ]
-         ; Tabs.content
-             tabs
-             ~value:"account"
-             [ Card.root
-                 [ Card.header
-                     [ Card.title [ Node.text "Account" ]
-                     ; Card.description
-                         [ Node.text
-                             "Make changes to your account here. Click save when \
-                              you're done."
-                         ]
-                     ]
-                 ; Card.content
-                     ~class_:"grid gap-6"
-                     [ field ~id:"tabs-demo-name" ~label:"Name" name
-                     ; field ~id:"tabs-demo-username" ~label:"Username" username
-                     ]
-                 ; Card.footer [ Button.view [ Node.text "Save changes" ] ]
-                 ]
-             ]
-         ; Tabs.content
-             tabs
-             ~value:"password"
-             [ Card.root
-                 [ Card.header
-                     [ Card.title [ Node.text "Password" ]
-                     ; Card.description
-                         [ Node.text
-                             "Change your password here. After saving, you'll be logged \
-                              out."
-                         ]
-                     ]
-                 ; Card.content
-                     ~class_:"grid gap-6"
-                     [ field ~id:"tabs-demo-current" ~label:"Current password" current
-                     ; field ~id:"tabs-demo-new" ~label:"New password" new_
-                     ]
-                 ; Card.footer [ Button.view [ Node.text "Save password" ] ]
-                 ]
-             ]
-         ])
-      graph
-  in
-  let%arr tabs in
-  Node.div ~attrs:[ Attr.class_ "flex w-full max-w-sm flex-col gap-6" ] [ tabs ]
+  Tabs.component
+    ~default_value:"overview"
+    ~class_:"w-[400px]"
+    (Bonsai.return (fun tabs ->
+       [ Tabs.list
+           tabs
+           [ Tabs.trigger ~value:"overview" [ Node.text "Overview" ]
+           ; Tabs.trigger ~value:"analytics" [ Node.text "Analytics" ]
+           ; Tabs.trigger ~value:"reports" [ Node.text "Reports" ]
+           ; Tabs.trigger ~value:"settings" [ Node.text "Settings" ]
+           ]
+       ; panel
+           tabs
+           ~value:"overview"
+           ~title:"Overview"
+           ~description:
+             "View your key metrics and recent project activity. Track progress \
+              across all your active projects."
+           "You have 12 active projects and 3 pending tasks."
+       ; panel
+           tabs
+           ~value:"analytics"
+           ~title:"Analytics"
+           ~description:
+             "Track performance and user engagement metrics. Monitor trends and \
+              identify growth opportunities."
+           "Page views are up 25% compared to last month."
+       ; panel
+           tabs
+           ~value:"reports"
+           ~title:"Reports"
+           ~description:
+             "Generate and download your detailed reports. Export data in multiple \
+              formats for analysis."
+           "You have 5 reports ready and available to export."
+       ; panel
+           tabs
+           ~value:"settings"
+           ~title:"Settings"
+           ~description:
+             "Manage your account preferences and options. Customize your experience \
+              to fit your needs."
+           "Configure notifications, security, and themes."
+       ]))
+    graph
+;;
+
 (*$*)
 
 (*$ Line

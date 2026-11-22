@@ -10,7 +10,12 @@ let page = "slider"
 (*$ Demo *)
 let demo (local_ graph) =
   let%arr slider =
-    Slider.component ~default_value:[ 50. ] ~max:100. ~step:1. ~class_:"w-[60%]" graph
+    Slider.component
+      ~default_value:[ 75. ]
+      ~max:100.
+      ~step:1.
+      ~class_:"mx-auto w-full max-w-xs"
+      graph
   in
   slider.view
 (*$*)

@@ -21,14 +21,13 @@ let demo (local_ graph) =
        [ Dropdown_menu.trigger menu (Button.view ~variant:Outline [ Node.text "Open" ])
        ; Dropdown_menu.content
            menu
-           ~class_:"w-56"
+           ~class_:"w-40"
            ~align:Start
-           [ Dropdown_menu.label [ Node.text "My Account" ]
-           ; Dropdown_menu.group
-               [ item "Profile" ~shortcut:"⇧⌘P"
+           [ Dropdown_menu.group
+               [ Dropdown_menu.label [ Node.text "My Account" ]
+               ; item "Profile" ~shortcut:"⇧⌘P"
                ; item "Billing" ~shortcut:"⌘B"
                ; item "Settings" ~shortcut:"⌘S"
-               ; item "Keyboard shortcuts" ~shortcut:"⌘K"
                ]
            ; Dropdown_menu.separator ()
            ; Dropdown_menu.group
@@ -44,11 +43,10 @@ let demo (local_ graph) =
                ; item "New Team" ~shortcut:"⌘+T"
                ]
            ; Dropdown_menu.separator ()
-           ; item "GitHub"
-           ; item "Support"
-           ; item "API" ~disabled:true
+           ; Dropdown_menu.group
+               [ item "GitHub"; item "Support"; item "API" ~disabled:true ]
            ; Dropdown_menu.separator ()
-           ; item "Log out" ~shortcut:"⇧⌘Q"
+           ; Dropdown_menu.group [ item "Log out" ~shortcut:"⇧⌘Q" ]
            ]
        ]))
     graph

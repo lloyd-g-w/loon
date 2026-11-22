@@ -8,31 +8,12 @@ let page = "badge"
 
 (*$ Demo *)
 let demo =
-  let count ?variant n =
-    Badge.view
-      ?variant
-      ~class_:"h-5 min-w-5 rounded-full px-1 font-mono tabular-nums"
-      [ Node.text n ]
-  in
   Node.div
-    ~attrs:[ Attr.class_ "flex flex-col items-center gap-2" ]
-    [ Node.div
-        ~attrs:[ Attr.class_ "flex w-full flex-wrap gap-2" ]
-        [ Badge.view [ Node.text "Badge" ]
-        ; Badge.view ~variant:Secondary [ Node.text "Secondary" ]
-        ; Badge.view ~variant:Destructive [ Node.text "Destructive" ]
-        ; Badge.view ~variant:Outline [ Node.text "Outline" ]
-        ]
-    ; Node.div
-        ~attrs:[ Attr.class_ "flex w-full flex-wrap gap-2" ]
-        [ Badge.view
-            ~variant:Secondary
-            ~class_:"bg-blue-500 text-white dark:bg-blue-600"
-            [ Icon.view Badge_check; Node.text "Verified" ]
-        ; count "8"
-        ; count ~variant:Destructive "99"
-        ; count ~variant:Outline "20+"
-        ]
+    ~attrs:[ Attr.class_ "flex w-full flex-wrap justify-center gap-2" ]
+    [ Badge.view [ Node.text "Badge" ]
+    ; Badge.view ~variant:Secondary [ Node.text "Secondary" ]
+    ; Badge.view ~variant:Destructive [ Node.text "Destructive" ]
+    ; Badge.view ~variant:Outline [ Node.text "Outline" ]
     ]
 (*$*)
 

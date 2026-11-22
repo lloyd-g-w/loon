@@ -22,7 +22,7 @@ let demo (local_ graph) =
              ~default_size:25.
              [ cell ~class_:"flex h-full items-center justify-center p-6" "Two"
              ]
-         ; Resizable.handle ()
+         ; Resizable.handle ~with_handle:true ()
          ; Resizable.panel
              ~default_size:75.
              [ cell
@@ -34,12 +34,12 @@ let demo (local_ graph) =
   in
   Resizable.component
     ~orientation:Horizontal
-    ~class_:"max-w-md rounded-lg border md:min-w-[450px]"
+    ~class_:"max-w-sm rounded-lg border"
     (let%arr inner in
      [ Resizable.panel
          ~default_size:50.
          [ cell ~class_:"flex h-[200px] items-center justify-center p-6" "One" ]
-     ; Resizable.handle ()
+     ; Resizable.handle ~with_handle:true ()
      ; Resizable.panel ~default_size:50. [ inner ]
      ])
     graph

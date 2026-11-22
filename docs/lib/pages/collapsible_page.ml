@@ -12,10 +12,12 @@ let demo (local_ graph) =
   let is_open, set_open = Bonsai.state false graph in
   let%arr is_open
   and set_open in
-  let repository name =
+  let detail ~label value =
     Node.div
-      ~attrs:[ Attr.class_ "rounded-md border px-4 py-2 font-mono text-sm" ]
-      [ Node.text name ]
+      ~attrs:[ Attr.class_ "rounded-md border px-4 py-2 text-sm" ]
+      [ Node.p ~attrs:[ Attr.class_ "font-medium" ] [ Node.text label ]
+      ; Node.p ~attrs:[ Attr.class_ "text-muted-foreground" ] [ Node.text value ]
+      ]
   in
   Collapsible.view
     ~open_:is_open
@@ -26,7 +28,7 @@ let demo (local_ graph) =
            ~attrs:[ Attr.class_ "flex items-center justify-between gap-4 px-4" ]
            [ Node.h4
                ~attrs:[ Attr.class_ "text-sm font-semibold" ]
-               [ Node.text "@peduarte starred 3 repositories" ]
+               [ Node.text "Order #4189" ]
            ; Collapsible.trigger_child
                c
                (Button.view
@@ -36,14 +38,23 @@ let demo (local_ graph) =
                   [ Icon.view Chevrons_up_down
                   ; Node.span
                       ~attrs:[ Attr.class_ "sr-only" ]
-                      [ Node.text "Toggle" ]
+                      [ Node.text "Toggle details" ]
                   ])
            ]
-       ; repository "@radix-ui/primitives"
+       ; Node.div
+           ~attrs:
+             [ Attr.class_
+                 "flex items-center justify-between rounded-md border px-4 py-2 text-sm"
+             ]
+           [ Node.span ~attrs:[ Attr.class_ "text-muted-foreground" ] [ Node.text "Status" ]
+           ; Node.span ~attrs:[ Attr.class_ "font-medium" ] [ Node.text "Shipped" ]
+           ]
        ; Collapsible.content
            c
            ~class_:"flex flex-col gap-2"
-           [ repository "@radix-ui/colors"; repository "@stitches/react" ]
+           [ detail ~label:"Shipping address" "100 Market St, San Francisco"
+           ; detail ~label:"Items" "2x Studio Headphones"
+           ]
        ])
 ;;
 

@@ -13,6 +13,7 @@ let demo (local_ graph) =
   let full_urls, set_full_urls = Bonsai.state true graph in
   let profile, set_profile = Bonsai.state "benoit" graph in
   Menubar.component
+    ~class_:"w-72"
     (let%arr bookmarks_bar and set_bookmarks_bar and full_urls and set_full_urls
      and profile and set_profile in
      let item ?disabled ?inset ?shortcut text =
@@ -23,57 +24,65 @@ let demo (local_ graph) =
           :: Option.to_list
                (Option.map shortcut ~f:(fun s -> Menubar.shortcut [ Node.text s ])))
      in
+     let group = Menubar.group in
      [ Menubar.menu
          (Menubar.trigger [ Node.text "File" ])
          (Menubar.content
-            [ item "New Tab" ~shortcut:"⌘T"
-            ; item "New Window" ~shortcut:"⌘N"
-            ; item ~disabled:true "New Incognito Window"
+            [ group
+                [ item "New Tab" ~shortcut:"⌘T"
+                ; item "New Window" ~shortcut:"⌘N"
+                ; item ~disabled:true "New Incognito Window"
+                ]
             ; Menubar.separator ()
-            ; Menubar.sub
-                (Menubar.sub_trigger [ Node.text "Share" ])
-                (Menubar.sub_content [ item "Email link"; item "Messages"; item "Notes" ])
+            ; group
+                [ Menubar.sub
+                    (Menubar.sub_trigger [ Node.text "Share" ])
+                    (Menubar.sub_content
+                       [ group [ item "Email link"; item "Messages"; item "Notes" ] ])
+                ]
             ; Menubar.separator ()
-            ; item "Print..." ~shortcut:"⌘P"
+            ; group [ item "Print..." ~shortcut:"⌘P" ]
             ])
      ; Menubar.menu
          (Menubar.trigger [ Node.text "Edit" ])
          (Menubar.content
-            [ item "Undo" ~shortcut:"⌘Z"
-            ; item "Redo" ~shortcut:"⇧⌘Z"
+            [ group [ item "Undo" ~shortcut:"⌘Z"; item "Redo" ~shortcut:"⇧⌘Z" ]
             ; Menubar.separator ()
-            ; Menubar.sub
-                (Menubar.sub_trigger [ Node.text "Find" ])
-                (Menubar.sub_content
-                   [ item "Search the web"
-                   ; Menubar.separator ()
-                   ; item "Find..."
-                   ; item "Find Next"
-                   ; item "Find Previous"
-                   ])
+            ; group
+                [ Menubar.sub
+                    (Menubar.sub_trigger [ Node.text "Find" ])
+                    (Menubar.sub_content
+                       [ group [ item "Search the web" ]
+                       ; Menubar.separator ()
+                       ; group [ item "Find..."; item "Find Next"; item "Find Previous" ]
+                       ])
+                ]
             ; Menubar.separator ()
-            ; item "Cut"
-            ; item "Copy"
-            ; item "Paste"
+            ; group [ item "Cut"; item "Copy"; item "Paste" ]
             ])
      ; Menubar.menu
          (Menubar.trigger [ Node.text "View" ])
          (Menubar.content
-            [ Menubar.checkbox_item
-                ~checked:bookmarks_bar
-                ~on_checked_change:set_bookmarks_bar
-                [ Node.text "Always Show Bookmarks Bar" ]
-            ; Menubar.checkbox_item
-                ~checked:full_urls
-                ~on_checked_change:set_full_urls
-                [ Node.text "Always Show Full URLs" ]
+            ~class_:"w-44"
+            [ group
+                [ Menubar.checkbox_item
+                    ~checked:bookmarks_bar
+                    ~on_checked_change:set_bookmarks_bar
+                    [ Node.text "Bookmarks Bar" ]
+                ; Menubar.checkbox_item
+                    ~checked:full_urls
+                    ~on_checked_change:set_full_urls
+                    [ Node.text "Full URLs" ]
+                ]
             ; Menubar.separator ()
-            ; item ~inset:true "Reload" ~shortcut:"⌘R"
-            ; item ~disabled:true ~inset:true "Force Reload" ~shortcut:"⇧⌘R"
+            ; group
+                [ item ~inset:true "Reload" ~shortcut:"⌘R"
+                ; item ~disabled:true ~inset:true "Force Reload" ~shortcut:"⇧⌘R"
+                ]
             ; Menubar.separator ()
-            ; item ~inset:true "Toggle Fullscreen"
+            ; group [ item ~inset:true "Toggle Fullscreen" ]
             ; Menubar.separator ()
-            ; item ~inset:true "Hide Sidebar"
+            ; group [ item ~inset:true "Hide Sidebar" ]
             ])
      ; Menubar.menu
          (Menubar.trigger [ Node.text "Profiles" ])
@@ -86,9 +95,9 @@ let demo (local_ graph) =
                 ; Menubar.radio_item ~value:"Luis" [ Node.text "Luis" ]
                 ]
             ; Menubar.separator ()
-            ; item ~inset:true "Edit..."
+            ; group [ item ~inset:true "Edit..." ]
             ; Menubar.separator ()
-            ; item ~inset:true "Add Profile..."
+            ; group [ item ~inset:true "Add Profile..." ]
             ])
      ])
     graph

@@ -7,25 +7,22 @@ module Attr = Vdom.Attr
 
 let page = "navigation_menu"
 
-(*$ Demo
-   The contents drop down under their triggers; on phones they share the
-   viewport. *)
+(*$ Demo *)
 let components =
   [ ( "Alert Dialog"
-    , "A modal dialog that interrupts the user with important content and \
-       expects a response." )
-  ; ( "Hover Card"
-    , "For sighted users to preview content available behind a link." )
+    , "A modal dialog that interrupts the user with important content and expects a \
+       response." )
+  ; "Hover Card", "For sighted users to preview content available behind a link."
   ; ( "Progress"
-    , "Displays an indicator showing the completion progress of a task, \
-       typically displayed as a progress bar." )
+    , "Displays an indicator showing the completion progress of a task, typically \
+       displayed as a progress bar." )
   ; "Scroll-area", "Visually or semantically separates content."
   ; ( "Tabs"
-    , "A set of layered sections of content—known as tab panels—that are \
-       displayed one at a time." )
+    , "A set of layered sections of content—known as tab panels—that are displayed \
+       one at a time." )
   ; ( "Tooltip"
-    , "A popup that displays information related to an element when the \
-       element receives keyboard focus or the mouse hovers over it." )
+    , "A popup that displays information related to an element when the element \
+       receives keyboard focus or the mouse hovers over it." )
   ]
 ;;
 
@@ -34,79 +31,40 @@ let list_item ~href ~title description =
     [ Navigation_menu.link
         ~href
         [ Node.div
-            ~attrs:[ Attr.class_ "text-sm leading-none font-medium" ]
-            [ Node.text title ]
-        ; Node.p
-            ~attrs:
-              [ Attr.class_
-                  "line-clamp-2 text-sm leading-snug text-muted-foreground"
-              ]
-            [ Node.text description ]
+            ~attrs:[ Attr.class_ "flex flex-col gap-1 text-sm" ]
+            [ Node.div ~attrs:[ Attr.class_ "leading-none font-medium" ] [ Node.text title ]
+            ; Node.div
+                ~attrs:[ Attr.class_ "line-clamp-2 text-muted-foreground" ]
+                [ Node.text description ]
+            ]
         ]
     ]
 ;;
 
 let demo (local_ graph) =
-  let is_mobile = Use_mobile.component graph in
-  let menu viewport =
+  let menu =
     Navigation_menu.component
-      ~viewport
       (Bonsai.return (fun nav ->
          [ Navigation_menu.list
-             ~class_:"flex-wrap"
              nav
              [ Navigation_menu.item
                  [ Navigation_menu.trigger
                      nav
-                     ~value:"home"
-                     [ Node.text "Home" ]
+                     ~value:"getting-started"
+                     [ Node.text "Getting started" ]
                  ; Navigation_menu.content
                      nav
-                     ~value:"home"
+                     ~value:"getting-started"
                      [ Node.ul
-                         ~attrs:
-                           [ Attr.class_
-                               "grid gap-2 md:w-[400px] lg:w-[500px] \
-                                lg:grid-cols-[.75fr_1fr]"
-                           ]
-                         [ Node.li
-                             ~attrs:[ Attr.class_ "row-span-3" ]
-                             [ Navigation_menu.link
-                                 ~class_:
-                                   "flex h-full w-full flex-col justify-end \
-                                    rounded-md bg-linear-to-b from-muted/50 \
-                                    to-muted p-4 no-underline outline-hidden \
-                                    transition-all duration-200 select-none \
-                                    focus:shadow-md md:p-6"
-                                 ~href:"#/"
-                                 [ Node.div
-                                     ~attrs:
-                                       [ Attr.class_
-                                           "mb-2 text-lg font-medium sm:mt-4"
-                                       ]
-                                     [ Node.text "shadcn/ui" ]
-                                 ; Node.p
-                                     ~attrs:
-                                       [ Attr.class_
-                                           "text-sm leading-tight \
-                                            text-muted-foreground"
-                                       ]
-                                     [ Node.text
-                                         "Beautifully designed components \
-                                          built with Tailwind CSS."
-                                     ]
-                                 ]
-                             ]
-                         ; list_item
+                         ~attrs:[ Attr.class_ "w-96" ]
+                         [ list_item
                              ~href:"#/introduction"
                              ~title:"Introduction"
-                             "Re-usable components built using Radix UI and \
-                              Tailwind CSS."
+                             "Re-usable components built with Tailwind CSS."
                          ; list_item
                              ~href:"#/installation"
                              ~title:"Installation"
-                             "How to install dependencies and structure your \
-                              app."
+                             "How to install dependencies and structure your app."
                          ; list_item
                              ~href:"#/theming"
                              ~title:"Typography"
@@ -115,6 +73,7 @@ let demo (local_ graph) =
                      ]
                  ]
              ; Navigation_menu.item
+                 ~class_:"hidden md:flex"
                  [ Navigation_menu.trigger
                      nav
                      ~value:"components"
@@ -125,14 +84,11 @@ let demo (local_ graph) =
                      [ Node.ul
                          ~attrs:
                            [ Attr.class_
-                               "grid gap-2 sm:w-[400px] md:w-[500px] \
-                                md:grid-cols-2 lg:w-[600px]"
+                               "grid w-[400px] gap-2 md:w-[500px] md:grid-cols-2 \
+                                lg:w-[600px]"
                            ]
                          (List.map components ~f:(fun (title, description) ->
-                            list_item
-                              ~href:"#/navigation_menu"
-                              ~title
-                              description))
+                            list_item ~href:"#/navigation-menu" ~title description))
                      ]
                  ]
              ; Navigation_menu.item
@@ -141,102 +97,15 @@ let demo (local_ graph) =
                      ~href:"#/introduction"
                      [ Node.text "Docs" ]
                  ]
-             ; Navigation_menu.item
-                 ~class_:"hidden md:block"
-                 [ Navigation_menu.trigger
-                     nav
-                     ~value:"list"
-                     [ Node.text "List" ]
-                 ; Navigation_menu.content
-                     nav
-                     ~value:"list"
-                     [ Node.ul
-                         ~attrs:[ Attr.class_ "grid w-[300px] gap-4" ]
-                         [ Node.li
-                             (List.map
-                                [ ( "Components"
-                                  , "Browse all components in the library." )
-                                ; ( "Documentation"
-                                  , "Learn how to use the library." )
-                                ; "Blog", "Read our latest blog posts."
-                                ]
-                                ~f:(fun (title, description) ->
-                                  Navigation_menu.link
-                                    ~href:"#/navigation_menu"
-                                    [ Node.div
-                                        ~attrs:[ Attr.class_ "font-medium" ]
-                                        [ Node.text title ]
-                                    ; Node.div
-                                        ~attrs:
-                                          [ Attr.class_ "text-muted-foreground"
-                                          ]
-                                        [ Node.text description ]
-                                    ]))
-                         ]
-                     ]
-                 ]
-             ; Navigation_menu.item
-                 ~class_:"hidden md:block"
-                 [ Navigation_menu.trigger
-                     nav
-                     ~value:"simple"
-                     [ Node.text "Simple" ]
-                 ; Navigation_menu.content
-                     nav
-                     ~value:"simple"
-                     [ Node.ul
-                         ~attrs:[ Attr.class_ "grid w-[200px] gap-4" ]
-                         [ Node.li
-                             (List.map
-                                [ "Components"; "Documentation"; "Blocks" ]
-                                ~f:(fun t ->
-                                  Navigation_menu.link
-                                    ~href:"#/navigation_menu"
-                                    [ Node.text t ]))
-                         ]
-                     ]
-                 ]
-             ; Navigation_menu.item
-                 ~class_:"hidden md:block"
-                 [ Navigation_menu.trigger
-                     nav
-                     ~value:"with-icon"
-                     [ Node.text "With Icon" ]
-                 ; Navigation_menu.content
-                     nav
-                     ~value:"with-icon"
-                     [ Node.ul
-                         ~attrs:[ Attr.class_ "grid w-[200px] gap-4" ]
-                         [ Node.li
-                             (List.map
-                                [ Icon.Circle_help, "Backlog"
-                                ; Circle, "To Do"
-                                ; Circle_check, "Done"
-                                ]
-                                ~f:(fun (icon, t) ->
-                                  Navigation_menu.link
-                                    ~class_:"flex-row items-center gap-2"
-                                    ~href:"#/navigation_menu"
-                                    [ Icon.view icon; Node.text t ]))
-                         ]
-                     ]
-                 ]
              ]
          ]))
-  in
-  (* [viewport] changes the menu's structure: one menu for each. *)
-  let menu =
-    match%sub is_mobile with
-    | true -> menu true graph
-    | false -> menu false graph
+      graph
   in
   (* Room under the menu for its contents. *)
   let%arr menu in
   Node.div
     ~attrs:
-      [ Attr.class_
-          "flex min-h-[480px] w-full items-start justify-center \
-           md:min-h-[340px]"
+      [ Attr.class_ "flex min-h-[480px] w-full items-start justify-center md:min-h-[340px]"
       ]
     [ menu ]
 ;;

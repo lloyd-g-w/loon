@@ -9,23 +9,19 @@ let page = "separator"
 (*$ Demo *)
 let demo =
   Node.div
+    ~attrs:[ Attr.class_ "flex max-w-sm flex-col gap-4 text-sm" ]
     [ Node.div
-        ~attrs:[ Attr.class_ "space-y-1" ]
-        [ Node.h4
-            ~attrs:[ Attr.class_ "text-sm leading-none font-medium" ]
-            [ Node.text "Radix Primitives" ]
-        ; Node.p
-            ~attrs:[ Attr.class_ "text-sm text-muted-foreground" ]
-            [ Node.text "An open-source UI component library." ]
+        ~attrs:[ Attr.class_ "flex flex-col gap-1.5" ]
+        [ Node.div ~attrs:[ Attr.class_ "leading-none font-medium" ] [ Node.text "shadcn/ui" ]
+        ; Node.div
+            ~attrs:[ Attr.class_ "text-muted-foreground" ]
+            [ Node.text "The Foundation for your Design System" ]
         ]
-    ; Separator.view ~class_:"my-4" ()
+    ; Separator.view ()
     ; Node.div
-        ~attrs:[ Attr.class_ "flex h-5 items-center space-x-4 text-sm" ]
-        [ Node.div [ Node.text "Blog" ]
-        ; Separator.view ~orientation:Vertical ()
-        ; Node.div [ Node.text "Docs" ]
-        ; Separator.view ~orientation:Vertical ()
-        ; Node.div [ Node.text "Source" ]
+        [ Node.text
+            "A set of beautifully designed components that you can customize, extend, \
+             and build on."
         ]
     ]
 (*$*)

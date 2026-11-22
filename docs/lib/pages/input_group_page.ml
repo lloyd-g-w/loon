@@ -9,66 +9,11 @@ let page = "input_group"
 
 (*$ Demo *)
 let demo =
-  Node.div
-    ~attrs:[ Attr.class_ "grid w-full max-w-sm gap-6" ]
-    [ Input_group.root
-        [ Input_group.input ~placeholder:"Search..." ()
-        ; Input_group.addon [ Icon.view Search ]
-        ; Input_group.addon ~align:Inline_end [ Node.text "12 results" ]
-        ]
-    ; Input_group.root
-        [ Input_group.input ~placeholder:"example.com" ~class_:"pl-1!" ()
-        ; Input_group.addon [ Input_group.text [ Node.text "https://" ] ]
-        ; Input_group.addon
-            ~align:Inline_end
-            [ Input_group.button
-                ~class_:"rounded-full"
-                ~size:Icon_xs
-                ~attrs:[ Attr.title "This is content in a tooltip." ]
-                [ Icon.view Info ]
-            ]
-        ]
-    ; Input_group.root
-        [ Input_group.textarea ~placeholder:"Ask, Search or Chat..." ()
-        ; Input_group.addon
-            ~align:Block_end
-            [ Input_group.button
-                ~variant:Outline
-                ~class_:"rounded-full"
-                ~size:Icon_xs
-                [ Icon.view Plus ]
-            ; Input_group.button ~variant:Ghost [ Node.text "Auto" ]
-            ; Input_group.text ~class_:"ml-auto" [ Node.text "52% used" ]
-            ; Node.div
-                ~attrs:
-                  [ Attr.role "none"
-                  ; Attr.create "data-orientation" "vertical"
-                  ; Attr.class_ "h-4 w-px shrink-0 bg-border"
-                  ]
-                []
-            ; Input_group.button
-                ~variant:Default
-                ~class_:"rounded-full"
-                ~size:Icon_xs
-                ~disabled:true
-                [ Icon.view Arrow_up
-                ; Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "Send" ]
-                ]
-            ]
-        ]
-    ; Input_group.root
-        [ Input_group.input ~placeholder:"@shadcn" ()
-        ; Input_group.addon
-            ~align:Inline_end
-            [ Node.div
-                ~attrs:
-                  [ Attr.class_
-                      "flex size-4 items-center justify-center rounded-full bg-primary \
-                       text-primary-foreground"
-                  ]
-                [ Icon.view ~class_:"size-3" Check ]
-            ]
-        ]
+  Input_group.root
+    ~class_:"max-w-xs"
+    [ Input_group.input ~placeholder:"Search..." ()
+    ; Input_group.addon [ Icon.view Search ]
+    ; Input_group.addon ~align:Inline_end [ Node.text "12 results" ]
     ]
 (*$*)
 

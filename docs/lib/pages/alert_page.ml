@@ -9,29 +9,23 @@ let page = "alert"
 (*$ Demo *)
 let demo =
   Node.div
-    ~attrs:[ Attr.class_ "grid w-full max-w-xl items-start gap-4" ]
+    ~attrs:[ Attr.class_ "grid w-full max-w-md items-start gap-4" ]
     [ Alert.root
         [ Icon.view Circle_check
-        ; Alert.title [ Node.text "Success! Your changes have been saved" ]
+        ; Alert.title [ Node.text "Payment successful" ]
         ; Alert.description
-            [ Node.text "This is an alert with icon, title and description." ]
+            [ Node.text
+                "Your payment of $29.99 has been processed. A receipt has been sent \
+                 to your email address."
+            ]
         ]
     ; Alert.root
-        [ Icon.view Popcorn
-        ; Alert.title [ Node.text "This Alert has a title and an icon. No description." ]
-        ]
-    ; Alert.root
-        ~variant:Destructive
-        [ Icon.view Circle_alert
-        ; Alert.title [ Node.text "Unable to process your payment." ]
+        [ Icon.view Info
+        ; Alert.title [ Node.text "New feature available" ]
         ; Alert.description
-            [ Node.p [ Node.text "Please verify your billing information and try again." ]
-            ; Node.ul
-                ~attrs:[ Attr.class_ "list-inside list-disc text-sm" ]
-                [ Node.li [ Node.text "Check your card details" ]
-                ; Node.li [ Node.text "Ensure sufficient funds" ]
-                ; Node.li [ Node.text "Verify billing address" ]
-                ]
+            [ Node.text
+                "We've added dark mode support. You can enable it in your account \
+                 settings."
             ]
         ]
     ]

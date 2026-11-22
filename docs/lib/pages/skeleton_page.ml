@@ -9,7 +9,7 @@ let page = "skeleton"
 (*$ Demo *)
 let demo =
   Node.div
-    ~attrs:[ Attr.class_ "flex items-center space-x-4" ]
+    ~attrs:[ Attr.class_ "flex items-center gap-4" ]
     [ Skeleton.view ~class_:"h-12 w-12 rounded-full" []
     ; Node.div
         ~attrs:[ Attr.class_ "space-y-2" ]

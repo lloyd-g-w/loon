@@ -66,7 +66,7 @@ let demo (local_ graph) =
                        (List.map data ~f:(fun g ->
                           Node.div
                             ~attrs:
-                              [ Attr.class_ "flex-1 bg-foreground opacity-90"
+                              [ Attr.class_ "flex-1 bg-chart-1"
                               ; Attr.style
                                   (Css_gen.height (`Percent (Percent.of_mult (Float.of_int g /. 400.))))
                               ]

@@ -20,7 +20,7 @@ let demo (local_ graph) =
          [ Command.shortcut [ Node.text s ] ]))
   in
   Command.component
-    ~class_:"rounded-lg border shadow-md md:min-w-[450px]"
+    ~class_:"max-w-sm rounded-lg border"
     (Bonsai.return
        [ Command.input ~placeholder:"Type a command or search..." ()
        ; Command.list

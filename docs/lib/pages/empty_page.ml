@@ -20,11 +20,9 @@ let demo =
             ]
         ]
     ; Empty.content
-        [ Node.div
-            ~attrs:[ Attr.class_ "flex gap-2" ]
-            [ Button.view [ Node.text "Create Project" ]
-            ; Button.view ~variant:Outline [ Node.text "Import Project" ]
-            ]
+        ~class_:"flex-row justify-center gap-2"
+        [ Button.view [ Node.text "Create Project" ]
+        ; Button.view ~variant:Outline [ Node.text "Import Project" ]
         ]
     ; Button.link
         ~variant:Link

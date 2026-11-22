@@ -10,41 +10,24 @@ let page = "hover_card"
 (*$ Demo *)
 let demo (local_ graph) =
   Hover_card.component
+    ~open_delay:10.
+    ~close_delay:100.
     (Bonsai.return (fun card ->
-       [ Hover_card.trigger card (Button.view ~variant:Link [ Node.text "@nextjs" ])
+       [ Hover_card.trigger card (Button.view ~variant:Link [ Node.text "Hover Here" ])
        ; Hover_card.content
            card
-           ~class_:"w-80"
-           [ Node.div
-               ~attrs:[ Attr.class_ "flex justify-between gap-4" ]
-               [ Node.span
-                   ~attrs:
-                     [ Attr.class_
-                         "relative flex size-8 shrink-0 overflow-hidden rounded-full"
-                     ]
-                   [ Node.img
-                       ~attrs:
-                         [ Attr.src "https://github.com/vercel.png"
-                         ; Attr.class_ "aspect-square size-full"
-                         ]
-                       ()
-                   ]
-               ; Node.div
-                   ~attrs:[ Attr.class_ "space-y-1" ]
-                   [ Node.h4
-                       ~attrs:[ Attr.class_ "text-sm font-semibold" ]
-                       [ Node.text "@nextjs" ]
-                   ; Node.p
-                       ~attrs:[ Attr.class_ "text-sm" ]
-                       [ Node.text "The React Framework – created and maintained by @vercel." ]
-                   ; Node.div
-                       ~attrs:[ Attr.class_ "text-xs text-muted-foreground" ]
-                       [ Node.text "Joined December 2021" ]
-                   ]
-               ]
+           ~class_:"flex w-64 flex-col gap-0.5"
+           [ Node.div ~attrs:[ Attr.class_ "font-semibold" ] [ Node.text "@nextjs" ]
+           ; Node.div
+               [ Node.text "The React Framework – created and maintained by @vercel." ]
+           ; Node.div
+               ~attrs:[ Attr.class_ "mt-1 text-xs text-muted-foreground" ]
+               [ Node.text "Joined December 2021" ]
            ]
        ]))
     graph
+;;
+
 (*$*)
 
 let page =
