@@ -81,7 +81,7 @@ await wait(b, 100);
 await state("click Profile");
 
 // The dialog.
-await b.open("command", "Dialog", "command-dialog");
+await b.open("command", "Dialog", "parity-command-dialog");
 await each(b, (p) => p.mouse.click(5, 5));
 await each(b, (p) => p.keyboard.press("Control+j"));
 await wait(b, 400);

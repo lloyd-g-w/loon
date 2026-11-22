@@ -38,12 +38,12 @@ const hoverTrigger = (name) =>
 await b.open("navigation_menu", "Demo", "navigation-menu-demo");
 await align(b, "[data-slot=navigation-menu]");
 await state("closed");
-await hoverTrigger("Home");
+await hoverTrigger("Getting started");
 await wait(b, 100);
-await state("hover Home 100ms (before the delay)");
+await state("hover Getting started 100ms (before the delay)");
 await wait(b, 300);
-await state("hover Home 400ms");
-await clipShot(b, "nav-home", "[data-slot=navigation-menu]", "[data-slot=navigation-menu-content]");
+await state("hover Getting started 400ms");
+await clipShot(b, "nav-getting-started", "[data-slot=navigation-menu]", "[data-slot=navigation-menu-content]");
 await hoverTrigger("Components");
 await wait(b, 50);
 await state("hover Components (switches at once)");
@@ -66,19 +66,19 @@ await wait(b, 500);
 await state("pointer away 600ms");
 // Click: opens; a second click closes (and hovering again does not reopen
 // until the pointer leaves).
-await each(b, (p) => trigger(p, "List").click());
+await each(b, (p) => trigger(p, "Components").click());
 await wait(b, 400);
-await state("click List");
-await clipShot(b, "nav-list", "[data-slot=navigation-menu]", "[data-slot=navigation-menu-content]");
-await each(b, (p) => trigger(p, "List").click());
+await state("click Components");
+await clipShot(b, "nav-components-click", "[data-slot=navigation-menu]", "[data-slot=navigation-menu-content]");
+await each(b, (p) => trigger(p, "Components").click());
 await wait(b, 400);
-await state("click List again");
+await state("click Components again");
 await each(b, (p) => p.mouse.move(5, 5, { steps: 4 }));
 await wait(b, 500);
 // Keyboard.
-await each(b, (p) => trigger(p, "Home").focus());
+await each(b, (p) => trigger(p, "Getting started").focus());
 await wait(b, 100);
-await state("focus Home");
+await state("focus Getting started");
 await each(b, (p) => p.keyboard.press("ArrowRight"));
 await wait(b, 100);
 await state("ArrowRight");

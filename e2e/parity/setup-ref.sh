@@ -19,7 +19,7 @@ cp -r "$src/registry/bases/radix" src/registry
 rm -rf src/registry/examples && mkdir src/registry/examples
 # The radix examples whose imports the app has (not the AI, RTL or Base UI
 # ones).
-ok_import='^(react|react-dom|lucide-react|@tabler/icons-react|sonner|date-fns|date-fns/.*|@tanstack/react-table|embla-carousel-autoplay|embla-carousel-react|input-otp|recharts|react-day-picker|radix-ui|zod|react-hook-form|@hookform/resolvers/zod|@/styles/radix-nova/ui/[a-z-]+|@/registry/bases/radix/.*)$'
+ok_import='^(react|react-dom|next/link|next/image|lucide-react|@tabler/icons-react|sonner|date-fns|date-fns/.*|@tanstack/react-table|embla-carousel-autoplay|embla-carousel-react|input-otp|recharts|react-day-picker|radix-ui|zod|react-hook-form|@hookform/resolvers/zod|@/styles/radix-nova/ui/[a-z-]+|@/registry/bases/radix/.*)$'
 for f in "$src"/examples/radix/*.tsx; do
 	bad=0
 	while read -r m; do
