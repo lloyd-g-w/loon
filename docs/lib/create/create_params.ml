@@ -44,9 +44,23 @@ let normalize (p : Create_preset.t) =
            | _ -> fallback)
     }
   in
+  (* design-system-provider.tsx: Lyra and Sera have no radius, Rhea no large
+     one. *)
+  let p =
+    match p.style, p.radius with
+    | ("lyra" | "sera"), _ -> { p with radius = "none" }
+    | "rhea", "large" -> { p with radius = "default" }
+    | _ -> p
+  in
   if String.equal p.menu_accent "bold" && is_translucent_menu_color p.menu_color
   then { p with menu_accent = "subtle" }
   else p
+;;
+
+let is_radius_locked (p : Create_preset.t) =
+  match p.style with
+  | "lyra" | "sera" -> true
+  | _ -> false
 ;;
 
 let design_system_keys =
