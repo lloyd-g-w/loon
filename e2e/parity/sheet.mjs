@@ -8,7 +8,7 @@ const b = await both();
 const sel = {
   content: "[data-slot=sheet-content]",
   overlay: "[data-slot=sheet-overlay]",
-  closeButton: "[data-slot=sheet-content] > button.absolute",
+  closeButton: "[data-slot=sheet-content] > [data-slot=sheet-close]",
 };
 await b.open("sheet", "Demo", "sheet-demo");
 await modalChecks(b, { ...sel, name: "demo", trigger: "[data-slot=sheet-trigger]", tabs: 6 });

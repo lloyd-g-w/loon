@@ -1,11 +1,11 @@
 // Mirrors loon's Sidebar "Demo": shadcn's sidebar-07 in the docs page's frame
 // (the sidebar absolute in the frame, not fixed to the window).
-import { AppSidebar } from "@/registry/new-york-v4/blocks/sidebar-07/components/app-sidebar"
+import { AppSidebar } from "@/registry/bases/radix/blocks/sidebar-07/components/app-sidebar"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/registry/new-york-v4/ui/sidebar"
+} from "@/registry/bases/radix/ui/sidebar"
 
 export default function SidebarDemo() {
   return (

@@ -1,11 +1,11 @@
 // shadcn's sidebar-07 block (a sidebar collapsing to icons) in the frame
 // loon's Sidebar "Demo" example runs in.
-import { AppSidebar } from "@/registry/new-york-v4/blocks/sidebar-07/components/app-sidebar"
+import { AppSidebar } from "@/registry/bases/radix/blocks/sidebar-07/components/app-sidebar"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/registry/new-york-v4/ui/sidebar"
+} from "@/registry/bases/radix/ui/sidebar"
 
 export default function Sidebar07() {
   return (

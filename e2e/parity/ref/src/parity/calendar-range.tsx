@@ -2,8 +2,8 @@
 import * as React from "react"
 import { type DateRange } from "react-day-picker"
 
-import { Calendar } from "@/registry/new-york-v4/ui/calendar"
-import { Card, CardContent } from "@/registry/new-york-v4/ui/card"
+import { Calendar } from "@/registry/bases/radix/ui/calendar"
+import { Card, CardContent } from "@/registry/bases/radix/ui/card"
 
 export default function CalendarRange() {
   const today = new Date()

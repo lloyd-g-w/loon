@@ -11,7 +11,7 @@ const sel = {
   overlay: "[data-slot=dialog-overlay]",
 };
 await b.open("dialog", "Demo", "dialog-demo");
-await modalChecks(b, { ...sel, name: "demo", closeButton: "[data-slot=dialog-close].absolute, [data-slot=dialog-content] > button:last-child" });
+await modalChecks(b, { ...sel, name: "demo", closeButton: "[data-slot=dialog-content] > [data-slot=dialog-close]" });
 await b.open("dialog", "Custom close button", "dialog-close-button");
 await modalChecks(b, { ...sel, name: "close-button", tabs: 4 });
 await b.close();

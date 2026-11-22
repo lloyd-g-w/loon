@@ -1,12 +1,20 @@
 import "./index.css"
 import * as React from "react"
 import { createRoot } from "react-dom/client"
-import { Toaster } from "@/registry/new-york-v4/ui/sonner"
-import { TooltipProvider } from "@/registry/new-york-v4/ui/tooltip"
+import { Toaster } from "@/registry/bases/radix/ui/sonner"
+import { TooltipProvider } from "@/registry/bases/radix/ui/tooltip"
 
-// Also ./parity/<name>.tsx as #/parity-<name>: pages mirroring loon examples
-// that shadcn has no example of (e.g. a sidebar block in a frame).
+// shadcn's examples/radix (in ./registry/examples), then new-york-v4's for
+// the names radix has not (loon's Combobox still ports those). Also
+// ./parity/<name>.tsx as #/parity-<name>: pages mirroring loon examples that
+// shadcn has no example of (e.g. a sidebar block in a frame).
 const examples: Record<string, () => Promise<unknown>> = {
+  ...Object.fromEntries(
+    Object.entries(import.meta.glob("./ny/examples/*.tsx")).map(([k, v]) => [
+      `./registry/examples/${k.slice(14)}`,
+      v,
+    ]),
+  ),
   ...import.meta.glob("./registry/examples/*.tsx"),
   ...Object.fromEntries(
     Object.entries(import.meta.glob("./parity/*.tsx")).map(([k, v]) => [

@@ -8,10 +8,15 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: [
-      { find: /^@\/registry\/new-york-v4\/(.*)$/, replacement: r("src/registry/$1") },
-      { find: /^cn$/, replacement: r("src/registry/lib/utils.ts") },
-      { find: /^@\/lib\/utils$/, replacement: r("src/registry/lib/utils.ts") },
-      { find: /^@\/components\/ui\/(.*)$/, replacement: r("src/registry/ui/$1") },
+      // bases/radix, and the examples' styled copies of it
+      { find: /^@\/registry\/bases\/radix\/(.*)$/, replacement: r("src/registry/$1") },
+      { find: /^@\/styles\/radix-[a-z]+\/(.*)$/, replacement: r("src/registry/$1") },
+      { find: /^@\/app\/\(create\)\/components\/icon-placeholder$/, replacement: r("src/stubs/icon-placeholder.tsx") },
+      { find: /^cn$/, replacement: r("src/ny/lib/utils.ts") },
+      // new-york-v4
+      { find: /^@\/registry\/new-york-v4\/(.*)$/, replacement: r("src/ny/$1") },
+      { find: /^@\/lib\/utils$/, replacement: r("src/ny/lib/utils.ts") },
+      { find: /^@\/components\/ui\/(.*)$/, replacement: r("src/ny/ui/$1") },
       { find: /^@\/hooks\/(.*)$/, replacement: r("src/hooks/$1") },
       { find: /^next\/link$/, replacement: r("src/stubs/next-link.tsx") },
       { find: /^next\/image$/, replacement: r("src/stubs/next-image.tsx") },
