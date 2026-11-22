@@ -47,14 +47,27 @@ let demo =
 (*$ Side
    [~side] on [content]: [Top], [Right] (the default), [Bottom] or [Left]. *)
 let side (local_ graph) =
+  let lorem =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod \
+     tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, \
+     quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo \
+     consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse \
+     cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non \
+     proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+  in
   let sheet (side : Sheet.Side.t) =
-    let name = Sheet.Side.name side in
     Sheet.component
       (Bonsai.return (fun sheet ->
-         [ Sheet.trigger sheet (Button.view ~variant:Outline [ Node.text name ])
+         [ Sheet.trigger
+             sheet
+             (Button.view
+                ~variant:Outline
+                ~class_:"capitalize"
+                [ Node.text (Sheet.Side.name side) ])
          ; Sheet.content
              sheet
              ~side
+             ~class_:"data-[side=bottom]:max-h-[50vh] data-[side=top]:max-h-[50vh]"
              [ Sheet.header
                  [ Sheet.title sheet [ Node.text "Edit profile" ]
                  ; Sheet.description
@@ -64,34 +77,22 @@ let side (local_ graph) =
                      ]
                  ]
              ; Node.div
-                 ~attrs:[ Attr.class_ "grid gap-4 py-4" ]
-                 [ Node.div
-                     ~attrs:[ Attr.class_ "grid grid-cols-4 items-center gap-4" ]
-                     [ label ~class_:"text-right" ~for_:("name-" ^ name) "Name"
-                     ; input
-                         ~attrs:[ Attr.class_ "col-span-3" ]
-                         ~id:("name-" ^ name)
-                         "Pedro Duarte"
-                     ]
-                 ; Node.div
-                     ~attrs:[ Attr.class_ "grid grid-cols-4 items-center gap-4" ]
-                     [ label ~class_:"text-right" ~for_:("username-" ^ name) "Username"
-                     ; input
-                         ~attrs:[ Attr.class_ "col-span-3" ]
-                         ~id:("username-" ^ name)
-                         "@peduarte"
-                     ]
-                 ]
+                 ~attrs:[ Attr.class_ "no-scrollbar overflow-y-auto px-4" ]
+                 (List.init 10 ~f:(fun _ ->
+                    Node.p ~attrs:[ Attr.class_ "mb-2 leading-relaxed" ] [ Node.text lorem ]))
              ; Sheet.footer
-                 [ Sheet.close sheet (Button.view ~type_:`Submit [ Node.text "Save changes" ])
+                 [ Button.view ~type_:`Submit [ Node.text "Save changes" ]
+                 ; Sheet.close sheet (Button.view ~variant:Outline [ Node.text "Cancel" ])
                  ]
              ]
          ]))
       graph
   in
-  let sheets = Bonsai.all (List.map Sheet.Side.all ~f:sheet) in
+  let sheets =
+    Bonsai.all (List.map Sheet.Side.[ Top; Right; Bottom; Left ] ~f:sheet)
+  in
   let%arr.Bonsai sheets in
-  Node.div ~attrs:[ Attr.class_ "grid grid-cols-2 gap-2" ] sheets
+  Node.div ~attrs:[ Attr.class_ "flex flex-wrap gap-2" ] sheets
 (*$*)
 
 let page =
