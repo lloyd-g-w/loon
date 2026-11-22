@@ -11,8 +11,17 @@ module File : sig
   [@@deriving sexp_of]
 end
 
+module Kind : sig
+  type t =
+    | Component (** a module of loon's [src/] *)
+    | Block (** one of shadcn's blocks, from [blocks/]: [login_03] *)
+    | Block_part (** a module of [blocks/] that blocks use: [little_date] *)
+  [@@deriving sexp_of, equal]
+end
+
 type t =
   { name : string (** the module's file name without [.ml], e.g. [dom_util] *)
+  ; kind : Kind.t
   ; description : string
   ; sources : File.t list (** the [.ml] and [.mli] files *)
   ; css : File.t list (** its stylesheets, in order *)
@@ -25,7 +34,12 @@ type t =
 val theme : string
 
 (** [build files ~generated]: the entries of loon's sources [files] (paths
-    such as [src/button.ml], [src/css/button.css]). Modules that are, or use,
+    such as [src/button.ml], [src/css/button.css], and [blocks/login_03.ml]
+    for the blocks). A block's sources are its own with their [open Loon]
+    line dropped, so that they build beside the components they use (or,
+    when it uses a component [open! Core] hides, as [Field], with a local
+    [Loon] naming it);
+    [blocks/block.ml], the gallery's list of blocks, is left out. Modules that are, or use,
     one of the [generated] modules (built by a rule, so not copyable) are
     left out. A module's dependencies are the modules it names and the
     entries owning the [loon-...] classes its strings use (a class belongs

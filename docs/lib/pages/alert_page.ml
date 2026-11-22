@@ -22,7 +22,7 @@ let demo =
         ]
     ; Alert.root
         ~variant:Destructive
-        [ Icon.view Circle_exclamation_point
+        [ Icon.view Circle_alert
         ; Alert.title [ Node.text "Unable to process your payment." ]
         ; Alert.description
             [ Node.p [ Node.text "Please verify your billing information and try again." ]
@@ -41,7 +41,7 @@ let demo =
 let destructive =
   Alert.root
     ~variant:Destructive
-    [ Icon.view Circle_exclamation_point
+    [ Icon.view Circle_alert
     ; Alert.title [ Node.text "Error" ]
     ; Alert.description [ Node.text "Your session has expired. Please log in again." ]
     ]

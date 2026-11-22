@@ -63,7 +63,6 @@ let%expect_test "shadcn's classes" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round"
-             aria-hidden="true"
              class="lucide lucide-chevrons-up-down opacity-50">
           <path d="m7 15 5 5 5-5"> </path>
           <path d="m7 9 5-5 5 5"> </path>
@@ -119,10 +118,9 @@ let%expect_test "shadcn's classes" =
                      stroke-width="2"
                      stroke-linecap="round"
                      stroke-linejoin="round"
-                     aria-hidden="true"
                      class="lucide lucide-search opacity-50 shrink-0 size-4">
-                  <path d="m21 21-4.34-4.34"> </path>
                   <circle cx="11" cy="11" r="8"> </circle>
+                  <path d="m21 21-4.3-4.3"> </path>
                 </svg>
                 <input cmdk-input=""
                        autocomplete="off"
@@ -179,7 +177,6 @@ let%expect_test "shadcn's classes" =
                              stroke-width="2"
                              stroke-linecap="round"
                              stroke-linejoin="round"
-                             aria-hidden="true"
                              class="lucide lucide-check ml-auto opacity-0">
                           <path d="M20 6 9 17l-5-5"> </path>
                         </svg>
@@ -206,7 +203,6 @@ let%expect_test "shadcn's classes" =
                              stroke-width="2"
                              stroke-linecap="round"
                              stroke-linejoin="round"
-                             aria-hidden="true"
                              class="lucide lucide-check ml-auto opacity-0">
                           <path d="M20 6 9 17l-5-5"> </path>
                         </svg>
@@ -248,8 +244,7 @@ let%expect_test "open, search, choose; choosing the value again clears it" =
              stroke="currentColor"
              stroke-width="2"
              stroke-linecap="round"
-             stroke-linejoin="round"
-             aria-hidden="true">
+             stroke-linejoin="round">
           <path d="m7 15 5 5 5-5"> </path>
           <path d="m7 9 5-5 5 5"> </path>
         </svg>
@@ -283,8 +278,7 @@ let%expect_test "open, search, choose; choosing the value again clears it" =
              stroke="currentColor"
              stroke-width="2"
              stroke-linecap="round"
-             stroke-linejoin="round"
-             aria-hidden="true">
+             stroke-linejoin="round">
           <path d="m7 15 5 5 5-5"> </path>
           <path d="m7 9 5-5 5 5"> </path>
         </svg>
@@ -337,10 +331,9 @@ let%expect_test "open, search, choose; choosing the value again clears it" =
                      stroke="currentColor"
                      stroke-width="2"
                      stroke-linecap="round"
-                     stroke-linejoin="round"
-                     aria-hidden="true">
-                  <path d="m21 21-4.34-4.34"> </path>
+                     stroke-linejoin="round">
                   <circle cx="11" cy="11" r="8"> </circle>
+                  <path d="m21 21-4.3-4.3"> </path>
                 </svg>
                 <input cmdk-input=""
                        autocomplete="off"
@@ -390,8 +383,7 @@ let%expect_test "open, search, choose; choosing the value again clears it" =
                              stroke="currentColor"
                              stroke-width="2"
                              stroke-linecap="round"
-                             stroke-linejoin="round"
-                             aria-hidden="true">
+                             stroke-linejoin="round">
                           <path d="M20 6 9 17l-5-5"> </path>
                         </svg>
                       </div>
@@ -434,8 +426,7 @@ let%expect_test "open, search, choose; choosing the value again clears it" =
              stroke="currentColor"
              stroke-width="2"
              stroke-linecap="round"
-             stroke-linejoin="round"
-             aria-hidden="true">
+             stroke-linejoin="round">
           <path d="m7 15 5 5 5-5"> </path>
           <path d="m7 9 5-5 5 5"> </path>
         </svg>
@@ -471,8 +462,7 @@ let%expect_test "open, search, choose; choosing the value again clears it" =
            stroke="currentColor"
            stroke-width="2"
            stroke-linecap="round"
-           stroke-linejoin="round"
-           aria-hidden="true">
+           stroke-linejoin="round">
         <path d="m7 15 5 5 5-5"> </path>
         <path d="m7 9 5-5 5 5"> </path>
       </svg>

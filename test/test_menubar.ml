@@ -154,7 +154,6 @@ let%expect_test "shadcn's classes" =
                    stroke-width="2"
                    stroke-linecap="round"
                    stroke-linejoin="round"
-                   aria-hidden="true"
                    class="h-4 lucide lucide-chevron-right ml-auto w-4">
                 <path d="m9 18 6-6-6-6"> </path>
               </svg>

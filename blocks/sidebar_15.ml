@@ -86,7 +86,7 @@ let nav_secondary_items =
     ; make "Settings" Settings_2
     ; make "Templates" Blocks
     ; make "Trash" Trash
-    ; make "Help" Message_circle_question_mark
+    ; make "Help" Message_circle_question
     ]
 ;;
 

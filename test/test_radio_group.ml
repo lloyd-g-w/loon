@@ -51,7 +51,6 @@ let%expect_test "shadcn's classes" =
                stroke-width="2"
                stroke-linecap="round"
                stroke-linejoin="round"
-               aria-hidden="true"
                class="-translate-x-1/2 -translate-y-1/2 absolute fill-primary left-1/2 lucide lucide-circle size-2 top-1/2">
             <circle cx="12" cy="12" r="10"> </circle>
           </svg>
@@ -169,8 +168,7 @@ let%expect_test "a click checks an item" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"> </circle>
             </svg>
           </span>
@@ -243,8 +241,7 @@ let%expect_test "arrow keys check the next enabled item, wrapping; Home and End"
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"> </circle>
             </svg>
           </span>
@@ -334,8 +331,7 @@ let%expect_test "arrow keys check the next enabled item, wrapping; Home and End"
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"> </circle>
               </svg>
             </span>
@@ -426,8 +422,7 @@ let%expect_test "arrow keys check the next enabled item, wrapping; Home and End"
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"> </circle>
               </svg>
             </span>
@@ -528,8 +523,7 @@ let%expect_test "arrow keys check the next enabled item, wrapping; Home and End"
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"> </circle>
               </svg>
             </span>
@@ -629,8 +623,7 @@ let%expect_test "arrow keys check the next enabled item, wrapping; Home and End"
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"> </circle>
               </svg>
             </span>
@@ -730,8 +723,7 @@ let%expect_test "arrow keys check the next enabled item, wrapping; Home and End"
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"> </circle>
               </svg>
             </span>

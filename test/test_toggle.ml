@@ -10,7 +10,7 @@ let%expect_test "shadcn's classes" =
        ~attrs:[ Attr.create "aria-label" "Toggle bold" ]
        ~pressed:false
        ~on_change:(fun _ -> Bonsai_web.Effect.Ignore)
-       [ Icon.view Letter_b ]);
+       [ Icon.view Bold ]);
   [%expect
     {|
     <button type="button"
@@ -29,9 +29,8 @@ let%expect_test "shadcn's classes" =
            stroke-width="2"
            stroke-linecap="round"
            stroke-linejoin="round"
-           aria-hidden="true"
-           class="lucide lucide-letter-b">
-        <path d="M6 12h9a4 4 0 010 8H7a1 1 0 01-1-1V5a1 1 0 011-1h7a4 4 0 010 8"> </path>
+           class="lucide lucide-bold">
+        <path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"> </path>
       </svg>
     </button>
     |}]

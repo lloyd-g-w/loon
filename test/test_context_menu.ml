@@ -159,7 +159,6 @@ let%expect_test "shadcn's classes" =
                    stroke-width="2"
                    stroke-linecap="round"
                    stroke-linejoin="round"
-                   aria-hidden="true"
                    class="lucide lucide-chevron-right ml-auto">
                 <path d="m9 18 6-6-6-6"> </path>
               </svg>
@@ -289,8 +288,7 @@ let%expect_test "a right click opens it at the pointer; Esc closes it" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <path d="m9 18 6-6-6-6"> </path>
               </svg>
             </div>
@@ -316,8 +314,7 @@ let%expect_test "a right click opens it at the pointer; Esc closes it" =
                        stroke="currentColor"
                        stroke-width="2"
                        stroke-linecap="round"
-                       stroke-linejoin="round"
-                       aria-hidden="true">
+                       stroke-linejoin="round">
                     <path d="M20 6 9 17l-5-5"> </path>
                   </svg>
                 </span>
@@ -347,8 +344,7 @@ let%expect_test "a right click opens it at the pointer; Esc closes it" =
                          stroke="currentColor"
                          stroke-width="2"
                          stroke-linecap="round"
-                         stroke-linejoin="round"
-                         aria-hidden="true">
+                         stroke-linejoin="round">
                       <circle cx="12" cy="12" r="10"> </circle>
                     </svg>
                   </span>

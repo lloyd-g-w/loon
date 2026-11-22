@@ -1,5 +1,5 @@
 ; The registry: every component's files, embedded at build time from src/
-; (cli/gen), and what `loon` does with them.
+; (cli/gen), and the blocks' from blocks/, and what `loon` does with them.
 
 (library
  (name loon_registry)
@@ -23,7 +23,9 @@
   ../../src/embedded/dune
   (glob_files ../../src/*.ml)
   (glob_files ../../src/*.mli)
-  (glob_files ../../src/css/*.css))
+  (glob_files ../../src/css/*.css)
+  (glob_files ../../blocks/*.ml)
+  (glob_files ../../blocks/*.mli))
  (action
   (with-stdout-to
    data.ml

@@ -70,7 +70,6 @@ let%expect_test "shadcn's classes" =
                  stroke-width="2"
                  stroke-linecap="round"
                  stroke-linejoin="round"
-                 aria-hidden="true"
                  class="duration-200 lucide lucide-chevron-down pointer-events-none shrink-0 size-4 text-muted-foreground transition-transform translate-y-0.5">
               <path d="m6 9 6 6 6-6"> </path>
             </svg>
@@ -127,8 +126,7 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <path d="m6 9 6 6 6-6"> </path>
             </svg>
           </button>
@@ -163,8 +161,7 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <path d="m6 9 6 6 6-6"> </path>
             </svg>
           </button>
@@ -205,8 +202,7 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <path d="m6 9 6 6 6-6"> </path>
             </svg>
           </button>
@@ -255,8 +251,7 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <path d="m6 9 6 6 6-6"> </path>
               </svg>
             </button>
@@ -299,8 +294,7 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <path d="m6 9 6 6 6-6"> </path>
               </svg>
             </button>
@@ -374,8 +368,7 @@ let%expect_test "single, collapsible: the open item closes" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <path d="m6 9 6 6 6-6"> </path>
             </svg>
           </button>
@@ -410,8 +403,7 @@ let%expect_test "single, collapsible: the open item closes" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <path d="m6 9 6 6 6-6"> </path>
             </svg>
           </button>
@@ -452,8 +444,7 @@ let%expect_test "single, collapsible: the open item closes" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <path d="m6 9 6 6 6-6"> </path>
             </svg>
           </button>
@@ -497,8 +488,7 @@ let%expect_test "single, collapsible: the open item closes" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <path d="m6 9 6 6 6-6"> </path>
               </svg>
             </button>
@@ -565,8 +555,7 @@ let%expect_test "multiple: several open" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <path d="m6 9 6 6 6-6"> </path>
             </svg>
           </button>
@@ -602,8 +591,7 @@ let%expect_test "multiple: several open" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <path d="m6 9 6 6 6-6"> </path>
             </svg>
           </button>
@@ -644,8 +632,7 @@ let%expect_test "multiple: several open" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <path d="m6 9 6 6 6-6"> </path>
             </svg>
           </button>
@@ -689,8 +676,7 @@ let%expect_test "multiple: several open" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <path d="m6 9 6 6 6-6"> </path>
               </svg>
             </button>
@@ -732,8 +718,7 @@ let%expect_test "multiple: several open" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <path d="m6 9 6 6 6-6"> </path>
               </svg>
             </button>
@@ -794,8 +779,7 @@ let%expect_test "multiple: several open" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <path d="m6 9 6 6 6-6"> </path>
               </svg>
             </button>

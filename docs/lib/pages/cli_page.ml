@@ -36,6 +36,12 @@ let page =
           "Each component comes with the components and helpers it uses (Sidebar \
            brings Sheet, Tooltip, Portal, Popper, …). Files you already have are left \
            alone unless you pass [-overwrite]."
+      ; Doc.h2 "Add blocks"
+      ; Doc.pre ~lang:Shell "loon add login-03 dashboard-01"
+      ; Doc.p
+          "A block (a page of the Blocks gallery, named as shadcn names it) is copied \
+           the same way: its module, beside the components it uses, which come with \
+           it. [Ui.Login_03.view] is then the page, yours to change."
       ; Doc.h2 "Styles"
       ; Doc.p
           "A component's styles are its Tailwind classes. The directory's [loon.css] \
@@ -51,7 +57,8 @@ let page =
       ; Doc.table
           [ "Command"; "What it does" ]
           [ [ Doc.code "loon list"
-            ; Doc.text "The components and helpers, with a line about each."
+            ; Doc.text
+                "The components and helpers, then the blocks, with a line about each."
             ]
           ; [ Doc.code "loon init"
             ; Doc.text "Creates the ui directory, its dune file and loon.css."

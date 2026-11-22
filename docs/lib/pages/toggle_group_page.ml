@@ -17,7 +17,7 @@ let demo (local_ graph) =
              group
              ~value:"bold"
              ~attrs:[ Attr.create "aria-label" "Toggle bold" ]
-             [ Icon.view ~class_:"h-4 w-4" Letter_b ]
+             [ Icon.view ~class_:"h-4 w-4" Bold ]
          ; Toggle_group.item
              group
              ~value:"italic"
@@ -44,7 +44,7 @@ let outline (local_ graph) =
              group
              ~value:"bold"
              ~attrs:[ Attr.create "aria-label" "Toggle bold" ]
-             [ Icon.view ~class_:"h-4 w-4" Letter_b ]
+             [ Icon.view ~class_:"h-4 w-4" Bold ]
          ; Toggle_group.item
              group
              ~value:"italic"
@@ -72,7 +72,7 @@ let single (local_ graph) =
              group
              ~value:"bold"
              ~attrs:[ Attr.create "aria-label" "Toggle bold" ]
-             [ Icon.view ~class_:"h-4 w-4" Letter_b ]
+             [ Icon.view ~class_:"h-4 w-4" Bold ]
          ; Toggle_group.item
              group
              ~value:"italic"
@@ -99,7 +99,7 @@ let small (local_ graph) =
              group
              ~value:"bold"
              ~attrs:[ Attr.create "aria-label" "Toggle bold" ]
-             [ Icon.view ~class_:"h-4 w-4" Letter_b ]
+             [ Icon.view ~class_:"h-4 w-4" Bold ]
          ; Toggle_group.item
              group
              ~value:"italic"
@@ -126,7 +126,7 @@ let large (local_ graph) =
              group
              ~value:"bold"
              ~attrs:[ Attr.create "aria-label" "Toggle bold" ]
-             [ Icon.view ~class_:"h-4 w-4" Letter_b ]
+             [ Icon.view ~class_:"h-4 w-4" Bold ]
          ; Toggle_group.item
              group
              ~value:"italic"
@@ -153,7 +153,7 @@ let disabled (local_ graph) =
              group
              ~value:"bold"
              ~attrs:[ Attr.create "aria-label" "Toggle bold" ]
-             [ Icon.view ~class_:"h-4 w-4" Letter_b ]
+             [ Icon.view ~class_:"h-4 w-4" Bold ]
          ; Toggle_group.item
              group
              ~value:"italic"

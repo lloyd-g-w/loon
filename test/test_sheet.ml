@@ -130,7 +130,6 @@ let%expect_test "shadcn's classes, open on the right" =
                  stroke-width="2"
                  stroke-linecap="round"
                  stroke-linejoin="round"
-                 aria-hidden="true"
                  class="lucide lucide-x size-4">
               <path d="M18 6 6 18"> </path>
               <path d="m6 6 12 12"> </path>
@@ -341,8 +340,7 @@ let%expect_test
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <path d="M18 6 6 18"> </path>
               <path d="m6 6 12 12"> </path>
             </svg>

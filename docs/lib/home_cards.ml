@@ -232,7 +232,7 @@ let sidebar_nav =
     ; section
         ~label:"Support"
         ~class_:"flex xl:col-start-2 xl:row-start-1"
-        [ Icon.Circle_question_mark, "Help Center", false
+        [ Icon.Circle_help, "Help Center", false
         ; Book_open, "Docs", false
         ; Message_circle, "Contact Us", false
         ; Activity, "Status", false
@@ -244,7 +244,7 @@ let sidebar_nav =
         [ Icon.User, "Profile", false
         ; Credit_card, "Billing", true
         ; Bell, "Notifications", false
-        ; Shield_exclamation_point, "Security", false
+        ; Shield_alert, "Security", false
         ; Paintbrush, "Appearance", false
         ]
     ]
@@ -624,7 +624,7 @@ let account_access =
             ~href:"#/"
             [ Item.media
                 ~variant:Icon
-                [ Icon.view ~class_:"text-destructive" Circle_exclamation_point ]
+                [ Icon.view ~class_:"text-destructive" Circle_alert ]
             ; Item.content
                 [ Item.title [ text "Danger Zone" ]
                 ; Item.description

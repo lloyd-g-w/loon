@@ -22,10 +22,9 @@ let%expect_test "shadcn's classes" =
            stroke-width="2"
            stroke-linecap="round"
            stroke-linejoin="round"
-           aria-hidden="true"
            class="lucide lucide-circle-check">
         <circle cx="12" cy="12" r="10"> </circle>
-        <path d="m16 9-5.5 5.5L8 12"> </path>
+        <path d="m9 12 2 2 4-4"> </path>
       </svg>
       <div data-slot="alert-title" class="col-start-2 font-medium line-clamp-1 min-h-4 tracking-tight"> Success! Your changes have been saved </div>
       <div data-slot="alert-description"

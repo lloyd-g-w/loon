@@ -53,7 +53,7 @@ let account_access =
                ~href:"#"
                [ Item.media
                    ~variant:Icon
-                   [ icon ~class_:"text-destructive" Circle_exclamation_point ]
+                   [ icon ~class_:"text-destructive" Circle_alert ]
                ; Item.content
                    [ Item.title [ text "Danger Zone" ]
                    ; Item.description
