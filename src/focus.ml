@@ -47,10 +47,24 @@ let guard ~id side =
       ; Attr.style (Css_gen.create ~field:"pointer-events" ~value:"none")
       ; Attr.tabindex 0
       ; aria "hidden" "true"
-      ; Attr.on_focus (fun _ ->
-          match side with
-          | `Start -> last_in id
-          | `End -> first_in id)
+      ; Attr.on_focus (fun ev ->
+          (* Tabbing out of the content wraps around; tabbing in from
+             outside it (the trigger, the focus left behind on open) enters
+             at the near end. *)
+          let from_inside =
+            in_browser ()
+            && Js.Opt.case
+                 (Js.Unsafe.coerce ev)##.relatedTarget
+                 (fun () -> false)
+                 (fun (related : Dom.node Js.t) ->
+                   Js.Opt.case
+                     (Dom_html.document##getElementById (Js.string id))
+                     (fun () -> false)
+                     (fun root -> Js.to_bool (root##contains related)))
+          in
+          match side, from_inside with
+          | `Start, true | `End, false -> last_in id
+          | `End, true | `Start, false -> first_in id)
       ]
     []
 ;;

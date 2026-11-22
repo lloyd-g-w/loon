@@ -7,8 +7,10 @@ val first_in : string -> unit Effect.t
 
 val last_in : string -> unit Effect.t
 
-(** An invisible focusable element that, when focused (by Tab leaving the
-    modal at one end), sends focus to the other end of the element [id]. *)
+(** An invisible focusable element at one end of the element [id]: focused
+    by Tab leaving [id] at one end, it sends focus to the other end; focused
+    from outside [id] (Tab from where the focus was left on open), to its
+    own end. *)
 val guard : id:string -> [ `Start | `End ] -> Node.t
 
 (** Focuses the element when it is added to the page (an overlay's content

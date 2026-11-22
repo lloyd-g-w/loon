@@ -118,6 +118,24 @@ await run(async (engine, url) => {
     );
     if (!unlocked) console.log(`${slug}: still scroll-locked after closing`);
   }
+  // Drawer (vaul): Tab from the trigger, focus left there on open, enters at
+  // the content's start; a drag down a third of its height closes it.
+  await page.goto(`${url}#/drawer`);
+  await ready(page, "drawer");
+  const drawerTrigger = page.locator('[data-page="drawer"] [data-slot=drawer-trigger]').first();
+  await drawerTrigger.click();
+  await page.waitForTimeout(700);
+  await page.keyboard.press("Tab");
+  console.log(`drawer: Tab after opening focuses ${await page.evaluate(() => document.activeElement.textContent.trim() || document.activeElement.getAttribute("aria-label"))}`);
+  const panel = await page.locator("[data-slot=drawer-content]").boundingBox();
+  await page.mouse.move(panel.x + panel.width / 2, panel.y + 8);
+  await page.mouse.down();
+  await page.mouse.move(panel.x + panel.width / 2, panel.y + 8 + panel.height / 3, { steps: 20 });
+  const overlayOpacity = await page.evaluate(() => Number(getComputedStyle(document.querySelector("[data-slot=drawer-overlay]")).opacity).toFixed(2));
+  await page.waitForTimeout(400);
+  await page.mouse.up();
+  await page.waitForSelector("[data-slot=drawer-content]", { state: "detached" });
+  console.log(`drawer: dragged a third down (overlay at ${overlayOpacity}), closed`);
   checkErrors(errors, "examples");
   await browser.close();
 });
