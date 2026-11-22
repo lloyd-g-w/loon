@@ -22,6 +22,7 @@ The reference checkouts (read-only): `~/src/shadcn-ui` (components in
 | `docs/lib/` | the documentation site; `docs/lib/pages/<slug>_page.ml` is a page, found by `docs/gen` (no list to edit); `create/` and `typeset/` port ui.shadcn.com's /create and /typeset (`customize/`: what they share) |
 | `docs/bin/` | the page and its assets; `docs/bin/site/` is the built site (its `loon.css` scans the docs' sources too, so examples may use any Tailwind class) |
 | `cli/` | the `loon` command: `cli/gen` embeds `src/` into `cli/registry` (no list to edit); cram tests in `cli/test` |
+| `examples/app/` | a small app using loon as a library (its own dune project, and the flake's template): one Tailwind stylesheet over loon's installed `loon.input.css` and its sources; `examples/test/app.t` checks it |
 | `e2e/` | Playwright scripts against the built site |
 | `nix/` | the OxCaml pins and patches, shared with prigh |
 | `THIRD_PARTY_NOTICES.md` | shadcn/ui, Radix, tw-animate-css, Sonner, Lucide, the fonts, temporal-polyfill: add an entry when you bundle something new |

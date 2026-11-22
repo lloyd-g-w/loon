@@ -1,0 +1,29 @@
+; A Bonsai_web app using loon as a library. main.css is one stylesheet for
+; loon's classes and the app's own: Tailwind v4 over loon's input (installed
+; with the library, its @source lines naming loon's sources) and this
+; directory's sources.
+
+(executable
+ (name main)
+ (modes js)
+ (preprocess
+  (pps ppx_jane js_of_ocaml-ppx bonsai.ppx_bonsai))
+ (libraries core bonsai bonsai_web virtual_dom loon))
+
+(rule
+ (target main.input.css)
+ (action
+  (with-stdout-to
+   main.input.css
+   (progn
+    (echo "@import \"%{lib:loon:loon.input.css}\";\n")
+    (echo "@source \"./*.ml\";\n")))))
+
+(rule
+ (target main.css)
+ (deps
+  main.input.css
+  %{lib:loon:loon.input.css}
+  (glob_files *.ml))
+ (action
+  (run tailwindcss --silent --input main.input.css --output main.css)))

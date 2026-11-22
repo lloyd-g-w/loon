@@ -88,6 +88,7 @@
               "_build"
               "result"
               "e2e"
+              "examples"
               ".github"
             ]);
         };
@@ -181,5 +182,14 @@
           '';
         };
       }
-    );
+    )
+    // {
+      # nix flake init -t github:lloyd-g-w/loon: examples/app, a Bonsai_web
+      # app using loon as a library, with one stylesheet for loon's Tailwind
+      # classes and its own.
+      templates.default = {
+        path = ./examples/app;
+        description = "A Bonsai_web app using loon as a library";
+      };
+    };
 }

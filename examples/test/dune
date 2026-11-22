@@ -1,0 +1,6 @@
+; The example app's stylesheet, as built: loon's classes and the app's own.
+
+(cram
+ (deps
+  ../app/main.css
+  ../app/main.bc.js))
