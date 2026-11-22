@@ -1,10 +1,11 @@
 open! Core
+open Loon
 
 type moment = Date.t * int
 
 let end_of_day = (23 * 60) + 59
-let long_month d = Loon.Calendar.format "LLLL" d
-let short_month d = Loon.Calendar.format "LLL" d
+let long_month d = Calendar.format "LLLL" d
+let short_month d = Calendar.format "LLL" d
 let month_day d = sprintf "%s %d" (short_month d) (Date.day d)
 
 (* toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
@@ -20,7 +21,7 @@ let format_time minutes =
 let quarter d = ((Month.to_int (Date.month d) - 1) / 3) + 1
 
 let format_date_range
-      ?(today = Loon.Calendar.today ())
+      ?(today = Calendar.today ())
       ?(include_time = true)
       ?(separator = "-")
       ((from, from_time) : moment)
@@ -123,9 +124,5 @@ let format_date_range
         (format_time to_time)
         year_suffix
   else
-    sprintf
-      "%s, %s%s"
-      (Loon.Calendar.format "EEE" from)
-      (month_day from)
-      year_suffix
+    sprintf "%s, %s%s" (Calendar.format "EEE" from) (month_day from) year_suffix
 ;;

@@ -19,7 +19,7 @@ by `tools/icons.nix`. Radix's behaviour: https://www.radix-ui.com/primitives/doc
 | `src/loon.css` (built) | `tailwindcss` over that input, scanning `src/*.ml` for class names; installed, and embedded as `Loon.Stylesheet.css` (`src/embedded/`) |
 | `tools/` | `nix run .#gen-icons` (`gen-icons.mjs`, `icons.nix`) writes `src/icon.ml(i)` from lucide-react and `src/tabler.ml(i)` from @tabler/icons-react, pinned at shadcn's versions (`tools/icons.txt`, `tools/tabler-icons.txt`: the icons included) |
 | `test/` | expect tests, run under node: `test_<component>.ml` |
-| `blocks/` | the `loon_blocks` library: shadcn's blocks (`sidebar-07` is `sidebar_07.ml`), shown on the docs' Blocks page |
+| `blocks/` | the `loon_blocks` library: shadcn's blocks (`sidebar-07` is `sidebar_07.ml`), shown on the docs' Blocks page and copied by `loon add sidebar-07` (with the components they use, into the same library: so a block names components after its `open Loon`, never `Loon.Button`; `cli/test/compile.t` builds every one) |
 | `docs/lib/` | the documentation site; `docs/lib/pages/<slug>_page.ml` is a page, found by `docs/gen` (no list to edit); `create/` and `typeset/` port ui.shadcn.com's /create and /typeset (`customize/`: what they share) |
 | `docs/bin/` | the page and its assets; `docs/bin/site/` is the built site (its `loon.css` scans the docs' sources too, so examples may use any Tailwind class) |
 | `cli/` | the `loon` command: `cli/gen` embeds `src/` into `cli/registry` (no list to edit); cram tests in `cli/test` |

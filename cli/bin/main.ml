@@ -24,17 +24,35 @@ let ok_or_exit = function
     exit 1
 ;;
 
+let of_kind kind =
+  List.filter Registry.all ~f:(fun e -> Registry.Entry.Kind.equal e.kind kind)
+;;
+
+(* A block by shadcn's name for it: login-03. *)
+let display_name (e : Registry.Entry.t) =
+  match e.kind with
+  | Block -> String.tr e.name ~target:'_' ~replacement:'-'
+  | Component | Block_part -> e.name
+;;
+
 let list =
   Command.basic
-    ~summary:"list the components"
+    ~summary:"list the components and blocks"
     (let%map_open.Command () = return () in
      fun () ->
+       let components = of_kind Component
+       and blocks = of_kind Block in
        let width =
-         List.fold Registry.all ~init:0 ~f:(fun w e ->
-           Int.max w (String.length e.name))
+         List.fold (components @ blocks) ~init:0 ~f:(fun w e ->
+           Int.max w (String.length (display_name e)))
        in
-       List.iter Registry.all ~f:(fun e ->
-         printf "%-*s  %s\n" width e.name e.description))
+       let show =
+         List.iter ~f:(fun e ->
+           printf "%-*s  %s\n" width (display_name e) e.description)
+       in
+       show components;
+       printf "\nBlocks (shadcn's, as `loon add login-03` copies them):\n";
+       show blocks)
 ;;
 
 let info =
@@ -62,10 +80,11 @@ let info =
 
 let add =
   Command.basic
-    ~summary:"copy components (and what they need) into your project"
+    ~summary:"copy components or blocks (and what they need) into your project"
     ~readme:(fun () ->
       "Copies each COMPONENT's .ml and .mli, and those of the components it \
-       uses, into DIR, and their styles (the theme, and any a component has beyond \
+       uses, into DIR (a block, as login-03, the same way: beside the \
+       components, so that Ui.Login_03.view is the page), and their styles (the theme, and any a component has beyond \
        its Tailwind classes) into DIR/loon.css, Tailwind's input. Files that exist are kept, so your changes are safe: \
        -overwrite replaces them. `loon diff` shows how your copies differ from \
        loon's.")
@@ -73,12 +92,12 @@ let add =
      and overwrite = overwrite_flag
      and dry_run =
        flag "dry-run" no_arg ~doc:" print what it would do, and do nothing"
-     and all = flag "all" no_arg ~doc:" every component"
+     and all = flag "all" no_arg ~doc:" every component (not the blocks)"
      and names = anon (sequence ("COMPONENT" %: string)) in
      fun () ->
        let names =
          if all
-         then List.map Registry.all ~f:(fun e -> e.name) @ names
+         then List.map (of_kind Component) ~f:(fun e -> e.name) @ names
          else names
        in
        if List.is_empty names

@@ -42,6 +42,7 @@ let () =
          (List.map entries ~f:(fun (e : Entry.t) ->
             sprintf
               "{ name = %S\n\
+              \    ; kind = Kind.%s\n\
               \    ; description = %S\n\
               \    ; sources =\n\
               \    %s\n\
@@ -50,6 +51,7 @@ let () =
               \    ; deps = %s\n\
               \    }"
               e.name
+              (Sexp.to_string [%sexp (e.kind : Entry.Kind.t)])
               e.description
               (list (List.map e.sources ~f:file))
               (list (List.map e.css ~f:file))

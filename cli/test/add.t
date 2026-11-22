@@ -90,3 +90,39 @@ With no names, add asks for some.
   $ loon add
   loon: which components? (`loon list` shows them)
   [1]
+
+A block, as `npx shadcn add login-03`: the block's module and the
+components it uses, side by side, so that it builds in the library
+(compile.t builds every block).
+
+  $ loon add -dir app/ui login-03 | grep -E '^Adding|login_03'
+  Adding login_03 (and what it needs: import, theme, cn, button, card, dom_util, label, field, icon, control, input)
+    wrote    app/ui/login_03.ml
+    wrote    app/ui/login_03.mli
+
+Its `open Loon` refers to the library's own modules: a local Loon names
+those `open! Core` would hide (Core has a Field too); the others need no
+open.
+
+  $ head -9 app/ui/login_03.ml
+  (* The library's own modules, for [open Loon] below: [open! Core] hides them. *)
+  module Loon = struct
+    module Field = Field
+  end
+  
+  open! Core
+  open Bonsai_web
+  open Loon
+  module Node = Vdom.Node
+  $ loon add -dir app/ui calendar-01 > /dev/null
+  $ grep -c '^open Loon' app/ui/calendar_01.ml
+  0
+  [1]
+  $ loon diff -dir app/ui login-03
+  login_03: the same as loon's.
+
+`-all` adds every component, not the blocks.
+
+  $ loon add -all -dry-run | head -1 | grep -c 'login_03'
+  0
+  [1]

@@ -54,6 +54,30 @@ Every component builds this way, not only those: none may use something
   $ grep -v 'missing-effects\|^Entering\|^Leaving' build.log
   [1]
 
+So does every block (shadcn's pages, built from the components), copied by
+`loon add login-03` beside them; an app uses one as `Ui.Login_03.view`.
+
+  $ loon add $(loon list | sed '1,/^Blocks/d' | cut -d' ' -f1) > /dev/null
+  $ ls src/ui/login_03.ml src/ui/dashboard_01.ml src/ui/dashboard_01_data.ml src/ui/little_date.ml src/ui/tabler.ml
+  src/ui/dashboard_01.ml
+  src/ui/dashboard_01_data.ml
+  src/ui/little_date.ml
+  src/ui/login_03.ml
+  src/ui/tabler.ml
+  $ cat >> src/app.ml <<EOF
+  > 
+  > let login (local_ graph) = Ui.Login_03.view graph
+  > EOF
+  $ env -u INSIDE_DUNE -u DUNE_BUILD_DIR dune build --root . 2> build.log; echo "dune exited $?"
+  dune exited 0
+  $ grep -v 'missing-effects\|^Entering\|^Leaving' build.log
+  [1]
+
+The stylesheet has the blocks' classes too (login-03's md:p-10).
+
+  $ grep -c 'md\\:p-10' _build/default/src/ui/ui.css
+  1
+
 Sonner's own stylesheet comes with it, after the theme.
 
   $ grep -c '^\[data-sonner-toaster\] {' _build/default/src/ui/ui.css
