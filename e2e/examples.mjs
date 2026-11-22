@@ -111,7 +111,11 @@ await run(async (engine, url) => {
     console.log(`${slug}: top layer ${r.top}, hit-tested on top ${r.onTop}${r.overHeader ? ", over the header" : ""}, scroll locked ${r.locked}`);
     await page.keyboard.press("Escape");
     await page.waitForSelector(content, { state: "detached" });
-    const unlocked = await page.evaluate(() => !document.body.hasAttribute("data-scroll-locked") && !document.getElementById("loon-scroll-lock"));
+    // The lock's stylesheet stays (adding it restyles the page), applying only
+    // under [data-scroll-locked].
+    const unlocked = await page.evaluate(
+      () => !document.body.hasAttribute("data-scroll-locked") && getComputedStyle(document.body).overflow !== "hidden",
+    );
     if (!unlocked) console.log(`${slug}: still scroll-locked after closing`);
   }
   checkErrors(errors, "examples");
