@@ -3,6 +3,15 @@
  (action
   (copy ../main.bc.js main.bc.js)))
 
+; Its source map (dev profile only), for the browser's devtools.
+
+(rule
+ (target main.bc.map)
+ (enabled_if
+  (= %{profile} dev))
+ (action
+  (copy ../main.bc.map main.bc.map)))
+
 ; The docs' stylesheet: loon's Tailwind input and the site's own styles
 ; (../site.css: ui.shadcn.com's globals and typeset), scanning the docs'
 ; sources (examples use Tailwind classes too) as well as loon's.
