@@ -92,9 +92,9 @@ let%expect_test "first load writes the preset; the pickers show it" =
   texts h "[data-picker]";
   vars h [ "--primary"; "--radius" ];
   [%expect {|
-    query: preset=bIkeymG&item=preview-02
+    query: preset=b0&item=preview-02
     Menu
-    Style Vega
+    Style Nova
     Base Color Neutral
     Theme Neutral
     Chart Color Neutral
@@ -122,9 +122,9 @@ let%expect_test "base colour, theme, radius, font and mode restyle the preview" 
   Bonsai.Expert.Var.set mode Loon.Theme.Mode.Dark;
   vars h [ "--background"; "--primary"; "--radius"; "--font-sans"; "--font-heading" ];
   [%expect {|
-    query: preset=bJfDPe2y&item=preview-02
-    query: preset=bJfEY2ZE&item=preview-02
-    query: preset=bJfEY2dM&item=preview-02
+    query: preset=bJMSkfGi&item=preview-02
+    query: preset=bJMTt3my&item=preview-02
+    query: preset=bJMTt3r6&item=preview-02
     --background: oklch(1 0 0)
     --primary: oklch(0.488 0.243 264.376)
     --radius: 0.875rem
@@ -148,13 +148,13 @@ let%expect_test "undo and redo" =
   key h ~ctrl:true ~shift:true KeyZ;
   query q;
   [%expect {|
-    query: preset=bIouxjE&item=preview-02
+    query: preset=b4Fywy&item=preview-02
     ("default prevented" (key KeyZ))
-    query: preset=bIm4yQa&item=preview-02
+    query: preset=b1PzeK&item=preview-02
     ("default prevented" (key KeyZ))
-    query: preset=bIkeymG&item=preview-02
+    query: preset=b0&item=preview-02
     ("default prevented" (key KeyZ))
-    query: preset=bIm4yQa&item=preview-02
+    query: preset=b1PzeK&item=preview-02
     |}]
 ;;
 
@@ -218,7 +218,7 @@ let%expect_test "copy preset and get code" =
   [%expect {|
     --preset b4DxGlzePJ
     Copied
-    loon init -dir lib/ui
+    loon init --style vega -dir lib/ui
     :root {
       --background: oklch(1 0 0);
       --foreground: oklch(0.141 0.005 285.823);
@@ -317,7 +317,7 @@ let%expect_test "Navigate shows a component's examples in the preview" =
        : bool)];
   [%expect {|
     ("default prevented" (key KeyP))
-    query: preset=bIkeymG&item=button-example
+    query: preset=b0&item=button-example
     Demo
     Size
     Default

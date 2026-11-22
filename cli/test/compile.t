@@ -4,7 +4,7 @@ need nothing from loon but the libraries the dune file names.
   $ cat > dune-project <<EOF
   > (lang dune 3.17)
   > EOF
-  $ loon init > /dev/null
+  $ loon init -style nova > /dev/null
   $ loon add button tabs card badge > /dev/null
   $ cat > src/app.ml <<EOF
   > open! Core
@@ -44,6 +44,13 @@ The stylesheet is Tailwind's output, with shadcn's classes the components use.
   has-data-\[slot\=card-action\]
   $ grep -c -- '--tw-animation\|@keyframes enter' _build/default/src/ui/ui.css | sed 's/^[1-9][0-9]*$/some/'
   some
+
+The copies carry the style's classes (Nova's here), not shadcn's cn-* hooks,
+so the stylesheet needs no style rules.
+
+  $ grep -h -o 'cn-[a-z-]*' src/ui/*.ml | sort -u
+  $ grep -c 'h-8 gap-1.5 px-2.5' src/ui/button.ml
+  1
 
 Every component builds this way, not only those: none may use something
 `loon add` does not copy.

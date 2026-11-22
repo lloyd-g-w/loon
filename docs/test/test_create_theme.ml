@@ -169,9 +169,9 @@ let%expect_test "params from the query" =
          });
   [%expect
     {|
-    ("" preset=bIkeymG&item=preview-02
+    ("" preset=b0&item=preview-02
      (p.preset
-      ((style vega) (base_color neutral) (theme neutral) (chart_color (neutral))
+      ((style nova) (base_color neutral) (theme neutral) (chart_color (neutral))
        (icon_library lucide) (font inter) (font_heading inherit) (radius default)
        (menu_accent subtle) (menu_color default))))
     (preset=b4DxGlzePJ&item=preview&fontHeading=geist&chartColor=rose&template=vite
@@ -180,15 +180,15 @@ let%expect_test "params from the query" =
       ((style vega) (base_color zinc) (theme blue) (chart_color (rose))
        (icon_library lucide) (font geist) (font_heading inherit) (radius large)
        (menu_accent bold) (menu_color inverted))))
-    (preset=a0 preset=b1Z5aAfqq&item=preview-02
+    (preset=a0 preset=b1YmpVh4a&item=preview-02
      (p.preset
-      ((style vega) (base_color neutral) (theme neutral) (chart_color (blue))
+      ((style nova) (base_color neutral) (theme neutral) (chart_color (blue))
        (icon_library lucide) (font inter) (font_heading inherit) (radius default)
        (menu_accent subtle) (menu_color default))))
     (preset=nope&baseColor=stone&theme=stone&font=lora&radius=small
-     preset=bJfDPhHE&item=preview-02
+     preset=bJMSkiUy&item=preview-02
      (p.preset
-      ((style vega) (base_color stone) (theme stone) (chart_color (stone))
+      ((style nova) (base_color stone) (theme stone) (chart_color (stone))
        (icon_library lucide) (font lora) (font_heading inherit) (radius small)
        (menu_accent subtle) (menu_color default))))
     (preset=bJLHEYk preset=bd1gAJJi&item=preview-02

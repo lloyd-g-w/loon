@@ -3,6 +3,7 @@
   $ loon init -dir lib/ui -library my_ui
   Setting up lib/ui as the library my_ui
     wrote    lib/ui/dune
+    wrote    lib/ui/loon.json
     wrote    lib/ui/import.ml
     wrote    lib/ui/theme.ml
     wrote    lib/ui/theme.mli

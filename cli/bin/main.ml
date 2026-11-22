@@ -17,6 +17,18 @@ let overwrite_flag =
       ~doc:" replace files (and loon.css sections) that exist")
 ;;
 
+let style_flag =
+  Command.Param.(
+    flag
+      "style"
+      ~aliases:[ "--style" ]
+      (optional string)
+      ~doc:
+        (sprintf
+           "NAME shadcn's style: %s (default: the project's, from loon.json; else vega)"
+           (String.concat ~sep:", " Style.names)))
+;;
+
 let ok_or_exit = function
   | Ok () -> ()
   | Error e ->
@@ -85,11 +97,14 @@ let add =
       "Copies each COMPONENT's .ml and .mli, and those of the components it \
        uses, into DIR (a block, as login-03, the same way: beside the \
        components, so that Ui.Login_03.view is the page), and their styles (the theme, and any a component has beyond \
-       its Tailwind classes) into DIR/loon.css, Tailwind's input. Files that exist are kept, so your changes are safe: \
+       its Tailwind classes) into DIR/loon.css, Tailwind's input. The \
+       components' classes are the style's (shadcn's Vega, Nova, ...: -style, \
+       else the one `loon init -style` recorded in DIR/loon.json). Files that exist are kept, so your changes are safe: \
        -overwrite replaces them. `loon diff` shows how your copies differ from \
        loon's.")
     (let%map_open.Command dir = dir_flag
      and overwrite = overwrite_flag
+     and style = style_flag
      and dry_run =
        flag "dry-run" no_arg ~doc:" print what it would do, and do nothing"
      and all = flag "all" no_arg ~doc:" every component (not the blocks)"
@@ -104,7 +119,7 @@ let add =
        then
          ok_or_exit
            (Or_error.error_string "which components? (`loon list` shows them)")
-       else ok_or_exit (Project.add ~dir ~overwrite ~dry_run names))
+       else ok_or_exit (Project.add ?style ~dir ~overwrite ~dry_run names))
 ;;
 
 let init =
@@ -112,13 +127,14 @@ let init =
     ~summary:"make a directory a dune library of components, with the theme"
     (let%map_open.Command dir = dir_flag
      and overwrite = overwrite_flag
+     and style = style_flag
      and library =
        flag
          "library"
          (optional_with_default "ui" string)
          ~doc:"NAME the library's name (default: ui)"
      in
-     fun () -> ok_or_exit (Project.init ~dir ~library ~overwrite))
+     fun () -> ok_or_exit (Project.init ?style ~dir ~library ~overwrite ()))
 ;;
 
 let diff =

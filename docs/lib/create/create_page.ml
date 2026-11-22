@@ -845,7 +845,8 @@ module Tab = struct
   [@@deriving equal]
 end
 
-let init_command = "loon init -dir lib/ui"
+(* The style is the one `loon add` then inlines into the copies. *)
+let init_command (p : Create_preset.t) = sprintf "loon init --style %s -dir lib/ui" p.style
 
 let code_panel ~name ~copied ~on_copy body =
   Node.div
@@ -877,6 +878,7 @@ let get_code_dialog ?(action = "get-code") graph (preset : Create_preset.t Bonsa
   let%arr open_ and set_open and tab and set_tab and copied and set_copied and sleep
   and preset in
   let css = Create_theme_css.css preset in
+  let init_command = init_command preset in
   let copy target text =
     Effect.Many
       [ write_clipboard text
@@ -929,7 +931,10 @@ let get_code_dialog ?(action = "get-code") graph (preset : Create_preset.t Bonsa
               "flex flex-col gap-3"
               (legend
                  "Command"
-                 [ text "Make a directory a dune library of components, with the theme." ]
+                 [ text
+                     "Make a directory a dune library of components, with the theme, \
+                      in this style."
+                 ]
                @ [ code_panel
                      ~name:"command"
                      ~copied:(is_copied "command")

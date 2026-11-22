@@ -100,6 +100,47 @@ let write ~dry_run ~overwrite path contents =
 ;;
 
 let css_path dir = dir ^/ "loon.css"
+let config_path dir = dir ^/ "loon.json"
+
+(* The project's style: loon.json's ["style"], as shadcn's components.json
+   has it. *)
+let config_style ~dir =
+  let path = config_path dir in
+  if not (exists path)
+  then None
+  else (
+    let json = In_channel.read_all path in
+    match String.substr_index json ~pattern:"\"style\"" with
+    | None -> None
+    | Some i ->
+      let rest = String.drop_prefix json (i + 7) in
+      (match String.lsplit2 rest ~on:'"' with
+       | None -> None
+       | Some (_, rest) ->
+         Option.bind (String.lsplit2 rest ~on:'"') ~f:(fun (v, _) -> Style.find v)))
+;;
+
+let config_file ~style = sprintf "{\n  \"style\": %S\n}\n" style
+
+let resolve_style ~dir style =
+  match style with
+  | None -> Ok (Option.value (config_style ~dir) ~default:Style.default)
+  | Some name ->
+    (match Style.find name with
+     | Some s -> Ok s
+     | None ->
+       Or_error.errorf
+         "unknown style %S (the styles: %s)"
+         name
+         (String.concat ~sep:", " Style.names))
+;;
+
+(* A file as copied in [style]: an .ml's cn-* classes inlined. *)
+let styled ~style (f : Entry.File.t) =
+  if String.is_suffix f.name ~suffix:".ml"
+  then Style.inline ~style f.contents
+  else f.contents
+;;
 
 let write_css ~dir ~dry_run ~overwrite entries =
   (    let path = css_path dir in
@@ -139,14 +180,14 @@ let write_css ~dir ~dry_run ~overwrite entries =
          (String.concat ~sep:", " skipped)))
 ;;
 
-let copy ~dir ~overwrite ~dry_run entries =
+let copy ~dir ~style ~overwrite ~dry_run entries =
   let same =
     List.sum
       (module Int)
       entries
       ~f:(fun (e : Entry.t) ->
         List.count e.sources ~f:(fun f ->
-          match write ~dry_run ~overwrite (dir ^/ f.name) f.contents with
+          match write ~dry_run ~overwrite (dir ^/ f.name) (styled ~style f) with
           | Same -> true
           | Wrote | Replaced | Skipped -> false))
   in
@@ -171,8 +212,9 @@ let css_note ~dir =
     (css_path dir)
 ;;
 
-let add ~dir ~overwrite ~dry_run names =
+let add ?style ~dir ~overwrite ~dry_run names =
   let open Or_error.Let_syntax in
+  let%bind style = resolve_style ~dir style in
   let%map entries = resolve names in
   let requested = List.map names ~f:Registry.canonical in
   let extra =
@@ -182,13 +224,14 @@ let add ~dir ~overwrite ~dry_run names =
         e.name)
   in
   printf
-    "%s %s%s\n"
+    "%s %s%s in the %s style\n"
     (if dry_run then "Would add" else "Adding")
     (String.concat ~sep:", " requested)
     (if List.is_empty extra
      then ""
-     else sprintf " (and what it needs: %s)" (String.concat ~sep:", " extra));
-  copy ~dir ~overwrite ~dry_run entries;
+     else sprintf " (and what it needs: %s)" (String.concat ~sep:", " extra))
+    (String.capitalize style);
+  copy ~dir ~style ~overwrite ~dry_run entries;
   if not (exists (dir ^/ "dune"))
   then
     printf
@@ -198,8 +241,9 @@ let add ~dir ~overwrite ~dry_run names =
   css_note ~dir
 ;;
 
-let init ~dir ~library ~overwrite =
+let init ?style ~dir ~library ~overwrite () =
   let open Or_error.Let_syntax in
+  let%bind style = resolve_style ~dir style in
   let%map entries = resolve [ Entry.theme ] in
   let dune = dir ^/ "dune" in
   if exists dune
@@ -211,7 +255,11 @@ let init ~dir ~library ~overwrite =
     ignore
       (write ~dry_run:false ~overwrite:false dune (dune_file ~library)
        : outcome));
-  copy ~dir ~overwrite ~dry_run:false entries;
+  (* The style chosen now is the one `loon add` copies in. *)
+  ignore
+    (write ~dry_run:false ~overwrite:true (config_path dir) (config_file ~style)
+     : outcome);
+  copy ~dir ~style ~overwrite ~dry_run:false entries;
   printf "\nNow `loon add button` (`loon list` shows the components).\n";
   css_note ~dir
 ;;
@@ -232,6 +280,7 @@ let installed ~dir =
 
 let diff ~dir ~color names =
   let open Or_error.Let_syntax in
+  let style = Option.value (config_style ~dir) ~default:Style.default in
   let%map entries =
     match names with
     | [] -> Ok (installed ~dir)
@@ -273,7 +322,7 @@ let diff ~dir ~color names =
       compare
         ~label:f.name
         ~path
-        ~ours:f.contents
+        ~ours:(styled ~style f)
         ~theirs:
           (Option.some_if (exists path) ()
            |> Option.map ~f:(fun () -> In_channel.read_all path)));

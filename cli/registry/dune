@@ -30,3 +30,26 @@
   (with-stdout-to
    data.ml
    (run ../gen/gen.exe %{deps}))))
+
+(rule
+ (target styles_data.ml)
+ (deps
+  (glob_files ../../src/css/styles/*.css))
+ (action
+  (with-stdout-to
+   styles_data.ml
+   (run ../gen/gen.exe -styles %{deps}))))
+
+; loon's Cn (tailwind-merge), for merging a style's classes into a
+; component's.
+
+(rule
+ (target cn.ml)
+ (deps ../../src/cn.ml)
+ (action
+  (with-stdout-to
+   cn.ml
+   (progn
+    (echo "(* Generated from loon's src/cn.ml. *)\n")
+    (system
+     "sed -e 's/^open! Import$/open! Core/' -e '/^let attr /d' -e '/^let with_class /d' ../../src/cn.ml")))))
