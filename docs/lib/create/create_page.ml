@@ -160,6 +160,7 @@ let radio_groups (env : Env.t) ~value ~field groups =
 let field_picker
   ?content_class
   ?(extra = [])
+  ?(disabled = fun (_ : Env.t) -> false)
   ~field
   ~label
   ~value_title
@@ -178,6 +179,7 @@ let field_picker
          let value = Field.get env.preset field in
          [ Picker.trigger
              ~attrs:[ Attr.create "data-picker" (Field.name field) ]
+             ~disabled:(disabled env)
              t
              (trigger_body ~label ~value:(value_title env value) (indicator env value))
          ; content
@@ -413,6 +415,7 @@ let radius_picker graph env =
   field_picker
     ~field:Radius
     ~label:"Radius"
+    ~disabled:(fun env -> Create_params.is_radius_locked env.preset)
     ~value_title:(fun _ v ->
       List.find Create_config.radii ~f:(fun r -> String.equal r.name v)
       |> Option.value_map ~default:v ~f:(fun (r : Create_config.Radius.t) -> r.label))
@@ -423,12 +426,16 @@ let radius_picker graph env =
          24' class='text-foreground'><path fill='none' stroke='currentColor' \
          stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 20v-5C4 \
          8.925 8.925 4 15 4h5'/></svg>")
-    (fun _ ->
+    (fun env ->
       match Create_config.radii with
       | [] -> []
       | default :: others ->
         [ [ Choice.v default.name default.label ]
-        ; List.map others ~f:(fun (r : Create_config.Radius.t) -> Choice.v r.name r.label)
+        ; List.map others ~f:(fun (r : Create_config.Radius.t) ->
+            Choice.v
+              ~disabled:(String.equal env.preset.style "rhea" && String.equal r.name "large")
+              r.name
+              r.label)
         ])
     graph
     env
@@ -1115,7 +1122,7 @@ let preview graph ~(env : Env.t Bonsai.t) ~(shown : Create_preset.t Bonsai.t) =
         ; Node.div
             ~attrs:
               (Attr.class_
-                 "relative z-10 size-full flex-1 overflow-auto bg-background \
+                 "@container/preview relative z-10 size-full flex-1 overflow-auto bg-background font-sans \
                   text-foreground"
                :: Create_preview_style.attrs ~mode:env.mode shown)
             [ block ]

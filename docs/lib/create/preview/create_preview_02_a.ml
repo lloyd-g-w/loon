@@ -5,6 +5,7 @@ open Bonsai.Let_syntax
 open Create_preview_util
 module Node = Vdom.Node
 module Attr = Vdom.Attr
+module Info = Create_preview_01_a.Info
 
 let bar_data ~x ~y rows = List.map rows ~f:(fun (k, v) -> [ x, `Text k; y, `Num v ])
 
@@ -23,9 +24,9 @@ let upcoming_item ~label ~value ~detail =
     ]
 ;;
 
-let contribution_history (local_ graph) =
+let contribution_history (info : Info.t Bonsai.t) (local_ graph) =
   let chart = chart graph in
-  let%arr chart in
+  let%arr chart and info in
   let config =
     [ "amount", Chart.Config.item ~label:"Contribution" ~color:"var(--chart-2)" () ]
   in
@@ -65,14 +66,14 @@ let contribution_history (local_ graph) =
                ; Chart.bar
                    ~data_key:"amount"
                    ~fill:"var(--color-amount)"
-                   ~radius:(`Corners (6., 6., 0., 0.))
-                   ~bar_size:40.
+                   ~radius:(Info.bar_radius info 6.)
+                   ~max_bar_size:40.
                    ()
                ])
         ]
     ; Card.content
         [ div
-            ~class_:"grid w-full grid-cols-1 gap-3 md:grid-cols-2"
+            ~class_:"grid w-full grid-cols-1 gap-3 @min-[48rem]/preview:grid-cols-2"
             [ upcoming_item
                 ~label:"Upcoming"
                 ~value:"May 25, 2024"
@@ -106,40 +107,47 @@ let empty_distribute_track =
 (* react-qr-code's SVG for "https://ledger.app/connect/jd-4829" at level M
    (29 modules). *)
 let qr_path =
-  "M0 0h7v1h-7zM9 0h2v1h-2zM12 0h4v1h-4zM17 0h4v1h-4zM22 0h7v1h-7zM0 1h1v1h-1zM6 \
-   1h1v1h-1zM9 1h3v1h-3zM13 1h5v1h-5zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 \
-   2h3v1h-3zM6 2h1v1h-1zM8 2h3v1h-3zM13 2h1v1h-1zM15 2h1v1h-1zM18 2h3v1h-3zM22 \
-   2h1v1h-1zM24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM8 \
-   3h2v1h-2zM11 3h2v1h-2zM14 3h2v1h-2zM17 3h1v1h-1zM19 3h1v1h-1zM22 3h1v1h-1zM24 \
-   3h3v1h-3zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM8 4h1v1h-1zM11 \
-   4h2v1h-2zM15 4h2v1h-2zM18 4h3v1h-3zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 \
-   5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM10 5h3v1h-3zM20 5h1v1h-1zM22 5h1v1h-1zM28 \
-   5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 \
-   6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM8 7h3v1h-3zM14 7h1v1h-1zM16 \
-   7h1v1h-1zM19 7h2v1h-2zM0 8h1v1h-1zM2 8h5v1h-5zM10 8h1v1h-1zM17 8h1v1h-1zM19 \
-   8h1v1h-1zM22 8h5v1h-5zM3 9h3v1h-3zM7 9h4v1h-4zM13 9h3v1h-3zM18 9h7v1h-7zM28 \
-   9h1v1h-1zM0 10h1v1h-1zM4 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM10 10h1v1h-1zM13 \
-   10h6v1h-6zM20 10h1v1h-1zM23 10h1v1h-1zM1 11h1v1h-1zM3 11h2v1h-2zM7 11h4v1h-4zM13 \
-   11h1v1h-1zM15 11h1v1h-1zM19 11h1v1h-1zM23 11h3v1h-3zM27 11h1v1h-1zM1 12h1v1h-1zM6 \
-   12h2v1h-2zM10 12h1v1h-1zM12 12h1v1h-1zM14 12h1v1h-1zM16 12h2v1h-2zM25 12h2v1h-2zM0 \
-   13h1v1h-1zM2 13h1v1h-1zM9 13h1v1h-1zM19 13h2v1h-2zM22 13h3v1h-3zM28 13h1v1h-1zM0 \
-   14h1v1h-1zM5 14h2v1h-2zM8 14h4v1h-4zM15 14h1v1h-1zM20 14h2v1h-2zM24 14h3v1h-3zM1 \
-   15h3v1h-3zM5 15h1v1h-1zM7 15h1v1h-1zM12 15h1v1h-1zM14 15h1v1h-1zM18 15h7v1h-7zM27 \
-   15h1v1h-1zM3 16h8v1h-8zM15 16h5v1h-5zM21 16h1v1h-1zM25 16h2v1h-2zM0 17h3v1h-3zM7 \
-   17h2v1h-2zM11 17h4v1h-4zM17 17h3v1h-3zM21 17h4v1h-4zM26 17h1v1h-1zM28 17h1v1h-1zM0 \
-   18h1v1h-1zM2 18h1v1h-1zM6 18h5v1h-5zM13 18h3v1h-3zM17 18h1v1h-1zM22 18h3v1h-3zM26 \
-   18h1v1h-1zM0 19h1v1h-1zM5 19h1v1h-1zM9 19h1v1h-1zM11 19h1v1h-1zM13 19h1v1h-1zM15 \
-   19h1v1h-1zM21 19h4v1h-4zM27 19h1v1h-1zM0 20h1v1h-1zM2 20h3v1h-3zM6 20h2v1h-2zM9 \
-   20h2v1h-2zM14 20h1v1h-1zM16 20h2v1h-2zM20 20h5v1h-5zM26 20h3v1h-3zM8 21h3v1h-3zM12 \
-   21h1v1h-1zM17 21h4v1h-4zM24 21h5v1h-5zM0 22h7v1h-7zM9 22h1v1h-1zM15 22h1v1h-1zM17 \
-   22h4v1h-4zM22 22h1v1h-1zM24 22h3v1h-3zM0 23h1v1h-1zM6 23h1v1h-1zM8 23h2v1h-2zM11 \
-   23h2v1h-2zM14 23h3v1h-3zM18 23h3v1h-3zM24 23h1v1h-1zM27 23h2v1h-2zM0 24h1v1h-1zM2 \
-   24h3v1h-3zM6 24h1v1h-1zM8 24h3v1h-3zM15 24h3v1h-3zM20 24h5v1h-5zM26 24h2v1h-2zM0 \
-   25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM8 25h2v1h-2zM11 25h1v1h-1zM14 25h1v1h-1zM18 \
-   25h1v1h-1zM25 25h4v1h-4zM0 26h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM8 26h1v1h-1zM10 \
-   26h3v1h-3zM15 26h2v1h-2zM21 26h7v1h-7zM0 27h1v1h-1zM6 27h1v1h-1zM10 27h1v1h-1zM12 \
-   27h2v1h-2zM15 27h2v1h-2zM18 27h4v1h-4zM24 27h2v1h-2zM27 27h1v1h-1zM0 28h7v1h-7zM8 \
-   28h2v1h-2zM12 28h1v1h-1zM14 28h1v1h-1zM17 28h3v1h-3zM23 28h1v1h-1zM26 28h1v1h-1z"
+  "M0 0h7v1h-7zM12 0h2v1h-2zM16 0h4v1h-4zM22 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1z\
+   M9 1h1v1h-1zM12 1h4v1h-4zM18 1h1v1h-1zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1z\
+   M2 2h3v1h-3zM6 2h1v1h-1zM11 2h1v1h-1zM13 2h1v1h-1zM16 2h5v1h-5zM22 2h1v1h-1z\
+   M24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM9 3h1v1h-1z\
+   M13 3h3v1h-3zM18 3h1v1h-1zM22 3h1v1h-1zM24 3h3v1h-3zM28 3h1v1h-1z\
+   M0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM9 4h1v1h-1zM11 4h4v1h-4zM16 4h1v1h-1z\
+   M18 4h1v1h-1zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1z\
+   M8 5h1v1h-1zM10 5h2v1h-2zM13 5h2v1h-2zM18 5h2v1h-2zM22 5h1v1h-1z\
+   M28 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1z\
+   M16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM9 7h1v1h-1z\
+   M11 7h2v1h-2zM14 7h1v1h-1zM17 7h4v1h-4zM0 8h1v1h-1zM3 8h1v1h-1zM5 8h2v1h-2z\
+   M8 8h2v1h-2zM11 8h1v1h-1zM15 8h2v1h-2zM19 8h1v1h-1zM21 8h1v1h-1z\
+   M23 8h1v1h-1zM0 9h2v1h-2zM3 9h2v1h-2zM8 9h5v1h-5zM14 9h2v1h-2zM17 9h1v1h-1z\
+   M20 9h3v1h-3zM25 9h1v1h-1zM28 9h1v1h-1zM0 10h5v1h-5zM6 10h2v1h-2z\
+   M9 10h2v1h-2zM16 10h4v1h-4zM21 10h1v1h-1zM23 10h1v1h-1zM25 10h3v1h-3z\
+   M0 11h1v1h-1zM2 11h3v1h-3zM9 11h2v1h-2zM12 11h1v1h-1zM14 11h2v1h-2z\
+   M18 11h1v1h-1zM20 11h1v1h-1zM23 11h1v1h-1zM26 11h2v1h-2zM1 12h4v1h-4z\
+   M6 12h4v1h-4zM12 12h1v1h-1zM15 12h1v1h-1zM17 12h1v1h-1zM20 12h3v1h-3z\
+   M25 12h1v1h-1zM27 12h2v1h-2zM2 13h1v1h-1zM4 13h2v1h-2zM9 13h4v1h-4z\
+   M16 13h5v1h-5zM0 14h1v1h-1zM3 14h2v1h-2zM6 14h1v1h-1zM8 14h1v1h-1z\
+   M16 14h2v1h-2zM20 14h1v1h-1zM22 14h7v1h-7zM0 15h1v1h-1zM2 15h2v1h-2z\
+   M11 15h1v1h-1zM13 15h2v1h-2zM17 15h1v1h-1zM20 15h3v1h-3zM25 15h1v1h-1z\
+   M27 15h1v1h-1zM1 16h2v1h-2zM4 16h3v1h-3zM10 16h1v1h-1zM13 16h2v1h-2z\
+   M16 16h3v1h-3zM20 16h1v1h-1zM27 16h1v1h-1zM11 17h1v1h-1zM17 17h1v1h-1z\
+   M20 17h4v1h-4zM25 17h1v1h-1zM28 17h1v1h-1zM0 18h1v1h-1zM3 18h2v1h-2z\
+   M6 18h2v1h-2zM13 18h1v1h-1zM16 18h2v1h-2zM20 18h2v1h-2zM23 18h2v1h-2z\
+   M27 18h2v1h-2zM4 19h1v1h-1zM9 19h2v1h-2zM12 19h2v1h-2zM15 19h4v1h-4z\
+   M21 19h1v1h-1zM27 19h2v1h-2zM0 20h1v1h-1zM2 20h1v1h-1zM5 20h3v1h-3z\
+   M11 20h1v1h-1zM14 20h2v1h-2zM20 20h5v1h-5zM26 20h1v1h-1zM8 21h4v1h-4z\
+   M13 21h1v1h-1zM20 21h1v1h-1zM24 21h1v1h-1zM26 21h3v1h-3zM0 22h7v1h-7z\
+   M13 22h2v1h-2zM17 22h2v1h-2zM20 22h1v1h-1zM22 22h1v1h-1zM24 22h1v1h-1z\
+   M27 22h1v1h-1zM0 23h1v1h-1zM6 23h1v1h-1zM8 23h2v1h-2zM11 23h1v1h-1z\
+   M13 23h1v1h-1zM15 23h2v1h-2zM20 23h1v1h-1zM24 23h5v1h-5zM0 24h1v1h-1z\
+   M2 24h3v1h-3zM6 24h1v1h-1zM14 24h1v1h-1zM17 24h1v1h-1zM20 24h5v1h-5z\
+   M28 24h1v1h-1zM0 25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM8 25h3v1h-3z\
+   M12 25h1v1h-1zM14 25h1v1h-1zM16 25h2v1h-2zM22 25h6v1h-6zM0 26h1v1h-1z\
+   M2 26h3v1h-3zM6 26h1v1h-1zM9 26h1v1h-1zM12 26h1v1h-1zM17 26h1v1h-1z\
+   M24 26h3v1h-3zM28 26h1v1h-1zM0 27h1v1h-1zM6 27h1v1h-1zM10 27h2v1h-2z\
+   M15 27h3v1h-3zM20 27h2v1h-2zM23 27h1v1h-1zM27 27h1v1h-1zM0 28h7v1h-7z\
+   M8 28h1v1h-1zM12 28h2v1h-2zM15 28h1v1h-1zM17 28h2v1h-2zM20 28h2v1h-2z\
+   M23 28h1v1h-1zM25 28h1v1h-1zM27 28h1v1h-1z"
 ;;
 
 let qr_code () =
@@ -184,9 +192,9 @@ let holdings =
   ]
 ;;
 
-let dividend_income (local_ graph) =
+let dividend_income (info : Info.t Bonsai.t) (local_ graph) =
   let charts = List.map holdings ~f:(fun _ -> chart graph) |> Bonsai.all in
-  let%arr charts in
+  let%arr charts and info in
   let config =
     [ "value", Chart.Config.item ~label:"Dividend" ~color:"var(--chart-2)" () ]
   in
@@ -206,7 +214,7 @@ let dividend_income (local_ graph) =
                      [ Item.title [ text name ]; Item.description [ text shares ] ]
                  ; Chart.container
                      ~config
-                     ~class_:"hidden h-8 w-24 md:block"
+                     ~class_:"hidden h-8 w-24 @min-[48rem]/preview:block"
                      chart
                      (Chart.bar_chart
                         ~margin:(Chart.margin ~top:0. ~right:0. ~bottom:0. ~left:0. ())
@@ -222,10 +230,10 @@ let dividend_income (local_ graph) =
                         ; Chart.bar
                             ~data_key:"value"
                             ~fill:"var(--color-value)"
-                            ~radius:(`Corners (3., 3., 0., 0.))
+                            ~radius:(Info.bar_radius info 3.)
                             ()
                         ])
-                 ; tspan "hidden text-sm font-semibold tabular-nums md:block" amount
+                 ; tspan "hidden text-sm font-semibold tabular-nums @min-[48rem]/preview:block" amount
                  ]))
         ]
     ]

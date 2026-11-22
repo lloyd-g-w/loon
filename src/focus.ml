@@ -16,6 +16,11 @@ let focusable_not_guard () =
 
 let in_browser () = Js.Optdef.test (Js.Unsafe.global##.document : _ Js.Optdef.t)
 
+(* Radix's [focus(element, { select: true })]: an input's text is selected. *)
+let select_input (el : Dom_html.element Js.t) =
+  if String.equal (Js.to_string el##.tagName) "INPUT" then (Js.Unsafe.coerce el)##select
+;;
+
 let focus_nth id ~last =
   Effect.of_thunk (fun () ->
     if in_browser ()
@@ -30,7 +35,9 @@ let focus_nth id ~last =
         in
         let all = if last then List.rev all else all in
         (match all with
-         | el :: _ -> el##focus
+         | el :: _ ->
+           el##focus;
+           select_input el
          | [] -> root##focus)))
 ;;
 
@@ -91,7 +98,9 @@ let focus_inside (el : Dom_html.element Js.t) mode =
     let focused =
       List.exists candidates ~f:(fun c ->
         focus_no_scroll c;
-        Option.value_map (active ()) ~default:false ~f:(fun a -> phys_equal a c))
+        let took = Option.value_map (active ()) ~default:false ~f:(fun a -> phys_equal a c) in
+        if took then select_input c;
+        took)
     in
     if not focused then focus_no_scroll el
   in

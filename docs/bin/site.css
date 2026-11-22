@@ -22,7 +22,8 @@
 @theme inline {
   --breakpoint-3xl: 1600px;
   --breakpoint-4xl: 2000px;
-  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  /* As globals.css: the variable, so that Create's preview can set it. */
+  --font-sans: var(--font-sans);
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --color-destructive-foreground: var(--destructive-foreground);
   --color-surface: var(--surface);
@@ -36,6 +37,7 @@
 }
 
 :root {
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --header-height: calc(var(--spacing) * 14);
   --footer-height: calc(var(--spacing) * 14);
   --radius: 0.625rem;

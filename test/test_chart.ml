@@ -208,93 +208,94 @@ let%expect_test "shadcn's classes: the container, its style and a bar chart" =
              height: 100%;
              min-width: 0;
            }>
-        <div class="recharts-bar-chart recharts-wrapper"
-             @on_mouseleave
-             @on_mousemove
-             style={
-               position: relative;
-               cursor: default;
-               width: 300px;
-               height: 200px;
-             }>
-          <svg role="application"
-               tabindex="0"
-               width="300"
-               height="200"
-               viewBox="0 0 300 200"
-               class="recharts-surface"
-               @on_blur
-               @on_keydown
+        <div style={ width: 0; height: 0; overflow: visible; }>
+          <div class="recharts-bar-chart recharts-wrapper"
+               @on_mouseleave
+               @on_mousemove
                style={
-                 width: 100%;
-                 height: 100%;
-                 display: block;
+                 position: relative;
+                 cursor: default;
+                 width: 300px;
+                 height: 200px;
                }>
-            <g class="recharts-cartesian-grid">
-              <g class="recharts-cartesian-grid-horizontal">
-                <line stroke="#ccc"
-                      fill="none"
-                      x="5"
-                      y="5"
-                      width="290"
-                      height="132"
-                      x1="5"
-                      y1="137"
-                      x2="295"
-                      y2="137"> </line>
-                <line stroke="#ccc"
-                      fill="none"
-                      x="5"
-                      y="5"
-                      width="290"
-                      height="132"
-                      x1="5"
-                      y1="104"
-                      x2="295"
-                      y2="104"> </line>
-                <line stroke="#ccc"
-                      fill="none"
-                      x="5"
-                      y="5"
-                      width="290"
-                      height="132"
-                      x1="5"
-                      y1="71"
-                      x2="295"
-                      y2="71"> </line>
-                <line stroke="#ccc"
-                      fill="none"
-                      x="5"
-                      y="5"
-                      width="290"
-                      height="132"
-                      x1="5"
-                      y1="38"
-                      x2="295"
-                      y2="38"> </line>
-                <line stroke="#ccc"
-                      fill="none"
-                      x="5"
-                      y="5"
-                      width="290"
-                      height="132"
-                      x1="5"
-                      y1="5"
-                      x2="295"
-                      y2="5"> </line>
+            <svg role="application"
+                 tabindex="0"
+                 width="300"
+                 height="200"
+                 viewBox="0 0 300 200"
+                 class="recharts-surface"
+                 @on_blur
+                 @on_keydown
+                 style={
+                   width: 100%;
+                   height: 100%;
+                   display: block;
+                 }>
+              <g class="recharts-cartesian-grid">
+                <g class="recharts-cartesian-grid-horizontal">
+                  <line stroke="#ccc"
+                        fill="none"
+                        x="5"
+                        y="5"
+                        width="290"
+                        height="132"
+                        x1="5"
+                        y1="137"
+                        x2="295"
+                        y2="137"> </line>
+                  <line stroke="#ccc"
+                        fill="none"
+                        x="5"
+                        y="5"
+                        width="290"
+                        height="132"
+                        x1="5"
+                        y1="104"
+                        x2="295"
+                        y2="104"> </line>
+                  <line stroke="#ccc"
+                        fill="none"
+                        x="5"
+                        y="5"
+                        width="290"
+                        height="132"
+                        x1="5"
+                        y1="71"
+                        x2="295"
+                        y2="71"> </line>
+                  <line stroke="#ccc"
+                        fill="none"
+                        x="5"
+                        y="5"
+                        width="290"
+                        height="132"
+                        x1="5"
+                        y1="38"
+                        x2="295"
+                        y2="38"> </line>
+                  <line stroke="#ccc"
+                        fill="none"
+                        x="5"
+                        y="5"
+                        width="290"
+                        height="132"
+                        x1="5"
+                        y1="5"
+                        x2="295"
+                        y2="5"> </line>
+                </g>
+                <Vdom.Node.none-widget> </Vdom.Node.none-widget>
               </g>
               <Vdom.Node.none-widget> </Vdom.Node.none-widget>
-            </g>
-            <Vdom.Node.none-widget> </Vdom.Node.none-widget>
-            <g class="recharts-bar recharts-layer">
-              <g class="recharts-bar-rectangles recharts-layer">
-                <g class="recharts-bar-rectangle recharts-layer">
-                  <path fill="var(--color-desktop)"
-                        x="14.6667"
-                        y="60.275"
-                        width="36"
-                        height="76.725"
-                        d="M 14.6667,64.275
+              <g class="recharts-bar recharts-layer">
+                <g class="recharts-bar-rectangles recharts-layer">
+                  <g class="recharts-bar-rectangle recharts-layer">
+                    <path fill="var(--color-desktop)"
+                          x="14.6667"
+                          y="60.275"
+                          width="36"
+                          height="76.725"
+                          d="M 14.6667,64.275
                 A 4,4,0,0,1,18.6667,60.275
                 L 46.6667,60.275
                 A 4,4,0,0,1,50.6667,64.275
@@ -302,15 +303,15 @@ let%expect_test "shadcn's classes: the container, its style and a bar chart" =
                 A 4,4,0,0,1,46.6667,137
                 L 18.6667,137
                 A 4,4,0,0,1,14.6667,133 Z"
-                        class="recharts-rectangle"> </path>
-                </g>
-                <g class="recharts-bar-rectangle recharts-layer">
-                  <path fill="var(--color-desktop)"
-                        x="111.3333"
-                        y="11.1875"
-                        width="36"
-                        height="125.8125"
-                        d="M 111.3333,15.1875
+                          class="recharts-rectangle"> </path>
+                  </g>
+                  <g class="recharts-bar-rectangle recharts-layer">
+                    <path fill="var(--color-desktop)"
+                          x="111.3333"
+                          y="11.1875"
+                          width="36"
+                          height="125.8125"
+                          d="M 111.3333,15.1875
                 A 4,4,0,0,1,115.3333,11.1875
                 L 143.3333,11.1875
                 A 4,4,0,0,1,147.3333,15.1875
@@ -318,15 +319,15 @@ let%expect_test "shadcn's classes: the container, its style and a bar chart" =
                 A 4,4,0,0,1,143.3333,137
                 L 115.3333,137
                 A 4,4,0,0,1,111.3333,133 Z"
-                        class="recharts-rectangle"> </path>
-                </g>
-                <g class="recharts-bar-rectangle recharts-layer">
-                  <path fill="var(--color-desktop)"
-                        x="208"
-                        y="39.2375"
-                        width="36"
-                        height="97.7625"
-                        d="M 208,43.2375
+                          class="recharts-rectangle"> </path>
+                  </g>
+                  <g class="recharts-bar-rectangle recharts-layer">
+                    <path fill="var(--color-desktop)"
+                          x="208"
+                          y="39.2375"
+                          width="36"
+                          height="97.7625"
+                          d="M 208,43.2375
                 A 4,4,0,0,1,212,39.2375
                 L 240,39.2375
                 A 4,4,0,0,1,244,43.2375
@@ -334,19 +335,19 @@ let%expect_test "shadcn's classes: the container, its style and a bar chart" =
                 A 4,4,0,0,1,240,137
                 L 212,137
                 A 4,4,0,0,1,208,133 Z"
-                        class="recharts-rectangle"> </path>
+                          class="recharts-rectangle"> </path>
+                  </g>
                 </g>
               </g>
-            </g>
-            <g class="recharts-bar recharts-layer">
-              <g class="recharts-bar-rectangles recharts-layer">
-                <g class="recharts-bar-rectangle recharts-layer">
-                  <path fill="var(--color-mobile)"
-                        x="54.6667"
-                        y="104"
-                        width="36"
-                        height="33"
-                        d="M 54.6667,108
+              <g class="recharts-bar recharts-layer">
+                <g class="recharts-bar-rectangles recharts-layer">
+                  <g class="recharts-bar-rectangle recharts-layer">
+                    <path fill="var(--color-mobile)"
+                          x="54.6667"
+                          y="104"
+                          width="36"
+                          height="33"
+                          d="M 54.6667,108
                 A 4,4,0,0,1,58.6667,104
                 L 86.6667,104
                 A 4,4,0,0,1,90.6667,108
@@ -354,15 +355,15 @@ let%expect_test "shadcn's classes: the container, its style and a bar chart" =
                 A 4,4,0,0,1,86.6667,137
                 L 58.6667,137
                 A 4,4,0,0,1,54.6667,133 Z"
-                        class="recharts-rectangle"> </path>
-                </g>
-                <g class="recharts-bar-rectangle recharts-layer">
-                  <path fill="var(--color-mobile)"
-                        x="151.3333"
-                        y="54.5"
-                        width="36"
-                        height="82.5"
-                        d="M 151.3333,58.5
+                          class="recharts-rectangle"> </path>
+                  </g>
+                  <g class="recharts-bar-rectangle recharts-layer">
+                    <path fill="var(--color-mobile)"
+                          x="151.3333"
+                          y="54.5"
+                          width="36"
+                          height="82.5"
+                          d="M 151.3333,58.5
                 A 4,4,0,0,1,155.3333,54.5
                 L 183.3333,54.5
                 A 4,4,0,0,1,187.3333,58.5
@@ -370,15 +371,15 @@ let%expect_test "shadcn's classes: the container, its style and a bar chart" =
                 A 4,4,0,0,1,183.3333,137
                 L 155.3333,137
                 A 4,4,0,0,1,151.3333,133 Z"
-                        class="recharts-rectangle"> </path>
-                </g>
-                <g class="recharts-bar-rectangle recharts-layer">
-                  <path fill="var(--color-mobile)"
-                        x="248"
-                        y="87.5"
-                        width="36"
-                        height="49.5"
-                        d="M 248,91.5
+                          class="recharts-rectangle"> </path>
+                  </g>
+                  <g class="recharts-bar-rectangle recharts-layer">
+                    <path fill="var(--color-mobile)"
+                          x="248"
+                          y="87.5"
+                          width="36"
+                          height="49.5"
+                          d="M 248,91.5
                 A 4,4,0,0,1,252,87.5
                 L 280,87.5
                 A 4,4,0,0,1,284,91.5
@@ -386,87 +387,98 @@ let%expect_test "shadcn's classes: the container, its style and a bar chart" =
                 A 4,4,0,0,1,280,137
                 L 252,137
                 A 4,4,0,0,1,248,133 Z"
-                        class="recharts-rectangle"> </path>
+                          class="recharts-rectangle"> </path>
+                  </g>
                 </g>
               </g>
-            </g>
-            <g class="recharts-cartesian-axis recharts-layer recharts-xAxis xAxis">
+              <g class="recharts-cartesian-axis recharts-layer recharts-xAxis xAxis">
+                <Vdom.Node.none-widget> </Vdom.Node.none-widget>
+                <g class="recharts-cartesian-axis-ticks recharts-xAxis-ticks">
+                  <g class="recharts-cartesian-axis-tick-labels recharts-xAxis-tick-labels">
+                    <g class="recharts-cartesian-axis-tick-label recharts-layer">
+                      <text stroke="none"
+                            x="53.333333333333336"
+                            y="153"
+                            text-anchor="middle"
+                            fill="#666"
+                            orientation="bottom"
+                            width="290"
+                            height="30"
+                            class="recharts-cartesian-axis-tick-value recharts-text">
+                        <tspan x="53.333333333333336" dy="0.71em"> Jan </tspan>
+                      </text>
+                    </g>
+                    <g class="recharts-cartesian-axis-tick-label recharts-layer">
+                      <text stroke="none"
+                            x="150"
+                            y="153"
+                            text-anchor="middle"
+                            fill="#666"
+                            orientation="bottom"
+                            width="290"
+                            height="30"
+                            class="recharts-cartesian-axis-tick-value recharts-text">
+                        <tspan x="150" dy="0.71em"> Feb </tspan>
+                      </text>
+                    </g>
+                    <g class="recharts-cartesian-axis-tick-label recharts-layer">
+                      <text stroke="none"
+                            x="246.66666666666669"
+                            y="153"
+                            text-anchor="middle"
+                            fill="#666"
+                            orientation="bottom"
+                            width="290"
+                            height="30"
+                            class="recharts-cartesian-axis-tick-value recharts-text">
+                        <tspan x="246.66666666666669" dy="0.71em"> Mar </tspan>
+                      </text>
+                    </g>
+                  </g>
+                  <g class="recharts-cartesian-axis-tick-lines recharts-xAxis-tick-lines">
+                    <g class="recharts-cartesian-axis-tick recharts-layer">
+                      <Vdom.Node.none-widget> </Vdom.Node.none-widget>
+                    </g>
+                    <g class="recharts-cartesian-axis-tick recharts-layer">
+                      <Vdom.Node.none-widget> </Vdom.Node.none-widget>
+                    </g>
+                    <g class="recharts-cartesian-axis-tick recharts-layer">
+                      <Vdom.Node.none-widget> </Vdom.Node.none-widget>
+                    </g>
+                  </g>
+                </g>
+              </g>
               <Vdom.Node.none-widget> </Vdom.Node.none-widget>
-              <g class="recharts-cartesian-axis-ticks">
-                <g class="recharts-cartesian-axis-tick recharts-layer">
-                  <Vdom.Node.none-widget> </Vdom.Node.none-widget>
-                  <text stroke="none"
-                        x="53.333333333333336"
-                        y="153"
-                        text-anchor="middle"
-                        fill="#666"
-                        orientation="bottom"
-                        width="290"
-                        height="30"
-                        class="recharts-cartesian-axis-tick-value recharts-text">
-                    <tspan x="53.333333333333336" dy="0.71em"> Jan </tspan>
-                  </text>
-                </g>
-                <g class="recharts-cartesian-axis-tick recharts-layer">
-                  <Vdom.Node.none-widget> </Vdom.Node.none-widget>
-                  <text stroke="none"
-                        x="150"
-                        y="153"
-                        text-anchor="middle"
-                        fill="#666"
-                        orientation="bottom"
-                        width="290"
-                        height="30"
-                        class="recharts-cartesian-axis-tick-value recharts-text">
-                    <tspan x="150" dy="0.71em"> Feb </tspan>
-                  </text>
-                </g>
-                <g class="recharts-cartesian-axis-tick recharts-layer">
-                  <Vdom.Node.none-widget> </Vdom.Node.none-widget>
-                  <text stroke="none"
-                        x="246.66666666666669"
-                        y="153"
-                        text-anchor="middle"
-                        fill="#666"
-                        orientation="bottom"
-                        width="290"
-                        height="30"
-                        class="recharts-cartesian-axis-tick-value recharts-text">
-                    <tspan x="246.66666666666669" dy="0.71em"> Mar </tspan>
-                  </text>
-                </g>
-              </g>
-            </g>
-            <Vdom.Node.none-widget> </Vdom.Node.none-widget>
-            <Vdom.Node.none-widget> </Vdom.Node.none-widget>
-          </svg>
-          <div class="recharts-legend-wrapper"
-               loon-chart-legend=<measure>
-               style={
-                 position: absolute;
-                 width: 290px;
-                 height: auto;
-                 left: 5px;
-                 bottom: 5px;
-               }>
-            <div class="flex gap-4 items-center justify-center pt-3">
-              <div class="[&>svg]:h-3 [&>svg]:text-muted-foreground [&>svg]:w-3 flex gap-1.5 items-center">
-                <div class="h-2 rounded-[2px] shrink-0 w-2"
-                     style={
-                       background-color: var(--color-desktop);
-                     }> </div>
-                Desktop
-              </div>
-              <div class="[&>svg]:h-3 [&>svg]:text-muted-foreground [&>svg]:w-3 flex gap-1.5 items-center">
-                <div class="h-2 rounded-[2px] shrink-0 w-2"
-                     style={
-                       background-color: var(--color-mobile);
-                     }> </div>
-                Mobile
+              <Vdom.Node.none-widget> </Vdom.Node.none-widget>
+            </svg>
+            <div class="recharts-legend-wrapper"
+                 loon-chart-legend=<measure>
+                 style={
+                   position: absolute;
+                   width: 290px;
+                   height: auto;
+                   left: 5px;
+                   bottom: 5px;
+                 }>
+              <div class="flex gap-4 items-center justify-center pt-3">
+                <div class="[&>svg]:h-3 [&>svg]:text-muted-foreground [&>svg]:w-3 flex gap-1.5 items-center">
+                  <div class="h-2 rounded-[2px] shrink-0 w-2"
+                       style={
+                         background-color: var(--color-desktop);
+                       }> </div>
+                  Desktop
+                </div>
+                <div class="[&>svg]:h-3 [&>svg]:text-muted-foreground [&>svg]:w-3 flex gap-1.5 items-center">
+                  <div class="h-2 rounded-[2px] shrink-0 w-2"
+                       style={
+                         background-color: var(--color-mobile);
+                       }> </div>
+                  Mobile
+                </div>
               </div>
             </div>
+            <Vdom.Node.none-widget> </Vdom.Node.none-widget>
           </div>
-          <Vdom.Node.none-widget> </Vdom.Node.none-widget>
         </div>
       </div>
     </div>
