@@ -15,16 +15,16 @@ let%expect_test "shadcn's classes" =
            ]
        ]);
   [%expect {|
-    <nav aria-label="breadcrumb" data-slot="breadcrumb">
+    <nav aria-label="breadcrumb" data-slot="breadcrumb" class="cn-breadcrumb">
       <ol data-slot="breadcrumb-list"
-          class="break-words flex flex-wrap gap-1.5 items-center sm:gap-2.5 text-muted-foreground text-sm">
-        <li data-slot="breadcrumb-item" class="gap-1.5 inline-flex items-center">
-          <a data-slot="breadcrumb-link" href="/" class="hover:text-foreground transition-colors"> Home </a>
+          class="cn-breadcrumb-list flex flex-wrap items-center wrap-break-word">
+        <li data-slot="breadcrumb-item" class="cn-breadcrumb-item inline-flex items-center">
+          <a data-slot="breadcrumb-link" href="/" class="cn-breadcrumb-link"> Home </a>
         </li>
         <li data-slot="breadcrumb-separator"
             role="presentation"
             aria-hidden="true"
-            class="[&>svg]:size-3.5">
+            class="cn-breadcrumb-separator">
           <svg xmlns="http://www.w3.org/2000/svg"
                width="24"
                height="24"
@@ -34,15 +34,15 @@ let%expect_test "shadcn's classes" =
                stroke-width="2"
                stroke-linecap="round"
                stroke-linejoin="round"
-               class="lucide lucide-chevron-right">
+               class="cn-rtl-flip lucide lucide-chevron-right">
             <path d="m9 18 6-6-6-6"> </path>
           </svg>
         </li>
-        <li data-slot="breadcrumb-item" class="gap-1.5 inline-flex items-center">
+        <li data-slot="breadcrumb-item" class="cn-breadcrumb-item inline-flex items-center">
           <span data-slot="breadcrumb-ellipsis"
                 role="presentation"
                 aria-hidden="true"
-                class="flex items-center justify-center size-9">
+                class="cn-breadcrumb-ellipsis flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="24"
                  height="24"
@@ -52,7 +52,7 @@ let%expect_test "shadcn's classes" =
                  stroke-width="2"
                  stroke-linecap="round"
                  stroke-linejoin="round"
-                 class="lucide lucide-ellipsis size-4">
+                 class="lucide lucide-ellipsis">
               <circle cx="12" cy="12" r="1"> </circle>
               <circle cx="19" cy="12" r="1"> </circle>
               <circle cx="5" cy="12" r="1"> </circle>
@@ -63,13 +63,13 @@ let%expect_test "shadcn's classes" =
         <li data-slot="breadcrumb-separator"
             role="presentation"
             aria-hidden="true"
-            class="[&>svg]:size-3.5"> / </li>
-        <li data-slot="breadcrumb-item" class="gap-1.5 inline-flex items-center">
+            class="cn-breadcrumb-separator"> / </li>
+        <li data-slot="breadcrumb-item" class="cn-breadcrumb-item inline-flex items-center">
           <span data-slot="breadcrumb-page"
                 role="link"
                 aria-disabled="true"
                 aria-current="page"
-                class="font-normal max-w-20 text-foreground truncate"> Breadcrumb </span>
+                class="cn-breadcrumb-page max-w-20 truncate"> Breadcrumb </span>
         </li>
       </ol>
     </nav>

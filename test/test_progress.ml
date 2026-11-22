@@ -13,12 +13,12 @@ let%expect_test "shadcn's classes" =
          data-value="13"
          data-max="100"
          data-slot="progress"
-         class="bg-primary/20 h-2 overflow-hidden relative rounded-full w-full">
+         class="cn-progress flex items-center overflow-x-hidden relative w-full">
       <div data-state="loading"
            data-value="13"
            data-max="100"
            data-slot="progress-indicator"
-           class="bg-primary flex-1 h-full transition-all w-full"
+           class="cn-progress-indicator flex-1 size-full transition-all"
            style={
              transform: translateX(-87%);
            }> </div>

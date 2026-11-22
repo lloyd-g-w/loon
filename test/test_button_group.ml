@@ -13,17 +13,17 @@ let%expect_test "shadcn's classes" =
     {|
     <div role="group"
          data-slot="button-group"
-         class="[&>*:not(:first-child)]:border-l-0 [&>*:not(:first-child)]:rounded-l-none [&>*:not(:last-child)]:rounded-r-none [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1 flex has-[>[data-slot=button-group]]:gap-2 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md items-stretch w-fit">
+         class="*:focus-visible:relative *:focus-visible:z-10 [&>*:not(:first-child)]:border-l-0 [&>*:not(:first-child)]:rounded-l-none [&>*:not(:last-child)]:rounded-r-none [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1 cn-button-group cn-button-group-orientation-horizontal flex group/button-group items-stretch w-fit">
       <button type="button"
               data-slot="button"
               data-variant="outline"
               data-size="default"
-              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"> Archive </button>
+              class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-outline disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"> Archive </button>
       <div data-slot="button-group-separator"
            role="none"
            data-orientation="vertical"
-           class="bg-input data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-auto data-[orientation=vertical]:w-px m-0! relative self-stretch shrink-0"> </div>
-      <div class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none bg-muted border flex font-medium gap-2 items-center px-4 rounded-md shadow-xs text-sm"> Report </div>
+           class="bg-border cn-button-group-separator data-horizontal:h-px data-horizontal:mx-px data-horizontal:w-auto data-vertical:h-auto data-vertical:my-px data-vertical:self-stretch data-vertical:w-px relative self-stretch shrink-0"> </div>
+      <div class="[&_svg]:pointer-events-none cn-button-group-text flex items-center"> Report </div>
     </div>
     |}]
 ;;
@@ -49,6 +49,6 @@ let%expect_test "vertical, nested" =
         <button type="button" data-slot="button" data-variant="default" data-size="default"> Down </button>
       </div>
     </div>
-    flex w-fit items-stretch has-[>[data-slot=button-group]]:gap-2 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1 flex-col [&>*:not(:first-child)]:rounded-t-none [&>*:not(:first-child)]:border-t-0 [&>*:not(:last-child)]:rounded-b-none
+    cn-button-group group/button-group flex w-fit items-stretch *:focus-visible:relative *:focus-visible:z-10 [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1 cn-button-group-orientation-vertical flex-col [&>*:not(:first-child)]:rounded-t-none [&>*:not(:first-child)]:border-t-0 [&>*:not(:last-child)]:rounded-b-none
     |}]
 ;;

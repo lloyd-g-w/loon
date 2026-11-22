@@ -15,17 +15,16 @@ let%expect_test "a card's parts" =
        ; Card.footer ~class_:"border-t" [ Node.text "Footer" ]
        ]);
   [%expect {|
-    <div data-slot="card"
-         class="bg-card border flex flex-col gap-6 max-w-sm py-6 rounded-xl shadow-sm text-card-foreground w-full">
+    <div data-slot="card" data-size="default" class="cn-card flex flex-col group/card max-w-sm w-full">
       <div data-slot="card-header"
-           class="@container/card-header [.border-b]:pb-6 auto-rows-min gap-2 grid grid-rows-[auto_auto] has-data-[slot=card-action]:grid-cols-[1fr_auto] items-start px-6">
-        <div data-slot="card-title" class="font-semibold leading-none"> Title </div>
-        <div data-slot="card-description" class="text-muted-foreground text-sm"> Description </div>
+           class="@container/card-header auto-rows-min cn-card-header grid group/card-header has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] items-start">
+        <div data-slot="card-title" class="cn-card-title cn-font-heading"> Title </div>
+        <div data-slot="card-description" class="cn-card-description"> Description </div>
         <div data-slot="card-action"
-             class="col-start-2 justify-self-end row-span-2 row-start-1 self-start"> Action </div>
+             class="cn-card-action col-start-2 justify-self-end row-span-2 row-start-1 self-start"> Action </div>
       </div>
-      <div data-slot="card-content" class="px-6"> Content </div>
-      <div data-slot="card-footer" class="[.border-t]:pt-6 border-t flex items-center px-6"> Footer </div>
+      <div data-slot="card-content" class="cn-card-content"> Content </div>
+      <div data-slot="card-footer" class="border-t cn-card-footer flex items-center"> Footer </div>
     </div>
     |}]
 ;;
@@ -35,7 +34,7 @@ let%expect_test "badges" =
   [%expect {|
     <span data-slot="badge"
           data-variant="default"
-          class="[&>svg]:pointer-events-none [&>svg]:size-3 [a&]:hover:bg-primary/90 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary border border-transparent dark:aria-invalid:ring-destructive/40 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-1 inline-flex items-center justify-center overflow-hidden px-2 py-0.5 rounded-full shrink-0 text-primary-foreground text-xs transition-[color,box-shadow] w-fit whitespace-nowrap"> Badge </span>
+          class="[&>svg]:pointer-events-none aria-invalid:border-destructive aria-invalid:ring-destructive/20 cn-badge cn-badge-variant-default dark:aria-invalid:ring-destructive/40 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 group/badge inline-flex items-center justify-center overflow-hidden shrink-0 w-fit whitespace-nowrap"> Badge </span>
     |}];
   List.iter Badge.Variant.all ~f:(fun variant ->
     Render.html ~classes:false (Badge.view ~variant [ Node.text "Badge" ]));

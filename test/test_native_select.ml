@@ -25,10 +25,11 @@ let%expect_test "shadcn's classes" =
   [%expect
     {|
     <div data-slot="native-select-wrapper"
-         class="group/native-select has-[select:disabled]:opacity-50 relative w-fit">
+         data-size="default"
+         class="cn-native-select-wrapper group/native-select has-[select:disabled]:opacity-50 relative w-fit">
       <select data-slot="native-select"
               data-size="default"
-              class="appearance-none aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-transparent border border-input dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:hover:bg-input/50 data-[size=sm]:h-8 data-[size=sm]:py-1 disabled:cursor-not-allowed disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 h-9 min-w-0 outline-none placeholder:text-muted-foreground pr-9 px-3 py-2 rounded-md selection:bg-primary selection:text-primary-foreground shadow-xs text-sm transition-[color,box-shadow] w-full">
+              class="cn-native-select disabled:cursor-not-allowed disabled:pointer-events-none outline-none">
         <option data-slot="native-select-option" class="bg-[Canvas] text-[CanvasText]" #value=""> Select status </option>
         <optgroup data-slot="native-select-optgroup"
                   label="Open"
@@ -46,7 +47,7 @@ let%expect_test "shadcn's classes" =
            stroke-linecap="round"
            stroke-linejoin="round"
            data-slot="native-select-icon"
-           class="-translate-y-1/2 absolute lucide lucide-chevron-down opacity-50 pointer-events-none right-3.5 select-none size-4 text-muted-foreground top-1/2">
+           class="absolute cn-native-select-icon lucide lucide-chevron-down pointer-events-none select-none">
         <path d="m6 9 6 6 6-6"> </path>
       </svg>
     </div>
@@ -67,7 +68,7 @@ let%expect_test "sizes, disabled, invalid" =
        []);
   [%expect
     {|
-    <div data-slot="native-select-wrapper">
+    <div data-slot="native-select-wrapper" data-size="default">
       <select data-slot="native-select" data-size="default"> </select>
       <svg xmlns="http://www.w3.org/2000/svg"
            width="24"
@@ -82,7 +83,7 @@ let%expect_test "sizes, disabled, invalid" =
         <path d="m6 9 6 6 6-6"> </path>
       </svg>
     </div>
-    <div data-slot="native-select-wrapper">
+    <div data-slot="native-select-wrapper" data-size="sm">
       <select data-slot="native-select" data-size="sm"> </select>
       <svg xmlns="http://www.w3.org/2000/svg"
            width="24"
@@ -97,7 +98,7 @@ let%expect_test "sizes, disabled, invalid" =
         <path d="m6 9 6 6 6-6"> </path>
       </svg>
     </div>
-    <div data-slot="native-select-wrapper">
+    <div data-slot="native-select-wrapper" data-size="default">
       <select data-slot="native-select"
               data-size="default"
               id="s"
@@ -131,7 +132,7 @@ let%expect_test "choosing an option sets the value" =
   [%expect
     {|
     <div>
-      <div data-slot="native-select-wrapper">
+      <div data-slot="native-select-wrapper" data-size="default">
         <select data-slot="native-select"
                 data-size="default"
                 id="status"
@@ -166,7 +167,7 @@ let%expect_test "choosing an option sets the value" =
   [%expect
     {|
       <div>
-        <div data-slot="native-select-wrapper">
+        <div data-slot="native-select-wrapper" data-size="default">
           <select data-slot="native-select"
                   data-size="default"
                   id="status"

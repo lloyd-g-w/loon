@@ -14,11 +14,11 @@ let%expect_test "shadcn's classes" =
        ]);
   [%expect {|
     <div data-slot="empty"
-         class="border-dashed flex flex-1 flex-col gap-6 items-center justify-center md:p-12 min-w-0 p-6 rounded-lg text-balance text-center">
-      <div data-slot="empty-header" class="flex flex-col gap-2 items-center max-w-sm text-center">
+         class="cn-empty flex flex-1 flex-col items-center justify-center min-w-0 text-balance text-center w-full">
+      <div data-slot="empty-header" class="cn-empty-header flex flex-col items-center max-w-sm">
         <div data-slot="empty-icon"
              data-variant="icon"
-             class="[&_svg:not([class*='size-'])]:size-6 [&_svg]:pointer-events-none [&_svg]:shrink-0 bg-muted flex items-center justify-center mb-2 rounded-lg shrink-0 size-10 text-foreground">
+             class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-empty-media cn-empty-media-icon flex items-center justify-center shrink-0">
           <svg xmlns="http://www.w3.org/2000/svg"
                width="24"
                height="24"
@@ -34,12 +34,12 @@ let%expect_test "shadcn's classes" =
             <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z"> </path>
           </svg>
         </div>
-        <div data-slot="empty-title" class="font-medium text-lg tracking-tight"> No Projects Yet </div>
+        <div data-slot="empty-title" class="cn-empty-title cn-font-heading"> No Projects Yet </div>
         <div data-slot="empty-description"
-             class="[&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4 text-muted-foreground text-sm/relaxed"> Get started. </div>
+             class="[&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4 cn-empty-description text-muted-foreground"> Get started. </div>
       </div>
       <div data-slot="empty-content"
-           class="flex flex-col gap-4 items-center max-w-sm min-w-0 text-balance text-sm w-full"> Actions </div>
+           class="cn-empty-content flex flex-col items-center max-w-sm min-w-0 text-balance w-full"> Actions </div>
     </div>
     |}]
 ;;

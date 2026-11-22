@@ -28,7 +28,7 @@ let%expect_test "shadcn's classes" =
               id="t-trigger"
               data-state="delayed-open"
               aria-describedby="t-tooltip"
-              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"
+              class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-outline disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
               @on_blur
               @on_focus
               @on_mouseleave
@@ -60,7 +60,7 @@ let%expect_test "shadcn's classes" =
                data-state="delayed-open"
                data-side="top"
                data-align="center"
-               class="animate-in bg-foreground data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 fade-in-0 origin-(--radix-tooltip-content-transform-origin) px-3 py-1.5 rounded-md text-background text-balance text-xs w-fit z-50 zoom-in-95"
+               class="bg-foreground cn-tooltip-content max-w-xs origin-(--radix-tooltip-content-transform-origin) text-background w-fit z-50"
                @on_mouseleave>
             <p> Add to library </p>
             <span id="t-tooltip"
@@ -73,7 +73,7 @@ let%expect_test "shadcn's classes" =
                    height="5"
                    viewBox="0 0 30 10"
                    preserveAspectRatio="none"
-                   class="bg-foreground fill-foreground rotate-45 rounded-[2px] size-2.5 translate-y-[calc(-50%_-_2px)] z-50"
+                   class="bg-foreground cn-tooltip-arrow fill-foreground translate-y-[calc(-50%_-_2px)] z-50"
                    style={
                      display: block;
                    }>

@@ -78,6 +78,7 @@ let%expect_test "shadcn's classes" =
       <span data-slot="context-menu-trigger"
             id="context-menu-trigger"
             data-state="open"
+            class="cn-context-menu-trigger select-none"
             @on_contextmenu
             style={
               -webkit-touch-callout: none;
@@ -116,21 +117,20 @@ let%expect_test "shadcn's classes" =
                tabindex="-1"
                data-side="right"
                data-align="start"
-               class="bg-popover border data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 max-h-(--radix-context-menu-content-available-height) min-w-[8rem] origin-(--radix-context-menu-content-transform-origin) overflow-x-hidden overflow-y-auto p-1 rounded-md shadow-md text-popover-foreground z-50"
+               class="cn-context-menu-content cn-menu-target cn-menu-translucent max-h-(--radix-context-menu-content-available-height) origin-(--radix-context-menu-content-transform-origin) overflow-x-hidden overflow-y-auto z-50"
                loon-focus-on-mount=Self
                @on_keydown
                style={
                  outline: none;
                }>
-            <div data-slot="context-menu-label"
-                 class="data-[inset]:pl-8 font-medium px-2 py-1.5 text-foreground text-sm"> Label </div>
+            <div data-slot="context-menu-label" class="cn-context-menu-label"> Label </div>
             <div data-slot="context-menu-item"
                  data-variant="destructive"
                  role="menuitem"
                  tabindex="-1"
                  data-orientation="vertical"
                  data-radix-collection-item=""
-                 class="[&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-default dark:data-[variant=destructive]:focus:bg-destructive/20 data-[disabled]:opacity-50 data-[disabled]:pointer-events-none data-[inset]:pl-8 data-[variant=destructive]:*:[svg]:text-destructive! data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:text-destructive flex focus:bg-accent focus:text-accent-foreground gap-2 items-center outline-hidden px-2 py-1.5 relative rounded-sm select-none text-sm"
+                 class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-context-menu-item cursor-default data-disabled:opacity-50 data-disabled:pointer-events-none flex group/context-menu-item items-center outline-hidden relative select-none"
                  loon-focus-when=false
                  @on_click
                  @on_mouseleave
@@ -144,7 +144,7 @@ let%expect_test "shadcn's classes" =
                  tabindex="-1"
                  data-orientation="vertical"
                  data-radix-collection-item=""
-                 class="[&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-default data-[inset]:pl-8 data-[state=open]:bg-accent data-[state=open]:text-accent-foreground flex focus:bg-accent focus:text-accent-foreground items-center outline-hidden px-2 py-1.5 rounded-sm select-none text-sm"
+                 class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-context-menu-sub-trigger cursor-default flex items-center outline-hidden select-none"
                  loon-focus-when=false
                  @on_click
                  @on_mouseleave
@@ -159,7 +159,7 @@ let%expect_test "shadcn's classes" =
                    stroke-width="2"
                    stroke-linecap="round"
                    stroke-linejoin="round"
-                   class="lucide lucide-chevron-right ml-auto">
+                   class="cn-rtl-flip lucide lucide-chevron-right ml-auto">
                 <path d="m9 18 6-6-6-6"> </path>
               </svg>
             </div>
@@ -345,7 +345,7 @@ let%expect_test "a right click opens it at the pointer; Esc closes it" =
                          stroke-width="2"
                          stroke-linecap="round"
                          stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="10"> </circle>
+                      <path d="M20 6 9 17l-5-5"> </path>
                     </svg>
                   </span>
                 </span>

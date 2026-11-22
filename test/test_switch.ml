@@ -16,12 +16,12 @@ let%expect_test "shadcn's classes" =
             data-slot="switch"
             data-size="default"
             id="airplane-mode"
-            class="border border-transparent dark:data-[state=unchecked]:bg-input/80 data-[size=default]:h-[1.15rem] data-[size=default]:w-8 data-[size=sm]:h-3.5 data-[size=sm]:w-6 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 group/switch inline-flex items-center outline-none peer rounded-full shadow-xs shrink-0 transition-all"
+            class="after:-inset-x-3 after:-inset-y-2 after:absolute cn-switch data-disabled:cursor-not-allowed data-disabled:opacity-50 group/switch inline-flex items-center outline-none peer relative transition-all"
             #value="on"
             @on_click>
       <span data-state="unchecked"
             data-slot="switch-thumb"
-            class="bg-background block dark:data-[state=checked]:bg-primary-foreground dark:data-[state=unchecked]:bg-foreground data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0 group-data-[size=default]/switch:size-4 group-data-[size=sm]/switch:size-3 pointer-events-none ring-0 rounded-full transition-transform"> </span>
+            class="block cn-switch-thumb pointer-events-none ring-0 transition-transform"> </span>
     </button>
     |}]
 ;;

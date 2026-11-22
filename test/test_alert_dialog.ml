@@ -53,7 +53,7 @@ let%expect_test "shadcn's classes, open" =
               aria-expanded="true"
               aria-controls="a-content"
               data-state="open"
-              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"
+              class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-outline disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
               @on_click> Show Dialog </button>
       <div popover="manual"
            loon-portal=()
@@ -82,7 +82,7 @@ let%expect_test "shadcn's classes, open" =
            }>
         <div data-slot="alert-dialog-overlay"
              data-state="open"
-             class="bg-black/50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 fixed inset-0 z-50"
+             class="cn-alert-dialog-overlay fixed inset-0 z-50"
              style={
                pointer-events: auto;
              }> </div>
@@ -104,7 +104,7 @@ let%expect_test "shadcn's classes, open" =
              tabindex="-1"
              data-slot="alert-dialog-content"
              data-size="default"
-             class="bg-background border data-[size=default]:sm:max-w-lg data-[size=sm]:max-w-xs data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 duration-200 fixed gap-4 grid group/alert-dialog-content left-[50%] max-w-[calc(100%-2rem)] p-6 rounded-lg shadow-lg top-[50%] translate-x-[-50%] translate-y-[-50%] w-full z-50"
+             class="-translate-x-1/2 -translate-y-1/2 cn-alert-dialog-content fixed grid group/alert-dialog-content left-1/2 outline-none top-1/2 w-full z-50"
              loon-dismiss=(()false true)
              loon-focus-on-mount=(Selector [data-slot=alert-dialog-cancel])
              loon-scroll-lock=()
@@ -112,28 +112,27 @@ let%expect_test "shadcn's classes, open" =
              style={
                pointer-events: auto;
              }>
-          <div data-slot="alert-dialog-header"
-               class="gap-1.5 grid grid-rows-[auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-6 has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] place-items-center sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr] sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-left text-center">
+          <div data-slot="alert-dialog-header" class="cn-alert-dialog-header">
             <h2 data-slot="alert-dialog-title"
                 id="a-title"
-                class="font-semibold sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2 text-lg"> Are you absolutely sure? </h2>
+                class="cn-alert-dialog-title cn-font-heading"> Are you absolutely sure? </h2>
             <p data-slot="alert-dialog-description"
                id="a-description"
-               class="text-muted-foreground text-sm"> This action cannot be undone. </p>
+               class="cn-alert-dialog-description"> This action cannot be undone. </p>
           </div>
           <div data-slot="alert-dialog-footer"
-               class="flex flex-col-reverse gap-2 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end">
+               class="cn-alert-dialog-footer flex flex-col-reverse gap-2 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end">
             <button type="button"
                     data-slot="alert-dialog-cancel"
                     data-variant="outline"
                     data-size="default"
-                    class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"
+                    class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-alert-dialog-cancel cn-button cn-button-size-default cn-button-variant-outline disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
                     @on_click> Cancel </button>
             <button type="button"
                     data-slot="alert-dialog-action"
                     data-variant="default"
                     data-size="default"
-                    class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"
+                    class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-alert-dialog-action cn-button cn-button-size-default cn-button-variant-default disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
                     @on_click> Continue </button>
           </div>
         </div>

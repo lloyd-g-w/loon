@@ -82,32 +82,35 @@ let%expect_test "shadcn's classes" =
            data-slot="sidebar"
            class="group hidden md:block peer text-sidebar-foreground">
         <div data-slot="sidebar-gap"
-             class="bg-transparent duration-200 ease-linear group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 relative transition-[width] w-(--sidebar-width)"> </div>
+             class="bg-transparent cn-sidebar-gap group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 relative w-(--sidebar-width)"> </div>
         <div data-slot="sidebar-container"
-             class="duration-200 ease-linear fixed group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] group-data-[side=left]:border-r group-data-[side=right]:border-l h-svh hidden inset-y-0 left-0 md:flex transition-[left,right,width] w-(--sidebar-width) z-10">
+             data-side="left"
+             class="data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] data-[side=left]:left-0 data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)] data-[side=right]:right-0 duration-200 ease-linear fixed group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l h-svh hidden inset-y-0 md:flex transition-[left,right,width] w-(--sidebar-width) z-10">
           <div data-sidebar="sidebar"
                data-slot="sidebar-inner"
-               class="bg-sidebar flex flex-col group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:shadow-sm h-full w-full">
-            <div data-slot="sidebar-header" data-sidebar="header" class="flex flex-col gap-2 p-2"> Acme </div>
+               class="cn-sidebar-inner flex flex-col size-full">
+            <div data-slot="sidebar-header"
+                 data-sidebar="header"
+                 class="cn-sidebar-header flex flex-col"> Acme </div>
             <div data-slot="sidebar-content"
                  data-sidebar="content"
-                 class="flex flex-1 flex-col gap-2 group-data-[collapsible=icon]:overflow-hidden min-h-0 overflow-auto">
+                 class="cn-sidebar-content flex flex-1 flex-col group-data-[collapsible=icon]:overflow-hidden min-h-0 overflow-auto">
               <div data-slot="sidebar-group"
                    data-sidebar="group"
-                   class="flex flex-col min-w-0 p-2 relative w-full">
+                   class="cn-sidebar-group flex flex-col min-w-0 relative w-full">
                 <div data-slot="sidebar-group-label"
                      data-sidebar="group-label"
-                     class="[&>svg]:shrink-0 [&>svg]:size-4 duration-200 ease-linear flex focus-visible:ring-2 font-medium group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0 h-8 items-center outline-hidden px-2 ring-sidebar-ring rounded-md shrink-0 text-sidebar-foreground/70 text-xs transition-[margin,opacity]"> Application </div>
+                     class="[&>svg]:shrink-0 cn-sidebar-group-label flex items-center outline-hidden shrink-0"> Application </div>
                 <button type="button"
                         data-slot="sidebar-group-action"
                         data-sidebar="group-action"
-                        class="[&>svg]:shrink-0 [&>svg]:size-4 absolute after:-inset-2 after:absolute aspect-square flex focus-visible:ring-2 group-data-[collapsible=icon]:hidden hover:bg-sidebar-accent hover:text-sidebar-accent-foreground items-center justify-center md:after:hidden outline-hidden p-0 right-3 ring-sidebar-ring rounded-md text-sidebar-foreground top-3.5 transition-transform w-5"> + </button>
+                        class="[&>svg]:shrink-0 after:-inset-2 after:absolute aspect-square cn-sidebar-group-action flex group-data-[collapsible=icon]:hidden items-center justify-center md:after:hidden outline-hidden transition-transform"> + </button>
                 <div data-slot="sidebar-group-content"
                      data-sidebar="group-content"
-                     class="text-sm w-full">
+                     class="cn-sidebar-group-content w-full">
                   <ul data-slot="sidebar-menu"
                       data-sidebar="menu"
-                      class="flex flex-col gap-1 min-w-0 w-full">
+                      class="cn-sidebar-menu flex flex-col min-w-0 w-full">
                     <li data-slot="sidebar-menu-item"
                         data-sidebar="menu-item"
                         class="group/menu-item relative">
@@ -118,7 +121,7 @@ let%expect_test "shadcn's classes" =
                          data-active="true"
                          id="sidebar-tooltip-Home-trigger"
                          data-state="closed"
-                         class="[&>span:last-child]:truncate [&>svg]:shrink-0 [&>svg]:size-4 active:bg-sidebar-accent active:text-sidebar-accent-foreground aria-disabled:opacity-50 aria-disabled:pointer-events-none data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground disabled:opacity-50 disabled:pointer-events-none flex focus-visible:ring-2 gap-2 group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:size-8! group-has-data-[sidebar=menu-action]/menu-item:pr-8 h-8 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground items-center outline-hidden overflow-hidden p-2 peer/menu-button ring-sidebar-ring rounded-md text-left text-sm transition-[width,height,padding] w-full"
+                         class="[&>span:last-child]:truncate [&_svg]:shrink-0 [&_svg]:size-4 aria-disabled:opacity-50 aria-disabled:pointer-events-none cn-sidebar-menu-button cn-sidebar-menu-button-size-default cn-sidebar-menu-button-variant-default disabled:opacity-50 disabled:pointer-events-none flex group/menu-button items-center outline-hidden overflow-hidden peer/menu-button w-full"
                          @on_blur
                          @on_focus
                          @on_mouseleave
@@ -129,7 +132,7 @@ let%expect_test "shadcn's classes" =
                       <Vdom.Node.none-widget> </Vdom.Node.none-widget>
                       <div data-slot="sidebar-menu-badge"
                            data-sidebar="menu-badge"
-                           class="absolute flex font-medium group-data-[collapsible=icon]:hidden h-5 items-center justify-center min-w-5 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5 peer-data-[size=sm]/menu-button:top-1 peer-hover/menu-button:text-sidebar-accent-foreground pointer-events-none px-1 right-1 rounded-md select-none tabular-nums text-sidebar-foreground text-xs"> 3 </div>
+                           class="cn-sidebar-menu-badge flex group-data-[collapsible=icon]:hidden items-center justify-center select-none tabular-nums"> 3 </div>
                     </li>
                     <li data-slot="sidebar-menu-item"
                         data-sidebar="menu-item"
@@ -139,14 +142,14 @@ let%expect_test "shadcn's classes" =
                               data-sidebar="menu-button"
                               data-size="lg"
                               data-active="false"
-                              class="[&>span:last-child]:truncate [&>svg]:shrink-0 [&>svg]:size-4 active:bg-sidebar-accent active:text-sidebar-accent-foreground aria-disabled:opacity-50 aria-disabled:pointer-events-none bg-background data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground disabled:opacity-50 disabled:pointer-events-none flex focus-visible:ring-2 gap-2 group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:size-8! group-has-data-[sidebar=menu-action]/menu-item:pr-8 h-12 hover:bg-sidebar-accent hover:shadow-[0_0_0_1px_var(--sidebar-accent)] hover:text-sidebar-accent-foreground items-center outline-hidden overflow-hidden p-2 peer/menu-button ring-sidebar-ring rounded-md shadow-[0_0_0_1px_var(--sidebar-border)] text-left text-sm transition-[width,height,padding] w-full"> Inbox </button>
+                              class="[&>span:last-child]:truncate [&_svg]:shrink-0 [&_svg]:size-4 aria-disabled:opacity-50 aria-disabled:pointer-events-none cn-sidebar-menu-button cn-sidebar-menu-button-size-lg cn-sidebar-menu-button-variant-outline disabled:opacity-50 disabled:pointer-events-none flex group/menu-button items-center outline-hidden overflow-hidden peer/menu-button w-full"> Inbox </button>
                       <button type="button"
                               data-slot="sidebar-menu-action"
                               data-sidebar="menu-action"
-                              class="[&>svg]:shrink-0 [&>svg]:size-4 absolute after:-inset-2 after:absolute aspect-square data-[state=open]:opacity-100 flex focus-visible:ring-2 group-data-[collapsible=icon]:hidden group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground items-center justify-center md:after:hidden md:opacity-0 outline-hidden p-0 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5 peer-data-[size=sm]/menu-button:top-1 peer-hover/menu-button:text-sidebar-accent-foreground right-1 ring-sidebar-ring rounded-md text-sidebar-foreground top-1.5 transition-transform w-5"> … </button>
+                              class="[&>svg]:shrink-0 after:-inset-2 after:absolute aria-expanded:opacity-100 cn-sidebar-menu-action flex group-data-[collapsible=icon]:hidden group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 items-center justify-center md:after:hidden md:opacity-0 outline-hidden peer-data-active/menu-button:text-sidebar-accent-foreground transition-transform"> … </button>
                       <ul data-slot="sidebar-menu-sub"
                           data-sidebar="menu-sub"
-                          class="border-l border-sidebar-border flex flex-col gap-1 group-data-[collapsible=icon]:hidden min-w-0 mx-3.5 px-2.5 py-0.5 translate-x-px">
+                          class="cn-sidebar-menu-sub flex flex-col group-data-[collapsible=icon]:hidden min-w-0">
                         <li data-slot="sidebar-menu-sub-item"
                             data-sidebar="menu-sub-item"
                             class="group/menu-sub-item relative">
@@ -155,7 +158,7 @@ let%expect_test "shadcn's classes" =
                              data-size="sm"
                              data-active="false"
                              href="#unread"
-                             class="-translate-x-px [&>span:last-child]:truncate [&>svg]:shrink-0 [&>svg]:size-4 [&>svg]:text-sidebar-accent-foreground active:bg-sidebar-accent active:text-sidebar-accent-foreground aria-disabled:opacity-50 aria-disabled:pointer-events-none data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground disabled:opacity-50 disabled:pointer-events-none flex focus-visible:ring-2 gap-2 group-data-[collapsible=icon]:hidden h-7 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground items-center min-w-0 outline-hidden overflow-hidden px-2 ring-sidebar-ring rounded-md text-sidebar-foreground text-xs"> Unread </a>
+                             class="-translate-x-px [&>span:last-child]:truncate [&>svg]:shrink-0 aria-disabled:opacity-50 aria-disabled:pointer-events-none cn-sidebar-menu-sub-button disabled:opacity-50 disabled:pointer-events-none flex group-data-[collapsible=icon]:hidden items-center min-w-0 outline-hidden overflow-hidden"> Unread </a>
                         </li>
                       </ul>
                     </li>
@@ -164,13 +167,13 @@ let%expect_test "shadcn's classes" =
                         class="group/menu-item relative">
                       <div data-slot="sidebar-menu-skeleton"
                            data-sidebar="menu-skeleton"
-                           class="flex gap-2 h-8 items-center px-2 rounded-md">
+                           class="cn-sidebar-menu-skeleton flex items-center">
                         <div data-slot="skeleton"
                              data-sidebar="menu-skeleton-icon"
-                             class="animate-pulse bg-accent rounded-md size-4"> </div>
+                             class="animate-pulse cn-sidebar-menu-skeleton-icon cn-skeleton"> </div>
                         <div data-slot="skeleton"
                              data-sidebar="menu-skeleton-text"
-                             class="animate-pulse bg-accent flex-1 h-4 max-w-(--skeleton-width) rounded-md"
+                             class="animate-pulse cn-sidebar-menu-skeleton-text cn-skeleton flex-1 max-w-(--skeleton-width)"
                              custom-css-vars=((--skeleton-width 70%))> </div>
                       </div>
                     </li>
@@ -178,26 +181,27 @@ let%expect_test "shadcn's classes" =
                 </div>
               </div>
             </div>
-            <div data-slot="sidebar-footer" data-sidebar="footer" class="flex flex-col gap-2 p-2"> Me </div>
+            <div data-slot="sidebar-footer"
+                 data-sidebar="footer"
+                 class="cn-sidebar-footer flex flex-col"> Me </div>
             <button type="button"
                     data-sidebar="rail"
                     data-slot="sidebar-rail"
                     aria-label="Toggle Sidebar"
                     tabindex="-1"
                     title="Toggle Sidebar"
-                    class="-translate-x-1/2 [[data-side=left][data-collapsible=offcanvas]_&]:-right-2 [[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-collapsible=offcanvas]_&]:-left-2 [[data-side=right][data-state=collapsed]_&]:cursor-w-resize absolute after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] ease-linear group-data-[collapsible=offcanvas]:after:left-full group-data-[collapsible=offcanvas]:translate-x-0 group-data-[side=left]:-right-4 group-data-[side=right]:left-0 hidden hover:after:bg-sidebar-border hover:group-data-[collapsible=offcanvas]:bg-sidebar in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize inset-y-0 sm:flex transition-all w-4 z-20"
+                    class="[[data-side=left][data-collapsible=offcanvas]_&]:-right-2 [[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-collapsible=offcanvas]_&]:-left-2 [[data-side=right][data-state=collapsed]_&]:cursor-w-resize absolute after:absolute after:inset-y-0 after:start-1/2 after:w-[2px] cn-sidebar-rail ease-linear group-data-[collapsible=offcanvas]:after:left-full group-data-[collapsible=offcanvas]:translate-x-0 group-data-[side=left]:-right-4 group-data-[side=right]:left-0 hidden hover:group-data-[collapsible=offcanvas]:bg-sidebar in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize inset-y-0 ltr:-translate-x-1/2 rtl:-translate-x-1/2 sm:flex transition-all w-4 z-20"
                     @on_click> </button>
           </div>
         </div>
       </div>
-      <main data-slot="sidebar-inset"
-            class="bg-background flex flex-1 flex-col md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm relative w-full">
+      <main data-slot="sidebar-inset" class="cn-sidebar-inset flex flex-1 flex-col relative w-full">
         <button type="button"
                 data-variant="ghost"
-                data-size="icon"
+                data-size="icon-sm"
                 data-sidebar="trigger"
                 data-slot="sidebar-trigger"
-                class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none rounded-md shrink-0 size-7 text-sm transition-all whitespace-nowrap"
+                class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-icon-sm cn-button-variant-ghost cn-sidebar-trigger disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
                 @on_click>
           <svg xmlns="http://www.w3.org/2000/svg"
                width="24"
@@ -208,7 +212,7 @@ let%expect_test "shadcn's classes" =
                stroke-width="2"
                stroke-linecap="round"
                stroke-linejoin="round"
-               class="lucide lucide-panel-left">
+               class="cn-rtl-flip lucide lucide-panel-left">
             <rect width="18" height="18" x="3" y="3" rx="2"> </rect>
             <path d="M9 3v18"> </path>
           </svg>
@@ -231,20 +235,22 @@ let%expect_test "variants, sides and collapsible none" =
   [%expect
     {|
     <div data-slot="sidebar-gap"
-         class="bg-transparent duration-200 ease-linear group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))] group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 relative transition-[width] w-(--sidebar-width)"> </div>
+         class="bg-transparent cn-sidebar-gap group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))] group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 relative w-(--sidebar-width)"> </div>
     <div data-slot="sidebar-container"
-         class="duration-200 ease-linear fixed group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)] group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)] h-svh hidden inset-y-0 md:flex p-2 right-0 transition-[left,right,width] w-(--sidebar-width) z-10">
+         data-side="right"
+         class="data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] data-[side=left]:left-0 data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)] data-[side=right]:right-0 duration-200 ease-linear fixed group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)] h-svh hidden inset-y-0 md:flex p-2 transition-[left,right,width] w-(--sidebar-width) z-10">
       <div data-sidebar="sidebar"
            data-slot="sidebar-inner"
-           class="bg-sidebar flex flex-col group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:shadow-sm h-full w-full"> </div>
+           class="cn-sidebar-inner flex flex-col size-full"> </div>
     </div>
     <div data-slot="sidebar-gap"
-         class="bg-transparent duration-200 ease-linear group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))] group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 relative transition-[width] w-(--sidebar-width)"> </div>
+         class="bg-transparent cn-sidebar-gap group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))] group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 relative w-(--sidebar-width)"> </div>
     <div data-slot="sidebar-container"
-         class="duration-200 ease-linear fixed group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)] group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] h-svh hidden inset-y-0 left-0 md:flex p-2 transition-[left,right,width] w-(--sidebar-width) z-10">
+         data-side="left"
+         class="data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] data-[side=left]:left-0 data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)] data-[side=right]:right-0 duration-200 ease-linear fixed group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)] h-svh hidden inset-y-0 md:flex p-2 transition-[left,right,width] w-(--sidebar-width) z-10">
       <div data-sidebar="sidebar"
            data-slot="sidebar-inner"
-           class="bg-sidebar flex flex-col group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:shadow-sm h-full w-full"> </div>
+           class="cn-sidebar-inner flex flex-col size-full"> </div>
     </div>
     <div data-slot="sidebar"
          class="bg-sidebar flex flex-col h-full text-sidebar-foreground w-(--sidebar-width)"> </div>
@@ -271,7 +277,7 @@ let%expect_test "the trigger and the rail collapse and expand it" =
            data-side="left"
            data-slot="sidebar">
         <div data-slot="sidebar-gap"> </div>
-        <div data-slot="sidebar-container">
+        <div data-slot="sidebar-container" data-side="left">
           <div data-sidebar="sidebar" data-slot="sidebar-inner">
             <div data-slot="sidebar-header" data-sidebar="header"> Acme </div>
             <div data-slot="sidebar-content" data-sidebar="content">
@@ -341,7 +347,7 @@ let%expect_test "the trigger and the rail collapse and expand it" =
       <main data-slot="sidebar-inset">
         <button type="button"
                 data-variant="ghost"
-                data-size="icon"
+                data-size="icon-sm"
                 data-sidebar="trigger"
                 data-slot="sidebar-trigger"
                 @on_click>
@@ -377,7 +383,7 @@ let%expect_test "the trigger and the rail collapse and expand it" =
              data-side="left"
              data-slot="sidebar">
           <div data-slot="sidebar-gap"> </div>
-          <div data-slot="sidebar-container">
+          <div data-slot="sidebar-container" data-side="left">
             <div data-sidebar="sidebar" data-slot="sidebar-inner">
               <div data-slot="sidebar-header" data-sidebar="header"> Acme </div>
               <div data-slot="sidebar-content" data-sidebar="content">
@@ -405,7 +411,7 @@ let%expect_test "the trigger and the rail collapse and expand it" =
              data-side="left"
              data-slot="sidebar">
           <div data-slot="sidebar-gap"> </div>
-          <div data-slot="sidebar-container">
+          <div data-slot="sidebar-container" data-side="left">
             <div data-sidebar="sidebar" data-slot="sidebar-inner">
               <div data-slot="sidebar-header" data-sidebar="header"> Acme </div>
               <div data-slot="sidebar-content" data-sidebar="content">
@@ -446,7 +452,7 @@ let%expect_test "collapsed to icons, a menu button's tooltip shows on hover" =
            data-side="left"
            data-slot="sidebar">
         <div data-slot="sidebar-gap"> </div>
-        <div data-slot="sidebar-container">
+        <div data-slot="sidebar-container" data-side="left">
           <div data-sidebar="sidebar" data-slot="sidebar-inner">
             <div data-slot="sidebar-header" data-sidebar="header"> Acme </div>
             <div data-slot="sidebar-content" data-sidebar="content">
@@ -516,7 +522,7 @@ let%expect_test "collapsed to icons, a menu button's tooltip shows on hover" =
       <main data-slot="sidebar-inset">
         <button type="button"
                 data-variant="ghost"
-                data-size="icon"
+                data-size="icon-sm"
                 data-sidebar="trigger"
                 data-slot="sidebar-trigger"
                 @on_click>
@@ -556,7 +562,7 @@ let%expect_test "collapsed to icons, a menu button's tooltip shows on hover" =
              data-side="left"
              data-slot="sidebar">
           <div data-slot="sidebar-gap"> </div>
-          <div data-slot="sidebar-container">
+          <div data-slot="sidebar-container" data-side="left">
             <div data-sidebar="sidebar" data-slot="sidebar-inner">
               <div data-slot="sidebar-header" data-sidebar="header"> Acme </div>
               <div data-slot="sidebar-content" data-sidebar="content">
@@ -573,7 +579,7 @@ let%expect_test "collapsed to icons, a menu button's tooltip shows on hover" =
   Handle.show_diff handle;
   [%expect
     {|
-          <div data-slot="sidebar-container">
+          <div data-slot="sidebar-container" data-side="left">
             <div data-sidebar="sidebar" data-slot="sidebar-inner">
               <div data-slot="sidebar-header" data-sidebar="header"> Acme </div>
               <div data-slot="sidebar-content" data-sidebar="content">
@@ -695,7 +701,7 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
       <main data-slot="sidebar-inset">
         <button type="button"
                 data-variant="ghost"
-                data-size="icon"
+                data-size="icon-sm"
                 data-sidebar="trigger"
                 data-slot="sidebar-trigger"
                 @on_click>
@@ -767,6 +773,7 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     +|         data-state="open"
     +|         tabindex="-1"
     +|         data-slot="sidebar"
+    +|         data-side="left"
     +|         data-sidebar="sidebar"
     +|         data-mobile="true"
     +|         custom-css-vars=((--sidebar-width 18rem))
@@ -845,7 +852,11 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     +|                title="Toggle Sidebar"
     +|                @on_click> </button>
     +|      </div>
-    +|      <button type="button" @on_click>
+    +|      <button type="button"
+    +|              data-slot="sheet-close"
+    +|              data-variant="ghost"
+    +|              data-size="icon-sm"
+    +|              @on_click>
     +|        <svg xmlns="http://www.w3.org/2000/svg"
     +|             width="24"
     +|             height="24"
@@ -875,7 +886,7 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
         <main data-slot="sidebar-inset">
           <button type="button"
                   data-variant="ghost"
-                  data-size="icon"
+                  data-size="icon-sm"
                   data-sidebar="trigger"
                   data-slot="sidebar-trigger"
                   @on_click>
@@ -941,6 +952,7 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     -|         data-state="open"
     -|         tabindex="-1"
     -|         data-slot="sidebar"
+    -|         data-side="left"
     -|         data-sidebar="sidebar"
     -|         data-mobile="true"
     -|         custom-css-vars=((--sidebar-width 18rem))
@@ -1019,7 +1031,11 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     -|                title="Toggle Sidebar"
     -|                @on_click> </button>
     -|      </div>
-    -|      <button type="button" @on_click>
+    -|      <button type="button"
+    -|              data-slot="sheet-close"
+    -|              data-variant="ghost"
+    -|              data-size="icon-sm"
+    -|              @on_click>
     -|        <svg xmlns="http://www.w3.org/2000/svg"
     -|             width="24"
     -|             height="24"
@@ -1050,7 +1066,7 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
         <main data-slot="sidebar-inset">
           <button type="button"
                   data-variant="ghost"
-                  data-size="icon"
+                  data-size="icon-sm"
                   data-sidebar="trigger"
                   data-slot="sidebar-trigger"
                   @on_click>

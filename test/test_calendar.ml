@@ -49,13 +49,13 @@ let%expect_test "shadcn's classes" =
     <div data-slot="calendar"
          id="calendar"
          data-mode="single"
-         class="[--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent bg-background group/calendar p-3 rdp-root rtl:**:[.rdp-button\_next>svg]:rotate-180 rtl:**:[.rdp-button\_previous>svg]:rotate-180 w-fit">
+         class="bg-background cn-calendar group/calendar in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent rdp-root rtl:**:[.rdp-button\_next>svg]:rotate-180 rtl:**:[.rdp-button\_previous>svg]:rotate-180 w-fit">
     <div class="flex flex-col gap-4 md:flex-row rdp-months relative">
     <nav aria-label="Navigation bar"
          class="absolute flex gap-1 inset-x-0 items-center justify-between rdp-nav top-0 w-full">
       <button type="button"
               aria-label="Go to the Previous Month"
-              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none p-0 rdp-button_previous rounded-md select-none shrink-0 size-(--cell-size) text-sm transition-all whitespace-nowrap"
+              class="[&_svg]:pointer-events-none [&_svg]:shrink-0 aria-disabled:opacity-50 cn-button cn-button-size-default cn-button-variant-ghost disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none p-0 rdp-button_previous select-none shrink-0 size-(--cell-size) transition-all whitespace-nowrap"
               @on_click>
         <svg xmlns="http://www.w3.org/2000/svg"
              width="24"
@@ -66,13 +66,13 @@ let%expect_test "shadcn's classes" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round"
-             class="lucide lucide-chevron-left rdp-chevron size-4">
+             class="cn-rtl-flip lucide lucide-chevron-left rdp-chevron size-4">
           <path d="m15 18-6-6 6-6"> </path>
         </svg>
       </button>
       <button type="button"
               aria-label="Go to the Next Month"
-              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none p-0 rdp-button_next rounded-md select-none shrink-0 size-(--cell-size) text-sm transition-all whitespace-nowrap"
+              class="[&_svg]:pointer-events-none [&_svg]:shrink-0 aria-disabled:opacity-50 cn-button cn-button-size-default cn-button-variant-ghost disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none p-0 rdp-button_next select-none shrink-0 size-(--cell-size) transition-all whitespace-nowrap"
               @on_click>
         <svg xmlns="http://www.w3.org/2000/svg"
              width="24"
@@ -83,14 +83,16 @@ let%expect_test "shadcn's classes" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round"
-             class="lucide lucide-chevron-right rdp-chevron size-4">
+             class="cn-rtl-flip lucide lucide-chevron-right rdp-chevron size-4">
           <path d="m9 18 6-6-6-6"> </path>
         </svg>
       </button>
     </nav>
     <div class="flex flex-col gap-4 rdp-month w-full">
     <div class="flex h-(--cell-size) items-center justify-center px-(--cell-size) rdp-month_caption w-full">
-      <span role="status" aria-live="polite" class="font-medium rdp-caption_label select-none text-sm"> February 2026 </span>
+      <span role="status"
+            aria-live="polite"
+            class="cn-calendar-caption font-medium rdp-caption_label select-none text-sm"> February 2026 </span>
     </div>
     <table role="grid"
            aria-multiselectable="false"
@@ -100,14 +102,14 @@ let%expect_test "shadcn's classes" =
     <tr class="flex rdp-weekdays">
     <th aria-label="Sunday"
         scope="col"
-        class="flex-1 font-normal rdp-weekday rounded-md select-none text-[0.8rem] text-muted-foreground"> Su </th>
+        class="flex-1 font-normal rdp-weekday rounded-(--cell-radius) select-none text-[0.8rem] text-muted-foreground"> Su </th>
     <tbody class="rdp-weeks">
     <tr class="flex mt-2 rdp-week w-full">
     <td role="gridcell"
         aria-selected="true"
         data-day="2026-02-03"
         data-selected="true"
-        class="[&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md aspect-square group/day h-full p-0 rdp-day rdp-selected relative select-none text-center w-full">
+        class="[&:first-child[data-selected=true]_button]:rounded-l-(--cell-radius) [&:last-child[data-selected=true]_button]:rounded-r-(--cell-radius) aspect-square group/day h-full p-0 rdp-day rdp-selected relative rounded-(--cell-radius) select-none text-center w-full">
       <button type="button"
               data-slot="button"
               data-variant="ghost"
@@ -119,7 +121,7 @@ let%expect_test "shadcn's classes" =
               data-range-middle="false"
               tabindex="0"
               aria-label="Tuesday, February 3rd, 2026, selected"
-              class="[&>span]:opacity-70 [&>span]:text-xs [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 aspect-square dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 dark:hover:text-accent-foreground data-[range-end=true]:bg-primary data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-end=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:rounded-none data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:rounded-l-md data-[range-start=true]:rounded-md data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground disabled:opacity-50 disabled:pointer-events-none flex flex-col focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-normal gap-1 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:relative group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 group-data-[focused=true]/day:z-10 hover:bg-accent hover:text-accent-foreground items-center justify-center leading-none min-w-(--cell-size) outline-none rdp-day rdp-day_button rounded-md shrink-0 size-auto text-sm transition-all w-full whitespace-nowrap"
+              class="[&>span]:opacity-70 [&>span]:text-xs [&_svg]:pointer-events-none [&_svg]:shrink-0 aspect-square border-0 cn-button cn-button-size-icon cn-button-variant-ghost cn-calendar-day-button dark:hover:text-foreground data-[range-end=true]:bg-primary data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-r-(--cell-radius) data-[range-end=true]:text-primary-foreground data-[range-middle=true]:bg-muted data-[range-middle=true]:rounded-none data-[range-middle=true]:text-foreground data-[range-start=true]:bg-primary data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-l-(--cell-radius) data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground disabled:opacity-50 disabled:pointer-events-none flex flex-col font-normal gap-1 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:relative group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 group-data-[focused=true]/day:z-10 group/button isolate items-center justify-center leading-none min-w-(--cell-size) outline-none rdp-day rdp-day_button relative select-none shrink-0 size-auto transition-all w-full whitespace-nowrap z-10"
               @on_blur
               @on_click
               @on_focus
@@ -128,7 +130,7 @@ let%expect_test "shadcn's classes" =
     <td role="gridcell"
         data-day="2026-02-04"
         data-disabled="true"
-        class="[&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md aspect-square group/day h-full opacity-50 p-0 rdp-day rdp-disabled relative select-none text-center text-muted-foreground w-full">
+        class="[&:first-child[data-selected=true]_button]:rounded-l-(--cell-radius) [&:last-child[data-selected=true]_button]:rounded-r-(--cell-radius) aspect-square group/day h-full opacity-50 p-0 rdp-day rdp-disabled relative rounded-(--cell-radius) select-none text-center text-muted-foreground w-full">
       <button type="button"
               data-slot="button"
               data-variant="ghost"
@@ -141,7 +143,7 @@ let%expect_test "shadcn's classes" =
               data-range-middle="false"
               tabindex="-1"
               aria-label="Wednesday, February 4th, 2026"
-              class="[&>span]:opacity-70 [&>span]:text-xs [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 aspect-square dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 dark:hover:text-accent-foreground data-[range-end=true]:bg-primary data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-end=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:rounded-none data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:rounded-l-md data-[range-start=true]:rounded-md data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground disabled:opacity-50 disabled:pointer-events-none flex flex-col focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-normal gap-1 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:relative group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 group-data-[focused=true]/day:z-10 hover:bg-accent hover:text-accent-foreground items-center justify-center leading-none min-w-(--cell-size) outline-none rdp-day rdp-day_button rounded-md shrink-0 size-auto text-sm transition-all w-full whitespace-nowrap"
+              class="[&>span]:opacity-70 [&>span]:text-xs [&_svg]:pointer-events-none [&_svg]:shrink-0 aspect-square border-0 cn-button cn-button-size-icon cn-button-variant-ghost cn-calendar-day-button dark:hover:text-foreground data-[range-end=true]:bg-primary data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-r-(--cell-radius) data-[range-end=true]:text-primary-foreground data-[range-middle=true]:bg-muted data-[range-middle=true]:rounded-none data-[range-middle=true]:text-foreground data-[range-start=true]:bg-primary data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-l-(--cell-radius) data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground disabled:opacity-50 disabled:pointer-events-none flex flex-col font-normal gap-1 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:relative group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 group-data-[focused=true]/day:z-10 group/button isolate items-center justify-center leading-none min-w-(--cell-size) outline-none rdp-day rdp-day_button relative select-none shrink-0 size-auto transition-all w-full whitespace-nowrap z-10"
               @on_blur
               @on_click
               @on_focus

@@ -44,7 +44,7 @@ let%expect_test "shadcn's classes, open from the bottom (with the handle)" =
               aria-expanded="true"
               aria-controls="v-content"
               data-state="open"
-              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"
+              class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-outline disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
               @on_click> Open Drawer </button>
       <div popover="manual"
            loon-portal=()
@@ -73,7 +73,7 @@ let%expect_test "shadcn's classes, open from the bottom (with the handle)" =
            }>
         <div data-slot="drawer-overlay"
              data-state="open"
-             class="bg-black/50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 fixed inset-0 z-50"
+             class="cn-drawer-overlay data-closed:animate-out data-closed:fade-out-0 data-open:animate-in data-open:fade-in-0 fixed inset-0 z-50"
              @on_click
              style={
                pointer-events: auto;
@@ -96,7 +96,7 @@ let%expect_test "shadcn's classes, open from the bottom (with the handle)" =
              tabindex="-1"
              data-slot="drawer-content"
              data-vaul-drawer-direction="bottom"
-             class="bg-background data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:animate-in data-[state=open]:slide-in-from-bottom data-[vaul-drawer-direction=bottom]:border-t data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=bottom]:mt-24 data-[vaul-drawer-direction=bottom]:rounded-t-lg data-[vaul-drawer-direction=left]:border-r data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 data-[vaul-drawer-direction=left]:sm:max-w-sm data-[vaul-drawer-direction=left]:w-3/4 data-[vaul-drawer-direction=right]:border-l data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:sm:max-w-sm data-[vaul-drawer-direction=right]:w-3/4 data-[vaul-drawer-direction=top]:border-b data-[vaul-drawer-direction=top]:inset-x-0 data-[vaul-drawer-direction=top]:max-h-[80vh] data-[vaul-drawer-direction=top]:mb-24 data-[vaul-drawer-direction=top]:rounded-b-lg data-[vaul-drawer-direction=top]:top-0 duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] fixed flex flex-col group/drawer-content h-auto z-50"
+             class="cn-drawer-content data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:animate-in data-[state=open]:slide-in-from-bottom data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=bottom]:mt-24 data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 data-[vaul-drawer-direction=left]:sm:max-w-sm data-[vaul-drawer-direction=left]:w-3/4 data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:sm:max-w-sm data-[vaul-drawer-direction=right]:w-3/4 data-[vaul-drawer-direction=top]:inset-x-0 data-[vaul-drawer-direction=top]:max-h-[80vh] data-[vaul-drawer-direction=top]:mb-24 data-[vaul-drawer-direction=top]:top-0 duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] fixed group/drawer-content z-50"
              loon-dismiss=(()false true)
              loon-drawer-drag=<close>
              loon-focus-on-mount=Keep
@@ -106,23 +106,23 @@ let%expect_test "shadcn's classes, open from the bottom (with the handle)" =
                pointer-events: auto;
                touch-action: none;
              }>
-          <div class="bg-muted group-data-[vaul-drawer-direction=bottom]/drawer-content:block h-2 hidden mt-4 mx-auto rounded-full shrink-0 w-[100px]"> </div>
+          <div class="cn-drawer-handle group-data-[vaul-drawer-direction=bottom]/drawer-content:block hidden mx-auto shrink-0"> </div>
           <div data-slot="drawer-header"
-               class="flex flex-col gap-0.5 group-data-[vaul-drawer-direction=bottom]/drawer-content:text-center group-data-[vaul-drawer-direction=top]/drawer-content:text-center md:gap-1.5 md:text-left p-4">
-            <h2 data-slot="drawer-title" id="v-title" class="font-semibold text-foreground"> Move Goal </h2>
-            <p data-slot="drawer-description" id="v-description" class="text-muted-foreground text-sm"> Set your daily activity goal. </p>
+               class="cn-drawer-header flex flex-col group-data-[vaul-drawer-direction=bottom]/drawer-content:text-center group-data-[vaul-drawer-direction=top]/drawer-content:text-center">
+            <h2 data-slot="drawer-title" id="v-title" class="cn-drawer-title cn-font-heading"> Move Goal </h2>
+            <p data-slot="drawer-description" id="v-description" class="cn-drawer-description"> Set your daily activity goal. </p>
           </div>
-          <div data-slot="drawer-footer" class="flex flex-col gap-2 mt-auto p-4">
+          <div data-slot="drawer-footer" class="cn-drawer-footer flex flex-col mt-auto">
             <button type="button"
                     data-slot="button"
                     data-variant="default"
                     data-size="default"
-                    class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"> Submit </button>
+                    class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-default disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"> Submit </button>
             <button type="button"
                     data-slot="drawer-close"
                     data-variant="outline"
                     data-size="default"
-                    class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"
+                    class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-outline disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
                     @on_click> Cancel </button>
           </div>
         </div>

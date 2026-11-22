@@ -27,7 +27,11 @@ let%expect_test "shadcn's classes" =
           ]));
   [%expect
     {|
-    <div role="radiogroup" aria-required="false" dir="ltr" data-slot="radio-group" class="gap-3 grid">
+    <div role="radiogroup"
+         aria-required="false"
+         dir="ltr"
+         data-slot="radio-group"
+         class="cn-radio-group w-full">
       <button type="button"
               role="radio"
               aria-checked="true"
@@ -35,25 +39,12 @@ let%expect_test "shadcn's classes" =
               tabindex="0"
               data-slot="radio-group-item"
               id="a"
-              class="aria-invalid:border-destructive aria-invalid:ring-destructive/20 aspect-square border border-input dark:aria-invalid:ring-destructive/40 dark:bg-input/30 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 outline-none rounded-full shadow-xs shrink-0 size-4 text-primary transition-[color,box-shadow]"
+              class="after:-inset-x-3 after:-inset-y-2 after:absolute aspect-square border cn-radio-group-item disabled:cursor-not-allowed disabled:opacity-50 group/radio-group-item outline-none peer relative shrink-0"
               #value="a"
               @on_click
               @on_keydown>
-        <span data-state="checked"
-              data-slot="radio-group-indicator"
-              class="flex items-center justify-center relative">
-          <svg xmlns="http://www.w3.org/2000/svg"
-               width="24"
-               height="24"
-               viewBox="0 0 24 24"
-               fill="none"
-               stroke="currentColor"
-               stroke-width="2"
-               stroke-linecap="round"
-               stroke-linejoin="round"
-               class="-translate-x-1/2 -translate-y-1/2 absolute fill-primary left-1/2 lucide lucide-circle size-2 top-1/2">
-            <circle cx="12" cy="12" r="10"> </circle>
-          </svg>
+        <span data-state="checked" data-slot="radio-group-indicator" class="cn-radio-group-indicator">
+          <span class="cn-radio-group-indicator-icon"> </span>
         </span>
       </button>
       <button type="button"
@@ -63,7 +54,7 @@ let%expect_test "shadcn's classes" =
               tabindex="-1"
               data-slot="radio-group-item"
               id="b"
-              class="aria-invalid:border-destructive aria-invalid:ring-destructive/20 aspect-square border border-input dark:aria-invalid:ring-destructive/40 dark:bg-input/30 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 outline-none rounded-full shadow-xs shrink-0 size-4 text-primary transition-[color,box-shadow]"
+              class="after:-inset-x-3 after:-inset-y-2 after:absolute aspect-square border cn-radio-group-item disabled:cursor-not-allowed disabled:opacity-50 group/radio-group-item outline-none peer relative shrink-0"
               #value="b"
               @on_click
               @on_keydown> </button>
@@ -160,17 +151,7 @@ let%expect_test "a click checks an item" =
                 @on_click
                 @on_keydown>
           <span data-state="checked" data-slot="radio-group-indicator">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="24"
-                 height="24"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"> </circle>
-            </svg>
+            <span> </span>
           </span>
         </button>
         <button type="button"
@@ -233,17 +214,7 @@ let%expect_test "arrow keys check the next enabled item, wrapping; Home and End"
                 @on_click
                 @on_keydown>
           <span data-state="checked" data-slot="radio-group-indicator">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="24"
-                 height="24"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"> </circle>
-            </svg>
+            <span> </span>
           </span>
         </button>
         <button type="button"
@@ -323,17 +294,7 @@ let%expect_test "arrow keys check the next enabled item, wrapping; Home and End"
                   @on_click
                   @on_keydown>
             <span data-state="checked" data-slot="radio-group-indicator">
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   width="24"
-                   height="24"
-                   viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="2"
-                   stroke-linecap="round"
-                   stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"> </circle>
-              </svg>
+              <span> </span>
             </span>
           </button>
     -|    <button type="button"
@@ -370,93 +331,62 @@ let%expect_test "arrow keys check the next enabled item, wrapping; Home and End"
 
       <div>
         <div role="radiogroup" aria-required="false" dir="ltr" data-slot="radio-group">
-    -|    <button type="button"
-    -|            role="radio"
-    -|            aria-checked="false"
-    -|            data-state="unchecked"
-    -|            tabindex="-1"
-    -|            data-slot="radio-group-item"
-    -|            id="r1"
-    -|            #value="default"
-    -|            @on_click
-    -|            @on_keydown> </button>
-    -|    <button type="button"
-    -|            role="radio"
-    -|            aria-checked="false"
-    -|            data-state="unchecked"
-    -|            tabindex="-1"
-    -|            data-slot="radio-group-item"
-    -|            id="r2"
-    -|            #value="comfortable"
-    -|            @on_click
-    -|            @on_keydown> </button>
-    -|    <button type="button"
-    -|            role="radio"
-    -|            aria-checked="false"
-    -|            data-state="unchecked"
-    -|            tabindex="-1"
-    -|            data-slot="radio-group-item"
-    -|            id="r3"
-    -|            data-disabled=""
-    -|            disabled=""
-    -|            #value="disabled"
-    -|            @on_keydown> </button>
           <button type="button"
                   role="radio"
-                  aria-checked="true"
-                  data-state="checked"
-                  tabindex="0"
+    -|            aria-checked="false"
+    +|            aria-checked="true"
+    -|            data-state="unchecked"
+    +|            data-state="checked"
+    -|            tabindex="-1"
+    +|            tabindex="0"
                   data-slot="radio-group-item"
-    -|            id="r4"
-    +|            id="r1"
-    -|            #value="compact"
-    +|            #value="default"
+                  id="r1"
+                  #value="default"
                   @on_click
-                  @on_keydown>
-            <span data-state="checked" data-slot="radio-group-indicator">
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   width="24"
-                   height="24"
-                   viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="2"
-                   stroke-linecap="round"
-                   stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"> </circle>
-              </svg>
-            </span>
-          </button>
-    +|    <button type="button"
-    +|            role="radio"
+    -|            @on_keydown> </button>
+    +|            @on_keydown>
+    +|      <span data-state="checked" data-slot="radio-group-indicator">
+    +|        <span> </span>
+    +|      </span>
+    +|    </button>
+          <button type="button"
+                  role="radio"
+                  aria-checked="false"
+                  data-state="unchecked"
+                  tabindex="-1"
+                  data-slot="radio-group-item"
+                  id="r2"
+                  #value="comfortable"
+                  @on_click
+                  @on_keydown> </button>
+          <button type="button"
+                  role="radio"
+                  aria-checked="false"
+                  data-state="unchecked"
+                  tabindex="-1"
+                  data-slot="radio-group-item"
+                  id="r3"
+                  data-disabled=""
+                  disabled=""
+                  #value="disabled"
+                  @on_keydown> </button>
+          <button type="button"
+                  role="radio"
+    -|            aria-checked="true"
     +|            aria-checked="false"
+    -|            data-state="checked"
     +|            data-state="unchecked"
+    -|            tabindex="0"
     +|            tabindex="-1"
-    +|            data-slot="radio-group-item"
-    +|            id="r2"
-    +|            #value="comfortable"
-    +|            @on_click
-    +|            @on_keydown> </button>
-    +|    <button type="button"
-    +|            role="radio"
-    +|            aria-checked="false"
-    +|            data-state="unchecked"
-    +|            tabindex="-1"
-    +|            data-slot="radio-group-item"
-    +|            id="r3"
-    +|            data-disabled=""
-    +|            disabled=""
-    +|            #value="disabled"
-    +|            @on_keydown> </button>
-    +|    <button type="button"
-    +|            role="radio"
-    +|            aria-checked="false"
-    +|            data-state="unchecked"
-    +|            tabindex="-1"
-    +|            data-slot="radio-group-item"
-    +|            id="r4"
-    +|            #value="compact"
-    +|            @on_click
+                  data-slot="radio-group-item"
+                  id="r4"
+                  #value="compact"
+                  @on_click
+    -|            @on_keydown>
+    -|      <span data-state="checked" data-slot="radio-group-indicator">
+    -|        <span> </span>
+    -|      </span>
+    -|    </button>
     +|            @on_keydown> </button>
         </div>
     -|  <output> (compact) </output>
@@ -471,94 +401,63 @@ let%expect_test "arrow keys check the next enabled item, wrapping; Home and End"
 
       <div>
         <div role="radiogroup" aria-required="false" dir="ltr" data-slot="radio-group">
-    +|    <button type="button"
-    +|            role="radio"
+          <button type="button"
+                  role="radio"
+    -|            aria-checked="true"
     +|            aria-checked="false"
+    -|            data-state="checked"
     +|            data-state="unchecked"
+    -|            tabindex="0"
     +|            tabindex="-1"
-    +|            data-slot="radio-group-item"
-    +|            id="r1"
-    +|            #value="default"
-    +|            @on_click
-    +|            @on_keydown> </button>
-    +|    <button type="button"
-    +|            role="radio"
-    +|            aria-checked="false"
-    +|            data-state="unchecked"
-    +|            tabindex="-1"
-    +|            data-slot="radio-group-item"
-    +|            id="r2"
-    +|            #value="comfortable"
-    +|            @on_click
-    +|            @on_keydown> </button>
-    +|    <button type="button"
-    +|            role="radio"
-    +|            aria-checked="false"
-    +|            data-state="unchecked"
-    +|            tabindex="-1"
-    +|            data-slot="radio-group-item"
-    +|            id="r3"
-    +|            data-disabled=""
-    +|            disabled=""
-    +|            #value="disabled"
+                  data-slot="radio-group-item"
+                  id="r1"
+                  #value="default"
+                  @on_click
+    -|            @on_keydown>
+    -|      <span data-state="checked" data-slot="radio-group-indicator">
+    -|        <span> </span>
+    -|      </span>
+    -|    </button>
     +|            @on_keydown> </button>
           <button type="button"
                   role="radio"
-                  aria-checked="true"
-                  data-state="checked"
-                  tabindex="0"
+                  aria-checked="false"
+                  data-state="unchecked"
+                  tabindex="-1"
                   data-slot="radio-group-item"
-    -|            id="r1"
-    +|            id="r4"
-    -|            #value="default"
-    +|            #value="compact"
+                  id="r2"
+                  #value="comfortable"
                   @on_click
-                  @on_keydown>
-            <span data-state="checked" data-slot="radio-group-indicator">
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   width="24"
-                   height="24"
-                   viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="2"
-                   stroke-linecap="round"
-                   stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"> </circle>
-              </svg>
-            </span>
-          </button>
-    -|    <button type="button"
-    -|            role="radio"
+                  @on_keydown> </button>
+          <button type="button"
+                  role="radio"
+                  aria-checked="false"
+                  data-state="unchecked"
+                  tabindex="-1"
+                  data-slot="radio-group-item"
+                  id="r3"
+                  data-disabled=""
+                  disabled=""
+                  #value="disabled"
+                  @on_keydown> </button>
+          <button type="button"
+                  role="radio"
     -|            aria-checked="false"
+    +|            aria-checked="true"
     -|            data-state="unchecked"
+    +|            data-state="checked"
     -|            tabindex="-1"
-    -|            data-slot="radio-group-item"
-    -|            id="r2"
-    -|            #value="comfortable"
-    -|            @on_click
+    +|            tabindex="0"
+                  data-slot="radio-group-item"
+                  id="r4"
+                  #value="compact"
+                  @on_click
     -|            @on_keydown> </button>
-    -|    <button type="button"
-    -|            role="radio"
-    -|            aria-checked="false"
-    -|            data-state="unchecked"
-    -|            tabindex="-1"
-    -|            data-slot="radio-group-item"
-    -|            id="r3"
-    -|            data-disabled=""
-    -|            disabled=""
-    -|            #value="disabled"
-    -|            @on_keydown> </button>
-    -|    <button type="button"
-    -|            role="radio"
-    -|            aria-checked="false"
-    -|            data-state="unchecked"
-    -|            tabindex="-1"
-    -|            data-slot="radio-group-item"
-    -|            id="r4"
-    -|            #value="compact"
-    -|            @on_click
-    -|            @on_keydown> </button>
+    +|            @on_keydown>
+    +|      <span data-state="checked" data-slot="radio-group-indicator">
+    +|        <span> </span>
+    +|      </span>
+    +|    </button>
         </div>
     -|  <output> (default) </output>
     +|  <output> (compact) </output>
@@ -571,93 +470,62 @@ let%expect_test "arrow keys check the next enabled item, wrapping; Home and End"
 
       <div>
         <div role="radiogroup" aria-required="false" dir="ltr" data-slot="radio-group">
-    -|    <button type="button"
-    -|            role="radio"
-    -|            aria-checked="false"
-    -|            data-state="unchecked"
-    -|            tabindex="-1"
-    -|            data-slot="radio-group-item"
-    -|            id="r1"
-    -|            #value="default"
-    -|            @on_click
-    -|            @on_keydown> </button>
-    -|    <button type="button"
-    -|            role="radio"
-    -|            aria-checked="false"
-    -|            data-state="unchecked"
-    -|            tabindex="-1"
-    -|            data-slot="radio-group-item"
-    -|            id="r2"
-    -|            #value="comfortable"
-    -|            @on_click
-    -|            @on_keydown> </button>
-    -|    <button type="button"
-    -|            role="radio"
-    -|            aria-checked="false"
-    -|            data-state="unchecked"
-    -|            tabindex="-1"
-    -|            data-slot="radio-group-item"
-    -|            id="r3"
-    -|            data-disabled=""
-    -|            disabled=""
-    -|            #value="disabled"
-    -|            @on_keydown> </button>
           <button type="button"
                   role="radio"
-                  aria-checked="true"
-                  data-state="checked"
-                  tabindex="0"
+    -|            aria-checked="false"
+    +|            aria-checked="true"
+    -|            data-state="unchecked"
+    +|            data-state="checked"
+    -|            tabindex="-1"
+    +|            tabindex="0"
                   data-slot="radio-group-item"
-    -|            id="r4"
-    +|            id="r1"
-    -|            #value="compact"
-    +|            #value="default"
+                  id="r1"
+                  #value="default"
                   @on_click
-                  @on_keydown>
-            <span data-state="checked" data-slot="radio-group-indicator">
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   width="24"
-                   height="24"
-                   viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="2"
-                   stroke-linecap="round"
-                   stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"> </circle>
-              </svg>
-            </span>
-          </button>
-    +|    <button type="button"
-    +|            role="radio"
+    -|            @on_keydown> </button>
+    +|            @on_keydown>
+    +|      <span data-state="checked" data-slot="radio-group-indicator">
+    +|        <span> </span>
+    +|      </span>
+    +|    </button>
+          <button type="button"
+                  role="radio"
+                  aria-checked="false"
+                  data-state="unchecked"
+                  tabindex="-1"
+                  data-slot="radio-group-item"
+                  id="r2"
+                  #value="comfortable"
+                  @on_click
+                  @on_keydown> </button>
+          <button type="button"
+                  role="radio"
+                  aria-checked="false"
+                  data-state="unchecked"
+                  tabindex="-1"
+                  data-slot="radio-group-item"
+                  id="r3"
+                  data-disabled=""
+                  disabled=""
+                  #value="disabled"
+                  @on_keydown> </button>
+          <button type="button"
+                  role="radio"
+    -|            aria-checked="true"
     +|            aria-checked="false"
+    -|            data-state="checked"
     +|            data-state="unchecked"
+    -|            tabindex="0"
     +|            tabindex="-1"
-    +|            data-slot="radio-group-item"
-    +|            id="r2"
-    +|            #value="comfortable"
-    +|            @on_click
-    +|            @on_keydown> </button>
-    +|    <button type="button"
-    +|            role="radio"
-    +|            aria-checked="false"
-    +|            data-state="unchecked"
-    +|            tabindex="-1"
-    +|            data-slot="radio-group-item"
-    +|            id="r3"
-    +|            data-disabled=""
-    +|            disabled=""
-    +|            #value="disabled"
-    +|            @on_keydown> </button>
-    +|    <button type="button"
-    +|            role="radio"
-    +|            aria-checked="false"
-    +|            data-state="unchecked"
-    +|            tabindex="-1"
-    +|            data-slot="radio-group-item"
-    +|            id="r4"
-    +|            #value="compact"
-    +|            @on_click
+                  data-slot="radio-group-item"
+                  id="r4"
+                  #value="compact"
+                  @on_click
+    -|            @on_keydown>
+    -|      <span data-state="checked" data-slot="radio-group-indicator">
+    -|        <span> </span>
+    -|      </span>
+    -|    </button>
     +|            @on_keydown> </button>
         </div>
     -|  <output> (compact) </output>
@@ -671,94 +539,63 @@ let%expect_test "arrow keys check the next enabled item, wrapping; Home and End"
 
       <div>
         <div role="radiogroup" aria-required="false" dir="ltr" data-slot="radio-group">
-    +|    <button type="button"
-    +|            role="radio"
+          <button type="button"
+                  role="radio"
+    -|            aria-checked="true"
     +|            aria-checked="false"
+    -|            data-state="checked"
     +|            data-state="unchecked"
+    -|            tabindex="0"
     +|            tabindex="-1"
-    +|            data-slot="radio-group-item"
-    +|            id="r1"
-    +|            #value="default"
-    +|            @on_click
-    +|            @on_keydown> </button>
-    +|    <button type="button"
-    +|            role="radio"
-    +|            aria-checked="false"
-    +|            data-state="unchecked"
-    +|            tabindex="-1"
-    +|            data-slot="radio-group-item"
-    +|            id="r2"
-    +|            #value="comfortable"
-    +|            @on_click
-    +|            @on_keydown> </button>
-    +|    <button type="button"
-    +|            role="radio"
-    +|            aria-checked="false"
-    +|            data-state="unchecked"
-    +|            tabindex="-1"
-    +|            data-slot="radio-group-item"
-    +|            id="r3"
-    +|            data-disabled=""
-    +|            disabled=""
-    +|            #value="disabled"
+                  data-slot="radio-group-item"
+                  id="r1"
+                  #value="default"
+                  @on_click
+    -|            @on_keydown>
+    -|      <span data-state="checked" data-slot="radio-group-indicator">
+    -|        <span> </span>
+    -|      </span>
+    -|    </button>
     +|            @on_keydown> </button>
           <button type="button"
                   role="radio"
-                  aria-checked="true"
-                  data-state="checked"
-                  tabindex="0"
+                  aria-checked="false"
+                  data-state="unchecked"
+                  tabindex="-1"
                   data-slot="radio-group-item"
-    -|            id="r1"
-    +|            id="r4"
-    -|            #value="default"
-    +|            #value="compact"
+                  id="r2"
+                  #value="comfortable"
                   @on_click
-                  @on_keydown>
-            <span data-state="checked" data-slot="radio-group-indicator">
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   width="24"
-                   height="24"
-                   viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="2"
-                   stroke-linecap="round"
-                   stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"> </circle>
-              </svg>
-            </span>
-          </button>
-    -|    <button type="button"
-    -|            role="radio"
+                  @on_keydown> </button>
+          <button type="button"
+                  role="radio"
+                  aria-checked="false"
+                  data-state="unchecked"
+                  tabindex="-1"
+                  data-slot="radio-group-item"
+                  id="r3"
+                  data-disabled=""
+                  disabled=""
+                  #value="disabled"
+                  @on_keydown> </button>
+          <button type="button"
+                  role="radio"
     -|            aria-checked="false"
+    +|            aria-checked="true"
     -|            data-state="unchecked"
+    +|            data-state="checked"
     -|            tabindex="-1"
-    -|            data-slot="radio-group-item"
-    -|            id="r2"
-    -|            #value="comfortable"
-    -|            @on_click
+    +|            tabindex="0"
+                  data-slot="radio-group-item"
+                  id="r4"
+                  #value="compact"
+                  @on_click
     -|            @on_keydown> </button>
-    -|    <button type="button"
-    -|            role="radio"
-    -|            aria-checked="false"
-    -|            data-state="unchecked"
-    -|            tabindex="-1"
-    -|            data-slot="radio-group-item"
-    -|            id="r3"
-    -|            data-disabled=""
-    -|            disabled=""
-    -|            #value="disabled"
-    -|            @on_keydown> </button>
-    -|    <button type="button"
-    -|            role="radio"
-    -|            aria-checked="false"
-    -|            data-state="unchecked"
-    -|            tabindex="-1"
-    -|            data-slot="radio-group-item"
-    -|            id="r4"
-    -|            #value="compact"
-    -|            @on_click
-    -|            @on_keydown> </button>
+    +|            @on_keydown>
+    +|      <span data-state="checked" data-slot="radio-group-indicator">
+    +|        <span> </span>
+    +|      </span>
+    +|    </button>
         </div>
     -|  <output> (default) </output>
     +|  <output> (compact) </output>

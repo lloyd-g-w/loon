@@ -12,7 +12,7 @@ let%expect_test "shadcn's classes" =
   [%expect {|
     <div data-slot="alert"
          role="alert"
-         class="[&>svg]:size-4 [&>svg]:text-current [&>svg]:translate-y-0.5 bg-card border gap-y-0.5 grid grid-cols-[0_1fr] has-[>svg]:gap-x-3 has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] items-start px-4 py-3 relative rounded-lg text-card-foreground text-sm w-full">
+         class="cn-alert cn-alert-variant-default group/alert relative w-full">
       <svg xmlns="http://www.w3.org/2000/svg"
            width="24"
            height="24"
@@ -26,9 +26,10 @@ let%expect_test "shadcn's classes" =
         <circle cx="12" cy="12" r="10"> </circle>
         <path d="m9 12 2 2 4-4"> </path>
       </svg>
-      <div data-slot="alert-title" class="col-start-2 font-medium line-clamp-1 min-h-4 tracking-tight"> Success! Your changes have been saved </div>
+      <div data-slot="alert-title"
+           class="[&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3 cn-alert-title"> Success! Your changes have been saved </div>
       <div data-slot="alert-description"
-           class="[&_p]:leading-relaxed col-start-2 gap-1 grid justify-items-start text-muted-foreground text-sm"> This is an alert with icon, title and description. </div>
+           class="[&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3 cn-alert-description"> This is an alert with icon, title and description. </div>
     </div>
     |}]
 ;;
@@ -43,8 +44,9 @@ let%expect_test "destructive, and the caller's class wins" =
   [%expect {|
     <div data-slot="alert"
          role="alert"
-         class="*:data-[slot=alert-description]:text-destructive/90 [&>svg]:size-4 [&>svg]:text-current [&>svg]:translate-y-0.5 bg-card border gap-y-0.5 grid grid-cols-[0_1fr] has-[>svg]:gap-x-3 has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] items-start px-6 py-3 relative rounded-lg text-destructive text-sm w-full">
-      <div data-slot="alert-title" class="col-start-2 font-medium line-clamp-1 min-h-4 tracking-tight"> Error </div>
+         class="cn-alert cn-alert-variant-destructive group/alert px-6 relative w-full">
+      <div data-slot="alert-title"
+           class="[&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3 cn-alert-title"> Error </div>
     </div>
     |}]
 ;;

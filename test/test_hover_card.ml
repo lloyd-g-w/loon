@@ -34,7 +34,7 @@ let%expect_test "shadcn's classes" =
               data-size="default"
               id="h-trigger"
               data-state="open"
-              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:underline inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary text-sm transition-all underline-offset-4 whitespace-nowrap"
+              class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-link disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
               @on_blur
               @on_focus
               @on_mouseenter
@@ -64,7 +64,7 @@ let%expect_test "shadcn's classes" =
                data-state="open"
                data-side="bottom"
                data-align="center"
-               class="bg-popover border data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 origin-(--radix-hover-card-content-transform-origin) outline-hidden p-4 rounded-md shadow-md text-popover-foreground w-80 z-50"
+               class="cn-hover-card-content origin-(--radix-hover-card-content-transform-origin) outline-hidden w-80 z-50"
                @on_mouseenter
                @on_mouseleave>
             <h4> @nextjs </h4>

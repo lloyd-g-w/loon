@@ -56,13 +56,15 @@ let%expect_test "shadcn's classes" =
     <nav role="navigation"
          aria-label="pagination"
          data-slot="pagination"
-         class="flex justify-center mx-auto w-full">
-      <ul data-slot="pagination-content" class="flex flex-row gap-1 items-center">
+         class="cn-pagination flex justify-center mx-auto w-full">
+      <ul data-slot="pagination-content" class="cn-pagination-content flex items-center">
         <li data-slot="pagination-item">
           <a data-slot="pagination-link"
+             data-variant="ghost"
+             data-size="default"
              href="#"
              aria-label="Go to previous page"
-             class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-1 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-2.5 py-2 rounded-md shrink-0 sm:pl-2.5 text-sm transition-all whitespace-nowrap">
+             class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-ghost cn-pagination-link cn-pagination-previous disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap">
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="24"
                  height="24"
@@ -72,28 +74,33 @@ let%expect_test "shadcn's classes" =
                  stroke-width="2"
                  stroke-linecap="round"
                  stroke-linejoin="round"
-                 class="lucide lucide-chevron-left">
+                 data-icon="inline-start"
+                 class="cn-rtl-flip lucide lucide-chevron-left">
               <path d="m15 18-6-6 6-6"> </path>
             </svg>
-            <span class="hidden sm:block"> Previous </span>
+            <span class="cn-pagination-previous-text hidden sm:block"> Previous </span>
           </a>
         </li>
         <li data-slot="pagination-item">
           <a data-slot="pagination-link"
+             data-variant="ghost"
+             data-size="icon"
              href="#"
-             class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none rounded-md shrink-0 size-9 text-sm transition-all whitespace-nowrap"> 1 </a>
+             class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-icon cn-button-variant-ghost cn-pagination-link disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"> 1 </a>
         </li>
         <li data-slot="pagination-item">
-          <a aria-current="page"
-             data-slot="pagination-link"
+          <a data-slot="pagination-link"
+             data-variant="outline"
+             data-size="icon"
+             aria-current="page"
              data-active="true"
              href="#"
-             class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none rounded-md shadow-xs shrink-0 size-9 text-sm transition-all whitespace-nowrap"> 2 </a>
+             class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-icon cn-button-variant-outline cn-pagination-link disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"> 2 </a>
         </li>
         <li data-slot="pagination-item">
           <span aria-hidden="true"
                 data-slot="pagination-ellipsis"
-                class="flex items-center justify-center size-9">
+                class="cn-pagination-ellipsis flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="24"
                  height="24"
@@ -103,7 +110,7 @@ let%expect_test "shadcn's classes" =
                  stroke-width="2"
                  stroke-linecap="round"
                  stroke-linejoin="round"
-                 class="lucide lucide-ellipsis size-4">
+                 class="lucide lucide-ellipsis">
               <circle cx="12" cy="12" r="1"> </circle>
               <circle cx="19" cy="12" r="1"> </circle>
               <circle cx="5" cy="12" r="1"> </circle>
@@ -113,10 +120,12 @@ let%expect_test "shadcn's classes" =
         </li>
         <li data-slot="pagination-item">
           <a data-slot="pagination-link"
+             data-variant="ghost"
+             data-size="default"
              href="#"
              aria-label="Go to next page"
-             class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-1 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-2.5 py-2 rounded-md shrink-0 sm:pr-2.5 text-sm transition-all whitespace-nowrap">
-            <span class="hidden sm:block"> Next </span>
+             class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-ghost cn-pagination-link cn-pagination-next disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap">
+            <span class="cn-pagination-next-text hidden sm:block"> Next </span>
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="24"
                  height="24"
@@ -126,7 +135,8 @@ let%expect_test "shadcn's classes" =
                  stroke-width="2"
                  stroke-linecap="round"
                  stroke-linejoin="round"
-                 class="lucide lucide-chevron-right">
+                 data-icon="inline-end"
+                 class="cn-rtl-flip lucide lucide-chevron-right">
               <path d="m9 18 6-6-6-6"> </path>
             </svg>
           </a>
@@ -158,21 +168,35 @@ let%expect_test "on_click changes page without following the link" =
   [%expect {|
     <ul data-slot="pagination-content">
       <li data-slot="pagination-item">
-        <a aria-current="page" data-slot="pagination-link" data-active="true" href="#" @on_click> 1 </a>
+        <a data-slot="pagination-link"
+           data-variant="outline"
+           data-size="icon"
+           aria-current="page"
+           data-active="true"
+           href="#"
+           @on_click> 1 </a>
       </li>
       <li data-slot="pagination-item">
-        <a data-slot="pagination-link" href="#" @on_click> 2 </a>
+        <a data-slot="pagination-link" data-variant="ghost" data-size="icon" href="#" @on_click> 2 </a>
       </li>
     </ul>
 
       <ul data-slot="pagination-content">
+    +|  <li data-slot="pagination-item">
+    +|    <a data-slot="pagination-link" data-variant="ghost" data-size="icon" href="#" @on_click> 1 </a>
+    +|  </li>
         <li data-slot="pagination-item">
-    -|    <a aria-current="page" data-slot="pagination-link" data-active="true" href="#" @on_click> 1 </a>
-    +|    <a data-slot="pagination-link" href="#" @on_click> 1 </a>
-        </li>
-        <li data-slot="pagination-item">
-    -|    <a data-slot="pagination-link" href="#" @on_click> 2 </a>
-    +|    <a aria-current="page" data-slot="pagination-link" data-active="true" href="#" @on_click> 2 </a>
+          <a data-slot="pagination-link"
+             data-variant="outline"
+             data-size="icon"
+             aria-current="page"
+             data-active="true"
+             href="#"
+    -|       @on_click> 1 </a>
+    -|  </li>
+    -|  <li data-slot="pagination-item">
+    -|    <a data-slot="pagination-link" data-variant="ghost" data-size="icon" href="#" @on_click> 2 </a>
+    +|       @on_click> 2 </a>
         </li>
       </ul>
     |}]

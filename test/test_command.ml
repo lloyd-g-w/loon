@@ -57,43 +57,53 @@ let%expect_test "shadcn's classes" =
     <div tabindex="-1"
          cmdk-root=""
          data-slot="command"
-         class="bg-popover flex flex-col h-full overflow-hidden rounded-md text-popover-foreground w-full"
+         class="cn-command flex flex-col overflow-hidden size-full"
          @on_keydown>
       <label cmdk-label=""
              for="c-input"
              id="c-label"
              style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border-width:0">  </label>
-      <div data-slot="command-input-wrapper" class="border-b flex gap-2 h-9 items-center px-3">
-        <svg xmlns="http://www.w3.org/2000/svg"
-             width="24"
-             height="24"
-             viewBox="0 0 24 24"
-             fill="none"
-             stroke="currentColor"
-             stroke-width="2"
-             stroke-linecap="round"
-             stroke-linejoin="round"
-             class="lucide lucide-search opacity-50 shrink-0 size-4">
-          <circle cx="11" cy="11" r="8"> </circle>
-          <path d="m21 21-4.3-4.3"> </path>
-        </svg>
-        <input cmdk-input=""
-               autocomplete="off"
-               autocorrect="off"
-               spellcheck="false"
-               aria-autocomplete="list"
-               role="combobox"
-               aria-expanded="true"
-               aria-controls="c-list"
-               aria-labelledby="c-label"
-               aria-activedescendant="c-item-0"
-               id="c-input"
-               type="text"
-               data-slot="command-input"
-               placeholder="Search..."
-               class="bg-transparent disabled:cursor-not-allowed disabled:opacity-50 flex h-10 outline-hidden placeholder:text-muted-foreground py-3 rounded-md text-sm w-full"
-               #value=""
-               @on_input/>
+      <div data-slot="command-input-wrapper" class="cn-command-input-wrapper">
+        <div data-slot="input-group"
+             role="group"
+             class="cn-command-input-group cn-input-group flex group/input-group has-[>textarea]:h-auto items-center min-w-0 outline-none relative w-full">
+          <input cmdk-input=""
+                 autocomplete="off"
+                 autocorrect="off"
+                 spellcheck="false"
+                 aria-autocomplete="list"
+                 role="combobox"
+                 aria-expanded="true"
+                 aria-controls="c-list"
+                 aria-labelledby="c-label"
+                 aria-activedescendant="c-item-0"
+                 id="c-input"
+                 type="text"
+                 data-slot="command-input"
+                 placeholder="Search..."
+                 class="cn-command-input disabled:cursor-not-allowed disabled:opacity-50 outline-hidden"
+                 #value=""
+                 @on_input/>
+          <div role="group"
+               data-slot="input-group-addon"
+               data-align="inline-start"
+               class="cn-input-group-addon cn-input-group-addon-align-inline-start cursor-text flex items-center justify-center order-first select-none"
+               @on_click>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 class="cn-command-input-icon lucide lucide-search">
+              <circle cx="11" cy="11" r="8"> </circle>
+              <path d="m21 21-4.3-4.3"> </path>
+            </svg>
+          </div>
+        </div>
       </div>
       <div cmdk-list=""
            role="listbox"
@@ -102,14 +112,14 @@ let%expect_test "shadcn's classes" =
            aria-label="Suggestions"
            id="c-list"
            data-slot="command-list"
-           class="max-h-[300px] overflow-x-hidden overflow-y-auto scroll-py-1">
+           class="cn-command-list overflow-x-hidden overflow-y-auto">
         <div cmdk-list-sizer="">
           <Vdom.Node.none-widget> </Vdom.Node.none-widget>
           <div cmdk-group=""
                role="presentation"
                data-value="Suggestions"
                data-slot="command-group"
-               class="[&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group-heading]]:text-xs overflow-hidden p-1 text-foreground">
+               class="cn-command-group">
             <div cmdk-group-heading="" aria-hidden="true" id="c-group-0"> Suggestions </div>
             <div cmdk-group-items="" role="group" aria-labelledby="c-group-0">
               <div cmdk-item=""
@@ -121,19 +131,30 @@ let%expect_test "shadcn's classes" =
                    data-value="Calendar"
                    id="c-item-0"
                    data-slot="command-item"
-                   class="[&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-default data-[disabled=true]:opacity-50 data-[disabled=true]:pointer-events-none data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground flex gap-2 items-center outline-hidden px-2 py-1.5 relative rounded-sm select-none text-sm"
+                   class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-command-item data-[disabled=true]:opacity-50 data-[disabled=true]:pointer-events-none group/command-item"
                    @on_click
                    @on_pointermove>
                 Calendar
-                <span data-slot="command-shortcut"
-                      class="ml-auto text-muted-foreground text-xs tracking-widest"> ⌘C </span>
+                <span data-slot="command-shortcut" class="cn-command-shortcut"> ⌘C </span>
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="24"
+                     height="24"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     class="cn-command-item-indicator group-data-[checked=true]/command-item:opacity-100 group-has-data-[slot=command-shortcut]/command-item:hidden lucide lucide-check ml-auto opacity-0">
+                  <path d="M20 6 9 17l-5-5"> </path>
+                </svg>
               </div>
             </div>
           </div>
           <div cmdk-separator=""
                role="separator"
                data-slot="command-separator"
-               class="-mx-1 bg-border h-px"> </div>
+               class="cn-command-separator"> </div>
         </div>
       </div>
     </div>
@@ -498,34 +519,38 @@ let%expect_test "the dialog: opened and closed by its state, the search cleared"
                    id="d-command-label"
                    style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border-width:0">  </label>
             <div data-slot="command-input-wrapper">
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   width="24"
-                   height="24"
-                   viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="2"
-                   stroke-linecap="round"
-                   stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"> </circle>
-                <path d="m21 21-4.3-4.3"> </path>
-              </svg>
-              <input cmdk-input=""
-                     autocomplete="off"
-                     autocorrect="off"
-                     spellcheck="false"
-                     aria-autocomplete="list"
-                     role="combobox"
-                     aria-expanded="true"
-                     aria-controls="d-command-list"
-                     aria-labelledby="d-command-label"
-                     aria-activedescendant="d-command-item-4"
-                     id="d-command-input"
-                     type="text"
-                     data-slot="command-input"
-                     placeholder="Type a command or search..."
-                     #value="bil"
-                     @on_input/>
+              <div data-slot="input-group" role="group">
+                <input cmdk-input=""
+                       autocomplete="off"
+                       autocorrect="off"
+                       spellcheck="false"
+                       aria-autocomplete="list"
+                       role="combobox"
+                       aria-expanded="true"
+                       aria-controls="d-command-list"
+                       aria-labelledby="d-command-label"
+                       aria-activedescendant="d-command-item-4"
+                       id="d-command-input"
+                       type="text"
+                       data-slot="command-input"
+                       placeholder="Type a command or search..."
+                       #value="bil"
+                       @on_input/>
+                <div role="group" data-slot="input-group-addon" data-align="inline-start" @on_click>
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                       width="24"
+                       height="24"
+                       viewBox="0 0 24 24"
+                       fill="none"
+                       stroke="currentColor"
+                       stroke-width="2"
+                       stroke-linecap="round"
+                       stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"> </circle>
+                    <path d="m21 21-4.3-4.3"> </path>
+                  </svg>
+                </div>
+              </div>
             </div>
             <div cmdk-list=""
                  role="listbox"
@@ -565,6 +590,17 @@ let%expect_test "the dialog: opened and closed by its state, the search cleared"
                       </svg>
                       <span> Billing </span>
                       <span data-slot="command-shortcut"> ⌘B </span>
+                      <svg xmlns="http://www.w3.org/2000/svg"
+                           width="24"
+                           height="24"
+                           viewBox="0 0 24 24"
+                           fill="none"
+                           stroke="currentColor"
+                           stroke-width="2"
+                           stroke-linecap="round"
+                           stroke-linejoin="round">
+                        <path d="M20 6 9 17l-5-5"> </path>
+                      </svg>
                     </div>
                     <Vdom.Node.none-widget> </Vdom.Node.none-widget>
                     <Vdom.Node.none-widget> </Vdom.Node.none-widget>
@@ -585,21 +621,6 @@ let%expect_test "the dialog: opened and closed by its state, the search cleared"
               </div>
             </div>
           </div>
-          <button type="button" data-slot="dialog-close" @on_click>
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="24"
-                 height="24"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round">
-              <path d="M18 6 6 18"> </path>
-              <path d="m6 6 12 12"> </path>
-            </svg>
-            <span> Close </span>
-          </button>
         </div>
         <div data-focus-guard=""
              tabindex="0"

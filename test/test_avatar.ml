@@ -20,22 +20,22 @@ let%expect_test "shadcn's classes" =
        ]);
   [%expect {|
     <div data-slot="avatar-group"
-         class="*:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-background -space-x-2 flex group/avatar-group">
+         class="*:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-background -space-x-2 cn-avatar-group flex group/avatar-group">
       <span data-slot="avatar"
             data-size="default"
-            class="data-[size=lg]:size-10 data-[size=sm]:size-6 flex group/avatar overflow-hidden relative rounded-full select-none shrink-0 size-8">
+            class="after:absolute after:border after:border-border after:inset-0 after:mix-blend-darken cn-avatar dark:after:mix-blend-lighten flex group/avatar relative select-none shrink-0">
         <img data-slot="avatar-image"
              src="https://github.com/shadcn.png"
              alt="@shadcn"
-             class="aspect-square size-full"
+             class="aspect-square cn-avatar-image object-cover size-full"
              @on_error
              @on_load/>
         <Vdom.Node.none-widget> </Vdom.Node.none-widget>
         <span data-slot="avatar-badge"
-              class="absolute bg-primary bottom-0 group-data-[size=default]/avatar:[&>svg]:size-2 group-data-[size=default]/avatar:size-2.5 group-data-[size=lg]/avatar:[&>svg]:size-2 group-data-[size=lg]/avatar:size-3 group-data-[size=sm]/avatar:[&>svg]:hidden group-data-[size=sm]/avatar:size-2 inline-flex items-center justify-center right-0 ring-2 ring-background rounded-full select-none text-primary-foreground z-10"> </span>
+              class="absolute bg-blend-color bottom-0 cn-avatar-badge group-data-[size=default]/avatar:[&>svg]:size-2 group-data-[size=default]/avatar:size-2.5 group-data-[size=lg]/avatar:[&>svg]:size-2 group-data-[size=lg]/avatar:size-3 group-data-[size=sm]/avatar:[&>svg]:hidden group-data-[size=sm]/avatar:size-2 inline-flex items-center justify-center right-0 ring-2 rounded-full select-none z-10"> </span>
       </span>
       <div data-slot="avatar-group-count"
-           class="[&>svg]:size-4 bg-muted flex group-has-data-[size=lg]/avatar-group:[&>svg]:size-5 group-has-data-[size=lg]/avatar-group:size-10 group-has-data-[size=sm]/avatar-group:[&>svg]:size-3 group-has-data-[size=sm]/avatar-group:size-6 items-center justify-center relative ring-2 ring-background rounded-full shrink-0 size-8 text-muted-foreground text-sm"> +3 </div>
+           class="cn-avatar-group-count flex items-center justify-center relative ring-2 ring-background shrink-0"> +3 </div>
     </div>
     |}]
 ;;

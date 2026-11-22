@@ -6,7 +6,7 @@ comment (the list grows with loon, so only some are checked here).
   dom_util         Small DOM effects the components share: moving focus and reading keys.
   import           What every component opens: Core, Vdom, Bonsai and small helpers.
   tabs             A set of layered sections of content, known as tab panels, that are displayed one at a time.
-  theme            Light and dark mode.
+  theme            Light and dark mode, and the style.
 
 Every line has a name and a description, but the blank line and heading
 before the blocks: shadcn's, named as shadcn names them.

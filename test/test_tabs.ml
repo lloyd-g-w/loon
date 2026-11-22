@@ -26,12 +26,12 @@ let%expect_test "shadcn's classes" =
     <div data-slot="tabs"
          dir="ltr"
          data-orientation="horizontal"
-         class="data-[orientation=horizontal]:flex-col flex gap-2 group/tabs">
+         class="cn-tabs data-horizontal:flex-col flex group/tabs">
       <div role="tablist"
            aria-orientation="horizontal"
            data-slot="tabs-list"
            data-variant="default"
-           class="bg-muted data-[variant=line]:rounded-none group-data-[orientation=horizontal]/tabs:h-9 group-data-[orientation=vertical]/tabs:flex-col group-data-[orientation=vertical]/tabs:h-fit group/tabs-list inline-flex items-center justify-center p-[3px] rounded-lg text-muted-foreground w-fit"
+           class="bg-muted cn-tabs-list cn-tabs-list-variant-default group-data-vertical/tabs:flex-col group-data-vertical/tabs:h-fit group/tabs-list inline-flex items-center justify-center text-muted-foreground w-fit"
            @on_keydown>
         <button type="button"
                 role="tab"
@@ -42,7 +42,7 @@ let%expect_test "shadcn's classes" =
                 data-orientation="horizontal"
                 tabindex="0"
                 data-slot="tabs-trigger"
-                class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 after:absolute after:bg-foreground after:opacity-0 after:transition-opacity border border-transparent dark:data-[state=active]:bg-input/30 dark:data-[state=active]:border-input dark:data-[state=active]:text-foreground dark:group-data-[variant=line]/tabs-list:data-[state=active]:bg-transparent dark:group-data-[variant=line]/tabs-list:data-[state=active]:border-transparent dark:hover:text-foreground dark:text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground disabled:opacity-50 disabled:pointer-events-none flex-1 focus-visible:border-ring focus-visible:outline-1 focus-visible:outline-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-1.5 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=vertical]/tabs:after:-right-1 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[orientation=vertical]/tabs:justify-start group-data-[orientation=vertical]/tabs:w-full group-data-[variant=default]/tabs-list:data-[state=active]:shadow-sm group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-[state=active]:after:opacity-100 group-data-[variant=line]/tabs-list:data-[state=active]:bg-transparent group-data-[variant=line]/tabs-list:data-[state=active]:shadow-none h-[calc(100%-1px)] hover:text-foreground inline-flex items-center justify-center px-2 py-1 relative rounded-md text-foreground/60 text-sm transition-all whitespace-nowrap"
+                class="[&_svg]:pointer-events-none [&_svg]:shrink-0 after:absolute after:bg-foreground after:opacity-0 after:transition-opacity cn-tabs-trigger dark:data-active:bg-input/30 dark:data-active:border-input dark:data-active:text-foreground dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:hover:text-foreground dark:text-muted-foreground data-active:bg-background data-active:text-foreground disabled:opacity-50 disabled:pointer-events-none flex-1 focus-visible:border-ring focus-visible:outline-1 focus-visible:outline-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:after:opacity-100 group-data-[variant=line]/tabs-list:data-active:bg-transparent group-data-horizontal/tabs:after:bottom-[-5px] group-data-horizontal/tabs:after:h-0.5 group-data-horizontal/tabs:after:inset-x-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:w-0.5 group-data-vertical/tabs:justify-start group-data-vertical/tabs:w-full h-[calc(100%-1px)] hover:text-foreground inline-flex items-center justify-center relative text-foreground/60 transition-all whitespace-nowrap"
                 @on_click> Account </button>
       </div>
       <div data-state="active"
@@ -52,7 +52,7 @@ let%expect_test "shadcn's classes" =
            id="tabs-content-account"
            tabindex="0"
            data-slot="tabs-content"
-           class="flex-1 outline-none"> Your account </div>
+           class="cn-tabs-content flex-1 outline-none"> Your account </div>
     </div>
     |}]
 ;;

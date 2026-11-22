@@ -67,9 +67,9 @@ let%expect_test "shadcn's classes" =
       <button type="button"
               data-slot="carousel-previous"
               data-variant="outline"
-              data-size="icon"
+              data-size="icon-sm"
               disabled=""
-              class="-left-12 -translate-y-1/2 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 absolute aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none rounded-full shadow-xs shrink-0 size-8 text-sm top-1/2 transition-all whitespace-nowrap">
+              class="-left-12 [&_svg]:pointer-events-none [&_svg]:shrink-0 absolute cn-button cn-button-size-icon-sm cn-button-variant-outline cn-carousel-previous disabled:opacity-50 disabled:pointer-events-none group/button inline-flex inset-y-0 items-center justify-center my-auto outline-none select-none shrink-0 touch-manipulation transition-all whitespace-nowrap">
         <svg xmlns="http://www.w3.org/2000/svg"
              width="24"
              height="24"
@@ -79,17 +79,16 @@ let%expect_test "shadcn's classes" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round"
-             class="lucide lucide-arrow-left">
-          <path d="m12 19-7-7 7-7"> </path>
-          <path d="M19 12H5"> </path>
+             class="cn-rtl-flip lucide lucide-chevron-left">
+          <path d="m15 18-6-6 6-6"> </path>
         </svg>
         <span class="sr-only"> Previous slide </span>
       </button>
       <button type="button"
               data-slot="carousel-next"
               data-variant="outline"
-              data-size="icon"
-              class="-right-12 -translate-y-1/2 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 absolute aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none rounded-full shadow-xs shrink-0 size-8 text-sm top-1/2 transition-all whitespace-nowrap"
+              data-size="icon-sm"
+              class="-right-12 [&_svg]:pointer-events-none [&_svg]:shrink-0 absolute cn-button cn-button-size-icon-sm cn-button-variant-outline cn-carousel-next disabled:opacity-50 disabled:pointer-events-none group/button inline-flex inset-y-0 items-center justify-center my-auto outline-none select-none shrink-0 touch-manipulation transition-all whitespace-nowrap"
               @on_click>
         <svg xmlns="http://www.w3.org/2000/svg"
              width="24"
@@ -100,9 +99,8 @@ let%expect_test "shadcn's classes" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round"
-             class="lucide lucide-arrow-right">
-          <path d="M5 12h14"> </path>
-          <path d="m12 5 7 7-7 7"> </path>
+             class="cn-rtl-flip lucide lucide-chevron-right">
+          <path d="m9 18 6-6-6-6"> </path>
         </svg>
         <span class="sr-only"> Next slide </span>
       </button>
@@ -144,8 +142,8 @@ let%expect_test "vertical" =
     <button type="button"
             data-slot="carousel-next"
             data-variant="outline"
-            data-size="icon"
-            class="-bottom-12 -translate-x-1/2 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 absolute aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center left-1/2 outline-none rotate-90 rounded-full shadow-xs shrink-0 size-8 text-sm transition-all whitespace-nowrap"
+            data-size="icon-sm"
+            class="-bottom-12 -translate-x-1/2 [&_svg]:pointer-events-none [&_svg]:shrink-0 absolute cn-button cn-button-size-icon-sm cn-button-variant-outline cn-carousel-next disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center left-1/2 outline-none rotate-90 select-none shrink-0 touch-manipulation transition-all whitespace-nowrap"
             @on_click>
       <svg xmlns="http://www.w3.org/2000/svg"
            width="24"
@@ -156,9 +154,8 @@ let%expect_test "vertical" =
            stroke-width="2"
            stroke-linecap="round"
            stroke-linejoin="round"
-           class="lucide lucide-arrow-right">
-        <path d="M5 12h14"> </path>
-        <path d="m12 5 7 7-7 7"> </path>
+           class="cn-rtl-flip lucide lucide-chevron-right">
+        <path d="m9 18 6-6-6-6"> </path>
       </svg>
       <span class="sr-only"> Next slide </span>
     </button>
@@ -211,7 +208,7 @@ let%expect_test "buttons and arrow keys move one slide, not past the ends" =
       <button type="button"
               data-slot="carousel-previous"
               data-variant="outline"
-              data-size="icon"
+              data-size="icon-sm"
               @on_click>
         <svg xmlns="http://www.w3.org/2000/svg"
              width="24"
@@ -222,15 +219,14 @@ let%expect_test "buttons and arrow keys move one slide, not past the ends" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round">
-          <path d="m12 19-7-7 7-7"> </path>
-          <path d="M19 12H5"> </path>
+          <path d="m15 18-6-6 6-6"> </path>
         </svg>
         <span> Previous slide </span>
       </button>
       <button type="button"
               data-slot="carousel-next"
               data-variant="outline"
-              data-size="icon"
+              data-size="icon-sm"
               disabled="">
         <svg xmlns="http://www.w3.org/2000/svg"
              width="24"
@@ -241,8 +237,7 @@ let%expect_test "buttons and arrow keys move one slide, not past the ends" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round">
-          <path d="M5 12h14"> </path>
-          <path d="m12 5 7 7-7 7"> </path>
+          <path d="m9 18 6-6-6-6"> </path>
         </svg>
         <span> Next slide </span>
       </button>
@@ -307,7 +302,7 @@ let%expect_test "component: the api and the buttons follow the state" =
         <button type="button"
                 data-slot="carousel-previous"
                 data-variant="outline"
-                data-size="icon"
+                data-size="icon-sm"
                 disabled="">
           <svg xmlns="http://www.w3.org/2000/svg"
                width="24"
@@ -318,15 +313,14 @@ let%expect_test "component: the api and the buttons follow the state" =
                stroke-width="2"
                stroke-linecap="round"
                stroke-linejoin="round">
-            <path d="m12 19-7-7 7-7"> </path>
-            <path d="M19 12H5"> </path>
+            <path d="m15 18-6-6 6-6"> </path>
           </svg>
           <span> Previous slide </span>
         </button>
         <button type="button"
                 data-slot="carousel-next"
                 data-variant="outline"
-                data-size="icon"
+                data-size="icon-sm"
                 disabled="">
           <svg xmlns="http://www.w3.org/2000/svg"
                width="24"
@@ -337,8 +331,7 @@ let%expect_test "component: the api and the buttons follow the state" =
                stroke-width="2"
                stroke-linecap="round"
                stroke-linejoin="round">
-            <path d="M5 12h14"> </path>
-            <path d="m12 5 7 7-7 7"> </path>
+            <path d="m9 18 6-6-6-6"> </path>
           </svg>
           <span> Next slide </span>
         </button>

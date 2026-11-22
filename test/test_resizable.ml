@@ -24,7 +24,7 @@ let%expect_test "shadcn's classes" =
          data-group=""
          aria-orientation="horizontal"
          id="resizable"
-         class="aria-[orientation=vertical]:flex-col border flex h-full rounded-lg w-full"
+         class="aria-[orientation=vertical]:flex-col border cn-resizable-panel-group flex h-full rounded-lg w-full"
          style={
            height: 100%;
            width: 100%;
@@ -71,7 +71,7 @@ let%expect_test "shadcn's classes" =
            aria-valuemin="0"
            aria-valuenow="25"
            tabindex="0"
-           class="[&[aria-orientation=horizontal]>div]:rotate-90 after:-translate-x-1/2 after:absolute after:inset-y-0 after:left-1/2 after:w-1 aria-[orientation=horizontal]:after:-translate-y-1/2 aria-[orientation=horizontal]:after:h-1 aria-[orientation=horizontal]:after:left-0 aria-[orientation=horizontal]:after:translate-x-0 aria-[orientation=horizontal]:after:w-full aria-[orientation=horizontal]:h-px aria-[orientation=horizontal]:w-full bg-border flex focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-ring items-center justify-center relative w-px"
+           class="[&[aria-orientation=horizontal]>div]:rotate-90 after:-translate-x-1/2 after:absolute after:inset-y-0 after:left-1/2 after:w-1 aria-[orientation=horizontal]:after:-translate-y-1/2 aria-[orientation=horizontal]:after:h-1 aria-[orientation=horizontal]:after:left-0 aria-[orientation=horizontal]:after:translate-x-0 aria-[orientation=horizontal]:after:w-full aria-[orientation=horizontal]:h-px aria-[orientation=horizontal]:w-full bg-border cn-resizable-handle flex focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring items-center justify-center relative ring-offset-background w-px"
            @on_blur
            @on_focus
            @on_keydown
@@ -87,25 +87,7 @@ let%expect_test "shadcn's classes" =
              flex-shrink: 0;
              touch-action: none;
            }>
-        <div class="bg-border border flex h-4 items-center justify-center rounded-xs w-3 z-10">
-          <svg xmlns="http://www.w3.org/2000/svg"
-               width="24"
-               height="24"
-               viewBox="0 0 24 24"
-               fill="none"
-               stroke="currentColor"
-               stroke-width="2"
-               stroke-linecap="round"
-               stroke-linejoin="round"
-               class="lucide lucide-grip-vertical size-2.5">
-            <circle cx="9" cy="12" r="1"> </circle>
-            <circle cx="9" cy="5" r="1"> </circle>
-            <circle cx="9" cy="19" r="1"> </circle>
-            <circle cx="15" cy="12" r="1"> </circle>
-            <circle cx="15" cy="5" r="1"> </circle>
-            <circle cx="15" cy="19" r="1"> </circle>
-          </svg>
-        </div>
+        <div class="cn-resizable-handle-icon flex shrink-0 z-10"> </div>
       </div>
       <div data-slot="resizable-panel"
            data-panel="true"

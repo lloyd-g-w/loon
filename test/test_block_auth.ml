@@ -9,40 +9,39 @@ let%expect_test "login-01, in full" =
     <div class="flex items-center justify-center md:p-10 min-h-svh p-6 w-full">
       <div class="max-w-sm w-full">
         <div class="flex flex-col gap-6">
-          <div data-slot="card"
-               class="bg-card border flex flex-col gap-6 py-6 rounded-xl shadow-sm text-card-foreground">
+          <div data-slot="card" data-size="default" class="cn-card flex flex-col group/card">
             <div data-slot="card-header"
-                 class="@container/card-header [.border-b]:pb-6 auto-rows-min gap-2 grid grid-rows-[auto_auto] has-data-[slot=card-action]:grid-cols-[1fr_auto] items-start px-6">
-              <div data-slot="card-title" class="font-semibold leading-none"> Login to your account </div>
-              <div data-slot="card-description" class="text-muted-foreground text-sm"> Enter your email below to login to your account </div>
+                 class="@container/card-header auto-rows-min cn-card-header grid group/card-header has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] items-start">
+              <div data-slot="card-title" class="cn-card-title cn-font-heading"> Login to your account </div>
+              <div data-slot="card-description" class="cn-card-description"> Enter your email below to login to your account </div>
             </div>
-            <div data-slot="card-content" class="px-6">
+            <div data-slot="card-content" class="cn-card-content">
               <form>
                 <div data-slot="field-group"
-                     class="@container/field-group [&>[data-slot=field-group]]:gap-4 data-[slot=checkbox-group]:gap-3 flex flex-col gap-7 group/field-group w-full">
+                     class="@container/field-group cn-field-group flex flex-col group/field-group w-full">
                   <div role="group"
                        data-slot="field"
                        data-orientation="vertical"
-                       class="[&>*]:w-full [&>.sr-only]:w-auto data-[invalid=true]:text-destructive flex flex-col gap-3 group/field w-full">
+                       class="*:w-full [&>.sr-only]:w-auto cn-field cn-field-orientation-vertical flex flex-col group/field w-full">
                     <label data-slot="field-label"
                            for="email"
-                           class="[&>*]:data-[slot=field]:p-4 dark:has-data-[state=checked]:bg-primary/10 flex font-medium gap-2 group-data-[disabled=true]/field:opacity-50 group-data-[disabled=true]:opacity-50 group-data-[disabled=true]:pointer-events-none group/field-label has-[>[data-slot=field]]:border has-[>[data-slot=field]]:flex-col has-[>[data-slot=field]]:rounded-md has-[>[data-slot=field]]:w-full has-data-[state=checked]:bg-primary/5 has-data-[state=checked]:border-primary items-center leading-snug peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer/field-label select-none text-sm w-fit"
+                           class="cn-field-label cn-label flex group-data-[disabled=true]:pointer-events-none group/field-label has-[>[data-slot=field]]:flex-col has-[>[data-slot=field]]:w-full items-center peer-disabled:cursor-not-allowed peer/field-label select-none w-fit"
                            @on_mousedown> Email </label>
                     <input type="email"
                            data-slot="input"
                            id="email"
                            placeholder="m@example.com"
                            required=""
-                           class="aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-transparent border border-input dark:aria-invalid:ring-destructive/40 dark:bg-input/30 disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none file:bg-transparent file:border-0 file:font-medium file:h-7 file:inline-flex file:text-foreground file:text-sm focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 h-9 md:text-sm min-w-0 outline-none placeholder:text-muted-foreground px-3 py-1 rounded-md selection:bg-primary selection:text-primary-foreground shadow-xs text-base transition-[color,box-shadow] w-full"/>
+                           class="cn-input disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none file:bg-transparent file:border-0 file:inline-flex file:text-foreground min-w-0 outline-none placeholder:text-muted-foreground w-full"/>
                   </div>
                   <div role="group"
                        data-slot="field"
                        data-orientation="vertical"
-                       class="[&>*]:w-full [&>.sr-only]:w-auto data-[invalid=true]:text-destructive flex flex-col gap-3 group/field w-full">
+                       class="*:w-full [&>.sr-only]:w-auto cn-field cn-field-orientation-vertical flex flex-col group/field w-full">
                     <div class="flex items-center">
                       <label data-slot="field-label"
                              for="password"
-                             class="[&>*]:data-[slot=field]:p-4 dark:has-data-[state=checked]:bg-primary/10 flex font-medium gap-2 group-data-[disabled=true]/field:opacity-50 group-data-[disabled=true]:opacity-50 group-data-[disabled=true]:pointer-events-none group/field-label has-[>[data-slot=field]]:border has-[>[data-slot=field]]:flex-col has-[>[data-slot=field]]:rounded-md has-[>[data-slot=field]]:w-full has-data-[state=checked]:bg-primary/5 has-data-[state=checked]:border-primary items-center leading-snug peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer/field-label select-none text-sm w-fit"
+                             class="cn-field-label cn-label flex group-data-[disabled=true]:pointer-events-none group/field-label has-[>[data-slot=field]]:flex-col has-[>[data-slot=field]]:w-full items-center peer-disabled:cursor-not-allowed peer/field-label select-none w-fit"
                              @on_mousedown> Password </label>
                       <a href="#"
                          class="hover:underline inline-block ml-auto text-sm underline-offset-4"> Forgot your password? </a>
@@ -51,24 +50,24 @@ let%expect_test "login-01, in full" =
                            data-slot="input"
                            id="password"
                            required=""
-                           class="aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-transparent border border-input dark:aria-invalid:ring-destructive/40 dark:bg-input/30 disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none file:bg-transparent file:border-0 file:font-medium file:h-7 file:inline-flex file:text-foreground file:text-sm focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 h-9 md:text-sm min-w-0 outline-none placeholder:text-muted-foreground px-3 py-1 rounded-md selection:bg-primary selection:text-primary-foreground shadow-xs text-base transition-[color,box-shadow] w-full"/>
+                           class="cn-input disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none file:bg-transparent file:border-0 file:inline-flex file:text-foreground min-w-0 outline-none placeholder:text-muted-foreground w-full"/>
                   </div>
                   <div role="group"
                        data-slot="field"
                        data-orientation="vertical"
-                       class="[&>*]:w-full [&>.sr-only]:w-auto data-[invalid=true]:text-destructive flex flex-col gap-3 group/field w-full">
+                       class="*:w-full [&>.sr-only]:w-auto cn-field cn-field-orientation-vertical flex flex-col group/field w-full">
                     <button type="submit"
                             data-slot="button"
                             data-variant="default"
                             data-size="default"
-                            class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"> Login </button>
+                            class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-default disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"> Login </button>
                     <button type="button"
                             data-slot="button"
                             data-variant="outline"
                             data-size="default"
-                            class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"> Login with Google </button>
+                            class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-outline disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"> Login with Google </button>
                     <p data-slot="field-description"
-                       class="[&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4 [[data-variant=legend]+&]:-mt-1.5 font-normal group-has-[[data-orientation=horizontal]]/field:text-balance last:mt-0 leading-normal nth-last-2:-mt-1 text-center text-muted-foreground text-sm">
+                       class="[&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4 cn-field-description font-normal group-has-data-horizontal/field:text-balance last:mt-0 leading-normal nth-last-2:-mt-1 text-center">
                       Don't have an account?
                       <a href="#"> Sign up </a>
                     </p>

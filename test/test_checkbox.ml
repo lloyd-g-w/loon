@@ -15,13 +15,13 @@ let%expect_test "shadcn's classes" =
             data-state="checked"
             data-slot="checkbox"
             id="terms"
-            class="aria-invalid:border-destructive aria-invalid:ring-destructive/20 border border-input dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:data-[state=checked]:bg-primary data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 outline-none peer rounded-[4px] shadow-xs shrink-0 size-4 transition-shadow"
+            class="after:-inset-x-3 after:-inset-y-2 after:absolute cn-checkbox disabled:cursor-not-allowed disabled:opacity-50 outline-none peer relative shrink-0"
             #value="on"
             @on_click
             @on_keydown>
       <span data-state="checked"
             data-slot="checkbox-indicator"
-            class="grid place-content-center text-current transition-none"
+            class="cn-checkbox-indicator grid place-content-center text-current transition-none"
             style={
               pointer-events: none;
             }>
@@ -34,7 +34,7 @@ let%expect_test "shadcn's classes" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round"
-             class="lucide lucide-check size-3.5">
+             class="lucide lucide-check">
           <path d="M20 6 9 17l-5-5"> </path>
         </svg>
       </span>

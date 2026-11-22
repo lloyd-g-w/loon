@@ -26,7 +26,7 @@ let%expect_test "shadcn's classes" =
     {|
     <div>
       <div data-input-otp-container="true"
-           class="flex gap-2 has-disabled:opacity-50 items-center"
+           class="cn-input-otp flex has-disabled:opacity-50 items-center"
            style={
              position: relative;
              cursor: text;
@@ -34,12 +34,14 @@ let%expect_test "shadcn's classes" =
              -webkit-user-select: none;
              pointer-events: none;
            }>
-        <div data-slot="input-otp-group" class="flex items-center">
+        <div data-slot="input-otp-group" class="cn-input-otp-group flex items-center">
           <div data-slot="input-otp-slot"
                data-active="false"
-               class="aria-invalid:border-destructive border-input border-r border-y dark:bg-input/30 dark:data-[active=true]:aria-invalid:ring-destructive/40 data-[active=true]:aria-invalid:border-destructive data-[active=true]:aria-invalid:ring-destructive/20 data-[active=true]:border-ring data-[active=true]:ring-[3px] data-[active=true]:ring-ring/50 data-[active=true]:z-10 first:border-l first:rounded-l-md flex h-9 items-center justify-center last:rounded-r-md outline-none relative shadow-xs text-sm transition-all w-9"> 1 </div>
+               class="cn-input-otp-slot data-[active=true]:z-10 flex items-center justify-center relative"> 1 </div>
         </div>
-        <div data-slot="input-otp-separator" role="separator">
+        <div data-slot="input-otp-separator"
+             role="separator"
+             class="cn-input-otp-separator flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg"
                width="24"
                height="24"
@@ -53,10 +55,10 @@ let%expect_test "shadcn's classes" =
             <path d="M5 12h14"> </path>
           </svg>
         </div>
-        <div data-slot="input-otp-group" class="flex items-center">
+        <div data-slot="input-otp-group" class="cn-input-otp-group flex items-center">
           <div data-slot="input-otp-slot"
                data-active="false"
-               class="aria-invalid:border-destructive border-input border-r border-y dark:bg-input/30 dark:data-[active=true]:aria-invalid:ring-destructive/40 data-[active=true]:aria-invalid:border-destructive data-[active=true]:aria-invalid:ring-destructive/20 data-[active=true]:border-ring data-[active=true]:ring-[3px] data-[active=true]:ring-ring/50 data-[active=true]:z-10 first:border-l first:rounded-l-md flex h-9 items-center justify-center last:rounded-r-md outline-none relative shadow-xs text-sm transition-all w-9"> </div>
+               class="cn-input-otp-slot data-[active=true]:z-10 flex items-center justify-center relative"> </div>
         </div>
         <div style={ position: absolute; inset: 0; pointer-events: none; }>
           <input autocomplete="one-time-code"
@@ -65,7 +67,7 @@ let%expect_test "shadcn's classes" =
                  maxlength="2"
                  data-slot="input-otp"
                  spellcheck="false"
-                 class="disabled:cursor-not-allowed"
+                 class="cn-input-otp-input disabled:cursor-not-allowed"
                  #value="1"
                  loon-input-otp-selection=<fun>
                  @on_blur

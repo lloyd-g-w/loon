@@ -95,7 +95,7 @@ let%expect_test "shadcn's classes" =
               data-state="open"
               data-slot="select-trigger"
               data-size="default"
-              class="*:data-[slot=select-value]:flex *:data-[slot=select-value]:gap-2 *:data-[slot=select-value]:items-center *:data-[slot=select-value]:line-clamp-1 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-transparent border border-input dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:hover:bg-input/50 data-[placeholder]:text-muted-foreground data-[size=default]:h-9 data-[size=sm]:h-8 disabled:cursor-not-allowed disabled:opacity-50 flex focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 gap-2 items-center justify-between outline-none px-3 py-2 rounded-md shadow-xs text-sm transition-[color,box-shadow] w-[180px] whitespace-nowrap"
+              class="*:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:line-clamp-1 [&_svg]:pointer-events-none [&_svg]:shrink-0 cn-select-trigger disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-between outline-none w-[180px] whitespace-nowrap"
               @on_click
               @on_keydown>
         <span data-slot="select-value" style={ pointer-events: none; }> Apple </span>
@@ -108,7 +108,7 @@ let%expect_test "shadcn's classes" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round"
-             class="lucide lucide-chevron-down opacity-50 size-4">
+             class="cn-select-trigger-icon lucide lucide-chevron-down pointer-events-none">
           <path d="m6 9 6 6 6-6"> </path>
         </svg>
       </button>
@@ -134,6 +134,7 @@ let%expect_test "shadcn's classes" =
                text-transform: none;
              }>
           <div data-slot="select-content"
+               data-align-trigger="false"
                role="listbox"
                id="s-content"
                data-state="open"
@@ -141,7 +142,7 @@ let%expect_test "shadcn's classes" =
                data-side="bottom"
                data-align="center"
                tabindex="-1"
-               class="bg-popover border data-[side=bottom]:slide-in-from-top-2 data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto relative rounded-md shadow-md text-popover-foreground z-50"
+               class="cn-menu-target cn-menu-translucent cn-select-content data-[align-trigger=true]:animate-none data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1 max-h-(--radix-select-content-available-height) origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto relative z-50"
                loon-focus-on-mount=Self
                loon-select-scroll=true
                @on_keydown
@@ -154,7 +155,7 @@ let%expect_test "shadcn's classes" =
             <div data-slot="select-scroll-up-button"
                  aria-hidden="true"
                  hidden=""
-                 class="cursor-default flex items-center justify-center py-1"
+                 class="cn-select-scroll-up-button"
                  @on_pointermove
                  style={
                    flex-shrink: 0;
@@ -168,7 +169,7 @@ let%expect_test "shadcn's classes" =
                    stroke-width="2"
                    stroke-linecap="round"
                    stroke-linejoin="round"
-                   class="lucide lucide-chevron-up size-4">
+                   class="lucide lucide-chevron-up">
                 <path d="m18 15-6-6-6 6"> </path>
               </svg>
             </div>
@@ -177,14 +178,15 @@ let%expect_test "shadcn's classes" =
             </style>
             <div data-radix-select-viewport=""
                  role="presentation"
-                 class="h-[var(--radix-select-trigger-height)] min-w-[var(--radix-select-trigger-width)] p-1 scroll-my-1 w-full"
+                 data-position="popper"
+                 class="cn-select-viewport data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:min-w-(--radix-select-trigger-width) data-[position=popper]:w-full"
                  style={
                    position: relative;
                    flex: 1;
                    overflow: hidden auto;
                  }>
-              <div role="group" data-slot="select-group">
-                <div data-slot="select-label" class="px-2 py-1.5 text-muted-foreground text-xs"> Fruits </div>
+              <div role="group" data-slot="select-group" class="cn-select-group">
+                <div data-slot="select-label" class="cn-select-label"> Fruits </div>
                 <div role="option"
                      aria-labelledby="s-item-0-text"
                      data-highlighted=""
@@ -193,13 +195,12 @@ let%expect_test "shadcn's classes" =
                      tabindex="-1"
                      id="s-item-0"
                      data-slot="select-item"
-                     class="*:[span]:last:flex *:[span]:last:gap-2 *:[span]:last:items-center [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-default data-[disabled]:opacity-50 data-[disabled]:pointer-events-none flex focus:bg-accent focus:text-accent-foreground gap-2 items-center outline-hidden pl-2 pr-8 py-1.5 relative rounded-sm select-none text-sm w-full"
+                     class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-select-item cursor-default data-disabled:opacity-50 data-disabled:pointer-events-none flex items-center outline-hidden relative select-none w-full"
                      loon-focus-when=true
                      @on_click
                      @on_pointerleave
                      @on_pointermove>
-                  <span data-slot="select-item-indicator"
-                        class="absolute flex items-center justify-center right-2 size-3.5">
+                  <span class="cn-select-item-indicator">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="24"
                          height="24"
@@ -209,7 +210,7 @@ let%expect_test "shadcn's classes" =
                          stroke-width="2"
                          stroke-linecap="round"
                          stroke-linejoin="round"
-                         class="lucide lucide-check size-4">
+                         class="cn-select-item-indicator-icon lucide lucide-check pointer-events-none">
                       <path d="M20 6 9 17l-5-5"> </path>
                     </svg>
                   </span>
@@ -218,12 +219,12 @@ let%expect_test "shadcn's classes" =
               </div>
               <div aria-hidden="true"
                    data-slot="select-separator"
-                   class="-mx-1 bg-border h-px my-1 pointer-events-none"> </div>
+                   class="cn-select-separator pointer-events-none"> </div>
             </div>
             <div data-slot="select-scroll-down-button"
                  aria-hidden="true"
                  hidden=""
-                 class="cursor-default flex items-center justify-center py-1"
+                 class="cn-select-scroll-down-button"
                  @on_pointermove
                  style={
                    flex-shrink: 0;
@@ -237,7 +238,7 @@ let%expect_test "shadcn's classes" =
                    stroke-width="2"
                    stroke-linecap="round"
                    stroke-linejoin="round"
-                   class="lucide lucide-chevron-down size-4">
+                   class="lucide lucide-chevron-down">
                 <path d="m6 9 6 6 6-6"> </path>
               </svg>
             </div>
@@ -358,6 +359,7 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                text-transform: none;
              }>
           <div data-slot="select-content"
+               data-align-trigger="true"
                role="listbox"
                id="bonsai_path_replaced_in_test-content"
                data-state="open"
@@ -396,6 +398,7 @@ let%expect_test "open: the structure, groups, labels and the separator" =
             </style>
             <div data-radix-select-viewport=""
                  role="presentation"
+                 data-position="item-aligned"
                  style={
                    position: relative;
                    flex: 1;
@@ -415,7 +418,7 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                      @on_click
                      @on_pointerleave
                      @on_pointermove>
-                  <span data-slot="select-item-indicator"> </span>
+                  <span> </span>
                   <span id="bonsai_path_replaced_in_test-item-0-text"> Apple </span>
                 </div>
                 <div role="option"
@@ -430,7 +433,7 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                      data-test="banana"
                      loon-focus-when=false
                      @on_pointermove>
-                  <span data-slot="select-item-indicator"> </span>
+                  <span> </span>
                   <span id="bonsai_path_replaced_in_test-item-1-text"> Banana </span>
                 </div>
                 <div role="option"
@@ -446,7 +449,7 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                      @on_click
                      @on_pointerleave
                      @on_pointermove>
-                  <span data-slot="select-item-indicator">
+                  <span>
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="24"
                          height="24"
@@ -477,7 +480,7 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                      @on_click
                      @on_pointerleave
                      @on_pointermove>
-                  <span data-slot="select-item-indicator"> </span>
+                  <span> </span>
                   <span id="bonsai_path_replaced_in_test-item-3-text"> Carrot </span>
                 </div>
               </div>

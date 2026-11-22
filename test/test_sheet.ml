@@ -47,7 +47,7 @@ let%expect_test "shadcn's classes, open on the right" =
               aria-expanded="true"
               aria-controls="s-content"
               data-state="open"
-              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"
+              class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-outline disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
               @on_click> Open </button>
       <div popover="manual"
            loon-portal=()
@@ -76,7 +76,7 @@ let%expect_test "shadcn's classes, open on the right" =
            }>
         <div data-slot="sheet-overlay"
              data-state="open"
-             class="bg-black/50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 fixed inset-0 z-50"
+             class="cn-sheet-overlay data-closed:animate-out data-closed:fade-out-0 data-open:animate-in data-open:fade-in-0 duration-100 fixed inset-0 z-50"
              @on_click
              style={
                pointer-events: auto;
@@ -98,7 +98,8 @@ let%expect_test "shadcn's classes, open on the right" =
              data-state="open"
              tabindex="-1"
              data-slot="sheet-content"
-             class="bg-background border-l data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=closed]:slide-out-to-right data-[state=open]:animate-in data-[state=open]:duration-500 data-[state=open]:slide-in-from-right ease-in-out fixed flex flex-col gap-4 h-full inset-y-0 right-0 shadow-lg sm:max-w-sm transition w-3/4 z-50"
+             data-side="right"
+             class="cn-sheet-content data-[side=bottom]:data-closed:slide-out-to-bottom-10 data-[side=bottom]:data-open:slide-in-from-bottom-10 data-[side=left]:data-closed:slide-out-to-left-10 data-[side=left]:data-open:slide-in-from-left-10 data-[side=right]:data-closed:slide-out-to-right-10 data-[side=right]:data-open:slide-in-from-right-10 data-[side=top]:data-closed:slide-out-to-top-10 data-[side=top]:data-open:slide-in-from-top-10 data-closed:animate-out data-closed:fade-out-0 data-open:animate-in data-open:fade-in-0"
              loon-dismiss=(()false true)
              loon-focus-on-mount=First_tabbable
              loon-scroll-lock=()
@@ -106,20 +107,23 @@ let%expect_test "shadcn's classes, open on the right" =
              style={
                pointer-events: auto;
              }>
-          <div data-slot="sheet-header" class="flex flex-col gap-1.5 p-4">
-            <h2 data-slot="sheet-title" id="s-title" class="font-semibold text-foreground"> Edit profile </h2>
-            <p data-slot="sheet-description" id="s-description" class="text-muted-foreground text-sm"> Make changes to your profile here. </p>
+          <div data-slot="sheet-header" class="cn-sheet-header flex flex-col">
+            <h2 data-slot="sheet-title" id="s-title" class="cn-font-heading cn-sheet-title"> Edit profile </h2>
+            <p data-slot="sheet-description" id="s-description" class="cn-sheet-description"> Make changes to your profile here. </p>
           </div>
-          <div data-slot="sheet-footer" class="flex flex-col gap-2 mt-auto p-4">
+          <div data-slot="sheet-footer" class="cn-sheet-footer flex flex-col mt-auto">
             <button type="button"
                     data-slot="sheet-close"
                     data-variant="outline"
                     data-size="default"
-                    class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"
+                    class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-outline disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
                     @on_click> Close </button>
           </div>
           <button type="button"
-                  class="absolute data-[state=open]:bg-secondary disabled:pointer-events-none focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-ring hover:opacity-100 opacity-70 right-4 ring-offset-background rounded-xs top-4 transition-opacity"
+                  data-slot="sheet-close"
+                  data-variant="ghost"
+                  data-size="icon-sm"
+                  class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-icon-sm cn-button-variant-ghost cn-sheet-close disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
                   @on_click>
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="24"
@@ -130,7 +134,7 @@ let%expect_test "shadcn's classes, open on the right" =
                  stroke-width="2"
                  stroke-linecap="round"
                  stroke-linejoin="round"
-                 class="lucide lucide-x size-4">
+                 class="lucide lucide-x">
               <path d="M18 6 6 18"> </path>
               <path d="m6 6 12 12"> </path>
             </svg>
@@ -170,7 +174,8 @@ let%expect_test "each side's classes" =
          data-state="open"
          tabindex="-1"
          data-slot="sheet-content"
-         class="bg-background border-b data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=closed]:slide-out-to-top data-[state=open]:animate-in data-[state=open]:duration-500 data-[state=open]:slide-in-from-top ease-in-out fixed flex flex-col gap-4 h-auto inset-x-0 shadow-lg top-0 transition z-50"
+         data-side="top"
+         class="cn-sheet-content data-[side=bottom]:data-closed:slide-out-to-bottom-10 data-[side=bottom]:data-open:slide-in-from-bottom-10 data-[side=left]:data-closed:slide-out-to-left-10 data-[side=left]:data-open:slide-in-from-left-10 data-[side=right]:data-closed:slide-out-to-right-10 data-[side=right]:data-open:slide-in-from-right-10 data-[side=top]:data-closed:slide-out-to-top-10 data-[side=top]:data-open:slide-in-from-top-10 data-closed:animate-out data-closed:fade-out-0 data-open:animate-in data-open:fade-in-0"
          loon-dismiss=(()false true)
          loon-focus-on-mount=First_tabbable
          loon-scroll-lock=()
@@ -186,7 +191,8 @@ let%expect_test "each side's classes" =
          data-state="open"
          tabindex="-1"
          data-slot="sheet-content"
-         class="bg-background border-l data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=closed]:slide-out-to-right data-[state=open]:animate-in data-[state=open]:duration-500 data-[state=open]:slide-in-from-right ease-in-out fixed flex flex-col gap-4 h-full inset-y-0 right-0 shadow-lg sm:max-w-sm transition w-3/4 z-50"
+         data-side="right"
+         class="cn-sheet-content data-[side=bottom]:data-closed:slide-out-to-bottom-10 data-[side=bottom]:data-open:slide-in-from-bottom-10 data-[side=left]:data-closed:slide-out-to-left-10 data-[side=left]:data-open:slide-in-from-left-10 data-[side=right]:data-closed:slide-out-to-right-10 data-[side=right]:data-open:slide-in-from-right-10 data-[side=top]:data-closed:slide-out-to-top-10 data-[side=top]:data-open:slide-in-from-top-10 data-closed:animate-out data-closed:fade-out-0 data-open:animate-in data-open:fade-in-0"
          loon-dismiss=(()false true)
          loon-focus-on-mount=First_tabbable
          loon-scroll-lock=()
@@ -202,7 +208,8 @@ let%expect_test "each side's classes" =
          data-state="open"
          tabindex="-1"
          data-slot="sheet-content"
-         class="bg-background border-t bottom-0 data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=closed]:slide-out-to-bottom data-[state=open]:animate-in data-[state=open]:duration-500 data-[state=open]:slide-in-from-bottom ease-in-out fixed flex flex-col gap-4 h-auto inset-x-0 shadow-lg transition z-50"
+         data-side="bottom"
+         class="cn-sheet-content data-[side=bottom]:data-closed:slide-out-to-bottom-10 data-[side=bottom]:data-open:slide-in-from-bottom-10 data-[side=left]:data-closed:slide-out-to-left-10 data-[side=left]:data-open:slide-in-from-left-10 data-[side=right]:data-closed:slide-out-to-right-10 data-[side=right]:data-open:slide-in-from-right-10 data-[side=top]:data-closed:slide-out-to-top-10 data-[side=top]:data-open:slide-in-from-top-10 data-closed:animate-out data-closed:fade-out-0 data-open:animate-in data-open:fade-in-0"
          loon-dismiss=(()false true)
          loon-focus-on-mount=First_tabbable
          loon-scroll-lock=()
@@ -218,7 +225,8 @@ let%expect_test "each side's classes" =
          data-state="open"
          tabindex="-1"
          data-slot="sheet-content"
-         class="bg-background border-r data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=closed]:slide-out-to-left data-[state=open]:animate-in data-[state=open]:duration-500 data-[state=open]:slide-in-from-left ease-in-out fixed flex flex-col gap-4 h-full inset-y-0 left-0 shadow-lg sm:max-w-sm transition w-3/4 z-50"
+         data-side="left"
+         class="cn-sheet-content data-[side=bottom]:data-closed:slide-out-to-bottom-10 data-[side=bottom]:data-open:slide-in-from-bottom-10 data-[side=left]:data-closed:slide-out-to-left-10 data-[side=left]:data-open:slide-in-from-left-10 data-[side=right]:data-closed:slide-out-to-right-10 data-[side=right]:data-open:slide-in-from-right-10 data-[side=top]:data-closed:slide-out-to-top-10 data-[side=top]:data-open:slide-in-from-top-10 data-closed:animate-out data-closed:fade-out-0 data-open:animate-in data-open:fade-in-0"
          loon-dismiss=(()false true)
          loon-focus-on-mount=First_tabbable
          loon-scroll-lock=()
@@ -313,6 +321,7 @@ let%expect_test
              data-state="open"
              tabindex="-1"
              data-slot="sheet-content"
+             data-side="left"
              loon-dismiss=(()false true)
              loon-focus-on-mount=First_tabbable
              loon-scroll-lock=()
@@ -331,7 +340,11 @@ let%expect_test
                     data-size="default"
                     @on_click> Close </button>
           </div>
-          <button type="button" @on_click>
+          <button type="button"
+                  data-slot="sheet-close"
+                  data-variant="ghost"
+                  data-size="icon-sm"
+                  @on_click>
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="24"
                  height="24"

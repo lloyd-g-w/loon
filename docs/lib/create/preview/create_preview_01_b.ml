@@ -555,9 +555,8 @@ let analytics_card (local_ graph) =
   let config =
     [ "visitors", Chart.Config.item ~label:"Visitors" ~color:"var(--chart-1)" () ]
   in
-  (* The base's [size="sm"] card; new-york-v4's has no sizes. *)
   Card.root
-    ~attrs:[ Attr.create "data-size" "sm" ]
+    ~size:Sm
     ~class_:"mx-auto w-full max-w-sm data-[size=sm]:pb-0"
     [ Card.header
         [ Card.title [ text "Analytics" ]

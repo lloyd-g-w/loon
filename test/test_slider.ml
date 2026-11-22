@@ -15,17 +15,17 @@ let%expect_test "shadcn's classes" =
           data-orientation="horizontal"
           aria-disabled="false"
           data-slot="slider"
-          class="data-[disabled]:opacity-50 data-[orientation=vertical]:flex-col data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto flex items-center relative select-none touch-none w-[60%]"
+          class="cn-slider data-disabled:opacity-50 data-vertical:flex-col data-vertical:h-full data-vertical:w-auto flex items-center relative select-none touch-none w-[60%]"
           custom-css-vars=((--radix-slider-thumb-transform"translateX(-50%)"))
           @on_pointerdown
           @on_pointermove
           @on_pointerup>
       <span data-orientation="horizontal"
             data-slot="slider-track"
-            class="bg-muted data-[orientation=horizontal]:h-1.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5 grow overflow-hidden relative rounded-full">
+            class="cn-slider-track data-horizontal:w-full data-vertical:h-full grow overflow-hidden relative">
         <span data-orientation="horizontal"
               data-slot="slider-range"
-              class="absolute bg-primary data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full"
+              class="absolute cn-slider-range data-horizontal:h-full data-vertical:w-full select-none"
               style={
                 left: 0%;
                 right: 50%;
@@ -44,7 +44,7 @@ let%expect_test "shadcn's classes" =
               data-slot="slider-thumb"
               aria-valuenow="50"
               tabindex="0"
-              class="bg-white block border border-primary disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-hidden focus-visible:ring-4 hover:ring-4 ring-ring/50 rounded-full shadow-sm shrink-0 size-4 transition-[color,box-shadow]"
+              class="block cn-slider-thumb disabled:opacity-50 disabled:pointer-events-none select-none shrink-0"
               @on_keydown> </span>
       </span>
     </span>

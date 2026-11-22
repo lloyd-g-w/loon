@@ -7,7 +7,7 @@ let%expect_test "shadcn's classes" =
     <div data-slot="separator"
          role="none"
          data-orientation="horizontal"
-         class="bg-border data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px shrink-0"> </div>
+         class="bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:self-stretch data-vertical:w-px shrink-0"> </div>
     |}]
 ;;
 

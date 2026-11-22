@@ -93,7 +93,7 @@ let%expect_test "shadcn's classes" =
               aria-expanded="true"
               aria-controls="bonsai_path_replaced_in_test-content"
               data-state="open"
-              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"
+              class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-default disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
               @on_click
               @on_keydown> Open </button>
       <div loon-dismiss=((bonsai_path_replaced_in_test-trigger)false true)
@@ -131,29 +131,26 @@ let%expect_test "shadcn's classes" =
                tabindex="-1"
                data-side="bottom"
                data-align="center"
-               class="bg-popover border data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 max-h-(--radix-dropdown-menu-content-available-height) min-w-[8rem] origin-(--radix-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto p-1 rounded-md shadow-md text-popover-foreground z-50"
+               class="cn-dropdown-menu-content cn-menu-target cn-menu-translucent data-[state=closed]:overflow-hidden max-h-(--radix-dropdown-menu-content-available-height) origin-(--radix-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto w-(--radix-dropdown-menu-trigger-width) z-50"
                loon-focus-on-mount=Self
                @on_keydown
                style={
                  outline: none;
                }>
-            <div data-slot="dropdown-menu-label"
-                 data-inset=""
-                 class="data-[inset]:pl-8 font-medium px-2 py-1.5 text-sm"> Label </div>
+            <div data-slot="dropdown-menu-label" data-inset="" class="cn-dropdown-menu-label"> Label </div>
             <div data-slot="dropdown-menu-item"
                  data-variant="destructive"
                  role="menuitem"
                  tabindex="-1"
                  data-orientation="vertical"
                  data-radix-collection-item=""
-                 class="[&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-default dark:data-[variant=destructive]:focus:bg-destructive/20 data-[disabled]:opacity-50 data-[disabled]:pointer-events-none data-[inset]:pl-8 data-[variant=destructive]:*:[svg]:text-destructive! data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:text-destructive flex focus:bg-accent focus:text-accent-foreground gap-2 items-center outline-hidden px-2 py-1.5 relative rounded-sm select-none text-sm"
+                 class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-dropdown-menu-item cursor-default data-disabled:opacity-50 data-disabled:pointer-events-none flex group/dropdown-menu-item items-center outline-hidden relative select-none"
                  loon-focus-when=false
                  @on_click
                  @on_mouseleave
                  @on_mousemove>
               Delete
-              <span data-slot="dropdown-menu-shortcut"
-                    class="ml-auto text-muted-foreground text-xs tracking-widest"> ⌘⌫ </span>
+              <span data-slot="dropdown-menu-shortcut" class="cn-dropdown-menu-shortcut"> ⌘⌫ </span>
             </div>
             <div data-slot="dropdown-menu-checkbox-item"
                  role="menuitemcheckbox"
@@ -162,12 +159,13 @@ let%expect_test "shadcn's classes" =
                  tabindex="-1"
                  data-orientation="vertical"
                  data-radix-collection-item=""
-                 class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-default data-[disabled]:opacity-50 data-[disabled]:pointer-events-none flex focus:bg-accent focus:text-accent-foreground gap-2 items-center outline-hidden pl-8 pr-2 py-1.5 relative rounded-sm select-none text-sm"
+                 class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-dropdown-menu-checkbox-item cursor-default data-disabled:opacity-50 data-disabled:pointer-events-none flex items-center outline-hidden relative select-none"
                  loon-focus-when=false
                  @on_click
                  @on_mouseleave
                  @on_mousemove>
-              <span class="absolute flex items-center justify-center left-2 pointer-events-none size-3.5">
+              <span data-slot="dropdown-menu-checkbox-item-indicator"
+                    class="cn-dropdown-menu-item-indicator pointer-events-none">
                 <span data-state="checked">
                   <svg xmlns="http://www.w3.org/2000/svg"
                        width="24"
@@ -178,7 +176,7 @@ let%expect_test "shadcn's classes" =
                        stroke-width="2"
                        stroke-linecap="round"
                        stroke-linejoin="round"
-                       class="lucide lucide-check size-4">
+                       class="lucide lucide-check">
                     <path d="M20 6 9 17l-5-5"> </path>
                   </svg>
                 </span>
@@ -193,12 +191,13 @@ let%expect_test "shadcn's classes" =
                    tabindex="-1"
                    data-orientation="vertical"
                    data-radix-collection-item=""
-                   class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-default data-[disabled]:opacity-50 data-[disabled]:pointer-events-none flex focus:bg-accent focus:text-accent-foreground gap-2 items-center outline-hidden pl-8 pr-2 py-1.5 relative rounded-sm select-none text-sm"
+                   class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-dropdown-menu-radio-item cursor-default data-disabled:opacity-50 data-disabled:pointer-events-none flex items-center outline-hidden relative select-none"
                    loon-focus-when=false
                    @on_click
                    @on_mouseleave
                    @on_mousemove>
-                <span class="absolute flex items-center justify-center left-2 pointer-events-none size-3.5">
+                <span data-slot="dropdown-menu-radio-item-indicator"
+                      class="cn-dropdown-menu-item-indicator pointer-events-none">
                   <span data-state="checked">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="24"
@@ -209,8 +208,8 @@ let%expect_test "shadcn's classes" =
                          stroke-width="2"
                          stroke-linecap="round"
                          stroke-linejoin="round"
-                         class="fill-current lucide lucide-circle size-2">
-                      <circle cx="12" cy="12" r="10"> </circle>
+                         class="lucide lucide-check">
+                      <path d="M20 6 9 17l-5-5"> </path>
                     </svg>
                   </span>
                 </span>
@@ -220,7 +219,7 @@ let%expect_test "shadcn's classes" =
             <div data-slot="dropdown-menu-separator"
                  role="separator"
                  aria-orientation="horizontal"
-                 class="-mx-1 bg-border h-px my-1"> </div>
+                 class="cn-dropdown-menu-separator"> </div>
             <div data-slot="dropdown-menu-sub-trigger"
                  id="bonsai_path_replaced_in_test-sub-3-trigger"
                  role="menuitem"
@@ -230,7 +229,7 @@ let%expect_test "shadcn's classes" =
                  tabindex="-1"
                  data-orientation="vertical"
                  data-radix-collection-item=""
-                 class="[&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-default data-[inset]:pl-8 data-[state=open]:bg-accent data-[state=open]:text-accent-foreground flex focus:bg-accent focus:text-accent-foreground gap-2 items-center outline-hidden px-2 py-1.5 rounded-sm select-none text-sm"
+                 class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-dropdown-menu-sub-trigger cursor-default flex items-center outline-hidden select-none"
                  loon-focus-when=false
                  @on_click
                  @on_mouseleave
@@ -245,7 +244,7 @@ let%expect_test "shadcn's classes" =
                    stroke-width="2"
                    stroke-linecap="round"
                    stroke-linejoin="round"
-                   class="lucide lucide-chevron-right ml-auto size-4">
+                   class="cn-rtl-flip lucide lucide-chevron-right ml-auto">
                 <path d="m9 18 6-6-6-6"> </path>
               </svg>
             </div>
@@ -393,7 +392,7 @@ let%expect_test "a click opens it, without a highlight; Esc closes it" =
                  @on_click
                  @on_mouseleave
                  @on_mousemove>
-              <span>
+              <span data-slot="dropdown-menu-checkbox-item-indicator">
                 <span data-state="checked">
                   <svg xmlns="http://www.w3.org/2000/svg"
                        width="24"
@@ -422,7 +421,7 @@ let%expect_test "a click opens it, without a highlight; Esc closes it" =
                    @on_click
                    @on_mouseleave
                    @on_mousemove>
-                <span> </span>
+                <span data-slot="dropdown-menu-radio-item-indicator"> </span>
                 Top
               </div>
               <div data-slot="dropdown-menu-radio-item"
@@ -436,7 +435,7 @@ let%expect_test "a click opens it, without a highlight; Esc closes it" =
                    @on_click
                    @on_mouseleave
                    @on_mousemove>
-                <span>
+                <span data-slot="dropdown-menu-radio-item-indicator">
                   <span data-state="checked">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="24"
@@ -447,7 +446,7 @@ let%expect_test "a click opens it, without a highlight; Esc closes it" =
                          stroke-width="2"
                          stroke-linecap="round"
                          stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="10"> </circle>
+                      <path d="M20 6 9 17l-5-5"> </path>
                     </svg>
                   </span>
                 </span>
@@ -801,7 +800,7 @@ let%expect_test "sub-menus: ArrowRight opens, ArrowLeft closes, the pointer open
                  @on_click
                  @on_mouseleave
                  @on_mousemove>
-              <span>
+              <span data-slot="dropdown-menu-checkbox-item-indicator">
                 <span data-state="checked">
                   <svg xmlns="http://www.w3.org/2000/svg"
                        width="24"
@@ -830,7 +829,7 @@ let%expect_test "sub-menus: ArrowRight opens, ArrowLeft closes, the pointer open
                    @on_click
                    @on_mouseleave
                    @on_mousemove>
-                <span> </span>
+                <span data-slot="dropdown-menu-radio-item-indicator"> </span>
                 Top
               </div>
               <div data-slot="dropdown-menu-radio-item"
@@ -844,7 +843,7 @@ let%expect_test "sub-menus: ArrowRight opens, ArrowLeft closes, the pointer open
                    @on_click
                    @on_mouseleave
                    @on_mousemove>
-                <span>
+                <span data-slot="dropdown-menu-radio-item-indicator">
                   <span data-state="checked">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="24"
@@ -855,7 +854,7 @@ let%expect_test "sub-menus: ArrowRight opens, ArrowLeft closes, the pointer open
                          stroke-width="2"
                          stroke-linecap="round"
                          stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="10"> </circle>
+                      <path d="M20 6 9 17l-5-5"> </path>
                     </svg>
                   </span>
                 </span>

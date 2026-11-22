@@ -41,7 +41,7 @@ let%expect_test "shadcn's classes" =
               aria-expanded="true"
               aria-controls="p-content"
               data-state="open"
-              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"
+              class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-outline disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
               @on_click> Open popover </button>
       <div loon-dismiss=((p-trigger)true false) loon-presence=() style={ display: contents; }>
         <div data-radix-popper-content-wrapper=""
@@ -71,12 +71,12 @@ let%expect_test "shadcn's classes" =
                tabindex="-1"
                data-side="bottom"
                data-align="center"
-               class="bg-popover border data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 origin-(--radix-popover-content-transform-origin) outline-hidden p-4 rounded-md shadow-md text-popover-foreground w-80 z-50"
+               class="cn-popover-content origin-(--radix-popover-content-transform-origin) outline-hidden w-80 z-50"
                loon-focus-on-mount=First_tabbable
                @on_keydown>
-            <div data-slot="popover-header" class="flex flex-col gap-1 text-sm">
-              <div data-slot="popover-title" class="font-medium"> Dimensions </div>
-              <p data-slot="popover-description" class="text-muted-foreground"> Set the dimensions for the layer. </p>
+            <div data-slot="popover-header" class="cn-popover-header">
+              <div data-slot="popover-title" class="cn-popover-title"> Dimensions </div>
+              <p data-slot="popover-description" class="cn-popover-description"> Set the dimensions for the layer. </p>
             </div>
             <input/>
           </div>

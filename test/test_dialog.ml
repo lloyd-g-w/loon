@@ -46,7 +46,7 @@ let%expect_test "shadcn's classes, open" =
               aria-expanded="true"
               aria-controls="d-content"
               data-state="open"
-              class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"
+              class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-outline disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
               @on_click> Open Dialog </button>
       <div popover="manual"
            loon-portal=()
@@ -75,7 +75,7 @@ let%expect_test "shadcn's classes, open" =
            }>
         <div data-slot="dialog-overlay"
              data-state="open"
-             class="bg-black/50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 fixed inset-0 z-50"
+             class="cn-dialog-overlay fixed inset-0 isolate z-50"
              @on_click
              style={
                pointer-events: auto;
@@ -97,7 +97,7 @@ let%expect_test "shadcn's classes, open" =
              data-state="open"
              tabindex="-1"
              data-slot="dialog-content"
-             class="bg-background border data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 duration-200 fixed gap-4 grid left-[50%] max-w-[calc(100%-2rem)] outline-none p-6 rounded-lg shadow-lg sm:max-w-lg top-[50%] translate-x-[-50%] translate-y-[-50%] w-full z-50"
+             class="-translate-x-1/2 -translate-y-1/2 cn-dialog-content fixed left-1/2 outline-none top-1/2 w-full z-50"
              loon-dismiss=(()false true)
              loon-focus-on-mount=First_tabbable
              loon-scroll-lock=()
@@ -105,29 +105,31 @@ let%expect_test "shadcn's classes, open" =
              style={
                pointer-events: auto;
              }>
-          <div data-slot="dialog-header" class="flex flex-col gap-2 sm:text-left text-center">
-            <h2 data-slot="dialog-title" id="d-title" class="font-semibold leading-none text-lg"> Edit profile </h2>
-            <p data-slot="dialog-description" id="d-description" class="text-muted-foreground text-sm"> Make changes to your profile here. </p>
+          <div data-slot="dialog-header" class="cn-dialog-header flex flex-col">
+            <h2 data-slot="dialog-title" id="d-title" class="cn-dialog-title cn-font-heading"> Edit profile </h2>
+            <p data-slot="dialog-description" id="d-description" class="cn-dialog-description"> Make changes to your profile here. </p>
           </div>
           <input id="name"/>
           <div data-slot="dialog-footer"
-               class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+               class="cn-dialog-footer flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
             <button type="button"
                     data-slot="dialog-close"
                     data-variant="outline"
                     data-size="default"
-                    class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-background border dark:aria-invalid:ring-destructive/40 dark:bg-input/30 dark:border-input dark:hover:bg-input/50 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shadow-xs shrink-0 text-sm transition-all whitespace-nowrap"
+                    class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-outline disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
                     @on_click> Cancel </button>
             <button type="button"
                     data-slot="button"
                     data-variant="default"
                     data-size="default"
                     id="save"
-                    class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-primary dark:aria-invalid:ring-destructive/40 disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-2 h-9 has-[>svg]:px-3 hover:bg-primary/90 inline-flex items-center justify-center outline-none px-4 py-2 rounded-md shrink-0 text-primary-foreground text-sm transition-all whitespace-nowrap"> Save changes </button>
+                    class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-default cn-button-variant-default disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"> Save changes </button>
           </div>
           <button type="button"
                   data-slot="dialog-close"
-                  class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 absolute data-[state=open]:bg-accent data-[state=open]:text-muted-foreground disabled:pointer-events-none focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-ring hover:opacity-100 opacity-70 right-4 ring-offset-background rounded-xs top-4 transition-opacity"
+                  data-variant="ghost"
+                  data-size="icon-sm"
+                  class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button cn-button-size-icon-sm cn-button-variant-ghost cn-dialog-close disabled:opacity-50 disabled:pointer-events-none group/button inline-flex items-center justify-center outline-none select-none shrink-0 transition-all whitespace-nowrap"
                   @on_click>
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="24"
@@ -290,7 +292,11 @@ let%expect_test
                     data-size="default"
                     id="save"> Save changes </button>
           </div>
-          <button type="button" data-slot="dialog-close" @on_click>
+          <button type="button"
+                  data-slot="dialog-close"
+                  data-variant="ghost"
+                  data-size="icon-sm"
+                  @on_click>
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="24"
                  height="24"

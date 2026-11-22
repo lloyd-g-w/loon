@@ -42,12 +42,12 @@ let%expect_test "shadcn's classes" =
           ]));
   [%expect
     {|
-    <div data-orientation="vertical" data-slot="accordion">
+    <div data-orientation="vertical" data-slot="accordion" class="cn-accordion flex flex-col w-full">
       <div @key=a
            data-state="open"
            data-orientation="vertical"
            data-slot="accordion-item"
-           class="border-b last:border-b-0">
+           class="cn-accordion-item">
         <h3 data-orientation="vertical" data-state="open" class="flex">
           <button type="button"
                   aria-controls="accordion-content-a"
@@ -57,7 +57,7 @@ let%expect_test "shadcn's classes" =
                   data-orientation="vertical"
                   id="accordion-trigger-a"
                   data-slot="accordion-trigger"
-                  class="[&[data-state=open]>svg]:rotate-180 disabled:opacity-50 disabled:pointer-events-none flex flex-1 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 font-medium gap-4 hover:underline items-start justify-between outline-none py-4 rounded-md text-left text-sm transition-all"
+                  class="border border-transparent cn-accordion-trigger disabled:opacity-50 disabled:pointer-events-none flex flex-1 group/accordion-trigger items-start justify-between outline-none relative transition-all"
                   @on_click
                   @on_keydown>
             A
@@ -70,8 +70,22 @@ let%expect_test "shadcn's classes" =
                  stroke-width="2"
                  stroke-linecap="round"
                  stroke-linejoin="round"
-                 class="duration-200 lucide lucide-chevron-down pointer-events-none shrink-0 size-4 text-muted-foreground transition-transform translate-y-0.5">
+                 data-slot="accordion-trigger-icon"
+                 class="cn-accordion-trigger-icon group-aria-expanded/accordion-trigger:hidden lucide lucide-chevron-down pointer-events-none shrink-0">
               <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon"
+                 class="cn-accordion-trigger-icon group-aria-expanded/accordion-trigger:inline hidden lucide lucide-chevron-up pointer-events-none shrink-0">
+              <path d="m18 15-6-6-6 6"> </path>
             </svg>
           </button>
         </h3>
@@ -81,9 +95,9 @@ let%expect_test "shadcn's classes" =
              aria-labelledby="accordion-trigger-a"
              data-orientation="vertical"
              data-slot="accordion-content"
-             class="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm"
+             class="cn-accordion-content overflow-hidden"
              loon-collapsible-presence=((open_ true)(accordion true))>
-          <div class="pb-4 pt-0"> Alpha </div>
+          <div class="[&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3 [&_p:not(:last-child)]:mb-4 cn-accordion-content-inner h-(--radix-accordion-content-height)"> Alpha </div>
         </div>
       </div>
     </div>
@@ -126,8 +140,21 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round">
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
               <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
+              <path d="m18 15-6-6-6 6"> </path>
             </svg>
           </button>
         </h3>
@@ -161,8 +188,21 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round">
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
               <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
+              <path d="m18 15-6-6-6 6"> </path>
             </svg>
           </button>
         </h3>
@@ -202,8 +242,21 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round">
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
               <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
+              <path d="m18 15-6-6-6 6"> </path>
             </svg>
           </button>
         </h3>
@@ -251,8 +304,21 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round">
+                   stroke-linejoin="round"
+                   data-slot="accordion-trigger-icon">
                 <path d="m6 9 6 6 6-6"> </path>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   data-slot="accordion-trigger-icon">
+                <path d="m18 15-6-6-6 6"> </path>
               </svg>
             </button>
           </h3>
@@ -294,8 +360,21 @@ let%expect_test "single: one open at a time; not collapsible keeps it open" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round">
+                   stroke-linejoin="round"
+                   data-slot="accordion-trigger-icon">
                 <path d="m6 9 6 6 6-6"> </path>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   data-slot="accordion-trigger-icon">
+                <path d="m18 15-6-6-6 6"> </path>
               </svg>
             </button>
           </h3>
@@ -368,8 +447,21 @@ let%expect_test "single, collapsible: the open item closes" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round">
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
               <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
+              <path d="m18 15-6-6-6 6"> </path>
             </svg>
           </button>
         </h3>
@@ -403,8 +495,21 @@ let%expect_test "single, collapsible: the open item closes" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round">
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
               <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
+              <path d="m18 15-6-6-6 6"> </path>
             </svg>
           </button>
         </h3>
@@ -444,8 +549,21 @@ let%expect_test "single, collapsible: the open item closes" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round">
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
               <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
+              <path d="m18 15-6-6-6 6"> </path>
             </svg>
           </button>
         </h3>
@@ -488,8 +606,21 @@ let%expect_test "single, collapsible: the open item closes" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round">
+                   stroke-linejoin="round"
+                   data-slot="accordion-trigger-icon">
                 <path d="m6 9 6 6 6-6"> </path>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   data-slot="accordion-trigger-icon">
+                <path d="m18 15-6-6-6 6"> </path>
               </svg>
             </button>
           </h3>
@@ -555,8 +686,21 @@ let%expect_test "multiple: several open" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round">
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
               <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
+              <path d="m18 15-6-6-6 6"> </path>
             </svg>
           </button>
         </h3>
@@ -591,8 +735,21 @@ let%expect_test "multiple: several open" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round">
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
               <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
+              <path d="m18 15-6-6-6 6"> </path>
             </svg>
           </button>
         </h3>
@@ -632,8 +789,21 @@ let%expect_test "multiple: several open" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round">
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
               <path d="m6 9 6 6 6-6"> </path>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 data-slot="accordion-trigger-icon">
+              <path d="m18 15-6-6-6 6"> </path>
             </svg>
           </button>
         </h3>
@@ -676,8 +846,21 @@ let%expect_test "multiple: several open" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round">
+                   stroke-linejoin="round"
+                   data-slot="accordion-trigger-icon">
                 <path d="m6 9 6 6 6-6"> </path>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   data-slot="accordion-trigger-icon">
+                <path d="m18 15-6-6-6 6"> </path>
               </svg>
             </button>
           </h3>
@@ -718,8 +901,21 @@ let%expect_test "multiple: several open" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round">
+                   stroke-linejoin="round"
+                   data-slot="accordion-trigger-icon">
                 <path d="m6 9 6 6 6-6"> </path>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   data-slot="accordion-trigger-icon">
+                <path d="m18 15-6-6-6 6"> </path>
               </svg>
             </button>
           </h3>
@@ -779,8 +975,21 @@ let%expect_test "multiple: several open" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round">
+                   stroke-linejoin="round"
+                   data-slot="accordion-trigger-icon">
                 <path d="m6 9 6 6 6-6"> </path>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="24"
+                   height="24"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2"
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
+                   data-slot="accordion-trigger-icon">
+                <path d="m18 15-6-6-6 6"> </path>
               </svg>
             </button>
           </h3>

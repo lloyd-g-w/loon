@@ -64,9 +64,7 @@ let%expect_test "shadcn's classes" =
   in
   Handle.show handle;
   [%expect {|
-    <div data-slot="menubar"
-         role="menubar"
-         class="bg-background border flex gap-1 h-9 items-center p-1 rounded-md shadow-xs">
+    <div data-slot="menubar" role="menubar" class="cn-menubar flex items-center">
       <button data-slot="menubar-trigger"
               type="button"
               role="menuitem"
@@ -76,7 +74,7 @@ let%expect_test "shadcn's classes" =
               aria-controls="menubar-0-content"
               data-state="open"
               tabindex="0"
-              class="data-[state=open]:bg-accent data-[state=open]:text-accent-foreground flex focus:bg-accent focus:text-accent-foreground font-medium items-center outline-hidden px-2 py-1 rounded-sm select-none text-sm"
+              class="cn-menubar-trigger flex items-center outline-hidden select-none"
               @on_blur
               @on_click
               @on_focus
@@ -112,20 +110,20 @@ let%expect_test "shadcn's classes" =
                tabindex="-1"
                data-side="bottom"
                data-align="start"
-               class="bg-popover border data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 min-w-[12rem] origin-(--radix-menubar-content-transform-origin) overflow-hidden p-1 rounded-md shadow-md text-popover-foreground z-50"
+               class="cn-menu-target cn-menu-translucent cn-menubar-content origin-(--radix-menubar-content-transform-origin) overflow-hidden z-50"
                loon-focus-on-mount=Self
                @on_keydown
                style={
                  outline: none;
                }>
-            <div data-slot="menubar-label" class="data-[inset]:pl-8 font-medium px-2 py-1.5 text-sm"> Label </div>
+            <div data-slot="menubar-label" class="cn-menubar-label"> Label </div>
             <div data-slot="menubar-item"
                  data-variant="default"
                  role="menuitem"
                  tabindex="-1"
                  data-orientation="vertical"
                  data-radix-collection-item=""
-                 class="[&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-default dark:data-[variant=destructive]:focus:bg-destructive/20 data-[disabled]:opacity-50 data-[disabled]:pointer-events-none data-[inset]:pl-8 data-[variant=destructive]:*:[svg]:text-destructive! data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:text-destructive flex focus:bg-accent focus:text-accent-foreground gap-2 items-center outline-hidden px-2 py-1.5 relative rounded-sm select-none text-sm"
+                 class="[&_svg]:pointer-events-none [&_svg]:shrink-0 cn-menubar-item cursor-default data-disabled:pointer-events-none flex group/menubar-item items-center outline-hidden relative select-none"
                  loon-focus-when=false
                  @on_click
                  @on_mouseleave
@@ -139,7 +137,7 @@ let%expect_test "shadcn's classes" =
                  tabindex="-1"
                  data-orientation="vertical"
                  data-radix-collection-item=""
-                 class="cursor-default data-[inset]:pl-8 data-[state=open]:bg-accent data-[state=open]:text-accent-foreground flex focus:bg-accent focus:text-accent-foreground items-center outline-none px-2 py-1.5 rounded-sm select-none text-sm"
+                 class="cn-menubar-sub-trigger cursor-default flex items-center outline-none select-none"
                  loon-focus-when=false
                  @on_click
                  @on_mouseleave
@@ -154,7 +152,7 @@ let%expect_test "shadcn's classes" =
                    stroke-width="2"
                    stroke-linecap="round"
                    stroke-linejoin="round"
-                   class="h-4 lucide lucide-chevron-right ml-auto w-4">
+                   class="cn-rtl-flip lucide lucide-chevron-right ml-auto size-4">
                 <path d="m9 18 6-6-6-6"> </path>
               </svg>
             </div>
