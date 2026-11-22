@@ -28,7 +28,6 @@ let%expect_test "shadcn's classes" =
                stroke-width="2"
                stroke-linecap="round"
                stroke-linejoin="round"
-               aria-hidden="true"
                class="lucide lucide-folder-code">
             <path d="M10 10.5 8 13l2 2.5"> </path>
             <path d="m14 10.5 2 2.5-2 2.5"> </path>

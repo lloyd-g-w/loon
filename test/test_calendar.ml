@@ -66,7 +66,6 @@ let%expect_test "shadcn's classes" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round"
-             aria-hidden="true"
              class="lucide lucide-chevron-left rdp-chevron size-4">
           <path d="m15 18-6-6 6-6"> </path>
         </svg>
@@ -84,7 +83,6 @@ let%expect_test "shadcn's classes" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round"
-             aria-hidden="true"
              class="lucide lucide-chevron-right rdp-chevron size-4">
           <path d="m9 18 6-6-6-6"> </path>
         </svg>
@@ -591,8 +589,7 @@ let%expect_test "dropdown caption and week numbers" =
                stroke="currentColor"
                stroke-width="2"
                stroke-linecap="round"
-               stroke-linejoin="round"
-               aria-hidden="true">
+               stroke-linejoin="round">
             <path d="m6 9 6 6 6-6"> </path>
           </svg>
         </span>
@@ -614,8 +611,7 @@ let%expect_test "dropdown caption and week numbers" =
                stroke="currentColor"
                stroke-width="2"
                stroke-linecap="round"
-               stroke-linejoin="round"
-               aria-hidden="true">
+               stroke-linejoin="round">
             <path d="m6 9 6 6 6-6"> </path>
           </svg>
         </span>
@@ -710,8 +706,7 @@ let%expect_test "locale, formatters, disabled navigation, initial month in bound
              stroke="currentColor"
              stroke-width="2"
              stroke-linecap="round"
-             stroke-linejoin="round"
-             aria-hidden="true">
+             stroke-linejoin="round">
           <path d="m15 18-6-6 6-6"> </path>
         </svg>
       </button>
@@ -728,8 +723,7 @@ let%expect_test "locale, formatters, disabled navigation, initial month in bound
              stroke="currentColor"
              stroke-width="2"
              stroke-linecap="round"
-             stroke-linejoin="round"
-             aria-hidden="true">
+             stroke-linejoin="round">
           <path d="m9 18 6-6-6-6"> </path>
         </svg>
       </button>

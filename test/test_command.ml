@@ -22,7 +22,7 @@ let parts ~on_select =
       ; Command.group
           ~heading:"Suggestions"
           [ item Calendar "Calendar"
-          ; item Face_slightly_smiling "Search Emoji"
+          ; item Smile "Search Emoji"
           ; item ~disabled:true Calculator "Calculator"
           ]
       ; Command.separator ()
@@ -73,10 +73,9 @@ let%expect_test "shadcn's classes" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round"
-             aria-hidden="true"
              class="lucide lucide-search opacity-50 shrink-0 size-4">
-          <path d="m21 21-4.34-4.34"> </path>
           <circle cx="11" cy="11" r="8"> </circle>
+          <path d="m21 21-4.3-4.3"> </path>
         </svg>
         <input cmdk-input=""
                autocomplete="off"
@@ -507,10 +506,9 @@ let%expect_test "the dialog: opened and closed by its state, the search cleared"
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
-                <path d="m21 21-4.34-4.34"> </path>
+                   stroke-linejoin="round">
                 <circle cx="11" cy="11" r="8"> </circle>
+                <path d="m21 21-4.3-4.3"> </path>
               </svg>
               <input cmdk-input=""
                      autocomplete="off"
@@ -561,11 +559,9 @@ let%expect_test "the dialog: opened and closed by its state, the search cleared"
                            stroke="currentColor"
                            stroke-width="2"
                            stroke-linecap="round"
-                           stroke-linejoin="round"
-                           aria-hidden="true">
+                           stroke-linejoin="round">
                         <rect width="20" height="14" x="2" y="5" rx="2"> </rect>
                         <line x1="2" x2="22" y1="10" y2="10"> </line>
-                        <path d="M6 14h2"> </path>
                       </svg>
                       <span> Billing </span>
                       <span data-slot="command-shortcut"> ⌘B </span>
@@ -598,8 +594,7 @@ let%expect_test "the dialog: opened and closed by its state, the search cleared"
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <path d="M18 6 6 18"> </path>
               <path d="m6 6 12 12"> </path>
             </svg>

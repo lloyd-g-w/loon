@@ -35,10 +35,9 @@ let%expect_test "shadcn's classes" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round"
-             aria-hidden="true"
              class="lucide lucide-search">
-          <path d="m21 21-4.34-4.34"> </path>
           <circle cx="11" cy="11" r="8"> </circle>
+          <path d="m21 21-4.3-4.3"> </path>
         </svg>
       </div>
       <div role="group"
@@ -92,8 +91,7 @@ let%expect_test "addons on every side, a textarea, buttons" =
                stroke="currentColor"
                stroke-width="2"
                stroke-linecap="round"
-               stroke-linejoin="round"
-               aria-hidden="true">
+               stroke-linejoin="round">
             <path d="m5 12 7-7 7 7"> </path>
             <path d="M12 19V5"> </path>
           </svg>

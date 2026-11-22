@@ -248,7 +248,7 @@ let sidebar_nav =
              , [ Icon.Layout_dashboard, "Dashboard", true
                ; Arrow_left_right, "Transactions", false
                ; Trending_up, "Investments", false
-               ; Building_complex, "Accounts", false
+               ; Building_2, "Accounts", false
                ; Chart_pie, "Spending", false
                ] )
            , ( "Planning"
@@ -266,7 +266,7 @@ let sidebar_nav =
                ; Paintbrush, "Appearance", false
                ] )
            , ( "Support"
-             , [ Icon.Circle_question_mark, "Help Center", false
+             , [ Icon.Circle_help, "Help Center", false
                ; Message_square, "Contact Us", false
                ; Book_open, "Documentation", false
                ; Activity, "Status", false

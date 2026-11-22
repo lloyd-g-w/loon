@@ -25,7 +25,7 @@ module Type = struct
     | Default | Loading -> None
     | Success -> Some (Icon.view ~class_:"size-4" Circle_check)
     | Info -> Some (Icon.view ~class_:"size-4" Info)
-    | Warning -> Some (Icon.view ~class_:"size-4" Triangle_exclamation_point)
+    | Warning -> Some (Icon.view ~class_:"size-4" Triangle_alert)
     | Error -> Some (Icon.view ~class_:"size-4" Octagon_x)
   ;;
 end

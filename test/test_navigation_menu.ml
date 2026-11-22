@@ -84,7 +84,6 @@ let%expect_test "shadcn's classes" =
                    stroke-width="2"
                    stroke-linecap="round"
                    stroke-linejoin="round"
-                   aria-hidden="true"
                    class="duration-300 group-data-[state=open]:rotate-180 lucide lucide-chevron-down ml-1 relative size-3 top-[1px] transition">
                 <path d="m6 9 6 6 6-6"> </path>
               </svg>
@@ -113,7 +112,6 @@ let%expect_test "shadcn's classes" =
                    stroke-width="2"
                    stroke-linecap="round"
                    stroke-linejoin="round"
-                   aria-hidden="true"
                    class="duration-300 group-data-[state=open]:rotate-180 lucide lucide-chevron-down ml-1 relative size-3 top-[1px] transition">
                 <path d="m6 9 6 6 6-6"> </path>
               </svg>
@@ -206,8 +204,7 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <path d="m6 9 6 6 6-6"> </path>
               </svg>
             </button>
@@ -233,8 +230,7 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <path d="m6 9 6 6 6-6"> </path>
               </svg>
             </button>
@@ -288,14 +284,14 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
                      stroke="currentColor"
                      stroke-width="2"
                      stroke-linecap="round"
-                     stroke-linejoin="round"
+                     stroke-linejoin="round">
 
+                     viewBox="0 0 24 24"
                      fill="none"
                      stroke="currentColor"
                      stroke-width="2"
                      stroke-linecap="round"
-                     stroke-linejoin="round"
-                     aria-hidden="true">
+                     stroke-linejoin="round">
                   <path d="m6 9 6 6 6-6"> </path>
                 </svg>
               </button>
@@ -379,8 +375,7 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
                      stroke="currentColor"
                      stroke-width="2"
                      stroke-linecap="round"
-                     stroke-linejoin="round"
-                     aria-hidden="true">
+                     stroke-linejoin="round">
                   <path d="m6 9 6 6 6-6"> </path>
                 </svg>
               </button>
@@ -409,7 +404,7 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
                      stroke="currentColor"
                      stroke-width="2"
                      stroke-linecap="round"
-                     stroke-linejoin="round"
+                     stroke-linejoin="round">
 
                data-slot="navigation-menu-indicator"
                loon-after-render-navigation-menu-indicator=<opaque>
@@ -473,14 +468,14 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
                 Home
 
 
+                     width="24"
                      height="24"
                      viewBox="0 0 24 24"
                      fill="none"
                      stroke="currentColor"
                      stroke-width="2"
                      stroke-linecap="round"
-                     stroke-linejoin="round"
-                     aria-hidden="true">
+                     stroke-linejoin="round">
                   <path d="m6 9 6 6 6-6"> </path>
                 </svg>
               </button>
@@ -509,8 +504,7 @@ let%expect_test "triggers open their content in the viewport; Esc closes it" =
                      stroke="currentColor"
                      stroke-width="2"
                      stroke-linecap="round"
-                     stroke-linejoin="round"
-                     aria-hidden="true">
+                     stroke-linejoin="round">
                   <path d="m6 9 6 6 6-6"> </path>
                 </svg>
               </button>
@@ -605,8 +599,7 @@ let%expect_test "without a viewport, the content drops down in its item" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <path d="m6 9 6 6 6-6"> </path>
               </svg>
             </button>
@@ -633,8 +626,7 @@ let%expect_test "without a viewport, the content drops down in its item" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <path d="m6 9 6 6 6-6"> </path>
               </svg>
             </button>

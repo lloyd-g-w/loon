@@ -34,7 +34,6 @@ let%expect_test "shadcn's classes" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round"
-             aria-hidden="true"
              class="lucide lucide-check size-3.5">
           <path d="M20 6 9 17l-5-5"> </path>
         </svg>
@@ -76,8 +75,7 @@ let%expect_test
              stroke="currentColor"
              stroke-width="2"
              stroke-linecap="round"
-             stroke-linejoin="round"
-             aria-hidden="true">
+             stroke-linejoin="round">
           <path d="M20 6 9 17l-5-5"> </path>
         </svg>
       </span>
@@ -107,8 +105,7 @@ let%expect_test
              stroke="currentColor"
              stroke-width="2"
              stroke-linecap="round"
-             stroke-linejoin="round"
-             aria-hidden="true">
+             stroke-linejoin="round">
           <path d="M20 6 9 17l-5-5"> </path>
         </svg>
       </span>
@@ -169,8 +166,7 @@ let%expect_test "a click toggles; an indeterminate box becomes checked" =
                stroke="currentColor"
                stroke-width="2"
                stroke-linecap="round"
-               stroke-linejoin="round"
-               aria-hidden="true">
+               stroke-linejoin="round">
             <path d="M20 6 9 17l-5-5"> </path>
           </svg>
         </span>

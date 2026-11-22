@@ -97,7 +97,6 @@ let%expect_test "shadcn's classes" =
                stroke-width="2"
                stroke-linecap="round"
                stroke-linejoin="round"
-               aria-hidden="true"
                class="lucide lucide-grip-vertical size-2.5">
             <circle cx="9" cy="12" r="1"> </circle>
             <circle cx="9" cy="5" r="1"> </circle>

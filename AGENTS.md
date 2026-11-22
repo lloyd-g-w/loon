@@ -6,8 +6,9 @@ are fine: match shadcn rather than keeping old loon APIs.
 
 The reference checkouts (read-only): `~/src/shadcn-ui` (components in
 `apps/v4/registry/new-york-v4/ui/*.tsx`, their examples in
-`.../new-york-v4/examples/*.tsx`, blocks and charts beside them),
-`~/src/lucide` (icons). Radix's behaviour: https://www.radix-ui.com/primitives/docs.
+`.../new-york-v4/examples/*.tsx`, blocks and charts beside them). The
+icons are lucide-react and @tabler/icons-react at shadcn's versions, pinned
+by `tools/icons.nix`. Radix's behaviour: https://www.radix-ui.com/primitives/docs.
 
 ## Layout and builds
 
@@ -16,7 +17,7 @@ The reference checkouts (read-only): `~/src/shadcn-ui` (components in
 | `src/` | the `loon` library: one module per component (`button.ml`/`.mli`) |
 | `src/css/` | Tailwind's input, concatenated in name order: `00-tailwind.css` (`@import "tailwindcss"`), `01-tw-animate.css`, `02-shadcn.css` (shadcn's variants and keyframes), `03-theme.css` (shadcn's neutral theme, `@theme inline`, base layer); then `<component>.css`, only for a component whose shadcn original ships a stylesheet (`sonner.css`, Sonner's own). The CLI gives the `00`–`03` files to `loon init` and a component's file to `loon add` |
 | `src/loon.css` (built) | `tailwindcss` over that input, scanning `src/*.ml` for class names; installed, and embedded as `Loon.Stylesheet.css` (`src/embedded/`) |
-| `tools/` | `gen-icons.mjs` writes `src/icon.ml(i)` from Lucide (`tools/icons.txt`: the icons included) |
+| `tools/` | `nix run .#gen-icons` (`gen-icons.mjs`, `icons.nix`) writes `src/icon.ml(i)` from lucide-react and `src/tabler.ml(i)` from @tabler/icons-react, pinned at shadcn's versions (`tools/icons.txt`, `tools/tabler-icons.txt`: the icons included) |
 | `test/` | expect tests, run under node: `test_<component>.ml` |
 | `blocks/` | the `loon_blocks` library: shadcn's blocks (`sidebar-07` is `sidebar_07.ml`), shown on the docs' Blocks page |
 | `docs/lib/` | the documentation site; `docs/lib/pages/<slug>_page.ml` is a page, found by `docs/gen` (no list to edit); `create/` and `typeset/` port ui.shadcn.com's /create and /typeset (`customize/`: what they share) |
@@ -87,8 +88,9 @@ Read `ui/<name>.tsx` and the Radix primitive it wraps, then write
 - **Icons are Lucide.** `Icon.view ?class_ Name` renders as lucide-react
   does (`class="lucide lucide-<name>"`, stroke 2); shadcn's
   `[&_svg:not([class*='size-'])]:size-4` sizes them. Need an icon not in
-  `Icon.t`? Add its name to `tools/icons.txt` and run `node
-  tools/gen-icons.mjs` (needs `~/src/lucide`).
+  `Icon.t`? Add its name to `tools/icons.txt` and run `nix run
+  .#gen-icons`. (Blocks that use `@tabler/icons-react`, as dashboard-01,
+  use `Tabler.view`: `tools/tabler-icons.txt`.)
 - **Dark mode is the class `dark`** on an ancestor (`Theme.root ~mode:Dark`
   or `<html class="dark">`), as shadcn's `@custom-variant dark`.
 - Update the components, blocks and docs that used its old API.
