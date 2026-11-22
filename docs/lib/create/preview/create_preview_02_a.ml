@@ -73,7 +73,7 @@ let contribution_history (info : Info.t Bonsai.t) (local_ graph) =
         ]
     ; Card.content
         [ div
-            ~class_:"grid w-full grid-cols-1 gap-3 md:grid-cols-2"
+            ~class_:"grid w-full grid-cols-1 gap-3 @min-[48rem]/preview:grid-cols-2"
             [ upcoming_item
                 ~label:"Upcoming"
                 ~value:"May 25, 2024"
@@ -207,7 +207,7 @@ let dividend_income (info : Info.t Bonsai.t) (local_ graph) =
                      [ Item.title [ text name ]; Item.description [ text shares ] ]
                  ; Chart.container
                      ~config
-                     ~class_:"hidden h-8 w-24 md:block"
+                     ~class_:"hidden h-8 w-24 @min-[48rem]/preview:block"
                      chart
                      (Chart.bar_chart
                         ~margin:(Chart.margin ~top:0. ~right:0. ~bottom:0. ~left:0. ())
@@ -226,7 +226,7 @@ let dividend_income (info : Info.t Bonsai.t) (local_ graph) =
                             ~radius:(Info.bar_radius info 3.)
                             ()
                         ])
-                 ; tspan "hidden text-sm font-semibold tabular-nums md:block" amount
+                 ; tspan "hidden text-sm font-semibold tabular-nums @min-[48rem]/preview:block" amount
                  ]))
         ]
     ]

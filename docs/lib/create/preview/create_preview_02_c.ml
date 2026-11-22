@@ -318,7 +318,7 @@ let receiving_method (local_ graph) =
   let method_ =
     Radio_group.component
       ~default_value:"bank"
-      ~class_:"grid grid-cols-1 items-start gap-3 md:grid-cols-2 style-sera:grid-cols-1"
+      ~class_:"grid grid-cols-1 items-start gap-3 @min-[48rem]/preview:grid-cols-2 style-sera:grid-cols-1"
       (Bonsai.return (fun group ->
          let option ~value ~id ~title ?description_class description =
            Field.label
@@ -464,8 +464,8 @@ let upcoming_payments (local_ graph) =
   let calendar =
     Calendar.component
       ~class_:
-        "w-full [--cell-size:--spacing(8)] md:[--cell-size:--spacing(10)] \
-         style-sera:md:[--cell-size:--spacing(9)]"
+        "w-full [--cell-size:--spacing(8)] @min-[48rem]/preview:[--cell-size:--spacing(10)] \
+         style-sera:@min-[48rem]/preview:[--cell-size:--spacing(9)]"
       ~default:(Single (Some (Calendar.today ())))
       graph
   in

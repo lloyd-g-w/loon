@@ -38,7 +38,7 @@ let style_overview (info : Info.t Bonsai.t) (local_ _graph) =
           []
       ; div
           ~class_:
-            "hidden max-w-14 truncate font-mono text-[0.60rem] md:block \
+            "hidden max-w-14 truncate font-mono text-[0.60rem] @min-[48rem]/preview:block \
              style-lyra:max-w-10 style-mira:max-w-10"
           [ text variant ]
       ]
@@ -224,9 +224,9 @@ let ui_elements (local_ graph) =
              (Button.view
                 ~variant:Outline
                 [ span
-                    ~class_:"hidden md:flex style-sera:md:hidden"
+                    ~class_:"hidden @min-[48rem]/preview:flex style-sera:@min-[48rem]/preview:hidden"
                     [ text "Alert Dialog" ]
-                ; span ~class_:"flex md:hidden style-sera:md:flex" [ text "Dialog" ]
+                ; span ~class_:"flex @min-[48rem]/preview:hidden style-sera:@min-[48rem]/preview:flex" [ text "Dialog" ]
                 ])
          ; Alert_dialog.content
              ~size:Sm
@@ -306,11 +306,11 @@ let ui_elements (local_ graph) =
                 [ Item.content
                     [ Item.title [ text "Two-factor authentication" ]
                     ; Item.description
-                        ~class_:"text-pretty xl:hidden 2xl:block"
+                        ~class_:"text-pretty @min-[80rem]/preview:hidden @min-[96rem]/preview:block"
                         [ text "Verify via email or phone number." ]
                     ]
                 ; Item.actions
-                    ~class_:"hidden md:flex"
+                    ~class_:"hidden @min-[48rem]/preview:flex"
                     [ Button.view ~size:Sm ~variant:Secondary [ text "Enable" ] ]
                 ]
             ]

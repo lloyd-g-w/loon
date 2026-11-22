@@ -15,7 +15,7 @@ let component info (local_ graph) =
       ; A.typography_specimen info
       ; (fun (local_ graph) ->
           let%arr ui_elements = A.ui_elements graph in
-          div ~class_:"md:hidden" [ ui_elements ])
+          div ~class_:"@min-[48rem]/preview:hidden" [ ui_elements ])
       ; A.codespaces_card
       ; A.invoice
       ]
@@ -26,7 +26,7 @@ let component info (local_ graph) =
       [ A.icon_preview_grid
       ; (fun (local_ graph) ->
           let%arr ui_elements = A.ui_elements graph in
-          div ~class_:"hidden w-full md:flex" [ ui_elements ])
+          div ~class_:"hidden w-full @min-[48rem]/preview:flex" [ ui_elements ])
       ; A.observability_card
       ; A.shipping_address
       ]
