@@ -47,7 +47,10 @@ let classes : Menu.Classes.t =
   ; item = item_class
   ; checkbox_item = radio_item_class
   ; radio_item = radio_item_class
-  ; indicator = "pointer-events-none absolute right-2 flex items-center justify-center"
+  ; checkbox_indicator =
+      "pointer-events-none absolute right-2 flex items-center justify-center"
+  ; radio_indicator = "pointer-events-none absolute right-2 flex items-center justify-center"
+  ; indicator_slots = false
   ; label = "px-2 py-1.5 text-xs font-medium text-neutral-400 data-[inset]:pl-8"
   ; separator = "-mx-1.5 my-1.5 h-px bg-neutral-600 dark:bg-neutral-700"
   ; shortcut =

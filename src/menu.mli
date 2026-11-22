@@ -27,7 +27,10 @@ module Classes : sig
     ; item : string
     ; checkbox_item : string
     ; radio_item : string
-    ; indicator : string (** the box of a checkbox or radio item's mark *)
+    ; checkbox_indicator : string (** the box of a checkbox item's mark *)
+    ; radio_indicator : string
+    ; indicator_slots : bool
+      (** whether the boxes have [data-slot]s (["<slot>-checkbox-item-indicator"]) *)
     ; label : string
     ; separator : string
     ; shortcut : string
@@ -87,7 +90,7 @@ val radio_group
   -> Item.t list
   -> Item.t
 
-(** [indicator]: the checked item's mark (by default a small filled circle). *)
+(** [indicator]: the checked item's mark (by default a check). *)
 val radio_item
   :  ?attrs:Attr.t list
   -> ?class_:string

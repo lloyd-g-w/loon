@@ -56,20 +56,49 @@ module Style = struct
   ;;
 end
 
-let attrs ?mode ?style () =
+module Menu_color = struct
+  type t =
+    | Default
+    | Inverted
+    | Default_translucent
+    | Inverted_translucent
+  [@@deriving enumerate, sexp, compare, equal]
+
+  let name = function
+    | Default -> "default"
+    | Inverted -> "inverted"
+    | Default_translucent -> "default-translucent"
+    | Inverted_translucent -> "inverted-translucent"
+  ;;
+
+  let of_name s = List.find all ~f:(fun t -> String.equal (name t) s)
+
+  let classes = function
+    | Default -> []
+    | Inverted -> [ "menu-inverted" ]
+    | Default_translucent -> [ "menu-translucent" ]
+    | Inverted_translucent -> [ "menu-inverted"; "menu-translucent" ]
+  ;;
+end
+
+let attrs ?mode ?style ?menu_color () =
   (match (mode : Mode.t option) with
    | Some Dark -> [ Attr.class_ "dark" ]
    | Some Light | None -> [])
+  @ (match style with
+     | Some style -> [ Attr.class_ (Style.class_ style) ]
+     | None -> [])
   @
-  match style with
-  | Some style -> [ Attr.class_ (Style.class_ style) ]
-  | None -> []
+  match menu_color with
+  | Some m when not (List.is_empty (Menu_color.classes m)) ->
+    [ Attr.classes (Menu_color.classes m) ]
+  | Some _ | None -> []
 ;;
 
-let root ?attrs:(extra = []) ?mode ?style children =
+let root ?attrs:(extra = []) ?mode ?style ?menu_color children =
   Node.div
     ~attrs:
-      (attrs ?mode ?style ()
+      (attrs ?mode ?style ?menu_color ()
        @ [ Attr.classes [ "bg-background"; "text-foreground" ] ]
        @ extra)
     children

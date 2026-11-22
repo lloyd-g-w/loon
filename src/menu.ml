@@ -19,7 +19,9 @@ module Classes = struct
     ; item : string
     ; checkbox_item : string
     ; radio_item : string
-    ; indicator : string
+    ; checkbox_indicator : string
+    ; radio_indicator : string
+    ; indicator_slots : bool
     ; label : string
     ; separator : string
     ; shortcut : string
@@ -154,9 +156,15 @@ let item
     }
 ;;
 
-let indicator (c : Classes.t) ~checked icon =
+let indicator (c : Classes.t) ~kind ~checked icon =
   Node.span
-    ~attrs:[ Attr.class_ c.indicator ]
+    ~attrs:
+      ((if c.indicator_slots then [ slot c (kind ^ "-item-indicator") ] else [])
+       @ [ Attr.class_
+             (match kind with
+              | "radio" -> c.radio_indicator
+              | _ -> c.checkbox_indicator)
+         ])
     (if checked then [ Node.span ~attrs:[ data "state" "checked" ] [ icon ] ] else [])
 ;;
 
@@ -189,7 +197,7 @@ let checkbox_item
                ]
                @ nav
                @ attrs)
-            (indicator c ~checked (Icon.view ~class_:"size-4" Check) :: children))
+            (indicator c ~kind:"checkbox" ~checked (Icon.view Check) :: children))
     }
 ;;
 
@@ -222,10 +230,11 @@ let radio_item
                @ attrs)
             (indicator
                c
+               ~kind:"radio"
                ~checked
                (match indicator_icon with
                 | Some icon -> icon
-                | None -> Icon.view ~class_:"size-2 fill-current" Circle)
+                | None -> Icon.view Check)
              :: children))
     }
 ;;

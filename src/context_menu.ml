@@ -19,65 +19,38 @@ end
 let classes : Menu.Classes.t =
   { slot = "context-menu"
   ; item =
-      "relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm \
-       outline-hidden select-none focus:bg-accent focus:text-accent-foreground \
-       data-[disabled]:pointer-events-none data-[disabled]:opacity-50 \
-       data-[inset]:pl-8 data-[variant=destructive]:text-destructive \
-       data-[variant=destructive]:focus:bg-destructive/10 \
-       data-[variant=destructive]:focus:text-destructive \
-       dark:data-[variant=destructive]:focus:bg-destructive/20 \
-       [&_svg]:pointer-events-none [&_svg]:shrink-0 \
-       [&_svg:not([class*='size-'])]:size-4 \
-       [&_svg:not([class*='text-'])]:text-muted-foreground \
-       data-[variant=destructive]:*:[svg]:text-destructive!"
+      "cn-context-menu-item group/context-menu-item relative flex cursor-default \
+       items-center outline-hidden select-none data-disabled:pointer-events-none \
+       data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0"
   ; checkbox_item =
-      "relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 \
-       text-sm outline-hidden select-none focus:bg-accent \
-       focus:text-accent-foreground data-[disabled]:pointer-events-none \
-       data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 \
-       [&_svg:not([class*='size-'])]:size-4"
+      "cn-context-menu-checkbox-item relative flex cursor-default items-center \
+       outline-hidden select-none data-disabled:pointer-events-none \
+       data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0"
   ; radio_item =
-      "relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 \
-       text-sm outline-hidden select-none focus:bg-accent \
-       focus:text-accent-foreground data-[disabled]:pointer-events-none \
-       data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 \
-       [&_svg:not([class*='size-'])]:size-4"
-  ; indicator =
-      "pointer-events-none absolute left-2 flex size-3.5 items-center justify-center"
-  ; label = "px-2 py-1.5 text-sm font-medium text-foreground data-[inset]:pl-8"
-  ; separator = "-mx-1 my-1 h-px bg-border"
-  ; shortcut = "ml-auto text-xs tracking-widest text-muted-foreground"
+      "cn-context-menu-radio-item relative flex cursor-default items-center \
+       outline-hidden select-none data-disabled:pointer-events-none \
+       data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0"
+  ; checkbox_indicator = "cn-context-menu-item-indicator pointer-events-none"
+  ; radio_indicator = "cn-context-menu-item-indicator pointer-events-none"
+  ; indicator_slots = false
+  ; label = "cn-context-menu-label"
+  ; separator = "cn-context-menu-separator"
+  ; shortcut = "cn-context-menu-shortcut"
   ; sub_trigger =
-      "flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-hidden \
-       select-none focus:bg-accent focus:text-accent-foreground data-[inset]:pl-8 \
-       data-[state=open]:bg-accent \
-       data-[state=open]:text-accent-foreground [&_svg]:pointer-events-none \
-       [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 \
-       [&_svg:not([class*='text-'])]:text-muted-foreground"
-  ; sub_trigger_icon = "ml-auto"
+      "cn-context-menu-sub-trigger flex cursor-default items-center \
+       outline-hidden select-none [&_svg]:pointer-events-none [&_svg]:shrink-0"
+  ; sub_trigger_icon = "cn-rtl-flip ml-auto"
   ; sub_content =
-      "z-50 min-w-[8rem] origin-(--radix-context-menu-content-transform-origin) \
-       overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground \
-       shadow-lg data-[side=bottom]:slide-in-from-top-2 \
-       data-[side=left]:slide-in-from-right-2 \
-       data-[side=right]:slide-in-from-left-2 \
-       data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out \
-       data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 \
-       data-[state=open]:animate-in data-[state=open]:fade-in-0 \
-       data-[state=open]:zoom-in-95"
+      "cn-context-menu-sub-content cn-menu-target cn-menu-translucent z-50 \
+       origin-(--radix-context-menu-content-transform-origin) overflow-hidden"
   }
 ;;
 
 let content_class =
-  "z-50 max-h-(--radix-context-menu-content-available-height) min-w-[8rem] \
+  "cn-context-menu-content cn-menu-target cn-menu-translucent z-50 \
+   max-h-(--radix-context-menu-content-available-height) \
    origin-(--radix-context-menu-content-transform-origin) overflow-x-hidden \
-   overflow-y-auto rounded-md border bg-popover p-1 text-popover-foreground \
-   shadow-md data-[side=bottom]:slide-in-from-top-2 \
-   data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 \
-   data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out \
-   data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 \
-   data-[state=open]:animate-in data-[state=open]:fade-in-0 \
-   data-[state=open]:zoom-in-95"
+   overflow-y-auto"
 ;;
 
 type t =
@@ -108,7 +81,7 @@ let trigger ?(attrs = []) ?class_ ?(disabled = false) t children =
        ; Attr.id (trigger_id t)
        ; data "state" (if State.is_open t.state then "open" else "closed")
        ]
-       @ Option.value_map class_ ~default:[] ~f:(fun c -> [ Attr.class_ c ])
+       @ [ Cn.with_class ?class_ [ "cn-context-menu-trigger select-none" ] ]
        @ (if disabled
           then [ data "disabled" "" ]
           else

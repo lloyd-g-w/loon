@@ -123,28 +123,17 @@ let content
 ;;
 
 let trigger_class =
-  "flex w-fit items-center justify-between gap-2 rounded-md border border-input \
-   bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs \
-   transition-[color,box-shadow] outline-none focus-visible:border-ring \
-   focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed \
-   disabled:opacity-50 aria-invalid:border-destructive \
-   aria-invalid:ring-destructive/20 data-[placeholder]:text-muted-foreground \
-   data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 \
-   *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center \
-   *:data-[slot=select-value]:gap-2 dark:bg-input/30 dark:hover:bg-input/50 \
-   dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 \
-   [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground"
+  "cn-select-trigger flex w-fit items-center justify-between whitespace-nowrap \
+   outline-none disabled:cursor-not-allowed disabled:opacity-50 \
+   *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex \
+   *:data-[slot=select-value]:items-center [&_svg]:pointer-events-none [&_svg]:shrink-0"
 ;;
 
 let content_class =
-  "relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] \
+  "cn-select-content cn-menu-target cn-menu-translucent relative z-50 \
+   max-h-(--radix-select-content-available-height) \
    origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto \
-   rounded-md border bg-popover text-popover-foreground shadow-md \
-   data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 \
-   data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 \
-   data-[state=closed]:animate-out data-[state=closed]:fade-out-0 \
-   data-[state=closed]:zoom-out-95 data-[state=open]:animate-in \
-   data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95"
+   data-[align-trigger=true]:animate-none"
 ;;
 
 let popper_content_class =
@@ -152,21 +141,17 @@ let popper_content_class =
    data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1"
 ;;
 
-let popper_viewport_class =
-  "h-[var(--radix-select-trigger-height)] w-full \
-   min-w-[var(--radix-select-trigger-width)] scroll-my-1"
+let viewport_class =
+  "cn-select-viewport data-[position=popper]:h-(--radix-select-trigger-height) \
+   data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)"
 ;;
 
 let item_class =
-  "relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 \
-   text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground \
-   data-[disabled]:pointer-events-none data-[disabled]:opacity-50 \
-   [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 \
-   [&_svg:not([class*='text-'])]:text-muted-foreground *:[span]:last:flex \
-   *:[span]:last:items-center *:[span]:last:gap-2"
+  "cn-select-item relative flex w-full cursor-default items-center outline-hidden \
+   select-none data-disabled:pointer-events-none data-disabled:opacity-50 \
+   [&_svg]:pointer-events-none [&_svg]:shrink-0"
 ;;
 
-let scroll_button_class = "flex cursor-default items-center justify-center py-1"
 
 let rec items_of parts =
   List.concat_map parts ~f:(function
@@ -372,7 +357,7 @@ let view
           (match selected with
            | Some (_, _, _, children) -> children
            | None -> [ Node.text (Option.value t.placeholder ~default:"") ])
-      ; Icon.view ~class_:"size-4 opacity-50" Chevron_down
+      ; Icon.view ~class_:"cn-select-trigger-icon pointer-events-none" Chevron_down
       ]
   in
   let content_node =
@@ -396,15 +381,17 @@ let view
           | Group { attrs; class_; parts } ->
             Node.div
               ~attrs:
-                ([ Attr.role "group"; data "slot" "select-group" ]
-                 @ Option.value_map class_ ~default:[] ~f:(fun c -> [ Attr.class_ c ])
+                ([ Attr.role "group"
+                 ; data "slot" "select-group"
+                 ; Cn.with_class ?class_ [ "cn-select-group" ]
+                 ]
                  @ attrs)
               (render parts)
           | Label { attrs; class_; children } ->
             Node.div
               ~attrs:
                 ([ data "slot" "select-label"
-                 ; Cn.with_class ?class_ [ "px-2 py-1.5 text-xs text-muted-foreground" ]
+                 ; Cn.with_class ?class_ [ "cn-select-label" ]
                  ]
                  @ attrs)
               children
@@ -413,7 +400,7 @@ let view
               ~attrs:
                 ([ aria "hidden" "true"
                  ; data "slot" "select-separator"
-                 ; Cn.with_class ?class_ [ "pointer-events-none -mx-1 my-1 h-px bg-border" ]
+                 ; Cn.with_class ?class_ [ "cn-select-separator pointer-events-none" ]
                  ]
                  @ attrs)
               []
@@ -448,11 +435,14 @@ let view
                       ])
                  @ attrs)
               [ Node.span
-                  ~attrs:
-                    [ data "slot" "select-item-indicator"
-                    ; Attr.class_ "absolute right-2 flex size-3.5 items-center justify-center"
-                    ]
-                  (if checked then [ Icon.view ~class_:"size-4" Check ] else [])
+                  ~attrs:[ Attr.class_ "cn-select-item-indicator" ]
+                  (if checked
+                   then
+                     [ Icon.view
+                         ~class_:"cn-select-item-indicator-icon pointer-events-none"
+                         Check
+                     ]
+                   else [])
               ; Node.span ~attrs:[ Attr.id text_id ] children
               ])
       in
@@ -485,6 +475,7 @@ let view
         Node.div
           ~attrs:
             ([ data "slot" "select-content"
+             ; data "align-trigger" (Bool.to_string (not is_popper))
              ; Attr.role "listbox"
              ; Attr.id content_id
              ; data "state" "open"
@@ -514,11 +505,11 @@ let view
                 [ data "slot" "select-scroll-up-button"
                 ; aria "hidden" "true"
                 ; Attr.hidden
-                ; Attr.class_ scroll_button_class
+                ; Attr.class_ "cn-select-scroll-up-button"
                 ; Attr.style (Css_gen.create ~field:"flex-shrink" ~value:"0")
                 ; Attr.on_pointermove (fun _ -> leave)
                 ]
-              [ Icon.view ~class_:"size-4" Chevron_up ]
+              [ Icon.view Chevron_up ]
           ; (* Radix's: the viewport scrolls with no scrollbar, by the
                buttons, the wheel or touch. *)
             Node.create
@@ -530,7 +521,8 @@ let view
               ~attrs:
                 [ Attr.create "data-radix-select-viewport" ""
                 ; Attr.role "presentation"
-                ; Cn.attr ("p-1" :: (if is_popper then [ popper_viewport_class ] else []))
+                ; data "position" (if is_popper then "popper" else "item-aligned")
+                ; Attr.class_ viewport_class
                 ; Attr.style
                     (Css_gen.concat
                        [ Css_gen.create ~field:"position" ~value:"relative"
@@ -544,11 +536,11 @@ let view
                 [ data "slot" "select-scroll-down-button"
                 ; aria "hidden" "true"
                 ; Attr.hidden
-                ; Attr.class_ scroll_button_class
+                ; Attr.class_ "cn-select-scroll-down-button"
                 ; Attr.style (Css_gen.create ~field:"flex-shrink" ~value:"0")
                 ; Attr.on_pointermove (fun _ -> leave)
                 ]
-              [ Icon.view ~class_:"size-4" Chevron_down ]
+              [ Icon.view Chevron_down ]
           ]
       in
       Node.div

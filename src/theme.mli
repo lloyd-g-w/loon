@@ -42,9 +42,34 @@ module Mode : sig
   val preferred : unit -> t
 end
 
+(** The colour of menus (dropdown, context, menubar, select, combobox
+    contents: the elements with the class [cn-menu-target]), as /create's
+    Menu option. *)
+module Menu_color : sig
+  type t =
+    | Default (** the theme's popover colours *)
+    | Inverted (** dark menus in light mode *)
+    | Default_translucent (** see-through, blurring what is behind *)
+    | Inverted_translucent
+  [@@deriving enumerate, sexp, compare, equal]
+
+  (** shadcn's name: ["inverted-translucent"]. *)
+  val name : t -> string
+
+  val of_name : string -> t option
+
+  (** The classes that apply it: [menu-inverted], [menu-translucent]. *)
+  val classes : t -> string list
+end
+
 (** The attributes of a themed subtree's root: the class [dark] in [Dark]
-    mode, and the style's class. *)
-val attrs : ?mode:Mode.t -> ?style:Style.t -> unit -> Attr.t list
+    mode, the style's class and the menu colour's. *)
+val attrs
+  :  ?mode:Mode.t
+  -> ?style:Style.t
+  -> ?menu_color:Menu_color.t
+  -> unit
+  -> Attr.t list
 
 (** A [div] with [attrs ?mode ?style ()]: the subtree is dark with [Dark],
     else its surroundings' mode (nothing undoes a [dark] ancestor), and in
@@ -55,5 +80,6 @@ val root
   :  ?attrs:Attr.t list
   -> ?mode:Mode.t
   -> ?style:Style.t
+  -> ?menu_color:Menu_color.t
   -> Node.t list
   -> Node.t

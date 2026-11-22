@@ -27,6 +27,7 @@ module Size : sig
   type t =
     | Default
     | Sm
+    | Xs
   [@@deriving enumerate, sexp_of, compare, equal]
 
   val name : t -> string

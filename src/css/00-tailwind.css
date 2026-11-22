@@ -4,4 +4,4 @@
    the build adds). */
 @import "tailwindcss" source(none);
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is(.dark *, .cn-menu-target:where(.menu-inverted *) *));

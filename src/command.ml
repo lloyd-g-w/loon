@@ -103,7 +103,7 @@ let shortcut ?(attrs = []) ?class_ children =
   Node.span
     ~attrs:
       ([ data "slot" "command-shortcut"
-       ; Cn.with_class ?class_ [ "ml-auto text-xs tracking-widest text-muted-foreground" ]
+       ; Cn.with_class ?class_ [ "cn-command-shortcut" ]
        ]
        @ attrs)
     children
@@ -265,11 +265,10 @@ let view
       | Input { attrs; class_; placeholder; disabled; auto_focus } ->
         Node.div
           ~attrs:
-            [ data "slot" "command-input-wrapper"
-            ; Attr.class_ "flex h-9 items-center gap-2 border-b px-3"
-            ]
-          [ Icon.view ~class_:"size-4 shrink-0 opacity-50" Search
-          ; Node.input
+            [ data "slot" "command-input-wrapper"; Attr.class_ "cn-command-input-wrapper" ]
+          [ Input_group.root
+              ~class_:"cn-command-input-group"
+              [ Node.input
               ~attrs:
                 ([ cmdk "input"
                  ; Attr.create "autocomplete" "off"
@@ -288,9 +287,8 @@ let view
                    ; data "slot" "command-input"
                    ; Cn.with_class
                        ?class_
-                       [ "flex h-10 w-full rounded-md bg-transparent py-3 text-sm \
-                          outline-hidden placeholder:text-muted-foreground \
-                          disabled:cursor-not-allowed disabled:opacity-50"
+                       [ "cn-command-input outline-hidden disabled:cursor-not-allowed \
+                          disabled:opacity-50"
                        ]
                    ; Attr.string_property "value" state.search
                    ; Attr.on_input (fun _ search -> on_change { State.search; value = None })
@@ -299,7 +297,9 @@ let view
                  @ (if disabled then [ Attr.disabled ] else [])
                  @ (if auto_focus then [ Focus.when_ true ] else [])
                  @ attrs)
-              ()
+                  ()
+              ; Input_group.addon [ Icon.view ~class_:"cn-command-input-icon" Search ]
+              ]
           ]
       | List { attrs; class_; parts } ->
         Node.div
@@ -312,7 +312,7 @@ let view
                ; data "slot" "command-list"
                ; Cn.with_class
                    ?class_
-                   [ "max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto" ]
+                   [ "cn-command-list overflow-x-hidden overflow-y-auto" ]
                ]
              @ attrs)
           [ Node.div ~attrs:[ cmdk "list-sizer" ] (render parts) ]
@@ -325,7 +325,7 @@ let view
               ([ cmdk "empty"
                ; Attr.role "presentation"
                ; data "slot" "command-empty"
-               ; Cn.with_class ?class_ [ "py-6 text-center text-sm" ]
+               ; Cn.with_class ?class_ [ "cn-command-empty" ]
                ]
                @ attrs)
             children
@@ -337,7 +337,7 @@ let view
               ([ cmdk "separator"
                ; Attr.role "separator"
                ; data "slot" "command-separator"
-               ; Cn.with_class ?class_ [ "-mx-1 h-px bg-border" ]
+               ; Cn.with_class ?class_ [ "cn-command-separator" ]
                ]
                @ attrs)
             []
@@ -358,10 +358,7 @@ let view
              @ [ data "slot" "command-group"
                ; Cn.with_class
                    ?class_:g.class_
-                   [ "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 \
-                      [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs \
-                      [&_[cmdk-group-heading]]:font-medium \
-                      [&_[cmdk-group-heading]]:text-muted-foreground"
+                   [ "cn-command-group"
                    ]
                ]
              @ g.attrs)
@@ -397,14 +394,10 @@ let view
                ; data "slot" "command-item"
                ; Cn.with_class
                    ?class_:item.class_
-                   [ "relative flex cursor-default items-center gap-2 rounded-sm px-2 \
-                      py-1.5 text-sm outline-hidden select-none \
+                   [ "cn-command-item group/command-item \
                       data-[disabled=true]:pointer-events-none \
-                      data-[disabled=true]:opacity-50 data-[selected=true]:bg-accent \
-                      data-[selected=true]:text-accent-foreground \
-                      [&_svg]:pointer-events-none [&_svg]:shrink-0 \
-                      [&_svg:not([class*='size-'])]:size-4 \
-                      [&_svg:not([class*='text-'])]:text-muted-foreground"
+                      data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none \
+                      [&_svg]:shrink-0"
                    ]
                ]
                @ (if item.disabled
@@ -417,7 +410,14 @@ let view
                     ; Attr.on_click (fun _ -> item.on_select)
                     ])
                @ item.attrs)
-            item.children))
+            (item.children
+             @ [ Icon.view
+                   ~class_:
+                     "cn-command-item-indicator ml-auto opacity-0 \
+                      group-has-data-[slot=command-shortcut]/command-item:hidden \
+                      group-data-[checked=true]/command-item:opacity-100"
+                   Check
+               ])))
   in
   Node.div
     ~attrs:
@@ -426,9 +426,7 @@ let view
        ; data "slot" "command"
        ; Cn.with_class
            ?class_
-           [ "flex h-full w-full flex-col overflow-hidden rounded-md bg-popover \
-              text-popover-foreground"
-           ]
+           [ "cn-command flex size-full flex-col overflow-hidden" ]
        ; Attr.on_keydown on_keydown
        ]
        @ attrs)
@@ -454,15 +452,6 @@ let component ?attrs ?class_ ?label ?should_filter ?filter ?loop parts (local_ g
     ~state
     ~on_change:set_state
     parts
-;;
-
-let dialog_command_class =
-  "**:data-[slot=command-input-wrapper]:h-12 [&_[cmdk-group-heading]]:px-2 \
-   [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground \
-   [&_[cmdk-group]]:px-2 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 \
-   [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 \
-   [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 \
-   [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5"
 ;;
 
 let dialog
@@ -493,11 +482,14 @@ let dialog
           ~class_:"sr-only"
           [ Dialog.title d [ Node.text title ]; Dialog.description d [ Node.text description ] ]
       ; Dialog.content
-          ~class_:(Cn.cn [ "overflow-hidden p-0"; Option.value class_ ~default:"" ])
-          ?show_close_button
+          ~class_:
+            (Cn.cn
+               [ "cn-command-dialog top-1/3 translate-y-0 overflow-hidden p-0"
+               ; Option.value class_ ~default:""
+               ])
+          ~show_close_button:(Option.value show_close_button ~default:false)
           d
           [ view
-              ~class_:dialog_command_class
               ~id:(id ^ "-command")
               ?label
               ?should_filter

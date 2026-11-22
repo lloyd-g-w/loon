@@ -14,9 +14,9 @@ module Variant = struct
   ;;
 
   let classes = function
-    | Default -> "bg-transparent"
-    | Outline -> "border-border"
-    | Muted -> "bg-muted/50"
+    | Default -> "cn-item-variant-default"
+    | Outline -> "cn-item-variant-outline"
+    | Muted -> "cn-item-variant-muted"
   ;;
 end
 
@@ -24,16 +24,19 @@ module Size = struct
   type t =
     | Default
     | Sm
+    | Xs
   [@@deriving enumerate, sexp_of, compare, equal]
 
   let name = function
     | Default -> "default"
     | Sm -> "sm"
+    | Xs -> "xs"
   ;;
 
   let classes = function
-    | Default -> "gap-4 p-4"
-    | Sm -> "gap-2.5 px-4 py-3"
+    | Default -> "cn-item-size-default"
+    | Sm -> "cn-item-size-sm"
+    | Xs -> "cn-item-size-xs"
   ;;
 end
 
@@ -51,17 +54,16 @@ module Media_variant = struct
   ;;
 
   let classes = function
-    | Default -> "bg-transparent"
-    | Icon -> "size-8 rounded-sm border bg-muted [&_svg:not([class*='size-'])]:size-4"
-    | Image -> "size-10 overflow-hidden rounded-sm [&_img]:size-full [&_img]:object-cover"
+    | Default -> "cn-item-media-variant-default"
+    | Icon -> "cn-item-media-variant-icon"
+    | Image -> "cn-item-media-variant-image"
   ;;
 end
 
 let base =
-  "group/item flex flex-wrap items-center rounded-md border border-transparent text-sm \
-   transition-colors duration-100 outline-none focus-visible:border-ring \
-   focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors \
-   [a]:hover:bg-accent/50"
+  "cn-item group/item flex w-full flex-wrap items-center transition-colors duration-100 \
+   outline-none focus-visible:border-ring focus-visible:ring-[3px] \
+   focus-visible:ring-ring/50 [a]:transition-colors"
 ;;
 
 let class_list ?(variant = Variant.Default) ?(size = Size.Default) ?class_ () =
@@ -97,7 +99,7 @@ let group ?(attrs = []) ?class_ children =
     ~attrs:
       ([ Attr.role "list"
        ; data "slot" "item-group"
-       ; Cn.with_class ?class_ [ "group/item-group flex flex-col" ]
+       ; Cn.with_class ?class_ [ "cn-item-group group/item-group flex w-full flex-col" ]
        ]
        @ attrs)
     children
@@ -112,10 +114,9 @@ let separator ?(attrs = []) ?class_ () =
        ; data "orientation" "horizontal"
        ; Cn.with_class
            ?class_
-           [ "shrink-0 bg-border data-[orientation=horizontal]:h-px \
-              data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full \
-              data-[orientation=vertical]:w-px"
-           ; "my-0"
+           [ "shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full \
+              data-vertical:w-px data-vertical:self-stretch"
+           ; "cn-item-separator"
            ]
        ]
        @ attrs)
@@ -129,9 +130,7 @@ let media ?(attrs = []) ?class_ ?(variant = Media_variant.Default) children =
        ; data "variant" (Media_variant.name variant)
        ; Cn.with_class
            ?class_
-           [ "flex shrink-0 items-center justify-center gap-2 \
-              group-has-[[data-slot=item-description]]/item:translate-y-0.5 \
-              group-has-[[data-slot=item-description]]/item:self-start \
+           [ "cn-item-media flex shrink-0 items-center justify-center \
               [&_svg]:pointer-events-none"
            ; Media_variant.classes variant
            ]
@@ -141,11 +140,12 @@ let media ?(attrs = []) ?class_ ?(variant = Media_variant.Default) children =
 ;;
 
 let content =
-  div "item-content" "flex flex-1 flex-col gap-1 [&+[data-slot=item-content]]:flex-none"
+  div "item-content" "cn-item-content flex flex-1 flex-col \
+                      [&+[data-slot=item-content]]:flex-none"
 ;;
 
 let title =
-  div "item-title" "flex w-fit items-center gap-2 text-sm leading-snug font-medium"
+  div "item-title" "cn-item-title line-clamp-1 flex w-fit items-center"
 ;;
 
 let description ?(attrs = []) ?class_ children =
@@ -154,8 +154,8 @@ let description ?(attrs = []) ?class_ children =
       ([ data "slot" "item-description"
        ; Cn.with_class
            ?class_
-           [ "line-clamp-2 text-sm leading-normal font-normal text-balance \
-              text-muted-foreground"
+           [ "cn-item-description line-clamp-2 font-normal [&>a]:underline \
+              [&>a]:underline-offset-4 [&>a:hover]:text-primary"
            ; "[&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary"
            ]
        ]
@@ -163,6 +163,6 @@ let description ?(attrs = []) ?class_ children =
     children
 ;;
 
-let actions = div "item-actions" "flex items-center gap-2"
-let header = div "item-header" "flex basis-full items-center justify-between gap-2"
-let footer = div "item-footer" "flex basis-full items-center justify-between gap-2"
+let actions = div "item-actions" "cn-item-actions flex items-center"
+let header = div "item-header" "cn-item-header flex basis-full items-center justify-between"
+let footer = div "item-footer" "cn-item-footer flex basis-full items-center justify-between"

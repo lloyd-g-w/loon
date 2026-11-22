@@ -9,6 +9,10 @@
 // here each is also an @scope, from an element with the class `style-<name>`
 // down to one with another style's class, so that the nearest style applies
 // when they nest. Vega, shadcn's default, applies from the root too.
+//
+// The translucent menus' rules (.cn-menu-translucent, which every menu's
+// content has) apply only under the class `menu-translucent` (Theme's
+// menu colour), as the site's provider adds the class only then.
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
@@ -27,7 +31,15 @@ for (const name of names) {
   const src = readFileSync(join(dir, `style-${name}.css`), "utf8");
   const open = `.style-${name} {`;
   if (!src.startsWith(open)) throw new Error(`style-${name}.css: no ${open}`);
-  const body = src.slice(open.length);
+  const body = src
+    .slice(open.length)
+    .replace(
+      /^(\s*)\.cn-menu-translucent(-aria)? \{/gm,
+      (_, indent, aria) =>
+        `${indent}.cn-menu-translucent${aria ?? ""}:where(.menu-translucent *) {`,
+    );
+  if (!body.includes(":where(.menu-translucent *)"))
+    throw new Error(`style-${name}.css: no .cn-menu-translucent`);
   const others = names.filter((n) => n !== name).map((n) => `.style-${n}`);
   const roots = name === "vega" ? `:root, .style-${name}` : `.style-${name}`;
   const css = `/* shadcn/ui's ${name[0].toUpperCase() + name.slice(1)} style (apps/v4/registry/styles/style-${name}.css),
