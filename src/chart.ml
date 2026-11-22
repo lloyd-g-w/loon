@@ -3760,7 +3760,18 @@ let container ?(attrs = []) ?class_ ?id ~config (chart : t) (spec : Spec.t) =
                  ; Css_gen.create ~field:"min-width" ~value:"0"
                  ])
           ]
-        [ Node.div
+        [ (* Recharts 3: a zero-size box, so that the chart does not size its
+             container. *)
+          Node.div
+            ~attrs:
+              [ Attr.style
+                  (Css_gen.concat
+                     [ Css_gen.create ~field:"width" ~value:"0"
+                     ; Css_gen.create ~field:"height" ~value:"0"
+                     ; Css_gen.create ~field:"overflow" ~value:"visible"
+                     ])
+              ]
+            [ Node.div
             ~attrs:
               [ Attr.classes [ "recharts-wrapper"; Kind.class_name spec.kind ]
               ; Attr.style
@@ -3795,6 +3806,7 @@ let container ?(attrs = []) ?class_ ?id ~config (chart : t) (spec : Spec.t) =
             ; legend_node
             ; tooltip_node
             ]
+          ]
         ]
     ]
 ;;
