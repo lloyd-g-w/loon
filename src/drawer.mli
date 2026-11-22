@@ -59,3 +59,21 @@ val description
   -> t
   -> Node.t list
   -> Node.t
+
+(** vaul's rules for dragging a bottom drawer (exposed for tests). *)
+module Drag_rules : sig
+  type release =
+    | Close
+    | Reset
+  [@@deriving sexp_of]
+
+  (** The panel's offset down and the overlay's opacity (unchanged when
+      [None]) for a pointer [dragged_up] pixels up from the press (negative:
+      down), the panel [height] tall. *)
+  val follow : height:float -> dragged_up:float -> float * float option
+
+  (** Letting go, the panel [swipe] down, the pointer [dragged_up] from the
+      press [ms] ago: closes it a quarter of its height down or flicked down
+      (faster than 0.4px/ms over the drag). *)
+  val release : height:float -> swipe:float -> dragged_up:float -> ms:float -> release
+end

@@ -96,7 +96,7 @@ let%expect_test "shadcn's classes, open from the bottom (with the handle)" =
              tabindex="-1"
              data-slot="drawer-content"
              data-vaul-drawer-direction="bottom"
-             class="cn-drawer-content data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:animate-in data-[state=open]:slide-in-from-bottom data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=bottom]:mt-24 data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 data-[vaul-drawer-direction=left]:sm:max-w-sm data-[vaul-drawer-direction=left]:w-3/4 data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:sm:max-w-sm data-[vaul-drawer-direction=right]:w-3/4 data-[vaul-drawer-direction=top]:inset-x-0 data-[vaul-drawer-direction=top]:max-h-[80vh] data-[vaul-drawer-direction=top]:mb-24 data-[vaul-drawer-direction=top]:top-0 duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] fixed group/drawer-content z-50"
+             class="[@media(hover:hover)_and_(pointer:fine)]:select-none cn-drawer-content data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:animate-in data-[state=open]:slide-in-from-bottom data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=bottom]:mt-24 data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 data-[vaul-drawer-direction=left]:sm:max-w-sm data-[vaul-drawer-direction=left]:w-3/4 data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:sm:max-w-sm data-[vaul-drawer-direction=right]:w-3/4 data-[vaul-drawer-direction=top]:inset-x-0 data-[vaul-drawer-direction=top]:max-h-[80vh] data-[vaul-drawer-direction=top]:mb-24 data-[vaul-drawer-direction=top]:top-0 duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] fixed group/drawer-content z-50"
              loon-dismiss=(()false true)
              loon-drawer-drag=<close>
              loon-focus-on-mount=Keep
@@ -322,4 +322,33 @@ let%expect_test "the trigger opens it; Escape, Cancel and the overlay close it" 
   Drive.click handle "[data-slot=drawer-overlay]";
   summary ();
   [%expect {| open: false |}]
+;;
+
+let%expect_test "dragging, as vaul's: down follows and fades the overlay; up is damped; \
+                 a quarter down or a flick closes" =
+  let height = 400. in
+  List.iter [ -60.; -100.; 0.; 5.; 80. ] ~f:(fun dragged_up ->
+    let y, opacity = Drawer.Drag_rules.follow ~height ~dragged_up in
+    print_s [%message (dragged_up : float) (y : float) (opacity : float option)]);
+  [%expect
+    {|
+    ((dragged_up -60) (y 60) (opacity (0.85)))
+    ((dragged_up -100) (y 100) (opacity (0.75)))
+    ((dragged_up 0) (y 0) (opacity (1)))
+    ((dragged_up 5) (y 0) (opacity ()))
+    ((dragged_up 80) (y -19.155593237379513) (opacity ()))
+    |}];
+  List.iter
+    [ 60., -60., 1000.; 100., -100., 1000.; 60., -60., 100.; -19., 80., 100. ]
+    ~f:(fun (swipe, dragged_up, ms) ->
+      let release = Drawer.Drag_rules.release ~height ~swipe ~dragged_up ~ms in
+      print_s
+        [%message
+          (swipe : float) (ms : float) (release : Drawer.Drag_rules.release)]);
+  [%expect {|
+    ((swipe 60) (ms 1000) (release Reset))
+    ((swipe 100) (ms 1000) (release Close))
+    ((swipe 60) (ms 100) (release Close))
+    ((swipe -19) (ms 100) (release Reset))
+    |}]
 ;;
