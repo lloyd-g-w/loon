@@ -7,7 +7,9 @@ classes, DOM, data attributes and Radix behaviour — as OCaml modules. Use
 them as a library, or copy them into your project with `loon add` and make
 them your own, as with shadcn.
 
-- **shadcn's look, exactly**: the new-york-v4 style, neutral theme, Lucide
+- **shadcn's look, exactly**: every shadcn style (Vega, the default, Nova,
+  Maia, Lyra, Mira, Luma, Sera, Rhea: `Theme.root ~style`, or `loon init
+  --style` to inline one into copied components), neutral theme, Lucide
   icons; styled by Tailwind v4 from the components' class strings.
 - **Radix's behaviour**: roles, ARIA, keyboard and focus as Radix
   Primitives do them.

@@ -8,10 +8,14 @@ their licences.
 
 The components' structure, Tailwind class strings, data attributes, theme
 variables and the documentation's examples are ported from shadcn/ui
-(https://github.com/shadcn-ui/ui, new-york-v4 style, at commit
-45bbf9b). `src/css/02-shadcn.css` is its
-`packages/shadcn/src/tailwind.css`; `src/css/03-theme.css` is the theme
-`shadcn init` writes.
+(https://github.com/shadcn-ui/ui, the Radix components of
+`apps/v4/registry/bases/radix`, at commit 45bbf9b). `src/css/02-shadcn.css`
+is its `packages/shadcn/src/tailwind.css`; `src/css/03-theme.css` is the
+theme `shadcn init` writes; `src/css/styles/*.css` are its styles (Vega,
+Nova, Maia, Lyra, Mira, Luma, Sera, Rhea:
+`apps/v4/registry/styles/style-*.css`, scoped by tools/gen-styles.mjs);
+`cli/registry/style.ml` ports its CLI's inlining of a style
+(`packages/shadcn/src/styles/transform-style-map.ts`).
 
 ```
 MIT License

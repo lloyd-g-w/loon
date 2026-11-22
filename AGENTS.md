@@ -1,12 +1,15 @@
-loon is a direct port of [shadcn/ui](https://ui.shadcn.com) (new-york-v4
-style, neutral base colour) to Bonsai_web on OxCaml: the same components,
+loon is a direct port of [shadcn/ui](https://ui.shadcn.com) (its Radix
+components, every style: Vega, Nova, Maia, Lyra, Mira, Luma, Sera, Rhea;
+neutral base colour) to Bonsai_web on OxCaml: the same components,
 with the same Tailwind classes, DOM, data attributes and behaviour, used as a
 library (`loon`) or copied into a project with `loon add`. Breaking changes
 are fine: match shadcn rather than keeping old loon APIs.
 
 The reference checkouts (read-only): `~/src/shadcn-ui` (components in
-`apps/v4/registry/new-york-v4/ui/*.tsx`, their examples in
-`.../new-york-v4/examples/*.tsx`, blocks and charts beside them). The
+`apps/v4/registry/bases/radix/ui/*.tsx`, blocks beside them, the styles in
+`apps/v4/registry/styles/style-*.css`, the docs' examples in
+`apps/v4/examples/radix/*.tsx`; `registry/new-york-v4` is the older,
+style-less registry, Vega inlined). The
 icons are lucide-react and @tabler/icons-react at shadcn's versions, pinned
 by `tools/icons.nix`. Radix's behaviour: https://www.radix-ui.com/primitives/docs.
 
@@ -15,7 +18,7 @@ by `tools/icons.nix`. Radix's behaviour: https://www.radix-ui.com/primitives/doc
 | Path | What |
 |---|---|
 | `src/` | the `loon` library: one module per component (`button.ml`/`.mli`) |
-| `src/css/` | Tailwind's input, concatenated in name order: `00-tailwind.css` (`@import "tailwindcss"`), `01-tw-animate.css`, `02-shadcn.css` (shadcn's variants and keyframes), `03-theme.css` (shadcn's neutral theme, `@theme inline`, base layer); then `<component>.css`, only for a component whose shadcn original ships a stylesheet (`sonner.css`, Sonner's own). The CLI gives the `00`–`03` files to `loon init` and a component's file to `loon add` |
+| `src/css/` | Tailwind's input, concatenated in name order: `00-tailwind.css` (`@import "tailwindcss"`), `01-tw-animate.css`, `02-shadcn.css` (shadcn's variants and keyframes), `03-theme.css` (shadcn's neutral theme, `@theme inline`, base layer); then `<component>.css`, only for a component whose shadcn original ships a stylesheet (`sonner.css`, Sonner's own); then `styles/<style>.css`, shadcn's styles (`tools/gen-styles.mjs` writes them from shadcn's, each `@scope`d to `.style-<name>`, Vega also to `:root`). The CLI gives the `00`–`03` files to `loon init` and a component's file to `loon add`, with the style's classes inlined in place of the `cn-*` hooks (`cli/registry/style.ml`) |
 | `src/loon.css` (built) | `tailwindcss` over that input, scanning `src/*.ml` for class names; installed, and embedded as `Loon.Stylesheet.css` (`src/embedded/`) |
 | `tools/` | `nix run .#gen-icons` (`gen-icons.mjs`, `icons.nix`) writes `src/icon.ml(i)` from lucide-react and `src/tabler.ml(i)` from @tabler/icons-react, pinned at shadcn's versions (`tools/icons.txt`, `tools/tabler-icons.txt`: the icons included) |
 | `test/` | expect tests, run under node: `test_<component>.ml` |
@@ -49,8 +52,11 @@ by `tools/icons.nix`. Radix's behaviour: https://www.radix-ui.com/primitives/doc
 Read `ui/<name>.tsx` and the Radix primitive it wraps, then write
 `src/<name>.ml`/`.mli`:
 
-- **Class strings verbatim.** Copy every `className`/`cva` string exactly,
-  as complete string literals in the `.ml`, so Tailwind's scanner sees them.
+- **Class strings verbatim.** Copy every `className`/`cva` string of the
+  base (`bases/radix/ui`) exactly, `cn-*` hooks included (`cn-button
+  cn-button-variant-outline`: the styles' CSS gives them their look), as
+  complete string literals in the `.ml`, so Tailwind's scanner and the
+  CLI's style inlining see them.
   Never build a class name from pieces (`"size-" ^ n`): Tailwind would not
   generate it. A `cva` becomes a function from variant types to literal
   strings (see `Button.classes`).
