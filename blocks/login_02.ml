@@ -57,6 +57,7 @@ let login_form ?(class_ = "") () =
                 ~type_:Email
                 ~placeholder:"m@example.com"
                 ~required:true
+                ~class_:"bg-background"
                 ()
             ]
         ; Field.root
@@ -71,7 +72,12 @@ let login_form ?(class_ = "") () =
                       ]
                     [ Node.text "Forgot your password?" ]
                 ]
-            ; Input.view ~id:"password" ~type_:Password ~required:true ()
+            ; Input.view
+                ~id:"password"
+                ~type_:Password
+                ~required:true
+                ~class_:"bg-background"
+                ()
             ]
         ; Field.root [ Button.view ~type_:`Submit [ Node.text "Login" ] ]
         ; Field.separator [ Node.text "Or continue with" ]

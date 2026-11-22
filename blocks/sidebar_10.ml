@@ -274,6 +274,7 @@ let nav_favorites ~sidebar (local_ graph) =
                         menu
                         (Sidebar.menu_action
                            ~show_on_hover:true
+                           ~class_:"aria-expanded:bg-muted"
                            [ Icon.view Ellipsis
                            ; Node.span
                                ~attrs:[ Attr.class_ "sr-only" ]
@@ -490,7 +491,7 @@ let view (local_ graph) =
                 [ Sidebar.trigger sidebar
                 ; Separator.view
                     ~orientation:Vertical
-                    ~class_:"mr-2 data-[orientation=vertical]:h-4"
+                    ~class_:"mr-2 data-vertical:h-4 data-vertical:self-auto"
                     ()
                 ; Breadcrumb.root
                     [ Breadcrumb.list

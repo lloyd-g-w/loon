@@ -112,7 +112,7 @@ let view (local_ graph) =
             ; Node.div
                 ~attrs:
                   [ Attr.class_
-                      "min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min"
+                      "min-h-screen flex-1 rounded-xl bg-muted/50 md:min-h-min"
                   ]
                 []
             ]

@@ -57,6 +57,7 @@ let signup_form ?(class_ = "") () =
                 ~type_:Text
                 ~placeholder:"John Doe"
                 ~required:true
+                ~class_:"bg-background"
                 ()
             ]
         ; Field.root
@@ -66,6 +67,7 @@ let signup_form ?(class_ = "") () =
                 ~type_:Email
                 ~placeholder:"m@example.com"
                 ~required:true
+                ~class_:"bg-background"
                 ()
             ; Field.description
                 [ Node.text
@@ -75,7 +77,12 @@ let signup_form ?(class_ = "") () =
             ]
         ; Field.root
             [ Field.label ~for_:"password" [ Node.text "Password" ]
-            ; Input.view ~id:"password" ~type_:Password ~required:true ()
+            ; Input.view
+                ~id:"password"
+                ~type_:Password
+                ~required:true
+                ~class_:"bg-background"
+                ()
             ; Field.description
                 [ Node.text "Must be at least 8 characters long." ]
             ]
@@ -87,6 +94,7 @@ let signup_form ?(class_ = "") () =
                 ~id:"confirm-password"
                 ~type_:Password
                 ~required:true
+                ~class_:"bg-background"
                 ()
             ; Field.description [ Node.text "Please confirm your password." ]
             ]

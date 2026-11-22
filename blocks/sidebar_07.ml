@@ -145,6 +145,7 @@ let nav_project ~sidebar (item : Project.t) (local_ graph) =
              menu
              (Sidebar.menu_action
                 ~show_on_hover:true
+                ~class_:"aria-expanded:bg-muted"
                 [ Icon.view Ellipsis
                 ; Node.span
                     ~attrs:[ Attr.class_ "sr-only" ]
@@ -152,7 +153,7 @@ let nav_project ~sidebar (item : Project.t) (local_ graph) =
                 ])
          ; Dropdown_menu.content
              menu
-             ~class_:"w-48 rounded-lg"
+             ~class_:"w-fit"
              ~side:(if is_mobile then Bottom else Right)
              ~align:(if is_mobile then End else Start)
              [ Dropdown_menu.item
@@ -245,7 +246,7 @@ let nav_user ~sidebar ~(user : User.t) (local_ graph) =
          ; Dropdown_menu.content
              menu
              ~class_:
-               "w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+               "w-fit"
              ~side:(if Sidebar.is_mobile sidebar then Bottom else Right)
              ~align:End
              ~side_offset:4.
@@ -321,7 +322,7 @@ let team_switcher ~sidebar ~teams (local_ graph) =
          ; Dropdown_menu.content
              menu
              ~class_:
-               "w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+               "w-fit"
              ~align:Start
              ~side:(if Sidebar.is_mobile sidebar then Bottom else Right)
              ~side_offset:4.
@@ -407,7 +408,7 @@ let view (local_ graph) =
                 [ Sidebar.trigger ~class_:"-ml-1" sidebar
                 ; Separator.view
                     ~orientation:Vertical
-                    ~class_:"mr-2 data-[orientation=vertical]:h-4"
+                    ~class_:"mr-2 data-vertical:h-4 data-vertical:self-auto"
                     ()
                 ; Breadcrumb.root
                     [ Breadcrumb.list
@@ -442,7 +443,7 @@ let view (local_ graph) =
             ; Node.div
                 ~attrs:
                   [ Attr.class_
-                      "min-h-[100vh] flex-1 rounded-xl bg-muted/50 \
+                      "min-h-screen flex-1 rounded-xl bg-muted/50 \
                        md:min-h-min"
                   ]
                 []

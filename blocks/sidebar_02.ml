@@ -205,7 +205,7 @@ let view (local_ graph) =
             [ Sidebar.trigger ~class_:"-ml-1" sidebar
             ; Separator.view
                 ~orientation:Vertical
-                ~class_:"mr-2 h-4"
+                ~class_:"mr-2 data-vertical:h-4 data-vertical:self-auto"
                 ()
             ; Breadcrumb.root
                 [ Breadcrumb.list

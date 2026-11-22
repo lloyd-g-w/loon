@@ -111,7 +111,10 @@ let view (local_ graph) =
             [ Node.div
                 ~attrs:[ Attr.class_ "flex items-center gap-2 px-3" ]
                 [ Sidebar.trigger sidebar
-                ; Separator.view ~orientation:Vertical ~class_:"mr-2 h-4" ()
+                ; Separator.view
+                    ~orientation:Vertical
+                    ~class_:"mr-2 data-vertical:h-4 data-vertical:self-auto"
+                    ()
                 ; Breadcrumb.root
                     [ Breadcrumb.list
                         [ Breadcrumb.item
@@ -138,7 +141,7 @@ let view (local_ graph) =
             ; Node.div
                 ~attrs:
                   [ Attr.class_
-                      "min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min"
+                      "min-h-screen flex-1 rounded-xl bg-muted/50 md:min-h-min"
                   ]
                 []
             ]

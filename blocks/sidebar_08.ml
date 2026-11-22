@@ -152,6 +152,7 @@ let nav_project ~sidebar (item : Project.t) (local_ graph) =
              menu
              (Sidebar.menu_action
                 ~show_on_hover:true
+                ~class_:"aria-expanded:bg-muted"
                 [ Icon.view Ellipsis
                 ; Node.span
                     ~attrs:[ Attr.class_ "sr-only" ]
@@ -368,7 +369,7 @@ let view (local_ graph) =
                 [ Sidebar.trigger ~class_:"-ml-1" sidebar
                 ; Separator.view
                     ~orientation:Vertical
-                    ~class_:"mr-2 data-[orientation=vertical]:h-4"
+                    ~class_:"mr-2 data-vertical:h-4 data-vertical:self-auto"
                     ()
                 ; Breadcrumb.root
                     [ Breadcrumb.list
@@ -403,7 +404,7 @@ let view (local_ graph) =
             ; Node.div
                 ~attrs:
                   [ Attr.class_
-                      "min-h-[100vh] flex-1 rounded-xl bg-muted/50 \
+                      "min-h-screen flex-1 rounded-xl bg-muted/50 \
                        md:min-h-min"
                   ]
                 []

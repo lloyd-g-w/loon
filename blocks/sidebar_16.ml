@@ -146,6 +146,7 @@ let nav_projects ~sidebar (local_ graph) =
                         menu
                         (Sidebar.menu_action
                            ~show_on_hover:true
+                           ~class_:"aria-expanded:bg-muted"
                            [ Icon.view Ellipsis
                            ; Node.span
                                ~attrs:[ Attr.class_ "sr-only" ]
@@ -318,7 +319,10 @@ let site_header ~sidebar (local_ graph) =
             ~size:Icon
             ~on_click:(Sidebar.toggle sidebar)
             [ Icon.view Panel_left ]
-        ; Separator.view ~orientation:Vertical ~class_:"mr-2 h-4" ()
+        ; Separator.view
+            ~orientation:Vertical
+            ~class_:"mr-2 data-vertical:h-4 data-vertical:self-auto"
+            ()
         ; Breadcrumb.root
             ~class_:"hidden sm:block"
             [ Breadcrumb.list
@@ -415,7 +419,7 @@ let view (local_ graph) =
                     ; Node.div
                         ~attrs:
                           [ Attr.class_
-                              "min-h-[100vh] flex-1 rounded-xl bg-muted/50 \
+                              "min-h-screen flex-1 rounded-xl bg-muted/50 \
                                md:min-h-min"
                           ]
                         []

@@ -276,6 +276,7 @@ let nav_favorites ~sidebar (local_ graph) =
                         menu
                         (Sidebar.menu_action
                            ~show_on_hover:true
+                           ~class_:"aria-expanded:bg-muted"
                            [ Icon.view Ellipsis
                            ; Node.span
                                ~attrs:[ Attr.class_ "sr-only" ]
@@ -480,10 +481,7 @@ let nav_user ~sidebar ~(user : User.t) (local_ graph) =
 let date_picker (local_ graph) =
   let calendar =
     Calendar.component
-      ~class_:
-        "[&_[role=gridcell]]:w-[33px] \
-         [&_[role=gridcell].bg-accent]:bg-sidebar-primary \
-         [&_[role=gridcell].bg-accent]:text-sidebar-primary-foreground"
+      ~class_:"bg-transparent [--cell-size:2.1rem]"
       ~default:(Single None)
       graph
   in
@@ -500,7 +498,6 @@ let calendars_view (local_ graph) =
   Node.fragment
     (List.concat_mapi calendars ~f:(fun index (name, items) ->
        [ Sidebar.group
-           ~class_:"py-0"
            [ Collapsible.view
                ~id:(sprintf "calendars-%d" index)
                ~class_:"group/collapsible"
@@ -629,7 +626,7 @@ let view (local_ graph) =
                 [ Sidebar.trigger sidebar
                 ; Separator.view
                     ~orientation:Vertical
-                    ~class_:"mr-2 data-[orientation=vertical]:h-4"
+                    ~class_:"mr-2 data-vertical:h-4 data-vertical:self-auto"
                     ()
                 ; Breadcrumb.root
                     [ Breadcrumb.list
@@ -653,7 +650,7 @@ let view (local_ graph) =
             ; Node.div
                 ~attrs:
                   [ Attr.class_
-                      "mx-auto h-[100vh] w-full max-w-3xl rounded-xl bg-muted/50"
+                      "mx-auto h-screen w-full max-w-3xl rounded-xl bg-muted/50"
                   ]
                 []
             ]
