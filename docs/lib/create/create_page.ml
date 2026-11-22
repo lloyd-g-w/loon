@@ -1122,7 +1122,7 @@ let preview graph ~(env : Env.t Bonsai.t) ~(shown : Create_preset.t Bonsai.t) =
         ; Node.div
             ~attrs:
               (Attr.class_
-                 "relative z-10 size-full flex-1 overflow-auto bg-background \
+                 "relative z-10 size-full flex-1 overflow-auto bg-background font-sans \
                   text-foreground"
                :: Create_preview_style.attrs ~mode:env.mode shown)
             [ block ]
