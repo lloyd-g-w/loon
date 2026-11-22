@@ -459,6 +459,7 @@ val bar
   -> ?active_bar:(Rectangle_props.t -> Node.t)
   -> ?shape:(Rectangle_props.t -> Node.t)
   -> ?bar_size:float
+  -> ?max_bar_size:float
   -> ?name:string
   -> ?layout:Layout.t
   -> ?children:child list

@@ -67,7 +67,7 @@ let contribution_history (info : Info.t Bonsai.t) (local_ graph) =
                    ~data_key:"amount"
                    ~fill:"var(--color-amount)"
                    ~radius:(Info.bar_radius info 6.)
-                   ~bar_size:40.
+                   ~max_bar_size:40.
                    ()
                ])
         ]

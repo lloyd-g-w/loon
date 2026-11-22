@@ -852,6 +852,7 @@ type series_kind =
       ; active_bar : (Rectangle_props.t -> Node.t) option
       ; shape : (Rectangle_props.t -> Node.t) option
       ; bar_size : float option
+      ; max_bar_size : float option
       }
   | Line of
       { curve : Curve.t
@@ -1177,6 +1178,7 @@ let bar
       ?active_bar
       ?shape
       ?bar_size
+      ?max_bar_size
       ?name
       ?layout
       ?children
@@ -1189,7 +1191,7 @@ let bar
       | `Corners c -> `Corners c)
   in
   series
-    ~kind:(Bar { radius; active_index; active_bar; shape; bar_size })
+    ~kind:(Bar { radius; active_index; active_bar; shape; bar_size; max_bar_size })
     ~data_key
     ?name
     ?fill
@@ -1835,7 +1837,13 @@ let format_tick (axis : axis) s =
   | None -> s
 ;;
 
-let bar_positions ~bar_gap ~bar_category_gap ~band_size (sizes : float option list) =
+let bar_positions
+      ?max_bar_size
+      ~bar_gap
+      ~bar_category_gap
+      ~band_size
+      (sizes : float option list)
+  =
   let len = List.length sizes in
   if len = 0
   then []
@@ -1875,8 +1883,12 @@ let bar_positions ~bar_gap ~bar_category_gap ~band_size (sizes : float option li
       let original =
         if Float.(original > 1.) then Float.of_int (Float.to_int original) else original
       in
+      let size =
+        Option.value_map max_bar_size ~default:original ~f:(Float.min original)
+      in
       List.mapi sizes ~f:(fun i _ ->
-        offset +. ((original +. !real_gap) *. Float.of_int i), original))
+        ( offset +. ((original +. !real_gap) *. Float.of_int i) +. ((original -. size) /. 2.)
+        , size )))
 ;;
 
 let color_of_series (s : series) =
@@ -2139,6 +2151,11 @@ let render_cartesian (ctx : render_ctx) : rendered =
   in
   let positions =
     bar_positions
+      ?max_bar_size:
+        (List.find_map bar_series ~f:(fun s ->
+           match s.kind with
+           | Bar b -> b.max_bar_size
+           | _ -> None))
       ~bar_gap:spec.bar_gap
       ~bar_category_gap:spec.bar_category_gap
       ~band_size:bandwidth
@@ -2298,7 +2315,7 @@ let render_cartesian (ctx : render_ctx) : rendered =
          ]
          @ (add_labels (point_labels ~default_position:Top);
             []))
-    | Bar { radius; active_index = bar_active; active_bar; shape; bar_size = _ } ->
+    | Bar { radius; active_index = bar_active; active_bar; shape; bar_size = _; max_bar_size = _ } ->
       let fill = Option.value s.fill ~default:"#808080" in
       let cells = Array.of_list (cells s.s_children) in
       (match bar_position s with
