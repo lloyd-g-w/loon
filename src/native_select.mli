@@ -21,9 +21,10 @@ module Size : sig
   val name : t -> string
 end
 
-(** The [<select>] in its wrapper. With [value] it is controlled (the
-    option of that value is selected; give [on_change] too); without, the
-    browser keeps the choice. *)
+(** The [<select>] in its wrapper ([class_] styles the wrapper, [attrs] go
+    on the select, as shadcn's). With [value] it is controlled (the option
+    of that value is selected; give [on_change] too); without, the browser
+    keeps the choice. *)
 val view
   :  ?attrs:Attr.t list
   -> ?class_:string

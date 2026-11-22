@@ -17,20 +17,6 @@ module Side = struct
     | Left -> "left"
   ;;
 
-  let classes = function
-    | Right ->
-      "inset-y-0 right-0 h-full w-3/4 border-l data-[state=closed]:slide-out-to-right \
-       data-[state=open]:slide-in-from-right sm:max-w-sm"
-    | Left ->
-      "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left \
-       data-[state=open]:slide-in-from-left sm:max-w-sm"
-    | Top ->
-      "inset-x-0 top-0 h-auto border-b data-[state=closed]:slide-out-to-top \
-       data-[state=open]:slide-in-from-top"
-    | Bottom ->
-      "inset-x-0 bottom-0 h-auto border-t data-[state=closed]:slide-out-to-bottom \
-       data-[state=open]:slide-in-from-bottom"
-  ;;
 end
 
 let view ?id ~open_ ~on_open_change f = Modal.view ?id ~open_ ~on_open_change f
@@ -44,24 +30,31 @@ let overlay_class =
 ;;
 
 let content_class =
-  "fixed z-50 flex flex-col gap-4 bg-background shadow-lg transition ease-in-out \
-   data-[state=closed]:animate-out data-[state=closed]:duration-300 \
-   data-[state=open]:animate-in data-[state=open]:duration-500"
+  "cn-sheet-content data-open:animate-in data-open:fade-in-0 \
+   data-[side=bottom]:data-open:slide-in-from-bottom-10 \
+   data-[side=left]:data-open:slide-in-from-left-10 \
+   data-[side=right]:data-open:slide-in-from-right-10 \
+   data-[side=top]:data-open:slide-in-from-top-10 data-closed:animate-out \
+   data-closed:fade-out-0 data-[side=bottom]:data-closed:slide-out-to-bottom-10 \
+   data-[side=left]:data-closed:slide-out-to-left-10 \
+   data-[side=right]:data-closed:slide-out-to-right-10 \
+   data-[side=top]:data-closed:slide-out-to-top-10"
 ;;
 
-let close_class =
-  "absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background \
-   transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring \
-   focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none \
-   data-[state=open]:bg-secondary"
-;;
-
-let content ?(attrs = []) ?class_ ?(side = Side.Right) ?(show_close_button = true) (t : t) children =
+let content
+  ?(attrs = [])
+  ?class_
+  ?(side = Side.Right)
+  ?(show_close_button = true)
+  (t : t)
+  children
+  =
   Modal.content
     ~overlay:(Modal.overlay ~slot:"sheet-overlay" ~class_:overlay_class t)
     ~content_attrs:
       ([ data "slot" "sheet-content"
-       ; Cn.with_class ?class_ [ content_class; Side.classes side ]
+       ; data "side" (Side.name side)
+       ; Cn.with_class ?class_ [ content_class ]
        ]
        @ attrs)
     t
@@ -69,15 +62,13 @@ let content ?(attrs = []) ?class_ ?(side = Side.Right) ?(show_close_button = tru
      @
      if show_close_button
      then
-       [ Node.button
-           ~attrs:
-             [ Attr.type_ "button"
-             ; Attr.class_ close_class
-             ; Attr.on_click (fun _ -> t.on_open_change false)
-             ]
-           [ Icon.view ~class_:"size-4" X
-           ; Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "Close" ]
-           ]
+       [ close
+           t
+           (Button.view
+              ~variant:Ghost
+              ~size:Icon_sm
+              ~class_:"cn-sheet-close"
+              [ Icon.view X; Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "Close" ] ])
        ]
      else [])
 ;;
@@ -85,8 +76,7 @@ let content ?(attrs = []) ?class_ ?(side = Side.Right) ?(show_close_button = tru
 let header ?(attrs = []) ?class_ children =
   Node.div
     ~attrs:
-      ([ data "slot" "sheet-header"; Cn.with_class ?class_ [ "cn-sheet-header flex \
-                                                              flex-col" ] ]
+      ([ data "slot" "sheet-header"; Cn.with_class ?class_ [ "cn-sheet-header flex flex-col" ] ]
        @ attrs)
     children
 ;;
@@ -94,8 +84,9 @@ let header ?(attrs = []) ?class_ children =
 let footer ?(attrs = []) ?class_ children =
   Node.div
     ~attrs:
-      ([ data "slot" "sheet-footer"; Cn.with_class ?class_ [ "cn-sheet-footer mt-auto \
-                                                              flex flex-col" ] ]
+      ([ data "slot" "sheet-footer"
+       ; Cn.with_class ?class_ [ "cn-sheet-footer mt-auto flex flex-col" ]
+       ]
        @ attrs)
     children
 ;;

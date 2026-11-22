@@ -242,8 +242,7 @@ let view
            [ Node.input
                ~attrs:
                  ([ Attr.create "autocomplete" "one-time-code"
-                  ; Cn.with_class ?class_ [ "cn-input-otp-input \
-                                             disabled:cursor-not-allowed" ]
+                  ; Cn.with_class ?class_ [ "cn-input-otp-input disabled:cursor-not-allowed" ]
                   ; data "input-otp" "true"
                   ; Attr.create
                       "inputmode"
@@ -336,8 +335,9 @@ let component
 let group ?(attrs = []) ?class_ children =
   Node.div
     ~attrs:
-      ([ data "slot" "input-otp-group"; Cn.with_class ?class_ [ "cn-input-otp-group flex \
-                                                                 items-center" ] ]
+      ([ data "slot" "input-otp-group"
+       ; Cn.with_class ?class_ [ "cn-input-otp-group flex items-center" ]
+       ]
        @ attrs)
     children
 ;;
@@ -372,16 +372,18 @@ let slot ?(attrs = []) ?class_ t ~index =
                  "cn-input-otp-caret pointer-events-none absolute inset-0 flex \
                   items-center justify-center"
              ]
-           [ Node.div
-               ~attrs:[ Attr.class_ "cn-input-otp-caret-line" ]
-               []
-           ]
+           [ Node.div ~attrs:[ Attr.class_ "cn-input-otp-caret-line" ] [] ]
        ]
      else [])
 ;;
 
 let separator ?(attrs = []) () =
   Node.div
-    ~attrs:([ data "slot" "input-otp-separator"; Attr.role "separator" ] @ attrs)
+    ~attrs:
+      ([ data "slot" "input-otp-separator"
+       ; Attr.class_ "cn-input-otp-separator flex items-center"
+       ; Attr.role "separator"
+       ]
+       @ attrs)
     [ Icon.view Minus ]
 ;;

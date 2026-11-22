@@ -7,41 +7,31 @@ let component = Modal.component
 let trigger ?attrs t node = Modal.trigger ~slot:"dialog-trigger" ?attrs t node
 let close ?attrs t node = Modal.close ~slot:"dialog-close" ?attrs t node
 
-let overlay_class =
-  "cn-dialog-overlay fixed inset-0 isolate z-50"
-;;
+let overlay_class = "cn-dialog-overlay fixed inset-0 isolate z-50"
 
 let content_class =
-  "cn-dialog-content fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 \
-   outline-none"
-;;
-
-let close_class =
-  "absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background \
-   transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring \
-   focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none \
-   data-[state=open]:bg-accent data-[state=open]:text-muted-foreground \
-   [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+  "cn-dialog-content fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 \
+   -translate-y-1/2 outline-none"
 ;;
 
 let content ?(attrs = []) ?class_ ?(show_close_button = true) ?initial_focus t children =
   Modal.content
     ?initial_focus
     ~overlay:(Modal.overlay ~slot:"dialog-overlay" ~class_:overlay_class t)
-    ~content_attrs:([ data "slot" "dialog-content"; Cn.with_class ?class_ [ content_class ] ] @ attrs)
+    ~content_attrs:
+      ([ data "slot" "dialog-content"; Cn.with_class ?class_ [ content_class ] ] @ attrs)
     t
     (children
      @
      if show_close_button
      then
-       [ Node.button
-           ~attrs:
-             [ Attr.type_ "button"
-             ; data "slot" "dialog-close"
-             ; Attr.class_ close_class
-             ; Attr.on_click (fun _ -> t.on_open_change false)
-             ]
-           [ Icon.view X; Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "Close" ] ]
+       [ close
+           t
+           (Button.view
+              ~variant:Ghost
+              ~size:Icon_sm
+              ~class_:"cn-dialog-close"
+              [ Icon.view X; Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "Close" ] ])
        ]
      else [])
 ;;
@@ -60,8 +50,9 @@ let footer ?(attrs = []) ?class_ ?show_close_button children =
   Node.div
     ~attrs:
       ([ data "slot" "dialog-footer"
-       ; Cn.with_class ?class_ [ "cn-dialog-footer flex flex-col-reverse gap-2 \
-                                  sm:flex-row sm:justify-end" ]
+       ; Cn.with_class
+           ?class_
+           [ "cn-dialog-footer flex flex-col-reverse gap-2 sm:flex-row sm:justify-end" ]
        ]
        @ attrs)
     (children

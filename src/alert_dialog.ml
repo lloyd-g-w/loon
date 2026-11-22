@@ -18,9 +18,7 @@ let view ?id ~open_ ~on_open_change f = Modal.view ?id ~open_ ~on_open_change f
 let component = Modal.component
 let trigger ?attrs t node = Modal.trigger ~slot:"alert-dialog-trigger" ?attrs t node
 
-let overlay_class =
-  "cn-alert-dialog-overlay fixed inset-0 z-50"
-;;
+let overlay_class = "cn-alert-dialog-overlay fixed inset-0 z-50"
 
 let content_class =
   "cn-alert-dialog-content group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid \
@@ -47,10 +45,7 @@ let header ?(attrs = []) ?class_ children =
   Node.div
     ~attrs:
       ([ data "slot" "alert-dialog-header"
-       ; Cn.with_class
-           ?class_
-           [ "cn-alert-dialog-header"
-           ]
+       ; Cn.with_class ?class_ [ "cn-alert-dialog-header" ]
        ]
        @ attrs)
     children
@@ -75,11 +70,7 @@ let footer ?(attrs = []) ?class_ children =
 let title ?attrs ?class_ t children =
   Modal.title
     ~slot:"alert-dialog-title"
-    ~class_:
-      (Cn.cn
-         [ "cn-alert-dialog-title cn-font-heading"
-         ; Option.value class_ ~default:""
-         ])
+    ~class_:(Cn.cn [ "cn-alert-dialog-title cn-font-heading"; Option.value class_ ~default:"" ])
     ?attrs
     t
     children
@@ -88,7 +79,7 @@ let title ?attrs ?class_ t children =
 let description ?attrs ?class_ t children =
   Modal.description
     ~slot:"alert-dialog-description"
-    ~class_:(Cn.cn [ "text-sm text-muted-foreground"; Option.value class_ ~default:"" ])
+    ~class_:(Cn.cn [ "cn-alert-dialog-description"; Option.value class_ ~default:"" ])
     ?attrs
     t
     children
@@ -98,12 +89,7 @@ let media ?(attrs = []) ?class_ children =
   Node.div
     ~attrs:
       ([ data "slot" "alert-dialog-media"
-       ; Cn.with_class
-           ?class_
-           [ "mb-2 inline-flex size-16 items-center justify-center rounded-md bg-muted \
-              sm:group-data-[size=default]/alert-dialog-content:row-span-2 \
-              *:[svg:not([class*='size-'])]:size-8"
-           ]
+       ; Cn.with_class ?class_ [ "cn-alert-dialog-media" ]
        ]
        @ attrs)
     children
@@ -111,14 +97,23 @@ let media ?(attrs = []) ?class_ children =
 
 (* shadcn's [<Button asChild><AlertDialogPrimitive.Action>]: the button's
    classes and data attributes, the action's slot. *)
-let button ~slot ?(attrs = []) ?class_ ?(variant = Button.Variant.Default) ?(size = Button.Size.Default) ~on_click children =
+let button
+  ~slot
+  ~hook
+  ?(attrs = [])
+  ?class_
+  ?(variant = Button.Variant.Default)
+  ?(size = Button.Size.Default)
+  ~on_click
+  children
+  =
   Node.button
     ~attrs:
       ([ Attr.type_ "button"
        ; data "slot" slot
        ; data "variant" (Button.Variant.name variant)
        ; data "size" (Button.Size.name size)
-       ; Attr.class_ (Button.classes ~variant ~size ?class_ ())
+       ; Attr.class_ (Button.classes ~variant ~size ~class_:(Cn.cn (hook :: Option.to_list class_)) ())
        ; Attr.on_click (fun _ -> on_click)
        ]
        @ attrs)
@@ -128,6 +123,7 @@ let button ~slot ?(attrs = []) ?class_ ?(variant = Button.Variant.Default) ?(siz
 let action ?attrs ?class_ ?variant ?size ?on_click (t : t) children =
   button
     ~slot:"alert-dialog-action"
+    ~hook:"cn-alert-dialog-action"
     ?attrs
     ?class_
     ?variant
@@ -139,6 +135,7 @@ let action ?attrs ?class_ ?variant ?size ?on_click (t : t) children =
 let cancel ?attrs ?class_ ?(variant = Button.Variant.Outline) ?size (t : t) children =
   button
     ~slot:"alert-dialog-cancel"
+    ~hook:"cn-alert-dialog-cancel"
     ?attrs
     ?class_
     ~variant

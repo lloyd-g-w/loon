@@ -36,14 +36,19 @@ module Presence = struct
       (Js.string "none")
       Js.undefined
     |> ignore;
+    let names = "collapsible" :: (if accordion then [ "accordion" ] else []) in
+    (* The variables off while measuring: a child sized by them (the
+       accordion content's inner div) would keep their old value. *)
+    List.iter names ~f:(fun name ->
+      List.iter [ "height"; "width" ] ~f:(fun dim ->
+        el##.style##removeProperty (Js.string ("--radix-" ^ name ^ "-content-" ^ dim))
+        |> ignore));
     let rect = el##getBoundingClientRect in
     let px f = Js.string (sprintf "%gpx" (Js.to_float f)) in
     let set name value =
       el##.style##setProperty (Js.string name) value Js.undefined |> ignore
     in
-    List.iter
-      ("collapsible" :: (if accordion then [ "accordion" ] else []))
-      ~f:(fun name ->
+    List.iter names ~f:(fun name ->
         set ("--radix-" ^ name ^ "-content-height") (px rect##.height);
         set ("--radix-" ^ name ^ "-content-width") (px rect##.width))
   ;;

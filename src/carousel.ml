@@ -545,7 +545,7 @@ let previous
       ?(attrs = [])
       ?class_
       ?(variant = Button.Variant.Outline)
-      ?(size = Button.Size.Icon)
+      ?(size = Button.Size.Icon_sm)
       t
   =
   button
@@ -563,7 +563,7 @@ let previous
          ])
     ~disabled:(not (can_scroll_prev t))
     ~on_click:(scroll_prev t)
-    [ Icon.view Arrow_left
+    [ Icon.view ~class_:"cn-rtl-flip" Chevron_left
     ; Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "Previous slide" ]
     ]
 ;;
@@ -572,7 +572,7 @@ let next
       ?(attrs = [])
       ?class_
       ?(variant = Button.Variant.Outline)
-      ?(size = Button.Size.Icon)
+      ?(size = Button.Size.Icon_sm)
       t
   =
   button
@@ -582,7 +582,7 @@ let next
     ~size
     ~class_:
       (Cn.cn
-         [ "cn-carousel-previous absolute touch-manipulation"
+         [ "cn-carousel-next absolute touch-manipulation"
          ; (if horizontal t
             then "inset-y-0 -right-12 my-auto"
             else "-bottom-12 left-1/2 -translate-x-1/2 rotate-90")
@@ -590,7 +590,7 @@ let next
          ])
     ~disabled:(not (can_scroll_next t))
     ~on_click:(scroll_next t)
-    [ Icon.view Arrow_right
+    [ Icon.view ~class_:"cn-rtl-flip" Chevron_right
     ; Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "Next slide" ]
     ]
 ;;

@@ -57,24 +57,21 @@ let view
   let opt f = Option.value_map ~default:[] ~f:(fun x -> [ f x ]) in
   Node.div
     ~attrs:
-      [ Attr.class_
-          "cn-native-select-wrapper group/native-select relative w-fit \
-           has-[select:disabled]:opacity-50"
+      [ Cn.with_class
+          ?class_
+          [ "cn-native-select-wrapper group/native-select relative w-fit \
+             has-[select:disabled]:opacity-50"
+          ]
       ; data "slot" "native-select-wrapper"
+      ; data "size" (Size.name size)
       ]
     [ Node.select
         ~attrs:
           ([ data "slot" "native-select"
            ; data "size" (Size.name size)
-           ; Cn.with_class
-               ?class_
-               [ "cn-native-select outline-none disabled:pointer-events-none \
-                  disabled:cursor-not-allowed"
-               ; "focus-visible:border-ring focus-visible:ring-[3px] \
-                  focus-visible:ring-ring/50"
-               ; "aria-invalid:border-destructive aria-invalid:ring-destructive/20 \
-                  dark:aria-invalid:ring-destructive/40"
-               ]
+           ; Attr.class_
+               "cn-native-select outline-none disabled:pointer-events-none \
+                disabled:cursor-not-allowed"
            ]
            @ opt Attr.id id
            @ opt Attr.name name
@@ -90,8 +87,7 @@ let view
         options
     ; Icon.view
         ~attrs:[ data "slot" "native-select-icon" ]
-        ~class_:
-          "cn-native-select-icon pointer-events-none absolute select-none"
+        ~class_:"cn-native-select-icon pointer-events-none absolute select-none"
         Chevron_down
     ]
 ;;

@@ -75,8 +75,10 @@ let view
   let t = { type_; collapsible; disabled; orientation; id; value; on_change } in
   Node.div
     ~attrs:
-      ([ orientation_attr t; data "slot" "accordion" ]
-       @ Option.value_map class_ ~default:[] ~f:(fun c -> [ Cn.attr [ c ] ])
+      ([ orientation_attr t
+       ; data "slot" "accordion"
+       ; Cn.with_class ?class_ [ "cn-accordion flex w-full flex-col" ]
+       ]
        @ attrs)
     (children t)
 ;;
@@ -236,10 +238,17 @@ let trigger ?(attrs = []) ?class_ children (item : Item.t) =
            @ attrs)
         (children
          @ [ Icon.view
+               ~attrs:[ data "slot" "accordion-trigger-icon" ]
                ~class_:
                  "cn-accordion-trigger-icon pointer-events-none shrink-0 \
                   group-aria-expanded/accordion-trigger:hidden"
                Chevron_down
+           ; Icon.view
+               ~attrs:[ data "slot" "accordion-trigger-icon" ]
+               ~class_:
+                 "cn-accordion-trigger-icon pointer-events-none hidden shrink-0 \
+                  group-aria-expanded/accordion-trigger:inline"
+               Chevron_up
            ])
     ]
 ;;
@@ -255,14 +264,19 @@ let content ?(attrs = []) ?class_ children (item : Item.t) =
          ; aria "labelledby" (trigger_id t item.value)
          ; orientation_attr t
          ; data "slot" "accordion-content"
-         ; Attr.class_
-             "cn-accordion-content overflow-hidden"
+         ; Attr.class_ "cn-accordion-content overflow-hidden"
          ; Collapsible.presence ~accordion:true ~open_:item.open_ ()
          ]
        @ attrs)
-    [ Node.div ~attrs:[ Cn.with_class ?class_ [ "cn-accordion-content-inner \
-                                                 h-(--radix-accordion-content-height) \
-                                                 [&_a]:underline [&_a]:underline-offset-3 \
-                                                 [&_a]:hover:text-foreground \
-                                                 [&_p:not(:last-child)]:mb-4" ] ] children ]
+    [ Node.div
+        ~attrs:
+          [ Cn.with_class
+              ?class_
+              [ "cn-accordion-content-inner h-(--radix-accordion-content-height) \
+                 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground \
+                 [&_p:not(:last-child)]:mb-4"
+              ]
+          ]
+        children
+    ]
 ;;
