@@ -30,14 +30,14 @@ let view ?(attrs = []) ?class_ ?(max = 100.) ?value () =
        @ [ data "slot" "progress"
          ; Cn.with_class
              ?class_
-             [ "relative h-2 w-full overflow-hidden rounded-full bg-primary/20" ]
+             [ "cn-progress relative flex w-full items-center overflow-x-hidden" ]
          ]
        @ attrs)
     [ Node.div
         ~attrs:
           (data_attrs
            @ [ data "slot" "progress-indicator"
-             ; Attr.class_ "h-full w-full flex-1 bg-primary transition-all"
+             ; Attr.class_ "cn-progress-indicator size-full flex-1 transition-all"
              ; Attr.style
                  (Css_gen.create
                     ~field:"transform"

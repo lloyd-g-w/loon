@@ -1,13 +1,30 @@
-/* The theme: shadcn/ui's new-york-v4 style with the neutral base colour.
+/* The theme: shadcn/ui's neutral base colour, as /create writes it.
    Override these variables (on :root and .dark) to restyle every component;
    the docs' Theming page lists them. Dark mode is the class .dark on an
-   ancestor (usually <html>). */
+   ancestor (usually <html>). The style (Vega, Nova, ...: css/styles/) is
+   the class style-<name> on an ancestor; Vega without one. */
+
+@custom-variant style-vega (&:where(.style-vega *));
+@custom-variant style-nova (&:where(.style-nova *));
+@custom-variant style-lyra (&:where(.style-lyra *));
+@custom-variant style-maia (&:where(.style-maia *));
+@custom-variant style-mira (&:where(.style-mira *));
+@custom-variant style-luma (&:where(.style-luma *));
+@custom-variant style-sera (&:where(.style-sera *));
+@custom-variant style-rhea (&:where(.style-rhea *));
+
+@theme {
+  --font-heading: var(--font-sans);
+}
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -116,5 +133,8 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  .cn-font-heading {
+    @apply font-heading;
   }
 }

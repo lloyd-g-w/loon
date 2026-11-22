@@ -24,8 +24,8 @@ module List_variant = struct
   ;;
 
   let classes = function
-    | Default -> "bg-muted"
-    | Line -> "gap-1 bg-transparent"
+    | Default -> "cn-tabs-list-variant-default bg-muted"
+    | Line -> "cn-tabs-list-variant-line gap-1 bg-transparent"
   ;;
 end
 
@@ -60,7 +60,7 @@ let view ?(attrs = []) ?class_ ?(orientation = Orientation.Horizontal) ?(id = "t
        ; data "orientation" (Orientation.name orientation)
        ; Cn.with_class
            ?class_
-           [ "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col" ]
+           [ "cn-tabs group/tabs flex data-horizontal:flex-col" ]
        ]
        @ attrs)
     (children t)
@@ -119,35 +119,30 @@ let list ?(attrs = []) ?class_ ?(variant = List_variant.Default) t triggers =
          ; data "slot" "tabs-trigger"
          ; Cn.with_class
              ?class_:tr.class_
-             [ "relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center \
-                gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium \
-                whitespace-nowrap text-foreground/60 transition-all \
-                group-data-[orientation=vertical]/tabs:w-full \
-                group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground \
+             [ "cn-tabs-trigger relative inline-flex h-[calc(100%-1px)] flex-1 \
+                items-center justify-center whitespace-nowrap text-foreground/60 \
+                transition-all group-data-vertical/tabs:w-full \
+                group-data-vertical/tabs:justify-start hover:text-foreground \
                 focus-visible:border-ring focus-visible:ring-[3px] \
                 focus-visible:ring-ring/50 focus-visible:outline-1 \
                 focus-visible:outline-ring disabled:pointer-events-none \
-                disabled:opacity-50 \
-                group-data-[variant=default]/tabs-list:data-[state=active]:shadow-sm \
-                group-data-[variant=line]/tabs-list:data-[state=active]:shadow-none \
-                dark:text-muted-foreground dark:hover:text-foreground \
-                [&_svg]:pointer-events-none [&_svg]:shrink-0 \
-                [&_svg:not([class*='size-'])]:size-4"
+                disabled:opacity-50 dark:text-muted-foreground dark:hover:text-foreground \
+                [&_svg]:pointer-events-none [&_svg]:shrink-0"
              ; "group-data-[variant=line]/tabs-list:bg-transparent \
-                group-data-[variant=line]/tabs-list:data-[state=active]:bg-transparent \
-                dark:group-data-[variant=line]/tabs-list:data-[state=active]:border-transparent \
-                dark:group-data-[variant=line]/tabs-list:data-[state=active]:bg-transparent"
-             ; "data-[state=active]:bg-background data-[state=active]:text-foreground \
-                dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 \
-                dark:data-[state=active]:text-foreground"
-             ; "after:absolute after:bg-foreground after:opacity-0 after:transition-opacity \
-                group-data-[orientation=horizontal]/tabs:after:inset-x-0 \
-                group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] \
-                group-data-[orientation=horizontal]/tabs:after:h-0.5 \
-                group-data-[orientation=vertical]/tabs:after:inset-y-0 \
-                group-data-[orientation=vertical]/tabs:after:-right-1 \
-                group-data-[orientation=vertical]/tabs:after:w-0.5 \
-                group-data-[variant=line]/tabs-list:data-[state=active]:after:opacity-100"
+                group-data-[variant=line]/tabs-list:data-active:bg-transparent \
+                dark:group-data-[variant=line]/tabs-list:data-active:border-transparent \
+                dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent"
+             ; "data-active:bg-background data-active:text-foreground \
+                dark:data-active:border-input dark:data-active:bg-input/30 \
+                dark:data-active:text-foreground"
+             ; "after:absolute after:bg-foreground after:opacity-0 \
+                after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 \
+                group-data-horizontal/tabs:after:bottom-[-5px] \
+                group-data-horizontal/tabs:after:h-0.5 \
+                group-data-vertical/tabs:after:inset-y-0 \
+                group-data-vertical/tabs:after:-right-1 \
+                group-data-vertical/tabs:after:w-0.5 \
+                group-data-[variant=line]/tabs-list:data-active:after:opacity-100"
              ]
          ]
          @ (if tr.disabled
@@ -174,11 +169,9 @@ let list ?(attrs = []) ?class_ ?(variant = List_variant.Default) t triggers =
        ; data "variant" (List_variant.name variant)
        ; Cn.with_class
            ?class_
-           [ "group/tabs-list inline-flex w-fit items-center justify-center rounded-lg \
-              p-[3px] text-muted-foreground group-data-[orientation=horizontal]/tabs:h-9 \
-              group-data-[orientation=vertical]/tabs:h-fit \
-              group-data-[orientation=vertical]/tabs:flex-col \
-              data-[variant=line]:rounded-none"
+           [ "cn-tabs-list group/tabs-list inline-flex w-fit items-center justify-center \
+              text-muted-foreground group-data-vertical/tabs:h-fit \
+              group-data-vertical/tabs:flex-col"
            ; List_variant.classes variant
            ]
        ; Attr.on_keydown on_keydown
@@ -202,7 +195,7 @@ let content ?(attrs = []) ?class_ t ~value children =
        ; Attr.id (content_id t value)
        ; Attr.tabindex 0
        ; data "slot" "tabs-content"
-       ; Cn.with_class ?class_ [ "flex-1 outline-none" ]
+       ; Cn.with_class ?class_ [ "cn-tabs-content flex-1 outline-none" ]
        ]
        @ (if active then [] else [ Attr.hidden ])
        @ attrs)

@@ -29,7 +29,7 @@ let view
        ; aria_bool "required" required
        ; Attr.create "dir" "ltr"
        ; data "slot" "radio-group"
-       ; Cn.with_class ?class_ [ "grid gap-3" ]
+       ; Cn.with_class ?class_ [ "cn-radio-group w-full" ]
        ]
        @ Option.value_map orientation ~default:[] ~f:(fun o ->
          [ aria "orientation" (Roving.Orientation.name o) ])
@@ -86,12 +86,9 @@ let item ?(attrs = []) ?class_ ?id ?(disabled = false) ?(invalid = false) t ~val
        ; data "slot" "radio-group-item"
        ; Cn.with_class
            ?class_
-           [ "aspect-square size-4 shrink-0 rounded-full border border-input text-primary \
-              shadow-xs transition-[color,box-shadow] outline-none \
-              focus-visible:border-ring focus-visible:ring-[3px] \
-              focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 \
-              aria-invalid:border-destructive aria-invalid:ring-destructive/20 \
-              dark:bg-input/30 dark:aria-invalid:ring-destructive/40"
+           [ "cn-radio-group-item group/radio-group-item peer relative aspect-square \
+              shrink-0 border outline-none after:absolute after:-inset-x-3 \
+              after:-inset-y-2 disabled:cursor-not-allowed disabled:opacity-50"
            ]
        ; Attr.on_keydown (fun ev ->
            match Dom_util.key ev with
@@ -123,15 +120,10 @@ let item ?(attrs = []) ?class_ ?id ?(disabled = false) ?(invalid = false) t ~val
            ~attrs:
              ([ state
               ; data "slot" "radio-group-indicator"
-              ; Attr.class_ "relative flex items-center justify-center"
+              ; Attr.class_ "cn-radio-group-indicator"
               ]
               @ disabled_attrs)
-           [ Icon.view
-               ~class_:
-                 "absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 \
-                  fill-primary"
-               Circle
-           ]
+           [ Node.span ~attrs:[ Attr.class_ "cn-radio-group-indicator-icon" ] [] ]
        ]
      else [])
 ;;

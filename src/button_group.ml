@@ -13,19 +13,19 @@ module Orientation = struct
 
   let classes = function
     | Horizontal ->
-      "[&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 \
-       [&>*:not(:last-child)]:rounded-r-none"
+      "cn-button-group-orientation-horizontal [&>*:not(:first-child)]:rounded-l-none \
+       [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none"
     | Vertical ->
-      "flex-col [&>*:not(:first-child)]:rounded-t-none [&>*:not(:first-child)]:border-t-0 \
+      "cn-button-group-orientation-vertical flex-col \
+       [&>*:not(:first-child)]:rounded-t-none [&>*:not(:first-child)]:border-t-0 \
        [&>*:not(:last-child)]:rounded-b-none"
   ;;
 end
 
 let class_list ?(orientation = Orientation.Horizontal) ?class_ () =
-  [ "flex w-fit items-stretch has-[>[data-slot=button-group]]:gap-2 \
-     [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 \
-     has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md \
-     [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1"
+  [ "cn-button-group group/button-group flex w-fit items-stretch *:focus-visible:relative \
+     *:focus-visible:z-10 [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit \
+     [&>input]:flex-1"
   ; Orientation.classes orientation
   ]
   @ Option.to_list class_
@@ -49,8 +49,7 @@ let text ?(attrs = []) ?class_ children =
     ~attrs:
       (Cn.with_class
          ?class_
-         [ "flex items-center gap-2 rounded-md border bg-muted px-4 text-sm font-medium \
-            shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4"
+         [ "cn-button-group-text flex items-center [&_svg]:pointer-events-none"
          ]
        :: attrs)
     children
@@ -68,7 +67,8 @@ let separator ?(attrs = []) ?class_ ?(orientation = Orientation.Vertical) () =
            [ "shrink-0 bg-border data-[orientation=horizontal]:h-px \
               data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full \
               data-[orientation=vertical]:w-px"
-           ; "relative m-0! self-stretch bg-input data-[orientation=vertical]:h-auto"
+           ; "cn-button-group-separator relative self-stretch data-horizontal:mx-px \
+              data-horizontal:w-auto data-vertical:my-px data-vertical:h-auto"
            ]
        ]
        @ attrs)

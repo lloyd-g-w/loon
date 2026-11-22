@@ -235,9 +235,11 @@ let page =
           ; "size", "Toggle.Size.t", "[Default], [Sm] or [Lg], for every item."
           ; ( "spacing"
             , "int"
-            , "The gap between items, in Tailwind's spacing unit; 0 (joined) by \
-               default." )
-          ; "orientation", "Roving.Orientation.t", "Which arrow keys move between items."
+            , "The gap between items, in Tailwind's spacing unit; 2 by default, 0 \
+               joins them." )
+          ; ( "orientation"
+            , "Roving.Orientation.t"
+            , "Lays the items out in a row ([Horizontal], the default) or a column." )
           ; "disabled", "bool", "Greys out every item."
           ; "class_", "string", "More Tailwind classes, merged last."
           ; "attrs", "Vdom.Attr.t list", "Extra attributes."

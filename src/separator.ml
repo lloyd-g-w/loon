@@ -31,9 +31,8 @@ let view ?(attrs = []) ?class_ ?(orientation = Orientation.Horizontal) ?(decorat
        @ [ data "orientation" (Orientation.name orientation)
          ; Cn.with_class
              ?class_
-             [ "shrink-0 bg-border data-[orientation=horizontal]:h-px \
-                data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full \
-                data-[orientation=vertical]:w-px"
+             [ "shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full \
+                data-vertical:w-px data-vertical:self-stretch"
              ]
          ]
        @ attrs)

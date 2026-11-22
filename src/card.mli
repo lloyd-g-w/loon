@@ -4,7 +4,22 @@
 
 open! Import
 
-val root : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
+module Size : sig
+  type t =
+    | Default
+    | Sm (** less padding and spacing *)
+  [@@deriving enumerate, sexp_of, compare, equal]
+
+  val name : t -> string
+end
+
+val root
+  :  ?attrs:Attr.t list
+  -> ?class_:string
+  -> ?size:Size.t
+  -> Node.t list
+  -> Node.t
+
 val header : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
 val title : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
 val description : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t

@@ -47,14 +47,9 @@ let view
          ; data "slot" "checkbox"
          ; Cn.with_class
              ?class_
-             [ "peer size-4 shrink-0 rounded-[4px] border border-input shadow-xs \
-                transition-shadow outline-none focus-visible:border-ring \
-                focus-visible:ring-[3px] focus-visible:ring-ring/50 \
-                disabled:cursor-not-allowed disabled:opacity-50 \
-                aria-invalid:border-destructive aria-invalid:ring-destructive/20 \
-                data-[state=checked]:border-primary data-[state=checked]:bg-primary \
-                data-[state=checked]:text-primary-foreground dark:bg-input/30 \
-                dark:aria-invalid:ring-destructive/40 dark:data-[state=checked]:bg-primary"
+             [ "cn-checkbox peer relative shrink-0 outline-none after:absolute \
+                after:-inset-x-3 after:-inset-y-2 disabled:cursor-not-allowed \
+                disabled:opacity-50"
              ]
          ; Attr.on_keydown (fun ev ->
              match Dom_util.key ev with
@@ -81,11 +76,13 @@ let view
            ~attrs:
              ([ data "state" (State.name checked)
               ; data "slot" "checkbox-indicator"
-              ; Attr.class_ "grid place-content-center text-current transition-none"
+              ; Attr.class_
+                  "cn-checkbox-indicator grid place-content-center text-current \
+                   transition-none"
               ; Attr.style (Css_gen.create ~field:"pointer-events" ~value:"none")
               ]
               @ disabled_attrs)
-           [ Icon.view ~class_:"size-3.5" Check ]
+           [ Icon.view Check ]
        ])
 ;;
 

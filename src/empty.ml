@@ -12,10 +12,9 @@ module Media_variant = struct
   ;;
 
   let classes = function
-    | Default -> "bg-transparent"
+    | Default -> "cn-empty-media-default"
     | Icon ->
-      "flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted \
-       text-foreground [&_svg:not([class*='size-'])]:size-6"
+      "cn-empty-media-icon"
   ;;
 end
 
@@ -26,11 +25,11 @@ let div slot classes ?(attrs = []) ?class_ children =
 let root =
   div
     "empty"
-    "flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg \
-     border-dashed p-6 text-center text-balance md:p-12"
+    "cn-empty flex w-full min-w-0 flex-1 flex-col items-center justify-center text-center \
+     text-balance"
 ;;
 
-let header = div "empty-header" "flex max-w-sm flex-col items-center gap-2 text-center"
+let header = div "empty-header" "cn-empty-header flex max-w-sm flex-col items-center"
 
 let media ?(attrs = []) ?class_ ?(variant = Media_variant.Default) children =
   Node.div
@@ -39,8 +38,8 @@ let media ?(attrs = []) ?class_ ?(variant = Media_variant.Default) children =
        ; data "variant" (Media_variant.name variant)
        ; Cn.with_class
            ?class_
-           [ "mb-2 flex shrink-0 items-center justify-center [&_svg]:pointer-events-none \
-              [&_svg]:shrink-0"
+           [ "cn-empty-media flex shrink-0 items-center justify-center \
+              [&_svg]:pointer-events-none [&_svg]:shrink-0"
            ; Media_variant.classes variant
            ]
        ]
@@ -48,17 +47,17 @@ let media ?(attrs = []) ?class_ ?(variant = Media_variant.Default) children =
     children
 ;;
 
-let title = div "empty-title" "text-lg font-medium tracking-tight"
+let title = div "empty-title" "cn-empty-title cn-font-heading"
 
 let description =
   div
     "empty-description"
-    "text-sm/relaxed text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 \
+    "cn-empty-description text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 \
      [&>a:hover]:text-primary"
 ;;
 
 let content =
   div
     "empty-content"
-    "flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm text-balance"
+    "cn-empty-content flex w-full max-w-sm min-w-0 flex-col items-center text-balance"
 ;;

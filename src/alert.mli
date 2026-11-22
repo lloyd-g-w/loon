@@ -34,3 +34,6 @@ val root
 
 val title : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
 val description : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t
+
+(** An action (a button) at the top right of the alert. *)
+val action : ?attrs:Attr.t list -> ?class_:string -> Node.t list -> Node.t

@@ -4,8 +4,10 @@ let root ?(attrs = []) ?class_ children =
   Node.create
     "nav"
     ~attrs:
-      ([ aria "label" "breadcrumb"; data "slot" "breadcrumb" ]
-       @ Option.value_map class_ ~default:[] ~f:(fun c -> [ Cn.attr [ c ] ])
+      ([ aria "label" "breadcrumb"
+       ; data "slot" "breadcrumb"
+       ; Cn.with_class ?class_ [ "cn-breadcrumb" ]
+       ]
        @ attrs)
     children
 ;;
@@ -16,9 +18,7 @@ let list ?(attrs = []) ?class_ children =
       ([ data "slot" "breadcrumb-list"
        ; Cn.with_class
            ?class_
-           [ "flex flex-wrap items-center gap-1.5 text-sm break-words \
-              text-muted-foreground sm:gap-2.5"
-           ]
+           [ "cn-breadcrumb-list flex flex-wrap items-center wrap-break-word" ]
        ]
        @ attrs)
     children
@@ -28,13 +28,13 @@ let item ?(attrs = []) ?class_ children =
   Node.li
     ~attrs:
       ([ data "slot" "breadcrumb-item"
-       ; Cn.with_class ?class_ [ "inline-flex items-center gap-1.5" ]
+       ; Cn.with_class ?class_ [ "cn-breadcrumb-item inline-flex items-center" ]
        ]
        @ attrs)
     children
 ;;
 
-let link_base = "transition-colors hover:text-foreground"
+let link_base = "cn-breadcrumb-link"
 let link_classes ?class_ () = Cn.cn (link_base :: Option.to_list class_)
 
 let link ?(attrs = []) ?class_ ~href children =
@@ -55,7 +55,7 @@ let page ?(attrs = []) ?class_ children =
        ; Attr.role "link"
        ; aria "disabled" "true"
        ; aria "current" "page"
-       ; Cn.with_class ?class_ [ "font-normal text-foreground" ]
+       ; Cn.with_class ?class_ [ "cn-breadcrumb-page" ]
        ]
        @ attrs)
     children
@@ -67,10 +67,10 @@ let separator ?(attrs = []) ?class_ ?children () =
       ([ data "slot" "breadcrumb-separator"
        ; Attr.role "presentation"
        ; aria "hidden" "true"
-       ; Cn.with_class ?class_ [ "[&>svg]:size-3.5" ]
+       ; Cn.with_class ?class_ [ "cn-breadcrumb-separator" ]
        ]
        @ attrs)
-    (Option.value children ~default:[ Icon.view Chevron_right ])
+    (Option.value children ~default:[ Icon.view ~class_:"cn-rtl-flip" Chevron_right ])
 ;;
 
 let ellipsis ?(attrs = []) ?class_ () =
@@ -79,10 +79,12 @@ let ellipsis ?(attrs = []) ?class_ () =
       ([ data "slot" "breadcrumb-ellipsis"
        ; Attr.role "presentation"
        ; aria "hidden" "true"
-       ; Cn.with_class ?class_ [ "flex size-9 items-center justify-center" ]
+       ; Cn.with_class
+           ?class_
+           [ "cn-breadcrumb-ellipsis flex items-center justify-center" ]
        ]
        @ attrs)
-    [ Icon.view ~class_:"size-4" Ellipsis
+    [ Icon.view Ellipsis
     ; Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "More" ]
     ]
 ;;

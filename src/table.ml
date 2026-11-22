@@ -11,34 +11,33 @@ let root ?(attrs = []) ?class_ children =
   Node.div
     ~attrs:
       [ data "slot" "table-container"
-      ; Attr.class_ "relative w-full overflow-x-auto"
+      ; Attr.class_ "cn-table-container"
       ]
     [ Node.table
         ~attrs:
           ([ data "slot" "table"
-           ; Cn.with_class ?class_ [ "w-full caption-bottom text-sm" ]
+           ; Cn.with_class ?class_ [ "cn-table" ]
            ]
            @ attrs)
         children
     ]
 ;;
 
-let header = part "thead" "table-header" "[&_tr]:border-b"
-let body = part "tbody" "table-body" "[&_tr:last-child]:border-0"
+let header = part "thead" "table-header" "cn-table-header"
+let body = part "tbody" "table-body" "cn-table-body"
 
 let footer =
   part
     "tfoot"
     "table-footer"
-    "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0"
+    "cn-table-footer"
 ;;
 
 let row ?(attrs = []) ?class_ ?(selected = false) children =
   part
     "tr"
     "table-row"
-    "border-b transition-colors hover:bg-muted/50 \
-     has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted"
+    "cn-table-row has-aria-expanded:bg-muted/50"
     ~attrs:((if selected then [ data "state" "selected" ] else []) @ attrs)
     ?class_
     children
@@ -48,17 +47,14 @@ let head =
   part
     "th"
     "table-head"
-    "h-10 px-2 text-left align-middle font-medium whitespace-nowrap \
-     text-foreground [&:has([role=checkbox])]:pr-0 \
-     [&>[role=checkbox]]:translate-y-[2px]"
+    "cn-table-head"
 ;;
 
 let cell ?(attrs = []) ?class_ ?col_span children =
   part
     "td"
     "table-cell"
-    "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 \
-     [&>[role=checkbox]]:translate-y-[2px]"
+    "cn-table-cell"
     ~attrs:
       (Option.value_map col_span ~default:[] ~f:(fun n ->
          [ Attr.create "colspan" (Int.to_string n) ])
@@ -68,5 +64,5 @@ let cell ?(attrs = []) ?class_ ?col_span children =
 ;;
 
 let caption =
-  part "caption" "table-caption" "mt-4 text-sm text-muted-foreground"
+  part "caption" "table-caption" "cn-table-caption"
 ;;

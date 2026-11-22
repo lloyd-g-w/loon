@@ -8,18 +8,12 @@ let trigger ?attrs t node = Modal.trigger ~slot:"dialog-trigger" ?attrs t node
 let close ?attrs t node = Modal.close ~slot:"dialog-close" ?attrs t node
 
 let overlay_class =
-  "fixed inset-0 z-50 bg-black/50 data-[state=closed]:animate-out \
-   data-[state=closed]:fade-out-0 data-[state=open]:animate-in \
-   data-[state=open]:fade-in-0"
+  "cn-dialog-overlay fixed inset-0 isolate z-50"
 ;;
 
 let content_class =
-  "fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] \
-   translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 \
-   shadow-lg duration-200 outline-none data-[state=closed]:animate-out \
-   data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 \
-   data-[state=open]:animate-in data-[state=open]:fade-in-0 \
-   data-[state=open]:zoom-in-95 sm:max-w-lg"
+  "cn-dialog-content fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 \
+   outline-none"
 ;;
 
 let close_class =
@@ -56,7 +50,7 @@ let header ?(attrs = []) ?class_ children =
   Node.div
     ~attrs:
       ([ data "slot" "dialog-header"
-       ; Cn.with_class ?class_ [ "flex flex-col gap-2 text-center sm:text-left" ]
+       ; Cn.with_class ?class_ [ "cn-dialog-header flex flex-col" ]
        ]
        @ attrs)
     children
@@ -66,7 +60,8 @@ let footer ?(attrs = []) ?class_ ?show_close_button children =
   Node.div
     ~attrs:
       ([ data "slot" "dialog-footer"
-       ; Cn.with_class ?class_ [ "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end" ]
+       ; Cn.with_class ?class_ [ "cn-dialog-footer flex flex-col-reverse gap-2 \
+                                  sm:flex-row sm:justify-end" ]
        ]
        @ attrs)
     (children
@@ -79,7 +74,7 @@ let footer ?(attrs = []) ?class_ ?show_close_button children =
 let title ?attrs ?class_ t children =
   Modal.title
     ~slot:"dialog-title"
-    ~class_:(Cn.cn [ "text-lg leading-none font-semibold"; Option.value class_ ~default:"" ])
+    ~class_:(Cn.cn [ "cn-dialog-title cn-font-heading"; Option.value class_ ~default:"" ])
     ?attrs
     t
     children
@@ -88,7 +83,7 @@ let title ?attrs ?class_ t children =
 let description ?attrs ?class_ t children =
   Modal.description
     ~slot:"dialog-description"
-    ~class_:(Cn.cn [ "text-sm text-muted-foreground"; Option.value class_ ~default:"" ])
+    ~class_:(Cn.cn [ "cn-dialog-description"; Option.value class_ ~default:"" ])
     ?attrs
     t
     children

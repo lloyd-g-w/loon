@@ -418,7 +418,7 @@ let tooltip_content
       ~attrs:
         [ (Cn.with_class
                ?class_
-               [ "grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl"
+               [ "cn-chart-tooltip grid min-w-32 items-start"
                ])
         ]
       [ (if nest_label then Node.none else opt tooltip_label)
@@ -3605,7 +3605,7 @@ let render_radial_bar (ctx : render_ctx) : rendered =
 ;;
 
 let container_classes =
-  "flex aspect-video justify-center text-xs \
+  "cn-chart flex aspect-video justify-center text-xs \
    [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground \
    [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 \
    [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border \
@@ -3613,8 +3613,10 @@ let container_classes =
    [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border \
    [&_.recharts-radial-bar-background-sector]:fill-muted \
    [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted \
-   [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector]:outline-hidden \
-   [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden"
+   [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border \
+   [&_.recharts-sector]:outline-hidden \
+   [&_.recharts-sector[stroke='#fff']]:stroke-transparent \
+   [&_.recharts-surface]:outline-hidden"
 ;;
 
 let px f = sprintf "%spx" (num f)

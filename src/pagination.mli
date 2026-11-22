@@ -42,6 +42,7 @@ val link
 val previous
   :  ?attrs:Attr.t list
   -> ?class_:string
+  -> ?text:string
   -> ?href:string
   -> ?on_click:unit Effect.t
   -> unit
@@ -51,6 +52,7 @@ val previous
 val next
   :  ?attrs:Attr.t list
   -> ?class_:string
+  -> ?text:string
   -> ?href:string
   -> ?on_click:unit Effect.t
   -> unit

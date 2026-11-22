@@ -49,13 +49,23 @@ let trigger ?attrs t node = Modal.trigger ~slot:"drawer-trigger" ?attrs t.modal 
 let close ?attrs t node = Modal.close ~slot:"drawer-close" ?attrs t.modal node
 
 let overlay_class =
-  "fixed inset-0 z-50 bg-black/50 data-[state=closed]:animate-out \
-   data-[state=closed]:fade-out-0 data-[state=open]:animate-in \
-   data-[state=open]:fade-in-0"
+  "cn-drawer-overlay fixed inset-0 z-50 data-open:animate-in data-open:fade-in-0 \
+   data-closed:animate-out data-closed:fade-out-0"
 ;;
 
 let content_class =
-  [ "group/drawer-content fixed z-50 flex h-auto flex-col bg-background"
+  [ "cn-drawer-content group/drawer-content fixed z-50 \
+     data-[vaul-drawer-direction=bottom]:inset-x-0 \
+     data-[vaul-drawer-direction=bottom]:bottom-0 \
+     data-[vaul-drawer-direction=bottom]:mt-24 \
+     data-[vaul-drawer-direction=bottom]:max-h-[80vh] \
+     data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 \
+     data-[vaul-drawer-direction=left]:w-3/4 data-[vaul-drawer-direction=right]:inset-y-0 \
+     data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:w-3/4 \
+     data-[vaul-drawer-direction=top]:inset-x-0 data-[vaul-drawer-direction=top]:top-0 \
+     data-[vaul-drawer-direction=top]:mb-24 data-[vaul-drawer-direction=top]:max-h-[80vh] \
+     data-[vaul-drawer-direction=left]:sm:max-w-sm \
+     data-[vaul-drawer-direction=right]:sm:max-w-sm"
   ; "data-[vaul-drawer-direction=top]:inset-x-0 data-[vaul-drawer-direction=top]:top-0 \
      data-[vaul-drawer-direction=top]:mb-24 data-[vaul-drawer-direction=top]:max-h-[80vh] \
      data-[vaul-drawer-direction=top]:rounded-b-lg data-[vaul-drawer-direction=top]:border-b"
@@ -75,7 +85,7 @@ let content_class =
 ;;
 
 let handle_class =
-  "mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full bg-muted \
+  "cn-drawer-handle mx-auto hidden shrink-0 \
    group-data-[vaul-drawer-direction=bottom]/drawer-content:block"
 ;;
 
@@ -206,10 +216,9 @@ let header ?(attrs = []) ?class_ children =
       ([ data "slot" "drawer-header"
        ; Cn.with_class
            ?class_
-           [ "flex flex-col gap-0.5 p-4 \
+           [ "cn-drawer-header flex flex-col \
               group-data-[vaul-drawer-direction=bottom]/drawer-content:text-center \
-              group-data-[vaul-drawer-direction=top]/drawer-content:text-center \
-              md:gap-1.5 md:text-left"
+              group-data-[vaul-drawer-direction=top]/drawer-content:text-center"
            ]
        ]
        @ attrs)
@@ -219,7 +228,8 @@ let header ?(attrs = []) ?class_ children =
 let footer ?(attrs = []) ?class_ children =
   Node.div
     ~attrs:
-      ([ data "slot" "drawer-footer"; Cn.with_class ?class_ [ "mt-auto flex flex-col gap-2 p-4" ] ]
+      ([ data "slot" "drawer-footer"; Cn.with_class ?class_ [ "cn-drawer-footer mt-auto \
+                                                               flex flex-col" ] ]
        @ attrs)
     children
 ;;
@@ -227,7 +237,7 @@ let footer ?(attrs = []) ?class_ children =
 let title ?attrs ?class_ t children =
   Modal.title
     ~slot:"drawer-title"
-    ~class_:(Cn.cn [ "font-semibold text-foreground"; Option.value class_ ~default:"" ])
+    ~class_:(Cn.cn [ "cn-drawer-title cn-font-heading"; Option.value class_ ~default:"" ])
     ?attrs
     t.modal
     children
@@ -236,7 +246,7 @@ let title ?attrs ?class_ t children =
 let description ?attrs ?class_ t children =
   Modal.description
     ~slot:"drawer-description"
-    ~class_:(Cn.cn [ "text-sm text-muted-foreground"; Option.value class_ ~default:"" ])
+    ~class_:(Cn.cn [ "cn-drawer-description"; Option.value class_ ~default:"" ])
     ?attrs
     t.modal
     children

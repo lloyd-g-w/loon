@@ -6,10 +6,9 @@ let view ?(attrs = []) ?class_ ?for_ children =
       ([ data "slot" "label"
        ; Cn.with_class
            ?class_
-           [ "flex items-center gap-2 text-sm leading-none font-medium select-none \
+           [ "cn-label flex items-center select-none \
               group-data-[disabled=true]:pointer-events-none \
-              group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed \
-              peer-disabled:opacity-50"
+              peer-disabled:cursor-not-allowed"
            ]
        ; Attr.on_mousedown (fun ev ->
            (* Radix: a double click does not select the label's text. *)

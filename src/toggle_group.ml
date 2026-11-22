@@ -31,7 +31,7 @@ let pressed t value =
 let group_selector = "[data-slot=toggle-group]"
 let item_selector = "[data-slot=toggle-group-item]"
 
-let root ?(attrs = []) ?class_ ?variant ?size ?(spacing = 0) ?orientation ?(disabled = false)
+let root ?(attrs = []) ?class_ ?variant ?size ?(spacing = 2) ?(orientation = Roving.Orientation.Horizontal) ?(disabled = false)
   kind children
   =
   let t = { kind; variant; size; spacing; disabled; items = [] } in
@@ -56,12 +56,12 @@ let root ?(attrs = []) ?class_ ?variant ?size ?(spacing = 0) ?orientation ?(disa
          ; Attr.css_var ~name:"gap" (Int.to_string spacing)
          ; Cn.with_class
              ?class_
-             [ "group/toggle-group flex w-fit items-center gap-[--spacing(var(--gap))] \
-                rounded-md data-[spacing=default]:data-[variant=outline]:shadow-xs"
+             [ "cn-toggle-group group/toggle-group flex w-fit flex-row items-center \
+                gap-[--spacing(var(--gap))] data-vertical:flex-col \
+                data-vertical:items-stretch"
              ]
          ]
-       @ Option.value_map orientation ~default:[] ~f:(fun o ->
-         [ data "orientation" (Roving.Orientation.name o) ])
+       @ [ data "orientation" (Roving.Orientation.name orientation) ]
        @ attrs)
     children
 ;;
@@ -183,17 +183,16 @@ let item ?(attrs = []) ?class_ ?variant ?size ?(disabled = false) t ~value child
           | Multiple _ -> [ aria_bool "pressed" on ])
        @ Roving.Tab_stop.item_attrs ~group:group_selector ~item:item_selector
        @ [ data "slot" "toggle-group-item" ]
-       @ Option.value_map variant ~default:[] ~f:(fun v ->
-         [ data "variant" (Toggle.Variant.name v) ])
-       @ Option.value_map size ~default:[] ~f:(fun s -> [ data "size" (Toggle.Size.name s) ])
-       @ [ data "spacing" (Int.to_string t.spacing)
+       @ [ data "variant" (Toggle.Variant.name (Option.value variant ~default:Default))
+         ; data "size" (Toggle.Size.name (Option.value size ~default:Default))
+         ; data "spacing" (Int.to_string t.spacing)
          ; Cn.attr
-             ([ Toggle.classes ?variant ?size ()
-              ; "w-auto min-w-0 shrink-0 px-3 focus:z-10 focus-visible:z-10"
-              ; "data-[spacing=0]:rounded-none data-[spacing=0]:shadow-none \
-                 data-[spacing=0]:first:rounded-l-md data-[spacing=0]:last:rounded-r-md \
-                 data-[spacing=0]:data-[variant=outline]:border-l-0 \
-                 data-[spacing=0]:data-[variant=outline]:first:border-l"
+             ([ "cn-toggle-group-item shrink-0 focus:z-10 focus-visible:z-10 \
+                 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:border-l-0 \
+                 group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:border-t-0 \
+                 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-l \
+                 group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-t"
+              ; Toggle.classes ?variant ?size ()
               ]
               @ Option.to_list class_)
          ; Attr.on_keydown (fun ev ->

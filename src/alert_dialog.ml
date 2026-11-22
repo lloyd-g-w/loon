@@ -19,19 +19,12 @@ let component = Modal.component
 let trigger ?attrs t node = Modal.trigger ~slot:"alert-dialog-trigger" ?attrs t node
 
 let overlay_class =
-  "fixed inset-0 z-50 bg-black/50 data-[state=closed]:animate-out \
-   data-[state=closed]:fade-out-0 data-[state=open]:animate-in \
-   data-[state=open]:fade-in-0"
+  "cn-alert-dialog-overlay fixed inset-0 z-50"
 ;;
 
 let content_class =
-  "group/alert-dialog-content fixed top-[50%] left-[50%] z-50 grid w-full \
-   max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg \
-   border bg-background p-6 shadow-lg duration-200 data-[size=sm]:max-w-xs \
-   data-[state=closed]:animate-out data-[state=closed]:fade-out-0 \
-   data-[state=closed]:zoom-out-95 data-[state=open]:animate-in \
-   data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 \
-   data-[size=default]:sm:max-w-lg"
+  "cn-alert-dialog-content group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid \
+   w-full -translate-x-1/2 -translate-y-1/2 outline-none"
 ;;
 
 let content ?(attrs = []) ?class_ ?(size = Size.Default) (t : t) children =
@@ -56,12 +49,7 @@ let header ?(attrs = []) ?class_ children =
       ([ data "slot" "alert-dialog-header"
        ; Cn.with_class
            ?class_
-           [ "grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center \
-              has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] \
-              has-data-[slot=alert-dialog-media]:gap-x-6 \
-              sm:group-data-[size=default]/alert-dialog-content:place-items-start \
-              sm:group-data-[size=default]/alert-dialog-content:text-left \
-              sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]"
+           [ "cn-alert-dialog-header"
            ]
        ]
        @ attrs)
@@ -74,7 +62,7 @@ let footer ?(attrs = []) ?class_ children =
       ([ data "slot" "alert-dialog-footer"
        ; Cn.with_class
            ?class_
-           [ "flex flex-col-reverse gap-2 \
+           [ "cn-alert-dialog-footer flex flex-col-reverse gap-2 \
               group-data-[size=sm]/alert-dialog-content:grid \
               group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row \
               sm:justify-end"
@@ -89,8 +77,7 @@ let title ?attrs ?class_ t children =
     ~slot:"alert-dialog-title"
     ~class_:
       (Cn.cn
-         [ "text-lg font-semibold \
-            sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2"
+         [ "cn-alert-dialog-title cn-font-heading"
          ; Option.value class_ ~default:""
          ])
     ?attrs

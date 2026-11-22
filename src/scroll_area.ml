@@ -482,11 +482,7 @@ let scroll_bar ?(attrs = []) ?class_ ?(orientation = Orientation.Vertical) () =
        ; data "slot" "scroll-area-scrollbar"
        ; Cn.with_class
            ?class_
-           [ "flex touch-none p-px transition-colors select-none"
-           ; (match orientation with
-              | Vertical -> "h-full w-2.5 border-l border-l-transparent"
-              | Horizontal -> "h-2.5 flex-col border-t border-t-transparent")
-           ]
+           [ "cn-scroll-area-scrollbar flex touch-none p-px transition-colors select-none" ]
        ; Attr.create
            "style"
            (match orientation with
@@ -502,7 +498,7 @@ let scroll_bar ?(attrs = []) ?class_ ?(orientation = Orientation.Vertical) () =
         ~attrs:
           [ data "state" "hidden"
           ; data "slot" "scroll-area-thumb"
-          ; Attr.class_ "relative flex-1 rounded-full bg-border"
+          ; Attr.class_ "cn-scroll-area-thumb relative flex-1 bg-border"
           ; Attr.create
               "style"
               "width: var(--radix-scroll-area-thumb-width); height: \
@@ -523,7 +519,7 @@ let root
     ~attrs:
       ([ Attr.create "dir" "ltr"
        ; data "slot" "scroll-area"
-       ; Cn.with_class ?class_ [ "relative" ]
+       ; Cn.with_class ?class_ [ "cn-scroll-area relative" ]
        ; Attr.create
            "style"
            "position: relative; --radix-scroll-area-corner-width: 0px; \
@@ -539,8 +535,8 @@ let root
           [ Attr.create "data-radix-scroll-area-viewport" ""
           ; data "slot" "scroll-area-viewport"
           ; Attr.class_
-              "size-full rounded-[inherit] transition-[color,box-shadow] \
-               outline-none focus-visible:ring-[3px] \
+              "cn-scroll-area-viewport size-full rounded-[inherit] \
+               transition-[color,box-shadow] outline-none focus-visible:ring-[3px] \
                focus-visible:ring-ring/50 focus-visible:outline-1"
           ; Attr.create "style" "overflow: hidden;"
           ]

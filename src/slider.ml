@@ -248,10 +248,8 @@ let view
              ; data "slot" "slider-thumb"
              ; aria "valuenow" (fmt v)
              ; Attr.class_
-                 "block size-4 shrink-0 rounded-full border border-primary bg-white \
-                  shadow-sm ring-ring/50 transition-[color,box-shadow] hover:ring-4 \
-                  focus-visible:ring-4 focus-visible:outline-hidden \
-                  disabled:pointer-events-none disabled:opacity-50"
+                 "cn-slider-thumb block shrink-0 select-none disabled:pointer-events-none \
+                  disabled:opacity-50"
              ]
              @ Option.value_map (label ~index ~count) ~default:[] ~f:(fun l ->
                [ aria "label" l ])
@@ -270,10 +268,9 @@ let view
        @ [ data "slot" "slider"
          ; Cn.with_class
              ?class_
-             [ "relative flex w-full touch-none items-center select-none \
-                data-[disabled]:opacity-50 data-[orientation=vertical]:h-full \
-                data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto \
-                data-[orientation=vertical]:flex-col"
+             [ "cn-slider relative flex w-full touch-none items-center select-none \
+                data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto \
+                data-vertical:flex-col"
              ]
          ; Attr.css_var
              ~name:"radix-slider-thumb-transform"
@@ -290,9 +287,8 @@ let view
          ([ o; data "slot" "slider-track" ]
           @ disabled_attrs
           @ [ Attr.class_
-                "relative grow overflow-hidden rounded-full bg-muted \
-                 data-[orientation=horizontal]:h-1.5 data-[orientation=horizontal]:w-full \
-                 data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5"
+                "cn-slider-track relative grow overflow-hidden data-horizontal:w-full \
+                 data-vertical:h-full"
             ])
        [ Node.span
            ~attrs:
@@ -301,8 +297,8 @@ let view
               @ [ Attr.style range_style
                 ; data "slot" "slider-range"
                 ; Attr.class_
-                    "absolute bg-primary data-[orientation=horizontal]:h-full \
-                     data-[orientation=vertical]:w-full"
+                    "cn-slider-range absolute select-none data-horizontal:h-full \
+                     data-vertical:w-full"
                 ])
            []
        ]

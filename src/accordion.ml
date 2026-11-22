@@ -123,7 +123,7 @@ let item ?(attrs = []) ?class_ ?(disabled = false) t ~value parts =
        @ (if disabled then [ data "disabled" "" ] else [])
        @ [ orientation_attr t
          ; data "slot" "accordion-item"
-         ; Cn.with_class ?class_ [ "border-b last:border-b-0" ]
+         ; Cn.with_class ?class_ [ "cn-accordion-item" ]
          ]
        @ attrs)
     (List.map parts ~f:(fun part -> part item))
@@ -216,12 +216,9 @@ let trigger ?(attrs = []) ?class_ children (item : Item.t) =
              ; data "slot" "accordion-trigger"
              ; Cn.with_class
                  ?class_
-                 [ "flex flex-1 items-start justify-between gap-4 rounded-md \
-                    py-4 text-left text-sm font-medium transition-all \
-                    outline-none hover:underline focus-visible:border-ring \
-                    focus-visible:ring-[3px] focus-visible:ring-ring/50 \
-                    disabled:pointer-events-none disabled:opacity-50 \
-                    [&[data-state=open]>svg]:rotate-180"
+                 [ "cn-accordion-trigger group/accordion-trigger relative flex flex-1 \
+                    items-start justify-between border border-transparent transition-all \
+                    outline-none disabled:pointer-events-none disabled:opacity-50"
                  ]
              ; Attr.on_keydown on_keydown
              ]
@@ -240,8 +237,8 @@ let trigger ?(attrs = []) ?class_ children (item : Item.t) =
         (children
          @ [ Icon.view
                ~class_:
-                 "pointer-events-none size-4 shrink-0 translate-y-0.5 \
-                  text-muted-foreground transition-transform duration-200"
+                 "cn-accordion-trigger-icon pointer-events-none shrink-0 \
+                  group-aria-expanded/accordion-trigger:hidden"
                Chevron_down
            ])
     ]
@@ -259,10 +256,13 @@ let content ?(attrs = []) ?class_ children (item : Item.t) =
          ; orientation_attr t
          ; data "slot" "accordion-content"
          ; Attr.class_
-             "overflow-hidden text-sm data-[state=closed]:animate-accordion-up \
-              data-[state=open]:animate-accordion-down"
+             "cn-accordion-content overflow-hidden"
          ; Collapsible.presence ~accordion:true ~open_:item.open_ ()
          ]
        @ attrs)
-    [ Node.div ~attrs:[ Cn.with_class ?class_ [ "pt-0 pb-4" ] ] children ]
+    [ Node.div ~attrs:[ Cn.with_class ?class_ [ "cn-accordion-content-inner \
+                                                 h-(--radix-accordion-content-height) \
+                                                 [&_a]:underline [&_a]:underline-offset-3 \
+                                                 [&_a]:hover:text-foreground \
+                                                 [&_p:not(:last-child)]:mb-4" ] ] children ]
 ;;

@@ -25,14 +25,52 @@ module Mode = struct
   ;;
 end
 
-let attrs ?mode () =
-  match (mode : Mode.t option) with
-  | Some Dark -> [ Attr.class_ "dark" ]
-  | Some Light | None -> []
+module Style = struct
+  type t =
+    | Vega
+    | Nova
+    | Maia
+    | Lyra
+    | Mira
+    | Luma
+    | Sera
+    | Rhea
+  [@@deriving enumerate, sexp, compare, equal]
+
+  let name t = String.lowercase (Sexp.to_string (sexp_of_t t))
+
+  let of_name s =
+    List.find all ~f:(fun t -> String.equal (name t) (String.lowercase s))
+  ;;
+
+  (* Literal, for Tailwind's scanner (the style-vega: variants). *)
+  let class_ = function
+    | Vega -> "style-vega"
+    | Nova -> "style-nova"
+    | Maia -> "style-maia"
+    | Lyra -> "style-lyra"
+    | Mira -> "style-mira"
+    | Luma -> "style-luma"
+    | Sera -> "style-sera"
+    | Rhea -> "style-rhea"
+  ;;
+end
+
+let attrs ?mode ?style () =
+  (match (mode : Mode.t option) with
+   | Some Dark -> [ Attr.class_ "dark" ]
+   | Some Light | None -> [])
+  @
+  match style with
+  | Some style -> [ Attr.class_ (Style.class_ style) ]
+  | None -> []
 ;;
 
-let root ?attrs:(extra = []) ?mode children =
+let root ?attrs:(extra = []) ?mode ?style children =
   Node.div
-    ~attrs:(attrs ?mode () @ [ Attr.classes [ "bg-background"; "text-foreground" ] ] @ extra)
+    ~attrs:
+      (attrs ?mode ?style ()
+       @ [ Attr.classes [ "bg-background"; "text-foreground" ] ]
+       @ extra)
     children
 ;;

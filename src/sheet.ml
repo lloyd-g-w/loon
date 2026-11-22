@@ -39,9 +39,8 @@ let trigger ?attrs t node = Modal.trigger ~slot:"sheet-trigger" ?attrs t node
 let close ?attrs t node = Modal.close ~slot:"sheet-close" ?attrs t node
 
 let overlay_class =
-  "fixed inset-0 z-50 bg-black/50 data-[state=closed]:animate-out \
-   data-[state=closed]:fade-out-0 data-[state=open]:animate-in \
-   data-[state=open]:fade-in-0"
+  "cn-sheet-overlay fixed inset-0 z-50 duration-100 data-open:animate-in \
+   data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0"
 ;;
 
 let content_class =
@@ -86,7 +85,8 @@ let content ?(attrs = []) ?class_ ?(side = Side.Right) ?(show_close_button = tru
 let header ?(attrs = []) ?class_ children =
   Node.div
     ~attrs:
-      ([ data "slot" "sheet-header"; Cn.with_class ?class_ [ "flex flex-col gap-1.5 p-4" ] ]
+      ([ data "slot" "sheet-header"; Cn.with_class ?class_ [ "cn-sheet-header flex \
+                                                              flex-col" ] ]
        @ attrs)
     children
 ;;
@@ -94,7 +94,8 @@ let header ?(attrs = []) ?class_ children =
 let footer ?(attrs = []) ?class_ children =
   Node.div
     ~attrs:
-      ([ data "slot" "sheet-footer"; Cn.with_class ?class_ [ "mt-auto flex flex-col gap-2 p-4" ] ]
+      ([ data "slot" "sheet-footer"; Cn.with_class ?class_ [ "cn-sheet-footer mt-auto \
+                                                              flex flex-col" ] ]
        @ attrs)
     children
 ;;
@@ -102,7 +103,7 @@ let footer ?(attrs = []) ?class_ children =
 let title ?attrs ?class_ t children =
   Modal.title
     ~slot:"sheet-title"
-    ~class_:(Cn.cn [ "font-semibold text-foreground"; Option.value class_ ~default:"" ])
+    ~class_:(Cn.cn [ "cn-sheet-title cn-font-heading"; Option.value class_ ~default:"" ])
     ?attrs
     t
     children
@@ -111,7 +112,7 @@ let title ?attrs ?class_ t children =
 let description ?attrs ?class_ t children =
   Modal.description
     ~slot:"sheet-description"
-    ~class_:(Cn.cn [ "text-sm text-muted-foreground"; Option.value class_ ~default:"" ])
+    ~class_:(Cn.cn [ "cn-sheet-description"; Option.value class_ ~default:"" ])
     ?attrs
     t
     children

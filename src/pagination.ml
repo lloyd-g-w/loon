@@ -39,7 +39,7 @@ let root ?(attrs = []) ?class_ children =
       ([ Attr.role "navigation"
        ; aria "label" "pagination"
        ; data "slot" "pagination"
-       ; Cn.with_class ?class_ [ "mx-auto flex w-full justify-center" ]
+       ; Cn.with_class ?class_ [ "cn-pagination mx-auto flex w-full justify-center" ]
        ]
        @ attrs)
     children
@@ -49,7 +49,7 @@ let content ?(attrs = []) ?class_ children =
   Node.ul
     ~attrs:
       ([ data "slot" "pagination-content"
-       ; Cn.with_class ?class_ [ "flex flex-row items-center gap-1" ]
+       ; Cn.with_class ?class_ [ "cn-pagination-content flex items-center" ]
        ]
        @ attrs)
     children
@@ -73,16 +73,19 @@ let link
       ?on_click
       children
   =
+  let variant : Button.Variant.t = if is_active then Outline else Ghost in
   Node.a
     ~attrs:
-      ((if is_active then [ aria "current" "page" ] else [])
-       @ [ data "slot" "pagination-link" ]
-       @ (if is_active then [ data "active" "true" ] else [])
+      ([ data "slot" "pagination-link"
+       ; data "variant" (Button.Variant.name variant)
+       ; data "size" (Button.Size.name size)
+       ]
+       @ (if is_active then [ aria "current" "page"; data "active" "true" ] else [])
        @ [ Attr.class_
              (Button.classes
-                ~variant:(if is_active then Outline else Ghost)
+                ~variant
                 ~size
-                ?class_
+                ~class_:(Cn.cn ([ "cn-pagination-link" ] @ Option.to_list class_))
                 ())
          ]
        @ Option.value_map href ~default:[] ~f:(fun h -> [ Attr.href h ])
@@ -94,29 +97,34 @@ let link
     children
 ;;
 
-let previous ?(attrs = []) ?class_ ?href ?on_click () =
+let previous ?(attrs = []) ?class_ ?(text = "Previous") ?href ?on_click () =
   link
     ~attrs:([ aria "label" "Go to previous page" ] @ attrs)
     ~size:Default
-    ~class_:(Cn.cn ([ "gap-1 px-2.5 sm:pl-2.5" ] @ Option.to_list class_))
+    ~class_:(Cn.cn ([ "cn-pagination-previous" ] @ Option.to_list class_))
     ?href
     ?on_click
-    [ Icon.view Chevron_left
+    [ Icon.view
+        ~attrs:[ data "icon" "inline-start" ]
+        ~class_:"cn-rtl-flip"
+        Chevron_left
     ; Node.span
-        ~attrs:[ Attr.class_ "hidden sm:block" ]
-        [ Node.text "Previous" ]
+        ~attrs:[ Attr.class_ "cn-pagination-previous-text hidden sm:block" ]
+        [ Node.text text ]
     ]
 ;;
 
-let next ?(attrs = []) ?class_ ?href ?on_click () =
+let next ?(attrs = []) ?class_ ?(text = "Next") ?href ?on_click () =
   link
     ~attrs:([ aria "label" "Go to next page" ] @ attrs)
     ~size:Default
-    ~class_:(Cn.cn ([ "gap-1 px-2.5 sm:pr-2.5" ] @ Option.to_list class_))
+    ~class_:(Cn.cn ([ "cn-pagination-next" ] @ Option.to_list class_))
     ?href
     ?on_click
-    [ Node.span ~attrs:[ Attr.class_ "hidden sm:block" ] [ Node.text "Next" ]
-    ; Icon.view Chevron_right
+    [ Node.span
+        ~attrs:[ Attr.class_ "cn-pagination-next-text hidden sm:block" ]
+        [ Node.text text ]
+    ; Icon.view ~attrs:[ data "icon" "inline-end" ] ~class_:"cn-rtl-flip" Chevron_right
     ]
 ;;
 
@@ -125,10 +133,12 @@ let ellipsis ?(attrs = []) ?class_ () =
     ~attrs:
       ([ aria "hidden" "true"
        ; data "slot" "pagination-ellipsis"
-       ; Cn.with_class ?class_ [ "flex size-9 items-center justify-center" ]
+       ; Cn.with_class
+           ?class_
+           [ "cn-pagination-ellipsis flex items-center justify-center" ]
        ]
        @ attrs)
-    [ Icon.view ~class_:"size-4" Ellipsis
+    [ Icon.view Ellipsis
     ; Node.span ~attrs:[ Attr.class_ "sr-only" ] [ Node.text "More pages" ]
     ]
 ;;

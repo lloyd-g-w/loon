@@ -227,7 +227,7 @@ let view
       [ data "input-otp-container" "true"
       ; Cn.with_class
           ?class_:container_class
-          [ "flex items-center gap-2 has-disabled:opacity-50" ]
+          [ "cn-input-otp flex items-center has-disabled:opacity-50" ]
       ; style
           [ "position", "relative"
           ; "cursor", if disabled then "default" else "text"
@@ -242,7 +242,8 @@ let view
            [ Node.input
                ~attrs:
                  ([ Attr.create "autocomplete" "one-time-code"
-                  ; Cn.with_class ?class_ [ "disabled:cursor-not-allowed" ]
+                  ; Cn.with_class ?class_ [ "cn-input-otp-input \
+                                             disabled:cursor-not-allowed" ]
                   ; data "input-otp" "true"
                   ; Attr.create
                       "inputmode"
@@ -335,7 +336,8 @@ let component
 let group ?(attrs = []) ?class_ children =
   Node.div
     ~attrs:
-      ([ data "slot" "input-otp-group"; Cn.with_class ?class_ [ "flex items-center" ] ]
+      ([ data "slot" "input-otp-group"; Cn.with_class ?class_ [ "cn-input-otp-group flex \
+                                                                 items-center" ] ]
        @ attrs)
     children
 ;;
@@ -355,14 +357,8 @@ let slot ?(attrs = []) ?class_ t ~index =
        ; data "active" (Bool.to_string active)
        ; Cn.with_class
            ?class_
-           [ "relative flex h-9 w-9 items-center justify-center border-y border-r \
-              border-input text-sm shadow-xs transition-all outline-none \
-              first:rounded-l-md first:border-l last:rounded-r-md \
-              aria-invalid:border-destructive data-[active=true]:z-10 \
-              data-[active=true]:border-ring data-[active=true]:ring-[3px] \
-              data-[active=true]:ring-ring/50 data-[active=true]:aria-invalid:border-destructive \
-              data-[active=true]:aria-invalid:ring-destructive/20 dark:bg-input/30 \
-              dark:data-[active=true]:aria-invalid:ring-destructive/40"
+           [ "cn-input-otp-slot relative flex items-center justify-center \
+              data-[active=true]:z-10"
            ]
        ]
        @ attrs)
@@ -373,10 +369,11 @@ let slot ?(attrs = []) ?class_ t ~index =
        [ Node.div
            ~attrs:
              [ Attr.class_
-                 "pointer-events-none absolute inset-0 flex items-center justify-center"
+                 "cn-input-otp-caret pointer-events-none absolute inset-0 flex \
+                  items-center justify-center"
              ]
            [ Node.div
-               ~attrs:[ Attr.class_ "h-4 w-px animate-caret-blink bg-foreground duration-1000" ]
+               ~attrs:[ Attr.class_ "cn-input-otp-caret-line" ]
                []
            ]
        ]

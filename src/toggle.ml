@@ -12,10 +12,9 @@ module Variant = struct
   ;;
 
   let classes = function
-    | Default -> "bg-transparent"
+    | Default -> "cn-toggle-variant-default"
     | Outline ->
-      "border border-input bg-transparent shadow-xs hover:bg-accent \
-       hover:text-accent-foreground"
+      "cn-toggle-variant-outline"
   ;;
 end
 
@@ -33,21 +32,16 @@ module Size = struct
   ;;
 
   let classes = function
-    | Default -> "h-9 min-w-9 px-2"
-    | Sm -> "h-8 min-w-8 px-1.5"
-    | Lg -> "h-10 min-w-10 px-2.5"
+    | Default -> "cn-toggle-size-default"
+    | Sm -> "cn-toggle-size-sm"
+    | Lg -> "cn-toggle-size-lg"
   ;;
 end
 
 let base =
-  "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium \
-   whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted \
-   hover:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] \
-   focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 \
-   aria-invalid:border-destructive aria-invalid:ring-destructive/20 \
-   data-[state=on]:bg-accent data-[state=on]:text-accent-foreground \
-   dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 \
-   [&_svg:not([class*='size-'])]:size-4"
+  "cn-toggle group/toggle inline-flex items-center justify-center whitespace-nowrap \
+   outline-none hover:bg-muted focus-visible:ring-[3px] disabled:pointer-events-none \
+   disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0"
 ;;
 
 let class_list ?(variant = Variant.Default) ?(size = Size.Default) ?class_ () =

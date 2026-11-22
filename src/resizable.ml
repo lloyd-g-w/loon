@@ -339,13 +339,11 @@ let view
          ; data "separator" (if h.disabled then "disabled" else "inactive")
          ; Cn.with_class
              ?class_:h.class_
-             [ "relative flex w-px items-center justify-center bg-border \
-                after:absolute after:inset-y-0 after:left-1/2 after:w-1 \
-                after:-translate-x-1/2 focus-visible:ring-1 \
-                focus-visible:ring-ring focus-visible:ring-offset-1 \
-                focus-visible:outline-hidden \
-                aria-[orientation=horizontal]:h-px \
-                aria-[orientation=horizontal]:w-full \
+             [ "cn-resizable-handle relative flex w-px items-center justify-center \
+                bg-border ring-offset-background after:absolute after:inset-y-0 \
+                after:left-1/2 after:w-1 after:-translate-x-1/2 focus-visible:ring-1 \
+                focus-visible:ring-ring focus-visible:outline-hidden \
+                aria-[orientation=horizontal]:h-px aria-[orientation=horizontal]:w-full \
                 aria-[orientation=horizontal]:after:left-0 \
                 aria-[orientation=horizontal]:after:h-1 \
                 aria-[orientation=horizontal]:after:w-full \
@@ -396,14 +394,7 @@ let view
          @ h.attrs)
       (if h.with_handle
        then
-         [ Node.div
-             ~attrs:
-               [ Attr.class_
-                   "z-10 flex h-4 w-3 items-center justify-center rounded-xs \
-                    border bg-border"
-               ]
-             [ Icon.view ~class_:"size-2.5" Grip_vertical ]
-         ]
+         [ Node.div ~attrs:[ Attr.class_ "cn-resizable-handle-icon z-10 flex shrink-0" ] [] ]
        else [])
   in
   let render_panel (p : panel) ~k =
@@ -465,7 +456,8 @@ let view
        ; Attr.id id
        ; Cn.with_class
            ?class_
-           [ "flex h-full w-full aria-[orientation=vertical]:flex-col" ]
+           [ "cn-resizable-panel-group flex h-full w-full \
+              aria-[orientation=vertical]:flex-col" ]
        ; Attr.style
            (Css_gen.concat
               [ Css_gen.create ~field:"height" ~value:"100%"

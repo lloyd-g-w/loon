@@ -12,17 +12,13 @@ module Variant = struct
   ;;
 
   let classes = function
-    | Default -> "bg-card text-card-foreground"
-    | Destructive ->
-      "bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 \
-       [&>svg]:text-current"
+    | Default -> "cn-alert-variant-default"
+    | Destructive -> "cn-alert-variant-destructive"
   ;;
 end
 
 let base =
-  "relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-lg border px-4 py-3 \
-   text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 \
-   [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current"
+  "cn-alert group/alert relative w-full"
 ;;
 
 let class_list ?(variant = Variant.Default) ?class_ () =
@@ -44,12 +40,16 @@ let div slot classes ?(attrs = []) ?class_ children =
 ;;
 
 let title =
-  div "alert-title" "col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight"
+  div
+    "alert-title"
+    "cn-alert-title [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground"
 ;;
 
 let description =
   div
     "alert-description"
-    "col-start-2 grid justify-items-start gap-1 text-sm text-muted-foreground \
-     [&_p]:leading-relaxed"
+    "cn-alert-description [&_a]:underline [&_a]:underline-offset-3 \
+     [&_a]:hover:text-foreground"
 ;;
+
+let action = div "alert-action" "cn-alert-action"

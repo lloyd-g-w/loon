@@ -555,9 +555,9 @@ let previous
     ~size
     ~class_:
       (Cn.cn
-         [ "absolute size-8 rounded-full"
+         [ "cn-carousel-previous absolute touch-manipulation"
          ; (if horizontal t
-            then "top-1/2 -left-12 -translate-y-1/2"
+            then "inset-y-0 -left-12 my-auto"
             else "-top-12 left-1/2 -translate-x-1/2 rotate-90")
          ; Option.value class_ ~default:""
          ])
@@ -582,9 +582,9 @@ let next
     ~size
     ~class_:
       (Cn.cn
-         [ "absolute size-8 rounded-full"
+         [ "cn-carousel-previous absolute touch-manipulation"
          ; (if horizontal t
-            then "top-1/2 -right-12 -translate-y-1/2"
+            then "inset-y-0 -right-12 my-auto"
             else "-bottom-12 left-1/2 -translate-x-1/2 rotate-90")
          ; Option.value class_ ~default:""
          ])
