@@ -34,3 +34,8 @@ val restore : string -> unit Effect.t
 (** Focuses the element whenever [focused] becomes true (an item highlighted
     from the keyboard). *)
 val when_ : bool -> Attr.t
+
+(** For a container's [keydown]: Tab on its last tabbable element goes to
+    its first, Shift+Tab on its first to its last (Radix's FocusScope with
+    [loop], as a non-modal popover's content). *)
+val loop_tab : Js_of_ocaml.Dom_html.keyboardEvent Js_of_ocaml.Js.t -> unit Effect.t

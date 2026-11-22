@@ -184,6 +184,12 @@ let content
       ?avoid_collisions
       ~modal:t.modal
       ~inside:[ trigger_id t ]
+      ~on_dismiss:(function
+        | Pointer_outside | Focus_outside when not t.modal ->
+          (* Radix: a non-modal menu leaves the focus where an interaction
+             outside put it. *)
+          Effect.Many [ Focus.no_restore; t.on_change Closed ]
+        | _ -> close t)
       ~base_class:content_class
       ~anchor:(Element (trigger_id t))
       menu

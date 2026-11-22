@@ -36,3 +36,13 @@ val next
   -> fallback:(string * bool) list
   -> current:string
   -> (string * unit Effect.t) option
+
+(** Radix's RovingFocusGroup tab stop: the group is focusable (Tab into it
+    focuses its [active] item, else the last focused, else the first) and
+    the items have [tabindex="-1"] but the last focused (set in the DOM).
+    Shift+Tab from an item leaves the group. [group] and [item] are
+    selectors; [focusable]: whether any item is enabled. *)
+module Tab_stop : sig
+  val group_attrs : item:string -> active:string -> focusable:bool -> Attr.t list
+  val item_attrs : group:string -> item:string -> Attr.t list
+end

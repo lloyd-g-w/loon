@@ -432,6 +432,97 @@ let focus_content id =
         ~f:(fun el -> el##focus))
 ;;
 
+(* Radix's pointer grace: leaving an open sub-menu's trigger towards the
+   sub-menu, the pointer may cross other items (for 300ms, within the
+   triangle from where it left to the sub-menu's near edge) without them
+   taking the highlight or closing the sub-menu. *)
+module Grace = struct
+  type t =
+    { level : string (* the items' level (its content's id) *)
+    ; area : (float * float) list
+    ; right : bool
+    ; until : float
+    }
+
+  let current : t option ref = ref None
+  let last_x = ref None
+  let moving_right = ref None
+  let now () = Js.to_float (new%js Js.date_now)##getTime
+
+  let xy (ev : Dom_html.mouseEvent Js.t) =
+    Js.to_float (Js.Unsafe.coerce ev)##.clientX, Js.to_float (Js.Unsafe.coerce ev)##.clientY
+  ;;
+
+  let in_browser () = Js.Optdef.test (Js.Unsafe.global##.document : _ Js.Optdef.t)
+
+  (* The pointer's horizontal direction, from the moves over the items. *)
+  let track ev =
+    if in_browser ()
+    then (
+      let x, _ = xy ev in
+      (match !last_x with
+       | Some x0 when Float.( <> ) x x0 -> moving_right := Some Float.(x > x0)
+       | _ -> ());
+      last_x := Some x)
+  ;;
+
+  let start (ev : Dom_html.mouseEvent Js.t) ~level ~sub_id =
+    if in_browser ()
+    then (
+      match
+        Js.Opt.to_option (Dom_html.document##getElementById (Js.string sub_id))
+      with
+      | None -> current := None
+      | Some content ->
+        let r = content##getBoundingClientRect in
+        let x, y = xy ev in
+        let left = Js.to_float r##.left
+        and right_edge = Js.to_float r##.right
+        and top = Js.to_float r##.top
+        and bottom = Js.to_float r##.bottom in
+        let right = Float.(left >= x) in
+        let near, far, bleed =
+          if right then left, right_edge, -5. else right_edge, left, 5.
+        in
+        current
+        := Some
+             { level
+             ; area = [ x +. bleed, y; near, top; far, top; far, bottom; near, bottom ]
+             ; right
+             ; until = now () +. 300.
+             })
+  ;;
+
+  let inside (px, py) polygon =
+    let a = Array.of_list polygon in
+    let n = Array.length a in
+    let inside = ref false in
+    let j = ref (n - 1) in
+    for i = 0 to n - 1 do
+      let xi, yi = a.(i)
+      and xj, yj = a.(!j) in
+      if Bool.( <> ) Float.(yi > py) Float.(yj > py)
+         && Float.(px < ((xj -. xi) *. (py -. yi) /. (yj -. yi)) +. xi)
+      then inside := not !inside;
+      j := i
+    done;
+    !inside
+  ;;
+
+  let moving_to_sub ev ~level =
+    in_browser ()
+    &&
+    match !current with
+    | Some g when not (String.equal g.level level) -> false
+    | Some g when Float.(now () < g.until) ->
+      Option.equal Bool.equal !moving_right (Some g.right) && inside (xy ev) g.area
+    | Some _ ->
+      current := None;
+      false
+    | None -> false
+  ;;
+end
+
 let rec render_level t ~prefix ~level_id ~subs (items : Item.t list) =
   let state = t.state in
   let counter = ref (-1) in
@@ -459,13 +550,23 @@ let rec render_level t ~prefix ~level_id ~subs (items : Item.t list) =
     [ Attr.tabindex (-1)
     ; data "orientation" "vertical"
     ; Attr.create "data-radix-collection-item" ""
-    ; Attr.on_mousemove (fun _ -> on_move)
-    ; Attr.on_mouseleave (fun _ ->
-        if highlighted
-        then
-          Effect.Many
-            [ t.set_state { state with highlighted = None }; focus_content level_id ]
-        else Effect.Ignore)
+    ; Attr.on_mousemove (fun ev ->
+        let to_sub = Grace.moving_to_sub ev ~level:level_id in
+        Grace.track ev;
+        if to_sub then Effect.Ignore else on_move)
+    ; Attr.on_mouseleave (fun ev ->
+        match sub_open with
+        | `Sub when Option.exists state.open_sub ~f:(fun o -> is_prefix ~prefix:path o) ->
+          (* The sub-menu stays, its trigger highlighted, while the pointer
+             heads for it. *)
+          Grace.start ev ~level:level_id ~sub_id:(path_id t.id path);
+          Effect.Ignore
+        | _ ->
+          if highlighted && not (Grace.moving_to_sub ev ~level:level_id)
+          then
+            Effect.Many
+              [ t.set_state { state with highlighted = None }; focus_content level_id ]
+          else Effect.Ignore)
     ; Focus.when_ highlighted
     ]
     @ (if highlighted then [ data "highlighted" "" ] else [])
@@ -561,6 +662,7 @@ let content
   ?(modal = true)
   ?(inside = [])
   ?(labelled_by = true)
+  ?on_dismiss
   ~base_class
   ~anchor
   t
@@ -601,7 +703,12 @@ let content
     ~attrs:
       ([ Attr.style (Css_gen.create ~field:"display" ~value:"contents")
        ; Presence.attr
-       ; Dismiss.attr ~inside ~modal ~on_dismiss:(fun (_ : Dismiss.Reason.t) -> t.close) ()
+       ; Dismiss.attr
+           ~inside
+           ~modal
+           ~on_dismiss:
+             (Option.value on_dismiss ~default:(fun (_ : Dismiss.Reason.t) -> t.close))
+           ()
        ]
      (* Radix's modal menus lock the page's scroll (RemoveScroll). *)
      @ if modal then [ Scroll.lock ] else [])

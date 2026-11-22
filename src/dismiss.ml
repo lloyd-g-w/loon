@@ -48,6 +48,14 @@ let is_inside (layer : Layer.t) (target : Dom.node Js.t) =
     | None -> false)
 ;;
 
+(* Whether [target] contains one of [inside] (the trigger). *)
+let contains_inside (layer : Layer.t) (target : Dom.node Js.t) =
+  List.exists layer.input.inside ~f:(fun id ->
+    match Js.Opt.to_option (Dom_html.document##getElementById (Js.string id)) with
+    | Some el -> Js.to_bool ((Js.Unsafe.coerce target)##contains el)
+    | None -> false)
+;;
+
 let target (ev : #Dom_html.event Js.t) : Dom.node Js.t option =
   Js.Opt.to_option (Js.Unsafe.coerce ev)##.target
 ;;
@@ -110,7 +118,14 @@ let install () =
       | _ -> ());
     listen "focusin" ~capture:true (fun (ev : Dom_html.event Js.t) ->
       match !layers, target ev with
-      | top :: _, Some t when top.input.focus_outside && not (is_inside top t) ->
+      | top :: _, Some t
+        when top.input.focus_outside
+             && (not (is_inside top t))
+             (* Not the focus Bonsai moves to the app's root (an ancestor of
+                the trigger) when the focused element is removed (an item
+                chosen): as Radix ignores focus on the body. The layer is
+                closing already, and its focus goes back where it was. *)
+             && not (contains_inside top t) ->
         dispatch top Focus_outside
       | _ -> ()))
 ;;

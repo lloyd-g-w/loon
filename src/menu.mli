@@ -180,7 +180,8 @@ val last_highlighted : Item.t list -> State.t
     {!Popper} against [anchor], dismissed by Esc and a pointer down outside
     it but for the elements [inside] ({!Dismiss}; [modal] by default), its
     exit animated ({!Presence}). [labelled_by] (default [true]): labelled by
-    the trigger, [trigger_id t.id]. *)
+    the trigger, [trigger_id t.id]. [on_dismiss] replaces [t.close] when
+    dismissed (to tell Escape from a click outside). *)
 val content
   :  ?attrs:Attr.t list
   -> ?class_:string
@@ -192,6 +193,7 @@ val content
   -> ?modal:bool
   -> ?inside:string list
   -> ?labelled_by:bool
+  -> ?on_dismiss:(Dismiss.Reason.t -> unit Effect.t)
   -> base_class:string
   -> anchor:Popper.Anchor.t
   -> t

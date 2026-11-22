@@ -210,7 +210,10 @@ let view ?(attrs = []) ?class_ ?(id = "menubar") ~state ~on_change (menus : Menu
                 ; Attr.on_mouseenter (fun _ ->
                     match state.value with
                     | Some open_ when not (String.equal open_ v) ->
-                      Effect.Many [ open_menu v; Focus.restore (trigger_id v) ]
+                      (* Radix focuses the trigger at once; the menu's
+                         content then takes the focus as it opens. *)
+                      Effect.Many
+                        [ Dom_util.focus_selector_now ("#" ^ trigger_id v); open_menu v ]
                     | _ -> Effect.Ignore)
                 ; Attr.on_focus (fun ev ->
                     Effect.Many
@@ -291,6 +294,13 @@ let view ?(attrs = []) ?class_ ?(id = "menubar") ~state ~on_change (menus : Menu
           ?avoid_collisions:c.avoid_collisions
           ~modal:false
           ~inside:(List.map enabled ~f:trigger_id)
+          ~on_dismiss:(function
+            | Escape -> close v
+            | Pointer_outside | Focus_outside ->
+              (* Radix: no focus back on the trigger after an interaction
+                 outside. *)
+              Effect.Many
+                [ Focus.no_restore; on_change { State.closed with current = Some v } ])
           ~base_class:content_class
           ~anchor:(Element (trigger_id v))
           menu
