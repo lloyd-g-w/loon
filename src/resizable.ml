@@ -158,16 +158,6 @@ let set_state (el : Dom_html.element Js.t) state =
   el##setAttribute (Js.string "data-separator") (Js.string state)
 ;;
 
-(* What [data-separator] shows when no drag is on: hover or focus. *)
-let rest_state (el : Dom_html.element Js.t) =
-  let matches s = Js.to_bool ((Js.Unsafe.coerce el)##matches (Js.string s)) in
-  if matches ":hover"
-  then "hover"
-  else if matches ":focus"
-  then "focus"
-  else "inactive"
-;;
-
 let current_target (ev : #Dom_html.event Js.t) : Dom_html.element Js.t option =
   Js.Opt.to_option (Js.Unsafe.coerce ev)##.currentTarget
 ;;
@@ -320,8 +310,18 @@ let view
           Hashtbl.remove drags id;
           body_style "cursor" "";
           body_style "user-select" "";
+          (* As react-resizable-panels: the handle lets go of the focus
+             it took on the pointer down. *)
           Option.iter (current_target ev) ~f:(fun el ->
-            set_state el (rest_state el))))
+            el##blur;
+            set_state el "inactive")))
+    in
+    let cursor = if horizontal then "ew-resize" else "ns-resize" in
+    (* Hovering a handle sets the page's cursor, as react-resizable-panels'
+       global cursor style. *)
+    let hover_cursor value (_ : Dom_html.pointerEvent Js.t) =
+      Effect.of_thunk (fun () ->
+        if in_browser () && not (Hashtbl.mem drags id) then body_style "cursor" value)
     in
     let dom_state state =
       fun (ev : #Dom_html.event Js.t) ->
@@ -379,6 +379,8 @@ let view
               ; Attr.on_pointermove on_pointermove
               ; Attr.on_pointerup on_pointerup
               ; Attr.on_pointerenter (dom_state (fun _ -> "hover"))
+              ; Attr.on_pointerenter (hover_cursor cursor)
+              ; Attr.on_pointerleave (hover_cursor "")
               ; Attr.on_pointerleave
                   (dom_state (fun el ->
                      if

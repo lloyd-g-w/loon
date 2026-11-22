@@ -116,9 +116,8 @@ let nav_main_item ~sidebar (item : Nav_item.t) (local_ graph) =
     (Collapsible.root_attrs collapsible)
   @@ Sidebar.menu_item
     ~class_:"group/collapsible"
-    [ Slot.merge
-        ~defaults:[ "data-slot", Attr.create "data-slot" "collapsible-trigger" ]
-        (Collapsible.trigger_attrs collapsible)
+    [ Collapsible.trigger_child
+        collapsible
         (Sidebar.menu_button
            ~tooltip:(Sidebar.menu_tooltip sidebar item.title)
            [ (match item.icon with

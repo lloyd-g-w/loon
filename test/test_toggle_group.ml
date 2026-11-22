@@ -28,20 +28,23 @@ let%expect_test "shadcn's classes" =
     <div role="toolbar"
          dir="ltr"
          data-slot="toggle-group"
+         tabindex="0"
          data-variant="outline"
          data-spacing="0"
          class="data-[spacing=default]:data-[variant=outline]:shadow-xs flex gap-[--spacing(var(--gap))] group/toggle-group items-center rounded-md w-fit"
-         custom-css-vars=((--gap 0))>
+         custom-css-vars=((--gap 0))
+         @on_focusout
+         @on_focus>
       <button type="button"
               data-state="on"
               aria-pressed="true"
-              tabindex="0"
+              tabindex="-1"
               data-slot="toggle-group-item"
               data-variant="outline"
               data-spacing="0"
               class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-transparent border border-input dark:aria-invalid:ring-destructive/40 data-[spacing=0]:data-[variant=outline]:border-l-0 data-[spacing=0]:data-[variant=outline]:first:border-l data-[spacing=0]:first:rounded-l-md data-[spacing=0]:last:rounded-r-md data-[spacing=0]:rounded-none data-[spacing=0]:shadow-none data-[state=on]:bg-accent data-[state=on]:text-accent-foreground disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:z-10 focus:z-10 font-medium gap-2 h-9 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center min-w-0 outline-none px-3 rounded-md shadow-xs shrink-0 text-sm transition-[color,box-shadow] w-auto whitespace-nowrap"
-              #value="bold"
               @on_click
+              @on_focus
               @on_keydown> B </button>
       <button type="button"
               data-state="off"
@@ -51,8 +54,8 @@ let%expect_test "shadcn's classes" =
               data-variant="outline"
               data-spacing="0"
               class="[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 aria-invalid:border-destructive aria-invalid:ring-destructive/20 bg-transparent border border-input dark:aria-invalid:ring-destructive/40 data-[spacing=0]:data-[variant=outline]:border-l-0 data-[spacing=0]:data-[variant=outline]:first:border-l data-[spacing=0]:first:rounded-l-md data-[spacing=0]:last:rounded-r-md data-[spacing=0]:rounded-none data-[spacing=0]:shadow-none data-[state=on]:bg-accent data-[state=on]:text-accent-foreground disabled:opacity-50 disabled:pointer-events-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:z-10 focus:z-10 font-medium gap-2 h-9 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center min-w-0 outline-none px-3 rounded-md shadow-xs shrink-0 text-sm transition-[color,box-shadow] w-auto whitespace-nowrap"
-              #value="italic"
               @on_click
+              @on_focus
               @on_keydown> I </button>
     </div>
     |}]
@@ -73,20 +76,23 @@ let%expect_test "spacing, size and vertical orientation" =
     <div role="radiogroup"
          dir="ltr"
          data-slot="toggle-group"
+         tabindex="0"
          data-size="sm"
          data-spacing="2"
          data-orientation="vertical"
-         custom-css-vars=((--gap 2))>
+         custom-css-vars=((--gap 2))
+         @on_focusout
+         @on_focus>
       <button type="button"
               data-state="off"
               role="radio"
               aria-checked="false"
-              tabindex="0"
+              tabindex="-1"
               data-slot="toggle-group-item"
               data-size="sm"
               data-spacing="2"
-              #value="a"
               @on_click
+              @on_focus
               @on_keydown> A </button>
     </div>
     |}]
@@ -108,48 +114,51 @@ let%expect_test
       <div role="radiogroup"
            dir="ltr"
            data-slot="toggle-group"
+           tabindex="0"
            data-spacing="0"
-           custom-css-vars=((--gap 0))>
+           custom-css-vars=((--gap 0))
+           @on_focusout
+           @on_focus>
         <button type="button"
                 data-state="off"
                 role="radio"
                 aria-checked="false"
-                tabindex="0"
+                tabindex="-1"
                 data-slot="toggle-group-item"
                 data-spacing="0"
-                #value="bold"
                 @on_click
+                @on_focus
                 @on_keydown> B </button>
         <button type="button"
                 data-state="off"
                 role="radio"
                 aria-checked="false"
-                tabindex="0"
+                tabindex="-1"
                 data-slot="toggle-group-item"
                 data-spacing="0"
-                #value="italic"
                 @on_click
+                @on_focus
                 @on_keydown> I </button>
         <button type="button"
                 data-state="off"
                 role="radio"
                 aria-checked="false"
-                tabindex="0"
+                tabindex="-1"
                 data-slot="toggle-group-item"
                 data-spacing="0"
                 data-disabled=""
                 disabled=""
-                #value="strike"
+                @on_focus
                 @on_keydown> S </button>
         <button type="button"
                 data-state="off"
                 role="radio"
                 aria-checked="false"
-                tabindex="0"
+                tabindex="-1"
                 data-slot="toggle-group-item"
                 data-spacing="0"
-                #value="underline"
                 @on_click
+                @on_focus
                 @on_keydown> U </button>
       </div>
       <output> () </output>
@@ -159,22 +168,20 @@ let%expect_test
   Handle.show_diff handle;
   [%expect
     {|
-      <div>
-        <div role="radiogroup"
-             dir="ltr"
-             data-slot="toggle-group"
+             tabindex="0"
              data-spacing="0"
-             custom-css-vars=((--gap 0))>
+             custom-css-vars=((--gap 0))
+             @on_focusout
+             @on_focus>
           <button type="button"
                   data-state="off"
                   role="radio"
                   aria-checked="false"
-    -|            tabindex="0"
-    +|            tabindex="-1"
+                  tabindex="-1"
                   data-slot="toggle-group-item"
                   data-spacing="0"
-                  #value="bold"
                   @on_click
+                  @on_focus
                   @on_keydown> B </button>
           <button type="button"
     -|            data-state="off"
@@ -182,34 +189,32 @@ let%expect_test
                   role="radio"
     -|            aria-checked="false"
     +|            aria-checked="true"
-                  tabindex="0"
+                  tabindex="-1"
                   data-slot="toggle-group-item"
                   data-spacing="0"
-                  #value="italic"
                   @on_click
+                  @on_focus
                   @on_keydown> I </button>
           <button type="button"
                   data-state="off"
                   role="radio"
                   aria-checked="false"
-    -|            tabindex="0"
-    +|            tabindex="-1"
+                  tabindex="-1"
                   data-slot="toggle-group-item"
                   data-spacing="0"
                   data-disabled=""
                   disabled=""
-                  #value="strike"
+                  @on_focus
                   @on_keydown> S </button>
           <button type="button"
                   data-state="off"
                   role="radio"
                   aria-checked="false"
-    -|            tabindex="0"
-    +|            tabindex="-1"
+                  tabindex="-1"
                   data-slot="toggle-group-item"
                   data-spacing="0"
-                  #value="underline"
                   @on_click
+                  @on_focus
                   @on_keydown> U </button>
         </div>
     -|  <output> () </output>
@@ -224,8 +229,11 @@ let%expect_test
         <div role="radiogroup"
              dir="ltr"
              data-slot="toggle-group"
+             tabindex="0"
              data-spacing="0"
-             custom-css-vars=((--gap 0))>
+             custom-css-vars=((--gap 0))
+             @on_focusout
+             @on_focus>
     -|    <button type="button"
     -|            data-state="off"
     -|            role="radio"
@@ -233,18 +241,18 @@ let%expect_test
     -|            tabindex="-1"
     -|            data-slot="toggle-group-item"
     -|            data-spacing="0"
-    -|            #value="bold"
     -|            @on_click
+    -|            @on_focus
     -|            @on_keydown> B </button>
           <button type="button"
                   data-state="on"
                   role="radio"
                   aria-checked="true"
-                  tabindex="0"
+                  tabindex="-1"
                   data-slot="toggle-group-item"
                   data-spacing="0"
-    +|            #value="bold"
-    +|            @on_click
+                  @on_click
+                  @on_focus
     +|            @on_keydown> B </button>
     +|    <button type="button"
     +|            data-state="off"
@@ -253,8 +261,8 @@ let%expect_test
     +|            tabindex="-1"
     +|            data-slot="toggle-group-item"
     +|            data-spacing="0"
-                  #value="italic"
-                  @on_click
+    +|            @on_click
+    +|            @on_focus
                   @on_keydown> I </button>
           <button type="button"
                   data-state="off"
@@ -265,7 +273,7 @@ let%expect_test
                   data-spacing="0"
                   data-disabled=""
                   disabled=""
-                  #value="strike"
+                  @on_focus
                   @on_keydown> S </button>
           <button type="button"
                   data-state="off"
@@ -274,8 +282,8 @@ let%expect_test
                   tabindex="-1"
                   data-slot="toggle-group-item"
                   data-spacing="0"
-                  #value="underline"
                   @on_click
+                  @on_focus
                   @on_keydown> U </button>
         </div>
     -|  <output> (italic) </output>
@@ -290,53 +298,48 @@ let%expect_test
         <div role="radiogroup"
              dir="ltr"
              data-slot="toggle-group"
+             tabindex="0"
              data-spacing="0"
-             custom-css-vars=((--gap 0))>
+             custom-css-vars=((--gap 0))
+             @on_focusout
+             @on_focus>
           <button type="button"
     -|            data-state="on"
     +|            data-state="off"
                   role="radio"
     -|            aria-checked="true"
     +|            aria-checked="false"
-                  tabindex="0"
+                  tabindex="-1"
                   data-slot="toggle-group-item"
                   data-spacing="0"
-                  #value="bold"
                   @on_click
+                  @on_focus
                   @on_keydown> B </button>
           <button type="button"
                   data-state="off"
                   role="radio"
                   aria-checked="false"
-    -|            tabindex="-1"
-    +|            tabindex="0"
+                  tabindex="-1"
                   data-slot="toggle-group-item"
                   data-spacing="0"
-                  #value="italic"
                   @on_click
+                  @on_focus
                   @on_keydown> I </button>
-          <button type="button"
-                  data-state="off"
-                  role="radio"
-                  aria-checked="false"
-    -|            tabindex="-1"
-    +|            tabindex="0"
-                  data-slot="toggle-group-item"
+
                   data-spacing="0"
                   data-disabled=""
                   disabled=""
-                  #value="strike"
+                  @on_focus
                   @on_keydown> S </button>
           <button type="button"
                   data-state="off"
                   role="radio"
                   aria-checked="false"
-    -|            tabindex="-1"
-    +|            tabindex="0"
+                  tabindex="-1"
                   data-slot="toggle-group-item"
                   data-spacing="0"
-                  #value="underline"
                   @on_click
+                  @on_focus
                   @on_keydown> U </button>
         </div>
     -|  <output> (bold) </output>
@@ -366,16 +369,19 @@ let%expect_test
       <div role="toolbar"
            dir="ltr"
            data-slot="toggle-group"
+           tabindex="0"
            data-spacing="0"
-           custom-css-vars=((--gap 0))>
+           custom-css-vars=((--gap 0))
+           @on_focusout
+           @on_focus>
         <button type="button"
                 data-state="off"
                 aria-pressed="false"
                 tabindex="-1"
                 data-slot="toggle-group-item"
                 data-spacing="0"
-                #value="bold"
                 @on_click
+                @on_focus
                 @on_keydown> B </button>
         <button type="button"
                 data-state="off"
@@ -383,8 +389,8 @@ let%expect_test
                 tabindex="-1"
                 data-slot="toggle-group-item"
                 data-spacing="0"
-                #value="italic"
                 @on_click
+                @on_focus
                 @on_keydown> I </button>
         <button type="button"
                 data-state="off"
@@ -394,16 +400,16 @@ let%expect_test
                 data-spacing="0"
                 data-disabled=""
                 disabled=""
-                #value="strike"
+                @on_focus
                 @on_keydown> S </button>
         <button type="button"
                 data-state="on"
                 aria-pressed="true"
-                tabindex="0"
+                tabindex="-1"
                 data-slot="toggle-group-item"
                 data-spacing="0"
-                #value="underline"
                 @on_click
+                @on_focus
                 @on_keydown> U </button>
       </div>
       <output> (underline) </output>
@@ -417,8 +423,11 @@ let%expect_test
         <div role="toolbar"
              dir="ltr"
              data-slot="toggle-group"
+             tabindex="0"
              data-spacing="0"
-             custom-css-vars=((--gap 0))>
+             custom-css-vars=((--gap 0))
+             @on_focusout
+             @on_focus>
           <button type="button"
     -|            data-state="off"
     +|            data-state="on"
@@ -427,8 +436,8 @@ let%expect_test
                   tabindex="-1"
                   data-slot="toggle-group-item"
                   data-spacing="0"
-                  #value="bold"
                   @on_click
+                  @on_focus
                   @on_keydown> B </button>
           <button type="button"
                   data-state="off"
@@ -436,8 +445,8 @@ let%expect_test
                   tabindex="-1"
                   data-slot="toggle-group-item"
                   data-spacing="0"
-                  #value="italic"
                   @on_click
+                  @on_focus
                   @on_keydown> I </button>
           <button type="button"
 
@@ -445,16 +454,16 @@ let%expect_test
                   data-spacing="0"
                   data-disabled=""
                   disabled=""
-                  #value="strike"
+                  @on_focus
                   @on_keydown> S </button>
           <button type="button"
                   data-state="on"
                   aria-pressed="true"
-                  tabindex="0"
+                  tabindex="-1"
                   data-slot="toggle-group-item"
                   data-spacing="0"
-                  #value="underline"
                   @on_click
+                  @on_focus
                   @on_keydown> U </button>
         </div>
     -|  <output> (underline) </output>
@@ -466,30 +475,10 @@ let%expect_test
   Handle.show_diff handle;
   [%expect
     {|
-      <div>
-        <div role="toolbar"
-             dir="ltr"
-             data-slot="toggle-group"
-             data-spacing="0"
-             custom-css-vars=((--gap 0))>
-          <button type="button"
-                  data-state="on"
-                  aria-pressed="true"
-    -|            tabindex="-1"
-    +|            tabindex="0"
                   data-slot="toggle-group-item"
                   data-spacing="0"
-                  #value="bold"
                   @on_click
-                  @on_keydown> B </button>
-          <button type="button"
-                  data-state="off"
-                  aria-pressed="false"
-                  tabindex="-1"
-                  data-slot="toggle-group-item"
-                  data-spacing="0"
-                  #value="italic"
-                  @on_click
+                  @on_focus
                   @on_keydown> I </button>
           <button type="button"
                   data-state="off"
@@ -499,19 +488,18 @@ let%expect_test
                   data-spacing="0"
                   data-disabled=""
                   disabled=""
-                  #value="strike"
+                  @on_focus
                   @on_keydown> S </button>
           <button type="button"
     -|            data-state="on"
     +|            data-state="off"
     -|            aria-pressed="true"
     +|            aria-pressed="false"
-    -|            tabindex="0"
-    +|            tabindex="-1"
+                  tabindex="-1"
                   data-slot="toggle-group-item"
                   data-spacing="0"
-                  #value="underline"
                   @on_click
+                  @on_focus
                   @on_keydown> U </button>
         </div>
     -|  <output> (underline bold) </output>

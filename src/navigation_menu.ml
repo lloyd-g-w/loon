@@ -528,7 +528,7 @@ let content ?(attrs = []) ?class_ t ~value children =
                  ]
              ; Attr.on_keydown on_keydown
              ]
-           @ (if t.viewport then [] else hover_attrs t)
+           @ (if t.viewport then [] else Presence.attr :: hover_attrs t)
            @ attrs)
         children
     in

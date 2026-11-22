@@ -29,16 +29,15 @@ let%expect_test "shadcn's classes" =
     |}]
 ;;
 
-let%expect_test "the trigger opens and closes it; trigger_attrs on a Button" =
+let%expect_test "the trigger opens and closes it; trigger_child on a Button" =
   let handle =
     Render.handle
       ~classes:false
       (Collapsible.component
          (Bonsai_web.Bonsai.return (fun c ->
-            [ Button.view
-                ~attrs:(Collapsible.trigger_attrs c)
-                ~variant:Ghost
-                [ Node.text "Toggle" ]
+            [ Collapsible.trigger_child
+                c
+                (Button.view ~variant:Ghost [ Node.text "Toggle" ])
             ; Collapsible.content c [ Node.text "Hidden" ]
             ])))
   in
@@ -47,7 +46,7 @@ let%expect_test "the trigger opens and closes it; trigger_attrs on a Button" =
     {|
     <div data-state="closed" data-slot="collapsible">
       <button type="button"
-              data-slot="button"
+              data-slot="collapsible-trigger"
               data-variant="ghost"
               data-size="default"
               aria-controls="bonsai_path_replaced_in_test-content"
@@ -68,7 +67,7 @@ let%expect_test "the trigger opens and closes it; trigger_attrs on a Button" =
     -|<div data-state="closed" data-slot="collapsible">
     +|<div data-state="open" data-slot="collapsible">
         <button type="button"
-                data-slot="button"
+                data-slot="collapsible-trigger"
                 data-variant="ghost"
                 data-size="default"
                 aria-controls="bonsai_path_replaced_in_test-content"
@@ -93,7 +92,7 @@ let%expect_test "the trigger opens and closes it; trigger_attrs on a Button" =
     -|<div data-state="open" data-slot="collapsible">
     +|<div data-state="closed" data-slot="collapsible">
         <button type="button"
-                data-slot="button"
+                data-slot="collapsible-trigger"
                 data-variant="ghost"
                 data-size="default"
                 aria-controls="bonsai_path_replaced_in_test-content"

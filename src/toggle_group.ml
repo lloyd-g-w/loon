@@ -28,13 +28,8 @@ let pressed t value =
   | Multiple { value = vs; _ } -> List.mem vs value ~equal:String.equal
 ;;
 
-(* The tab stop: the pressed item (the first pressed, of several), else
-   every item. *)
-let tab_stop t value =
-  match t.kind with
-  | Single { value = None; _ } | Multiple { value = []; _ } -> true
-  | Single { value = Some v; _ } | Multiple { value = v :: _; _ } -> String.equal v value
-;;
+let group_selector = "[data-slot=toggle-group]"
+let item_selector = "[data-slot=toggle-group-item]"
 
 let root ?(attrs = []) ?class_ ?variant ?size ?(spacing = 0) ?orientation ?(disabled = false)
   kind children
@@ -50,6 +45,10 @@ let root ?(attrs = []) ?class_ ?variant ?size ?(spacing = 0) ?orientation ?(disa
        ; Attr.create "dir" "ltr"
        ; data "slot" "toggle-group"
        ]
+       @ Roving.Tab_stop.group_attrs
+           ~item:item_selector
+           ~active:"[data-state=on]"
+           ~focusable:(not disabled)
        @ Option.value_map variant ~default:[] ~f:(fun v ->
          [ data "variant" (Toggle.Variant.name v) ])
        @ Option.value_map size ~default:[] ~f:(fun s -> [ data "size" (Toggle.Size.name s) ])
@@ -182,10 +181,8 @@ let item ?(attrs = []) ?class_ ?variant ?size ?(disabled = false) t ~value child
        @ (match t.kind with
           | Single _ -> [ Attr.role "radio"; aria_bool "checked" on ]
           | Multiple _ -> [ aria_bool "pressed" on ])
-       @ [ Attr.value value
-         ; Attr.tabindex (if tab_stop t value then 0 else -1)
-         ; data "slot" "toggle-group-item"
-         ]
+       @ Roving.Tab_stop.item_attrs ~group:group_selector ~item:item_selector
+       @ [ data "slot" "toggle-group-item" ]
        @ Option.value_map variant ~default:[] ~f:(fun v ->
          [ data "variant" (Toggle.Variant.name v) ])
        @ Option.value_map size ~default:[] ~f:(fun s -> [ data "size" (Toggle.Size.name s) ])
@@ -203,8 +200,8 @@ let item ?(attrs = []) ?class_ ?variant ?size ?(disabled = false) t ~value child
              match
                Roving.next
                  ev
-                 ~group:"[data-slot=toggle-group]"
-                 ~item:"[data-slot=toggle-group-item]"
+                 ~group:group_selector
+                 ~item:item_selector
                  ~fallback:t.items
                  ~current:value
              with

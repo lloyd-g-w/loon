@@ -12,23 +12,8 @@ let demo (local_ graph) =
   let field id label value =
     Node.div
       ~attrs:[ Attr.class_ "grid grid-cols-3 items-center gap-4" ]
-      [ Node.label
-          ~attrs:
-            [ Attr.for_ id
-            ; Attr.class_ "flex items-center gap-2 text-sm leading-none font-medium select-none"
-            ]
-          [ Node.text label ]
-      ; Node.input
-          ~attrs:
-            [ Attr.id id
-            ; Attr.value value
-            ; Attr.class_
-                "col-span-2 h-8 w-full min-w-0 rounded-md border border-input \
-                 bg-transparent px-3 py-1 text-base shadow-xs outline-none \
-                 focus-visible:border-ring focus-visible:ring-[3px] \
-                 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"
-            ]
-          ()
+      [ Label.view ~for_:id [ Node.text label ]
+      ; Input.view ~id ~value ~class_:"col-span-2 h-8" ()
       ]
   in
   Popover.component

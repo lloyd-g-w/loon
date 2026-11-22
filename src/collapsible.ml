@@ -183,6 +183,14 @@ let trigger_attrs t =
   else [ Attr.on_click (fun _ -> t.on_change (not t.open_)) ]
 ;;
 
+let trigger_child ?(attrs = []) t node =
+  Slot.merge
+    ~defaults:
+      [ "type", Attr.type_ "button"; "data-slot", data "slot" "collapsible-trigger" ]
+    (trigger_attrs t @ attrs)
+    node
+;;
+
 let trigger ?(attrs = []) ?class_ t children =
   Node.button
     ~attrs:

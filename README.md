@@ -23,25 +23,50 @@ sidebars, login, signup and calendars: the `loon_blocks` library in
 
 ## Quick start
 
-With Nix, add loon to your flake's inputs and its package to your build:
+Two ways, as with shadcn: depend on the `loon` library, or copy the
+components into your project with the `loon` CLI (below).
 
-```nix
-inputs.loon.url = "github:lloyd-g-w/loon";
+### As a library
+
+Start from the template (Nix; a small app in `examples/app/`):
+
+```sh
+nix flake init -t github:lloyd-g-w/loon
+nix develop          # OxCaml, dune, Bonsai, loon and Tailwind v4
+dune build           # _build/default/main.bc.js and main.css; or: nix build
 ```
 
-Depend on it in dune:
+Or add it to a project: with Nix, `inputs.loon.url =
+"github:lloyd-g-w/loon"` and `loon.packages.${system}.loon` among your
+build inputs (it brings the OxCaml toolchain and Bonsai); with opam, `opam
+pin add loon https://github.com/lloyd-g-w/loon.git` in an OxCaml switch.
+Then, in dune:
 
 ```dune
 (executable
  (name main)
  (modes js)
- (libraries bonsai_web loon))
+ (preprocess (pps ppx_jane js_of_ocaml-ppx bonsai.ppx_bonsai))
+ (libraries core bonsai bonsai_web virtual_dom loon))
+
+; One stylesheet for loon's classes and yours: loon's Tailwind input
+; (installed with the library; its @source lines name the sources of loon
+; and loon.blocks), then your sources.
+(rule
+ (with-stdout-to main.input.css
+  (progn
+   (echo "@import \"%{lib:loon:loon.input.css}\";\n")
+   (echo "@source \"./*.ml\";\n"))))
+
+(rule
+ (target main.css)
+ (deps main.input.css %{lib:loon:loon.input.css} (glob_files *.ml))
+ (action (run tailwindcss --silent --input main.input.css --output main.css)))
 ```
 
-Load the stylesheet — link `loon.css` (installed in `share/loon/`, built by
-Tailwind from loon's sources), or let OCaml put it in the page. It has the
-classes loon's components use; for Tailwind classes of your own, copy the
-components with the CLI (below), whose dune rule compiles your sources too.
+and link `main.css` from your page. (If you use no Tailwind classes of your
+own, `share/loon/loon.css` is loon's alone, prebuilt, and
+`Loon.Stylesheet.install ()` puts it in the page.)
 
 ```ocaml
 open! Core
@@ -63,11 +88,29 @@ let app (local_ graph) =
     ]
 ;;
 
-let () =
-  Stylesheet.install ();
-  Bonsai_web.Start.start app
-;;
+let () = Bonsai_web.Start.start app
 ```
+
+### Copying the components: the CLI
+
+```sh
+nix run github:lloyd-g-w/loon -- init     # src/ui: a dune library `ui` with the theme
+loon add button dialog                    # copies them and what they need
+loon list                                 # what there is
+loon info select                          # its files and what it needs
+loon diff                                 # how your copies differ from loon's
+```
+
+`loon add` takes `-dir DIR` (default `src/ui`), `-overwrite`, `-dry-run`,
+and `-all`, and copies the modules a component uses (Sidebar brings Sheet,
+Tooltip, Portal, Popper, …). The directory's `loon.css` is Tailwind v4's
+input: Tailwind, tw-animate-css, shadcn's custom variants and theme
+(`@theme inline`, `.dark`), and Sonner's stylesheet once you add `sonner`.
+The dune file `loon init` writes compiles it to `ui.css` with `tailwindcss`
+(v4, e.g. nixpkgs' `tailwindcss_4`), scanning the components' sources; for your
+own sources' classes, add `@source` lines to `loon.css` (and the files to
+the rule's `deps`); `cli/test/compile.t` builds such a project. The copies are yours: write
+`Ui.Button.view` where the docs write `Loon.Button.view`.
 
 ## Components
 
@@ -92,32 +135,11 @@ on `:root`, and dark values under the class `dark` (on `<html>`, or
 `Theme.root ~mode:Dark` for a subtree). Override them in a stylesheet after
 `loon.css`, as you would shadcn's `globals.css`.
 
-## Copying components: the CLI
-
-```sh
-nix run github:lloyd-g-w/loon -- init     # src/ui: a dune library `ui` with the theme
-loon add button dialog                    # copies them and what they need
-loon list                                 # what there is
-loon info select                          # its files and what it needs
-loon diff                                 # how your copies differ from loon's
-```
-
-`loon add` takes `-dir DIR` (default `src/ui`), `-overwrite`, `-dry-run`,
-and `-all`, and copies the modules a component uses (Sidebar brings Sheet,
-Tooltip, Portal, Popper, …). The directory's `loon.css` is Tailwind v4's
-input: Tailwind, tw-animate-css, shadcn's custom variants and theme
-(`@theme inline`, `.dark`), and Sonner's stylesheet once you add `sonner`.
-The dune file `loon init` writes compiles it to `ui.css` with `tailwindcss`
-(v4, e.g. nixpkgs' `tailwindcss_4`), scanning the components' sources; for your
-own sources' classes, add `@source` lines to `loon.css` (and the files to
-the rule's `deps`). The copies are yours: write
-`Ui.Button.view` where the docs write `Loon.Button.view`.
-
 ## Development
 
 ```sh
 nix develop          # prigh's OxCaml toolchain (binary cache), tailwindcss, node
-dune build @runtest  # expect tests (components, the docs app, the CLI)
+dune build @runtest  # expect tests (components, the docs app, the CLI, examples/)
 ./check              # build, dune tests, and the e2e in Chromium
 ./check --full       # the e2e in Chromium, Firefox and WebKit
 ```

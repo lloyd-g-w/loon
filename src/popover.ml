@@ -90,9 +90,9 @@ let content
            ; Attr.tabindex (-1)
            ; Focus.on_mount `First_tabbable
            ; Attr.on_keydown (fun ev ->
-               Option.value
-                 (Dismiss.escape_keydown ~on_escape:(close Escape) ev)
-                 ~default:Effect.Ignore)
+               match Dismiss.escape_keydown ~on_escape:(close Escape) ev with
+               | Some effect -> effect
+               | None -> Focus.loop_tab ev)
            ]
            @ Popper.content_attrs ~side ~align ()
            @ attrs)

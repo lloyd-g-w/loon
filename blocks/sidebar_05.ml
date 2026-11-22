@@ -101,11 +101,8 @@ let nav_item ~index (title, items) (local_ graph) =
     ~class_:"group/collapsible"
     (Bonsai.return (fun collapsible ->
        [ Sidebar.menu_item
-           [ (* [CollapsibleTrigger asChild]: its [data-slot] wins, as in
-                shadcn. *)
-             Slot.merge
-               ~defaults:[ "data-slot", Attr.create "data-slot" "collapsible-trigger" ]
-               (Collapsible.trigger_attrs collapsible)
+           [ Collapsible.trigger_child
+               collapsible
                (Sidebar.menu_button
                   [ Node.text (title ^ " ")
                   ; Icon.view
