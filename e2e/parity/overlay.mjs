@@ -313,7 +313,9 @@ export async function hoverChecks(b, { name, trigger, content, arrow }) {
   // Leave: time to close.
   const closed = await Promise.all(
     [b.loon.page, b.ref.page].map(async (p) => {
-      await p.mouse.move(2, 2);
+      // In steps: Radix's tooltip closes on a pointermove outside the grace
+      // area its pointerleave sets up, not on the pointerleave.
+      await p.mouse.move(2, 2, { steps: 5 });
       return timeUntil(p, content, null, 2000);
     }),
   );

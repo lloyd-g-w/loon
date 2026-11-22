@@ -4,6 +4,7 @@
 # ports from there, in Vite + React) in ${SHADCN_REF_DIR:-/tmp/shadcn-ref};
 # see README.md. Needs node and npm, and shadcn's source in
 # ${SHADCN_SRC:-~/src/shadcn-ui}.
+# Versions as shadcn's pnpm-lock.yaml.
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 loon="$here/../.."
@@ -71,9 +72,9 @@ body { font-family: var(--font-sans); }
 EOF
 } >src/index.css
 if [ ! -d node_modules ]; then
-	npm install --no-audit --no-fund react@19.2.3 react-dom@19.2.3 radix-ui@^1.4.3 cmdk vaul@1.1.2 \
-		sonner@^2 react-day-picker@^9.7 embla-carousel-react@8.5.2 embla-carousel-autoplay@8.5.2 \
-		react-resizable-panels@^4 recharts@3.8.0 lucide-react@0.474.0 input-otp date-fns \
+	npm install --no-audit --no-fund react@19.2.3 react-dom@19.2.3 radix-ui@1.4.3 cmdk vaul@1.1.2 \
+		sonner@2.0.7 react-day-picker@9.8.1 embla-carousel-react@8.5.2 embla-carousel-autoplay@8.5.2 \
+		react-resizable-panels@4.5.8 recharts@3.8.0 lucide-react@0.474.0 input-otp@1.4.2 date-fns \
 		@tanstack/react-table@^9 next-themes zod react-hook-form @hookform/resolvers @tabler/icons-react \
 		tailwindcss@^4 @tailwindcss/vite tw-animate-css class-variance-authority clsx tailwind-merge \
 		vite @vitejs/plugin-react
