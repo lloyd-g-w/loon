@@ -83,7 +83,7 @@ let icon =
     ~attrs:[ Attr.class_ "flex w-full max-w-lg flex-col gap-6" ]
     [ Item.view
         ~variant:Outline
-        [ Item.media ~variant:Icon [ Icon.view Shield_exclamation_point ]
+        [ Item.media ~variant:Icon [ Icon.view Shield_alert ]
         ; Item.content
             [ Item.title [ Node.text "Security Alert" ]
             ; Item.description [ Node.text "New login detected from unknown device." ]

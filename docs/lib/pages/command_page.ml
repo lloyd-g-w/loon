@@ -28,7 +28,7 @@ let demo (local_ graph) =
            ; Command.group
                ~heading:"Suggestions"
                [ item Calendar "Calendar"
-               ; item Face_slightly_smiling "Search Emoji"
+               ; item Smile "Search Emoji"
                ; item ~disabled:true Calculator "Calculator"
                ]
            ; Command.separator ()
@@ -93,7 +93,7 @@ let dialog (local_ graph) =
             ; Command.group
                 ~heading:"Suggestions"
                 [ item Calendar "Calendar"
-                ; item Face_slightly_smiling "Search Emoji"
+                ; item Smile "Search Emoji"
                 ; item Calculator "Calculator"
                 ]
             ; Command.separator ()

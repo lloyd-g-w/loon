@@ -230,8 +230,7 @@ let%expect_test "size sm, with media" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"> </circle>
               </svg>
             </div>

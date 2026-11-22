@@ -209,7 +209,7 @@ let demo (local_ graph) =
                          ~attrs:[ Attr.class_ "grid w-[200px] gap-4" ]
                          [ Node.li
                              (List.map
-                                [ Icon.Circle_question_mark, "Backlog"
+                                [ Icon.Circle_help, "Backlog"
                                 ; Circle, "To Do"
                                 ; Circle_check, "Done"
                                 ]

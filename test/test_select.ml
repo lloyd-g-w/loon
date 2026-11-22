@@ -108,7 +108,6 @@ let%expect_test "shadcn's classes" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round"
-             aria-hidden="true"
              class="lucide lucide-chevron-down opacity-50 size-4">
           <path d="m6 9 6 6 6-6"> </path>
         </svg>
@@ -169,7 +168,6 @@ let%expect_test "shadcn's classes" =
                    stroke-width="2"
                    stroke-linecap="round"
                    stroke-linejoin="round"
-                   aria-hidden="true"
                    class="lucide lucide-chevron-up size-4">
                 <path d="m18 15-6-6-6 6"> </path>
               </svg>
@@ -211,7 +209,6 @@ let%expect_test "shadcn's classes" =
                          stroke-width="2"
                          stroke-linecap="round"
                          stroke-linejoin="round"
-                         aria-hidden="true"
                          class="lucide lucide-check size-4">
                       <path d="M20 6 9 17l-5-5"> </path>
                     </svg>
@@ -240,7 +237,6 @@ let%expect_test "shadcn's classes" =
                    stroke-width="2"
                    stroke-linecap="round"
                    stroke-linejoin="round"
-                   aria-hidden="true"
                    class="lucide lucide-chevron-down size-4">
                 <path d="m6 9 6 6 6-6"> </path>
               </svg>
@@ -282,8 +278,7 @@ let%expect_test "closed, with a placeholder and the hidden native select" =
              stroke="currentColor"
              stroke-width="2"
              stroke-linecap="round"
-             stroke-linejoin="round"
-             aria-hidden="true">
+             stroke-linejoin="round">
           <path d="m6 9 6 6 6-6"> </path>
         </svg>
       </button>
@@ -333,8 +328,7 @@ let%expect_test "open: the structure, groups, labels and the separator" =
              stroke="currentColor"
              stroke-width="2"
              stroke-linecap="round"
-             stroke-linejoin="round"
-             aria-hidden="true">
+             stroke-linejoin="round">
           <path d="m6 9 6 6 6-6"> </path>
         </svg>
       </button>
@@ -393,8 +387,7 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <path d="m18 15-6-6-6 6"> </path>
               </svg>
             </div>
@@ -462,8 +455,7 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                          stroke="currentColor"
                          stroke-width="2"
                          stroke-linecap="round"
-                         stroke-linejoin="round"
-                         aria-hidden="true">
+                         stroke-linejoin="round">
                       <path d="M20 6 9 17l-5-5"> </path>
                     </svg>
                   </span>
@@ -505,8 +497,7 @@ let%expect_test "open: the structure, groups, labels and the separator" =
                    stroke="currentColor"
                    stroke-width="2"
                    stroke-linecap="round"
-                   stroke-linejoin="round"
-                   aria-hidden="true">
+                   stroke-linejoin="round">
                 <path d="m6 9 6 6 6-6"> </path>
               </svg>
             </div>
@@ -737,8 +728,7 @@ let%expect_test "disabled: the trigger does not open" =
              stroke="currentColor"
              stroke-width="2"
              stroke-linecap="round"
-             stroke-linejoin="round"
-             aria-hidden="true">
+             stroke-linejoin="round">
           <path d="m6 9 6 6 6-6"> </path>
         </svg>
       </button>
@@ -783,8 +773,7 @@ let%expect_test "the trigger's own id, for a label" =
            stroke="currentColor"
            stroke-width="2"
            stroke-linecap="round"
-           stroke-linejoin="round"
-           aria-hidden="true">
+           stroke-linejoin="round">
         <path d="m6 9 6 6 6-6"> </path>
       </svg>
     </button>

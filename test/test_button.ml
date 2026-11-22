@@ -48,8 +48,7 @@ let%expect_test "variants and sizes set data-variant, data-size and their classe
            stroke="currentColor"
            stroke-width="2"
            stroke-linecap="round"
-           stroke-linejoin="round"
-           aria-hidden="true">
+           stroke-linejoin="round">
         <path d="M5 12h14"> </path>
         <path d="M12 5v14"> </path>
       </svg>

@@ -40,6 +40,25 @@ module View = struct
   ;;
 end
 
+(* shadcn's `npx shadcn add NAME` button: copies the command that copies the
+   block into a project. *)
+let add_command_button (block : Block.t) =
+  let command = "loon add " ^ block.name in
+  Loon.Button.view
+    ~variant:Outline
+    ~size:Sm
+    ~class_:"group/copy w-fit gap-1 px-2 shadow-none"
+    ~attrs:
+      [ Attr.create "data-copied" "false"
+      ; Attr.create "data-docs" "copy-add-command"
+      ; Attr.on_click (fun ev -> Code_block.copy ~text:command ev)
+      ]
+    [ Icon.view ~class_:"group-data-[copied=true]/copy:hidden" Terminal
+    ; Icon.view ~class_:"hidden group-data-[copied=true]/copy:block" Check
+    ; Node.span [ Node.text command ]
+    ]
+;;
+
 let full_layout = [ 100.; 0. ]
 
 let sizes =
@@ -174,6 +193,8 @@ let viewer ~page (block : Block.t) (local_ graph) =
                            ]
                        ])
               ]
+          ; separator ~class_:"mx-1 h-4!" ()
+          ; add_command_button block
           ]
       ]
   in

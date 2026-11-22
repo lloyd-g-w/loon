@@ -108,8 +108,7 @@ let%expect_test "the customiser's pickers, closed" =
              stroke="currentColor"
              stroke-width="2"
              stroke-linecap="round"
-             stroke-linejoin="round"
-             aria-hidden="true">
+             stroke-linejoin="round">
           <rect width="18" height="11" x="3" y="11" rx="2" ry="2"> </rect>
           <path> </path>
         </svg>
@@ -159,8 +158,7 @@ let%expect_test "picking a font: the query and the preview" =
                stroke="currentColor"
                stroke-width="2"
                stroke-linecap="round"
-               stroke-linejoin="round"
-               aria-hidden="true">
+               stroke-linejoin="round">
             <path> </path>
           </svg>
         </span>
@@ -288,8 +286,7 @@ let%expect_test "shuffle keeps the locked params and the item; reset" =
            stroke="currentColor"
            stroke-width="2"
            stroke-linecap="round"
-           stroke-linejoin="round"
-           aria-hidden="true">
+           stroke-linejoin="round">
         <rect width="18" height="11" x="3" y="11" rx="2" ry="2"> </rect>
         <path> </path>
       </svg>
@@ -303,8 +300,7 @@ let%expect_test "shuffle keeps the locked params and the item; reset" =
            stroke="currentColor"
            stroke-width="2"
            stroke-linecap="round"
-           stroke-linejoin="round"
-           aria-hidden="true">
+           stroke-linejoin="round">
         <rect width="18" height="11" x="3" y="11" rx="2" ry="2"> </rect>
         <path> </path>
       </svg>

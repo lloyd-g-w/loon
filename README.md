@@ -96,14 +96,17 @@ let () = Bonsai_web.Start.start app
 ```sh
 nix run github:lloyd-g-w/loon -- init     # src/ui: a dune library `ui` with the theme
 loon add button dialog                    # copies them and what they need
-loon list                                 # what there is
+loon add login-03                         # a block (a page), with its components
+loon list                                 # what there is: components, then blocks
 loon info select                          # its files and what it needs
 loon diff                                 # how your copies differ from loon's
 ```
 
 `loon add` takes `-dir DIR` (default `src/ui`), `-overwrite`, `-dry-run`,
 and `-all`, and copies the modules a component uses (Sidebar brings Sheet,
-Tooltip, Portal, Popper, …). The directory's `loon.css` is Tailwind v4's
+Tooltip, Portal, Popper, …). A block (shadcn's pages: `dashboard-01`,
+`sidebar-07`, `login-03`, …) is copied the same way, beside the components
+it uses: `Ui.Login_03.view` is the page. The directory's `loon.css` is Tailwind v4's
 input: Tailwind, tw-animate-css, shadcn's custom variants and theme
 (`@theme inline`, `.dark`), and Sonner's stylesheet once you add `sonner`.
 The dune file `loon init` writes compiles it to `ui.css` with `tailwindcss`
@@ -123,7 +126,7 @@ Popover, Progress, Radio group, Resizable, Scroll area, Select, Separator,
 Sheet, Sidebar, Skeleton, Slider, Sonner, Spinner, Switch, Table, Tabs,
 Textarea, Toggle, Toggle group, Tooltip.
 
-Plus `Icon` (Lucide), `Cn` (shadcn's `cn`, with a tailwind-merge port),
+Plus `Icon` (Lucide), `Tabler` (Tabler Icons, for dashboard-01), `Cn` (shadcn's `cn`, with a tailwind-merge port),
 `Theme`, `Stylesheet`, `Use_mobile`, and the Radix primitives the
 components share (`Portal`, `Popper`, `Presence`, `Dismiss`, `Focus`,
 `Menu`, `Modal`, `Slot`, `List_nav`, `Roving`, …).
@@ -157,6 +160,6 @@ See `AGENTS.md` for the conventions a component follows, and
 ## Licence
 
 MIT. loon is derived from shadcn/ui and Radix Primitives (MIT), and
-includes tw-animate-css and Sonner's stylesheet (MIT) and Lucide's icons
-(ISC); the docs site bundles fonts (Geist and others, OFL) and
+includes tw-animate-css and Sonner's stylesheet (MIT), Lucide's icons
+(ISC) and Tabler's icons (MIT); the docs site bundles fonts (Geist and others, OFL) and
 temporal-polyfill (MIT). See `THIRD_PARTY_NOTICES.md`.

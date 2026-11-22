@@ -45,7 +45,6 @@ let%expect_test "shadcn's classes" =
            stroke-width="2"
            stroke-linecap="round"
            stroke-linejoin="round"
-           aria-hidden="true"
            data-slot="native-select-icon"
            class="-translate-y-1/2 absolute lucide lucide-chevron-down opacity-50 pointer-events-none right-3.5 select-none size-4 text-muted-foreground top-1/2">
         <path d="m6 9 6 6 6-6"> </path>
@@ -79,7 +78,6 @@ let%expect_test "sizes, disabled, invalid" =
            stroke-width="2"
            stroke-linecap="round"
            stroke-linejoin="round"
-           aria-hidden="true"
            data-slot="native-select-icon">
         <path d="m6 9 6 6 6-6"> </path>
       </svg>
@@ -95,7 +93,6 @@ let%expect_test "sizes, disabled, invalid" =
            stroke-width="2"
            stroke-linecap="round"
            stroke-linejoin="round"
-           aria-hidden="true"
            data-slot="native-select-icon">
         <path d="m6 9 6 6 6-6"> </path>
       </svg>
@@ -117,7 +114,6 @@ let%expect_test "sizes, disabled, invalid" =
            stroke-width="2"
            stroke-linecap="round"
            stroke-linejoin="round"
-           aria-hidden="true"
            data-slot="native-select-icon">
         <path d="m6 9 6 6 6-6"> </path>
       </svg>
@@ -158,7 +154,6 @@ let%expect_test "choosing an option sets the value" =
              stroke-width="2"
              stroke-linecap="round"
              stroke-linejoin="round"
-             aria-hidden="true"
              data-slot="native-select-icon">
           <path d="m6 9 6 6 6-6"> </path>
         </svg>
@@ -196,7 +191,6 @@ let%expect_test "choosing an option sets the value" =
                stroke-width="2"
                stroke-linecap="round"
                stroke-linejoin="round"
-               aria-hidden="true"
                data-slot="native-select-icon">
             <path d="m6 9 6 6 6-6"> </path>
           </svg>

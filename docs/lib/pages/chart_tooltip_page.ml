@@ -264,7 +264,7 @@ let icons (local_ graph) =
       , Chart.Config.item
           ~label:"Swimming"
           ~color:"var(--chart-2)"
-          ~icon:(fun () -> Icon.view Waves_horizontal)
+          ~icon:(fun () -> Icon.view Waves)
           () )
     ]
   in

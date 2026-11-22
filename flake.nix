@@ -138,6 +138,12 @@
           program = "${loon}/bin/loon";
         };
 
+        # Regenerates src/icon.ml and src/tabler.ml (tools/icons.nix).
+        apps.gen-icons = {
+          type = "app";
+          program = lib.getExe (import ./tools/icons.nix { inherit pkgs; });
+        };
+
         # e2e/: the documentation site in Chromium, Firefox and WebKit.
         checks.e2e =
           if pkgs.stdenv.hostPlatform.isLinux then

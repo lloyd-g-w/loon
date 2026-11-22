@@ -39,25 +39,25 @@ module App_data = struct
   let user_avatar = "avatars/shadcn.jpg"
 
   let nav_main =
-    [ "Dashboard", "#", Icon.Gauge
-    ; "Lifecycle", "#", Layout_list
-    ; "Analytics", "#", Chart_column
+    [ "Dashboard", "#", Tabler.Dashboard
+    ; "Lifecycle", "#", List_details
+    ; "Analytics", "#", Chart_bar
     ; "Projects", "#", Folder
     ; "Team", "#", Users
     ]
   ;;
 
   let nav_secondary =
-    [ "Settings", "#", Icon.Settings
-    ; "Get Help", "#", Circle_question_mark
+    [ "Settings", "#", Tabler.Settings
+    ; "Get Help", "#", Help
     ; "Search", "#", Search
     ]
   ;;
 
   let documents =
-    [ "Data Library", "#", Icon.Database
-    ; "Reports", "#", Clipboard_list
-    ; "Word Assistant", "#", File_type
+    [ "Data Library", "#", Tabler.Database
+    ; "Reports", "#", Report
+    ; "Word Assistant", "#", File_word
     ]
   ;;
 end
@@ -78,12 +78,12 @@ let nav_main ~sidebar items =
                        ease-linear hover:bg-primary/90 \
                        hover:text-primary-foreground active:bg-primary/90 \
                        active:text-primary-foreground"
-                    [ Icon.view Circle_plus; Node.span [ Node.text "Quick Create" ] ]
+                    [ Tabler.view Circle_plus_filled; Node.span [ Node.text "Quick Create" ] ]
                 ; Button.view
                     ~size:Icon
                     ~class_:"size-8 group-data-[collapsible=icon]:opacity-0"
                     ~variant:Outline
-                    [ Icon.view Mail; sr_only "Inbox" ]
+                    [ Tabler.view Mail; sr_only "Inbox" ]
                 ]
             ]
         ; Sidebar.menu
@@ -91,7 +91,7 @@ let nav_main ~sidebar items =
                Sidebar.menu_item
                  [ Sidebar.menu_button
                      ~tooltip:(Sidebar.menu_tooltip sidebar title)
-                     [ Icon.view icon; Node.span [ Node.text title ] ]
+                     [ Tabler.view icon; Node.span [ Node.text title ] ]
                  ]))
         ]
     ]
@@ -111,25 +111,25 @@ let nav_documents ~sidebar items (local_ graph) =
                (Sidebar.menu_action
                   ~show_on_hover:true
                   ~class_:"rounded-sm data-[state=open]:bg-accent"
-                  [ Icon.view Ellipsis; sr_only "More" ])
+                  [ Tabler.view Dots; sr_only "More" ])
            ; Dropdown_menu.content
                menu
                ~class_:"w-24 rounded-lg"
                ~side:(if is_mobile then Bottom else Right)
                ~align:(if is_mobile then End else Start)
-               [ Dropdown_menu.item [ Icon.view Folder; Node.span [ Node.text "Open" ] ]
-               ; Dropdown_menu.item [ Icon.view Share; Node.span [ Node.text "Share" ] ]
+               [ Dropdown_menu.item [ Tabler.view Folder; Node.span [ Node.text "Open" ] ]
+               ; Dropdown_menu.item [ Tabler.view Share_3; Node.span [ Node.text "Share" ] ]
                ; Dropdown_menu.separator ()
                ; Dropdown_menu.item
                    ~variant:Destructive
-                   [ Icon.view Trash; Node.span [ Node.text "Delete" ] ]
+                   [ Tabler.view Trash; Node.span [ Node.text "Delete" ] ]
                ]
            ])
         graph
     in
     let%arr menu in
     Sidebar.menu_item
-      [ Sidebar.menu_button ~href:url [ Icon.view icon; Node.span [ Node.text name ] ]
+      [ Sidebar.menu_button ~href:url [ Tabler.view icon; Node.span [ Node.text name ] ]
       ; menu
       ]
   in
@@ -142,7 +142,7 @@ let nav_documents ~sidebar items (local_ graph) =
          @ [ Sidebar.menu_item
                [ Sidebar.menu_button
                    ~class_:"text-sidebar-foreground/70"
-                   [ Icon.view ~class_:"text-sidebar-foreground/70" Ellipsis
+                   [ Tabler.view ~class_:"text-sidebar-foreground/70" Dots
                    ; Node.span [ Node.text "More" ]
                    ]
                ]
@@ -161,7 +161,7 @@ let nav_secondary ?class_ items =
                Sidebar.menu_item
                  [ Sidebar.menu_button
                      ~href:url
-                     [ Icon.view icon; Node.span [ Node.text title ] ]
+                     [ Tabler.view icon; Node.span [ Node.text title ] ]
                  ]))
         ]
     ]
@@ -199,7 +199,7 @@ let nav_user ~sidebar ~name ~email ~avatar (local_ graph) =
                 ~class_:
                   "data-[state=open]:bg-sidebar-accent \
                    data-[state=open]:text-sidebar-accent-foreground"
-                [ in_button; who; Icon.view ~class_:"ml-auto size-4" Ellipsis_vertical ])
+                [ in_button; who; Tabler.view ~class_:"ml-auto size-4" Dots_vertical ])
          ; Dropdown_menu.content
              menu
              ~class_:"w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
@@ -214,12 +214,12 @@ let nav_user ~sidebar ~name ~email ~avatar (local_ graph) =
                  ]
              ; Dropdown_menu.separator ()
              ; Dropdown_menu.group
-                 [ Dropdown_menu.item [ Icon.view Circle_user; Node.text "Account" ]
-                 ; Dropdown_menu.item [ Icon.view Credit_card; Node.text "Billing" ]
-                 ; Dropdown_menu.item [ Icon.view Bell; Node.text "Notifications" ]
+                 [ Dropdown_menu.item [ Tabler.view User_circle; Node.text "Account" ]
+                 ; Dropdown_menu.item [ Tabler.view Credit_card; Node.text "Billing" ]
+                 ; Dropdown_menu.item [ Tabler.view Notification; Node.text "Notifications" ]
                  ]
              ; Dropdown_menu.separator ()
-             ; Dropdown_menu.item [ Icon.view Log_out; Node.text "Log out" ]
+             ; Dropdown_menu.item [ Tabler.view Logout; Node.text "Log out" ]
              ]
          ])
       graph
@@ -249,7 +249,7 @@ let app_sidebar ?variant ~sidebar (local_ graph) =
                 [ Sidebar.menu_button
                     ~href:"#"
                     ~class_:"data-[slot=sidebar-menu-button]:p-1.5!"
-                    [ Icon.view ~class_:"size-5!" Contrast
+                    [ Tabler.view ~class_:"size-5!" Inner_shadow_top
                     ; span "text-base font-semibold" [ Node.text "Acme Inc." ]
                     ]
                 ]
@@ -303,7 +303,7 @@ let site_header sidebar =
 (* {1 section-cards.tsx} *)
 
 let section_cards =
-  let card ~description ~title ~(trend : Icon.t) ~badge ~footer ~muted =
+  let card ~description ~title ~(trend : Tabler.t) ~badge ~footer ~muted =
     Card.root
       ~class_:"@container/card"
       [ Card.header
@@ -312,13 +312,13 @@ let section_cards =
               ~class_:"text-2xl font-semibold tabular-nums @[250px]/card:text-3xl"
               [ Node.text title ]
           ; Card.action
-              [ Badge.view ~variant:Outline [ Icon.view trend; Node.text badge ] ]
+              [ Badge.view ~variant:Outline [ Tabler.view trend; Node.text badge ] ]
           ]
       ; Card.footer
           ~class_:"flex-col items-start gap-1.5 text-sm"
           [ div
               "line-clamp-1 flex gap-2 font-medium"
-              [ Node.text (footer ^ " "); Icon.view ~class_:"size-4" trend ]
+              [ Node.text (footer ^ " "); Tabler.view ~class_:"size-4" trend ]
           ; div "text-muted-foreground" [ Node.text muted ]
           ]
       ]
@@ -752,7 +752,7 @@ let table_cell_viewer (item : Data.t Bonsai.t) ~is_mobile (local_ graph) =
                        [ div
                            "flex gap-2 leading-none font-medium"
                            [ Node.text "Trending up by 5.2% this month "
-                           ; Icon.view ~class_:"size-4" Trending_up
+                           ; Tabler.view ~class_:"size-4" Trending_up
                            ]
                        ; div
                            "text-muted-foreground"
@@ -868,7 +868,7 @@ let row_cells ~is_mobile (item : Data.t Bonsai.t) (local_ graph) =
                 ~variant:Ghost
                 ~class_:"flex size-8 text-muted-foreground data-[state=open]:bg-muted"
                 ~size:Icon
-                [ Icon.view Ellipsis_vertical; sr_only "Open menu" ])
+                [ Tabler.view Dots_vertical; sr_only "Open menu" ])
          ; Dropdown_menu.content
              menu
              ~align:End
@@ -1045,7 +1045,7 @@ let drag_handle ~(drag : Drag.t option) ~(inject : Drag.Action.t -> unit Effect.
           | ArrowUp when active -> Effect.Many [ stop; inject (Step (-1)) ]
           | _ -> Effect.Ignore)
       ]
-    [ Icon.view ~class_:"size-3 text-muted-foreground" Grip_vertical
+    [ Tabler.view ~class_:"size-3 text-muted-foreground" Grip_vertical
     ; sr_only "Drag to reorder"
     ]
 ;;
@@ -1133,8 +1133,8 @@ let columns ~sleep ~(cells : Row_cells.t Int.Map.t) ~drag ~inject =
       ~cell:(fun _ (row : Data.t Data_table.Row.t) ->
         [ outline_badge
             [ (if String.equal row.original.status "Done"
-               then Icon.view ~class_:"fill-green-500 dark:fill-green-400" Circle_check
-               else Icon.view Loader)
+               then Tabler.view ~class_:"fill-green-500 dark:fill-green-400" Circle_check_filled
+               else Tabler.view Loader)
             ; Node.text row.original.status
             ]
         ])
@@ -1241,10 +1241,10 @@ let data_table (initial_data : Data.t list) (local_ graph) =
              (Button.view
                 ~variant:Outline
                 ~size:Sm
-                [ Icon.view Columns_2
+                [ Tabler.view Layout_columns
                 ; span "hidden lg:inline" [ Node.text "Customize Columns" ]
                 ; span "lg:hidden" [ Node.text "Columns" ]
-                ; Icon.view Chevron_down
+                ; Tabler.view Chevron_down
                 ])
          ; Dropdown_menu.content
              menu
@@ -1329,7 +1329,7 @@ let data_table (initial_data : Data.t list) (local_ graph) =
         ?size
         ~on_click
         ~disabled
-        [ sr_only label; Icon.view icon ]
+        [ sr_only label; Tabler.view icon ]
     in
     fun tabs ->
       [ div
@@ -1374,7 +1374,7 @@ let data_table (initial_data : Data.t list) (local_ graph) =
               ; Button.view
                   ~variant:Outline
                   ~size:Sm
-                  [ Icon.view Plus; span "hidden lg:inline" [ Node.text "Add Section" ] ]
+                  [ Tabler.view Plus; span "hidden lg:inline" [ Node.text "Add Section" ] ]
               ]
           ]
       ; Tabs.content

@@ -208,7 +208,6 @@ let%expect_test "shadcn's classes" =
                stroke-width="2"
                stroke-linecap="round"
                stroke-linejoin="round"
-               aria-hidden="true"
                class="lucide lucide-panel-left">
             <rect width="18" height="18" x="3" y="3" rx="2"> </rect>
             <path d="M9 3v18"> </path>
@@ -354,8 +353,7 @@ let%expect_test "the trigger and the rail collapse and expand it" =
                stroke="currentColor"
                stroke-width="2"
                stroke-linecap="round"
-               stroke-linejoin="round"
-               aria-hidden="true">
+               stroke-linejoin="round">
             <rect width="18" height="18" x="3" y="3" rx="2"> </rect>
             <path d="M9 3v18"> </path>
           </svg>
@@ -530,8 +528,7 @@ let%expect_test "collapsed to icons, a menu button's tooltip shows on hover" =
                stroke="currentColor"
                stroke-width="2"
                stroke-linecap="round"
-               stroke-linejoin="round"
-               aria-hidden="true">
+               stroke-linejoin="round">
             <rect width="18" height="18" x="3" y="3" rx="2"> </rect>
             <path d="M9 3v18"> </path>
           </svg>
@@ -710,8 +707,7 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
                stroke="currentColor"
                stroke-width="2"
                stroke-linecap="round"
-               stroke-linejoin="round"
-               aria-hidden="true">
+               stroke-linejoin="round">
             <rect width="18" height="18" x="3" y="3" rx="2"> </rect>
             <path d="M9 3v18"> </path>
           </svg>
@@ -858,8 +854,7 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     +|             stroke="currentColor"
     +|             stroke-width="2"
     +|             stroke-linecap="round"
-    +|             stroke-linejoin="round"
-    +|             aria-hidden="true">
+    +|             stroke-linejoin="round">
     +|          <path d="M18 6 6 18"> </path>
     +|          <path d="m6 6 12 12"> </path>
     +|        </svg>
@@ -892,7 +887,7 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
+                 stroke-linejoin="round">
     |}];
   Drive.key handle "[data-mobile=true]" Escape;
   Handle.show_diff handle;
@@ -1033,8 +1028,7 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
     -|             stroke="currentColor"
     -|             stroke-width="2"
     -|             stroke-linecap="round"
-    -|             stroke-linejoin="round"
-    -|             aria-hidden="true">
+    -|             stroke-linejoin="round">
     -|          <path d="M18 6 6 18"> </path>
     -|          <path d="m6 6 12 12"> </path>
     -|        </svg>
@@ -1068,7 +1062,7 @@ let%expect_test "on phones it is a sheet, which Esc closes" =
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
+                 stroke-linejoin="round">
     |}];
   (* A click on the overlay closes it too. *)
   Drive.click handle "[data-slot=sidebar-trigger]";

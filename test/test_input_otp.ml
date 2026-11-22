@@ -49,7 +49,6 @@ let%expect_test "shadcn's classes" =
                stroke-width="2"
                stroke-linecap="round"
                stroke-linejoin="round"
-               aria-hidden="true"
                class="lucide lucide-minus">
             <path d="M5 12h14"> </path>
           </svg>
@@ -134,8 +133,7 @@ let%expect_test
                stroke="currentColor"
                stroke-width="2"
                stroke-linecap="round"
-               stroke-linejoin="round"
-               aria-hidden="true">
+               stroke-linejoin="round">
             <path d="M5 12h14"> </path>
           </svg>
         </div>
@@ -214,10 +212,10 @@ let%expect_test
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <path d="M5 12h14"> </path>
             </svg>
+          </div>
     |}];
   Drive.type_ handle "input" "12";
   Handle.show_diff handle;
@@ -252,8 +250,7 @@ let%expect_test
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <path d="M5 12h14"> </path>
             </svg>
           </div>
@@ -335,8 +332,7 @@ let%expect_test
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <path d="M5 12h14"> </path>
             </svg>
           </div>
@@ -392,6 +388,7 @@ let%expect_test
   Handle.show_diff handle;
   [%expect
     {|
+          <div data-slot="input-otp-separator" role="separator">
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="24"
                  height="24"
@@ -400,8 +397,7 @@ let%expect_test
                  stroke="currentColor"
                  stroke-width="2"
                  stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+                 stroke-linejoin="round">
               <path d="M5 12h14"> </path>
             </svg>
           </div>
@@ -493,8 +489,7 @@ let%expect_test "disabled" =
                stroke="currentColor"
                stroke-width="2"
                stroke-linecap="round"
-               stroke-linejoin="round"
-               aria-hidden="true">
+               stroke-linejoin="round">
             <path d="M5 12h14"> </path>
           </svg>
         </div>

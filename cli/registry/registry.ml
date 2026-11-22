@@ -199,6 +199,7 @@ module%test _ = struct
 
   let entry ?(css = []) ?(deps = [ Entry.theme ]) name =
     { Entry.name
+    ; kind = Component
     ; description = ""
     ; sources = [ file (name ^ ".ml") "" ]
     ; css

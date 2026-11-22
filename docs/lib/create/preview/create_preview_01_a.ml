@@ -357,7 +357,7 @@ let icon_preview_grid =
                ~class_:"grid grid-cols-8 place-items-center gap-4"
                (List.map
                   [ Icon.Copy
-                  ; Circle_exclamation_point
+                  ; Circle_alert
                   ; Trash
                   ; Share
                   ; Shopping_bag
