@@ -392,48 +392,58 @@ let%expect_test "shadcn's classes: the container, its style and a bar chart" =
             </g>
             <g class="recharts-cartesian-axis recharts-layer recharts-xAxis xAxis">
               <Vdom.Node.none-widget> </Vdom.Node.none-widget>
-              <g class="recharts-cartesian-axis-ticks">
-                <g class="recharts-cartesian-axis-tick recharts-layer">
-                  <Vdom.Node.none-widget> </Vdom.Node.none-widget>
-                  <text stroke="none"
-                        x="53.333333333333336"
-                        y="153"
-                        text-anchor="middle"
-                        fill="#666"
-                        orientation="bottom"
-                        width="290"
-                        height="30"
-                        class="recharts-cartesian-axis-tick-value recharts-text">
-                    <tspan x="53.333333333333336" dy="0.71em"> Jan </tspan>
-                  </text>
+              <g class="recharts-cartesian-axis-ticks recharts-xAxis-ticks">
+                <g class="recharts-cartesian-axis-tick-labels recharts-xAxis-tick-labels">
+                  <g class="recharts-cartesian-axis-tick-label recharts-layer">
+                    <text stroke="none"
+                          x="53.333333333333336"
+                          y="153"
+                          text-anchor="middle"
+                          fill="#666"
+                          orientation="bottom"
+                          width="290"
+                          height="30"
+                          class="recharts-cartesian-axis-tick-value recharts-text">
+                      <tspan x="53.333333333333336" dy="0.71em"> Jan </tspan>
+                    </text>
+                  </g>
+                  <g class="recharts-cartesian-axis-tick-label recharts-layer">
+                    <text stroke="none"
+                          x="150"
+                          y="153"
+                          text-anchor="middle"
+                          fill="#666"
+                          orientation="bottom"
+                          width="290"
+                          height="30"
+                          class="recharts-cartesian-axis-tick-value recharts-text">
+                      <tspan x="150" dy="0.71em"> Feb </tspan>
+                    </text>
+                  </g>
+                  <g class="recharts-cartesian-axis-tick-label recharts-layer">
+                    <text stroke="none"
+                          x="246.66666666666669"
+                          y="153"
+                          text-anchor="middle"
+                          fill="#666"
+                          orientation="bottom"
+                          width="290"
+                          height="30"
+                          class="recharts-cartesian-axis-tick-value recharts-text">
+                      <tspan x="246.66666666666669" dy="0.71em"> Mar </tspan>
+                    </text>
+                  </g>
                 </g>
-                <g class="recharts-cartesian-axis-tick recharts-layer">
-                  <Vdom.Node.none-widget> </Vdom.Node.none-widget>
-                  <text stroke="none"
-                        x="150"
-                        y="153"
-                        text-anchor="middle"
-                        fill="#666"
-                        orientation="bottom"
-                        width="290"
-                        height="30"
-                        class="recharts-cartesian-axis-tick-value recharts-text">
-                    <tspan x="150" dy="0.71em"> Feb </tspan>
-                  </text>
-                </g>
-                <g class="recharts-cartesian-axis-tick recharts-layer">
-                  <Vdom.Node.none-widget> </Vdom.Node.none-widget>
-                  <text stroke="none"
-                        x="246.66666666666669"
-                        y="153"
-                        text-anchor="middle"
-                        fill="#666"
-                        orientation="bottom"
-                        width="290"
-                        height="30"
-                        class="recharts-cartesian-axis-tick-value recharts-text">
-                    <tspan x="246.66666666666669" dy="0.71em"> Mar </tspan>
-                  </text>
+                <g class="recharts-cartesian-axis-tick-lines recharts-xAxis-tick-lines">
+                  <g class="recharts-cartesian-axis-tick recharts-layer">
+                    <Vdom.Node.none-widget> </Vdom.Node.none-widget>
+                  </g>
+                  <g class="recharts-cartesian-axis-tick recharts-layer">
+                    <Vdom.Node.none-widget> </Vdom.Node.none-widget>
+                  </g>
+                  <g class="recharts-cartesian-axis-tick recharts-layer">
+                    <Vdom.Node.none-widget> </Vdom.Node.none-widget>
+                  </g>
                 </g>
               </g>
             </g>

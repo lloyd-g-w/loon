@@ -2438,60 +2438,84 @@ let render_cartesian (ctx : render_ctx) : rendered =
                     ])
                [])
            else Node.none)
+        (* Recharts 3: the labels and the lines in two groups. *)
         ; g
-            [ "recharts-cartesian-axis-ticks" ]
-            (List.mapi shown ~f:(fun index (coord, v) ->
-               let label = format_tick axis v in
-               let text_pos = line_pos +. (sgn *. (tick_size +. axis.tick_margin)) in
-               let x, y = if is_x then coord, text_pos else text_pos, coord in
-               let anchor, vertical_anchor =
-                 if is_x
-                 then `Middle, if low then `Start else `End
-                 else (if low then `End else `Start), `Middle
-               in
-               layer
-                 [ "recharts-cartesian-axis-tick" ]
-                 [ (if axis.tick_line
-                    then (
-                      let a1 = line_pos +. (sgn *. tick_size) in
-                      let x1, y1, x2, y2 =
-                        if is_x then coord, a1, coord, line_pos else a1, coord, line_pos, coord
+            [ "recharts-cartesian-axis-ticks"; "recharts-" ^ axis_name ^ "-ticks" ]
+            [ (if List.is_empty shown
+               then Node.none
+               else
+                 g
+                   [ "recharts-cartesian-axis-tick-labels"
+                   ; "recharts-" ^ axis_name ^ "-tick-labels"
+                   ]
+                   (List.mapi shown ~f:(fun index (coord, v) ->
+                      let label = format_tick axis v in
+                      let text_pos =
+                        line_pos +. (sgn *. (tick_size +. axis.tick_margin))
                       in
-                      svg
-                        "line"
-                        ~attrs:
-                          (common
-                           @ [ cls [ "recharts-cartesian-axis-tick-line" ]
-                             ; a "stroke" "#666"
-                             ; a "fill" "none"
-                             ; af "x1" x1
-                             ; af "y1" y1
-                             ; af "x2" x2
-                             ; af "y2" y2
-                             ])
-                        [])
-                    else Node.none)
-                 ; (match axis.custom_tick with
-                    | Some f ->
-                      f
-                        { x
-                        ; y
-                        ; text_anchor = Anchor.name anchor
-                        ; index
-                        ; value = v
-                        ; row = None
-                        }
-                    | None ->
-                      text_node
-                        ~attrs:common
-                        ~classes:[ "recharts-cartesian-axis-tick-value" ]
-                        ~fill:(Some "#666")
-                        ~x
-                        ~y
-                        ~anchor
-                        ~vertical:vertical_anchor
-                        label)
-                 ]))
+                      let x, y = if is_x then coord, text_pos else text_pos, coord in
+                      let anchor, vertical_anchor =
+                        if is_x
+                        then `Middle, if low then `Start else `End
+                        else (if low then `End else `Start), `Middle
+                      in
+                      layer
+                        [ "recharts-cartesian-axis-tick-label" ]
+                        [ (match axis.custom_tick with
+                           | Some f ->
+                             f
+                               { x
+                               ; y
+                               ; text_anchor = Anchor.name anchor
+                               ; index
+                               ; value = v
+                               ; row = None
+                               }
+                           | None ->
+                             text_node
+                               ~attrs:common
+                               ~classes:[ "recharts-cartesian-axis-tick-value" ]
+                               ~fill:(Some "#666")
+                               ~x
+                               ~y
+                               ~anchor
+                               ~vertical:vertical_anchor
+                               label)
+                        ])))
+            ; (if List.is_empty shown
+               then Node.none
+               else
+                 g
+                   [ "recharts-cartesian-axis-tick-lines"
+                   ; "recharts-" ^ axis_name ^ "-tick-lines"
+                   ]
+                   (List.map shown ~f:(fun (coord, _) ->
+                      layer
+                        [ "recharts-cartesian-axis-tick" ]
+                        [ (if axis.tick_line
+                           then (
+                             let a1 = line_pos +. (sgn *. tick_size) in
+                             let x1, y1, x2, y2 =
+                               if is_x
+                               then coord, a1, coord, line_pos
+                               else a1, coord, line_pos, coord
+                             in
+                             svg
+                               "line"
+                               ~attrs:
+                                 (common
+                                  @ [ cls [ "recharts-cartesian-axis-tick-line" ]
+                                    ; a "stroke" "#666"
+                                    ; a "fill" "none"
+                                    ; af "x1" x1
+                                    ; af "y1" y1
+                                    ; af "x2" x2
+                                    ; af "y2" y2
+                                    ])
+                               [])
+                           else Node.none)
+                        ])))
+            ]
         ])
   in
   let axes =
