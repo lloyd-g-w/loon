@@ -7,6 +7,8 @@ classes, DOM, data attributes and Radix behaviour — as OCaml modules. Use
 them as a library, or copy them into your project with `loon add` and make
 them your own, as with shadcn.
 
+Docs: <https://lloyd-g-w.github.io/loon/>
+
 - **shadcn's look, exactly**: every shadcn style (Vega, the default, Nova,
   Maia, Lyra, Mira, Luma, Sera, Rhea: `Theme.root ~style`, or `loon init
   --style` to inline one into copied components), neutral theme, Lucide
