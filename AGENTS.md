@@ -37,6 +37,12 @@ by `tools/icons.nix`. Radix's behaviour: https://www.radix-ui.com/primitives/doc
 - Look at what you build: `node e2e/shot.mjs OUT.png [WxH] [light|dark]
   [#/slug]` (with `PLAYWRIGHT_MODULE`, `PLAYWRIGHT_BROWSERS_PATH`,
   `FONTCONFIG_FILE` set; see `./check`), and compare with ui.shadcn.com.
+- Time it: `node e2e/perf.mjs` (CPU time of common interactions on the
+  docs site; `--profile OUT.cpuprofile` for the JS profiler). Watch for
+  full style recalculations: `:has()` over the whole page (`group-has-*`
+  on `body`/a layout root), inherited properties or custom properties set
+  on `body`, `<style>` elements added per open; each restyles every
+  element.
 
 ## Porting a component from shadcn
 

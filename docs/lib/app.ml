@@ -77,6 +77,23 @@ module Shown = struct
     | Page slug -> if Option.is_some (find_page slug) then Page slug else Not_found
   ;;
 
+  (* What the page's frame is, for the header and footer to follow (shadcn's
+     site asks with [group-has-[[data-slot=designer]]/body:]; a [:has] around
+     the whole page has the browser match every element's style again whenever
+     an element is added anywhere, as a menu opening). *)
+  let shell = function
+    | Tool _ -> "designer"
+    | Page s when String.equal s components_slug -> "docs"
+    | Page s ->
+      (match find_page s with
+       | Some p when Doc.Section.equal p.section Charts -> "plain"
+       | Some p when Doc.Section.equal p.section Blocks -> "soft"
+       | Some p when not (Doc.Section.is_docs p.section) -> "soft"
+       | Some _ -> "docs"
+       | None -> "plain")
+    | Home | Not_found -> "plain"
+  ;;
+
   let section = function
     | Page s when String.equal s components_slug -> Some Doc.Section.Components
     | Page s -> Option.map (find_page s) ~f:(fun p -> p.section)
@@ -326,14 +343,14 @@ let site_header
     [ Node.div
         ~attrs:
           [ Attr.class_
-              "container-wrapper px-6 group-has-data-[slot=designer]/layout:max-w-none \
+              "container-wrapper px-6 group-data-[shell=designer]/layout:max-w-none \
                3xl:fixed:px-0"
           ]
         [ Node.div
             ~attrs:
               [ Attr.class_
                   "flex h-(--header-height) items-center **:data-[slot=separator]:h-4! \
-                   group-has-data-[slot=designer]/layout:fixed:max-w-none \
+                   group-data-[shell=designer]/layout:fixed:max-w-none \
                    3xl:fixed:container"
               ]
             [ mobile_nav ~open_:mobile_open ~set_open:set_mobile_open
@@ -358,7 +375,7 @@ let site_header
                        ~attrs:
                          [ Attr.class_
                              "hidden items-center gap-2 \
-                              group-has-data-[slot=designer]/layout:md:flex"
+                              group-data-[shell=designer]/layout:md:flex"
                          ]
                        [ separator (); actions ])
                 ; Node.div
@@ -389,10 +406,10 @@ let site_footer =
   Node.footer
     ~attrs:
       [ Attr.class_
-          "group-has-[.section-soft]/body:bg-surface/40 \
-           group-has-[[data-slot=designer]]/body:hidden \
-           group-has-[[data-slot=docs]]/body:hidden dark:bg-transparent \
-           dark:group-has-[.section-soft]/body:bg-surface/40 3xl:fixed:bg-transparent"
+          "group-data-[shell=soft]/layout:bg-surface/40 \
+           group-data-[shell=designer]/layout:hidden \
+           group-data-[shell=docs]/layout:hidden dark:bg-transparent \
+           dark:group-data-[shell=soft]/layout:bg-surface/40 3xl:fixed:bg-transparent"
       ]
     [ Node.div
         ~attrs:[ Attr.class_ "container-wrapper px-4 xl:px-6" ]
@@ -1702,12 +1719,13 @@ let docs ~hash ~set_hash (local_ graph) =
       ~on_change:set_search
       ~go
   in
-  let%arr main and header and search_dialog and global_keys in
+  let%arr main and header and search_dialog and global_keys and shown in
   Node.div
     ~attrs:
       [ Attr.create "data-slot" "layout"
       ; Attr.class_ "group/layout relative z-10 flex min-h-svh flex-col bg-background \
-           has-data-[slot=designer]:h-svh has-data-[slot=designer]:overflow-hidden"
+           data-[shell=designer]:h-svh data-[shell=designer]:overflow-hidden"
+      ; Attr.create "data-shell" (Shown.shell shown)
       ; global_keys
       ]
     [ header

@@ -1,6 +1,8 @@
 ; The documentation site, assembled under site/: main.bc.js, the page and
-; loon.css. The dev profile compiles separately (quick to relink); release
-; builds (`-p`, Nix) are whole-program.
+; loon.css. The dev profile compiles separately (quick to relink), with its
+; source map in a file of its own (inline, it made main.bc.js 76 MB and
+; the page several seconds slower to load); release builds (`-p`, Nix) are
+; whole-program. jsstring.js: a faster caml_jsstring_of_string.
 
 (executable
  (name main)
@@ -8,6 +10,14 @@
  (preprocess
   (pps ppx_jane js_of_ocaml-ppx))
  (js_of_ocaml
+  (javascript_files jsstring.js)
+  (link_flags
+   (:standard -w no-overriding-primitive))
   (flags
    (:standard --opt 3)))
  (libraries core bonsai_web loon loon_docs))
+
+(env
+ (dev
+  (js_of_ocaml
+   (sourcemap file))))
