@@ -5,6 +5,7 @@ open Bonsai.Let_syntax
 open Create_preview_util
 module Node = Vdom.Node
 module Attr = Vdom.Attr
+module Info = Create_preview_01_a.Info
 
 let bar_data ~x ~y rows = List.map rows ~f:(fun (k, v) -> [ x, `Text k; y, `Num v ])
 
@@ -23,9 +24,9 @@ let upcoming_item ~label ~value ~detail =
     ]
 ;;
 
-let contribution_history (local_ graph) =
+let contribution_history (info : Info.t Bonsai.t) (local_ graph) =
   let chart = chart graph in
-  let%arr chart in
+  let%arr chart and info in
   let config =
     [ "amount", Chart.Config.item ~label:"Contribution" ~color:"var(--chart-2)" () ]
   in
@@ -65,7 +66,7 @@ let contribution_history (local_ graph) =
                ; Chart.bar
                    ~data_key:"amount"
                    ~fill:"var(--color-amount)"
-                   ~radius:(`Corners (6., 6., 0., 0.))
+                   ~radius:(Info.bar_radius info 6.)
                    ~bar_size:40.
                    ()
                ])
@@ -184,9 +185,9 @@ let holdings =
   ]
 ;;
 
-let dividend_income (local_ graph) =
+let dividend_income (info : Info.t Bonsai.t) (local_ graph) =
   let charts = List.map holdings ~f:(fun _ -> chart graph) |> Bonsai.all in
-  let%arr charts in
+  let%arr charts and info in
   let config =
     [ "value", Chart.Config.item ~label:"Dividend" ~color:"var(--chart-2)" () ]
   in
@@ -222,7 +223,7 @@ let dividend_income (local_ graph) =
                         ; Chart.bar
                             ~data_key:"value"
                             ~fill:"var(--color-value)"
-                            ~radius:(`Corners (3., 3., 0., 0.))
+                            ~radius:(Info.bar_radius info 3.)
                             ()
                         ])
                  ; tspan "hidden text-sm font-semibold tabular-nums md:block" amount

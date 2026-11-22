@@ -1,9 +1,9 @@
 (** preview-02's first two columns of cards. *)
 
-val contribution_history : Create_preview_util.card
+val contribution_history : Create_preview_01_a.Info.t Bonsai.t -> Create_preview_util.card
 val empty_distribute_track : Create_preview_util.card
 val qr_connect : Create_preview_util.card
-val dividend_income : Create_preview_util.card
+val dividend_income : Create_preview_01_a.Info.t Bonsai.t -> Create_preview_util.card
 val index_investing : Create_preview_util.card
 val syncing_state : Create_preview_util.card
 val payout_threshold : Create_preview_util.card

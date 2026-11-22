@@ -6,7 +6,7 @@ val transfer_funds : Create_preview_util.card
 val cover_art : Create_preview_util.card
 val loading_card : Create_preview_util.card
 val receiving_method : Create_preview_util.card
-val power_usage : Create_preview_util.card
+val power_usage : Create_preview_01_a.Info.t Bonsai.t -> Create_preview_util.card
 val empty_connect_bank : Create_preview_util.card
 val upcoming_payments : Create_preview_util.card
 val roller_shades : Create_preview_util.card

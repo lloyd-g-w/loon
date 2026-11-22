@@ -9,13 +9,13 @@ module C = Create_preview_02_c
 
 let all cards (local_ graph) = Bonsai.all (List.map cards ~f:(fun card -> card graph))
 
-let component (local_ graph) =
+let component info (local_ graph) =
   let col1 =
     all
-      [ A.contribution_history
+      [ A.contribution_history info
       ; A.empty_distribute_track
       ; A.qr_connect
-      ; A.dividend_income
+      ; A.dividend_income info
       ; A.index_investing
       ; A.syncing_state
       ]
@@ -51,7 +51,7 @@ let component (local_ graph) =
   let col5 =
     all
       [ C.receiving_method
-      ; C.power_usage
+      ; C.power_usage info
       ; C.empty_connect_bank
       ; C.upcoming_payments
       ; C.roller_shades

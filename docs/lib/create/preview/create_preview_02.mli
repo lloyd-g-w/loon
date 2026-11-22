@@ -4,4 +4,7 @@
 open! Core
 open Bonsai_web
 
-val component : local_ Bonsai.graph -> Vdom.Node.t Bonsai.t
+val component
+  :  Create_preview_01_a.Info.t Bonsai.t
+  -> local_ Bonsai.graph
+  -> Vdom.Node.t Bonsai.t

@@ -14,6 +14,13 @@ module Info = struct
     }
 
   let default = { style = "New York"; font = "Geist"; font_heading = "Geist" }
+
+  (* The cards' isRounded: Lyra's and Sera's bars are square. *)
+  let bar_radius t r =
+    if List.mem [ "Lyra"; "Sera" ] t.style ~equal:String.equal
+    then `All 0.
+    else `Corners (r, r, 0., 0.)
+  ;;
 end
 
 let style_overview (info : Info.t Bonsai.t) (local_ _graph) =
@@ -794,7 +801,7 @@ let environment_variables =
        ])
 ;;
 
-let bar_chart_card (local_ graph) =
+let bar_chart_card (info : Info.t Bonsai.t) (local_ graph) =
   let chart = chart graph in
   let data =
     [ "January", 186., 80.
@@ -808,7 +815,7 @@ let bar_chart_card (local_ graph) =
   let desktop = List.sum (module Float) data ~f:(fun (_, d, _) -> d) in
   let mobile = List.sum (module Float) data ~f:(fun (_, _, m) -> m) in
   let delta = Float.iround_nearest_exn ((desktop -. mobile) /. mobile *. 100.) in
-  let%arr chart in
+  let%arr chart and info in
   let config =
     [ "desktop", Chart.Config.item ~label:"Desktop" ~color:"var(--chart-1)" ()
     ; "mobile", Chart.Config.item ~label:"Mobile" ~color:"var(--chart-2)" ()
@@ -859,12 +866,12 @@ let bar_chart_card (local_ graph) =
                ; Chart.bar
                    ~data_key:"desktop"
                    ~fill:"var(--color-desktop)"
-                   ~radius:(`Corners (6., 6., 0., 0.))
+                   ~radius:(Info.bar_radius info 6.)
                    ()
                ; Chart.bar
                    ~data_key:"mobile"
                    ~fill:"var(--color-mobile)"
-                   ~radius:(`Corners (6., 6., 0., 0.))
+                   ~radius:(Info.bar_radius info 6.)
                    ()
                ])
         ; div

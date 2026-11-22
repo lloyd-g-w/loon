@@ -5,6 +5,7 @@ open Bonsai.Let_syntax
 open Create_preview_util
 module Node = Vdom.Node
 module Attr = Vdom.Attr
+module Info = Create_preview_01_a.Info
 
 let input ?type_ ?placeholder ?value ~id () =
   Input.view
@@ -369,9 +370,9 @@ let receiving_method (local_ graph) =
     ]
 ;;
 
-let power_usage (local_ graph) =
+let power_usage (info : Info.t Bonsai.t) (local_ graph) =
   let chart = chart graph in
-  let%arr chart in
+  let%arr chart and info in
   let config =
     [ "usage", Chart.Config.item ~label:"Usage (kW)" ~color:"var(--chart-2)" () ]
   in
@@ -418,7 +419,7 @@ let power_usage (local_ graph) =
                ; Chart.bar
                    ~data_key:"usage"
                    ~fill:"var(--color-usage)"
-                   ~radius:(`Corners (4., 4., 0., 0.))
+                   ~radius:(Info.bar_radius info 4.)
                    ()
                ])
         ; Separator.view ()

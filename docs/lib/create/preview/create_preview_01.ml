@@ -35,7 +35,7 @@ let component info (local_ graph) =
   let col3 =
     all
       [ A.environment_variables
-      ; A.bar_chart_card
+      ; A.bar_chart_card info
       ; A.invite_team
       ; A.activate_agent_dialog
       ]
